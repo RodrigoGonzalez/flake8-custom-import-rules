@@ -23,6 +23,19 @@ pytest = "^7.3.1"
 commitizen = "^3.0.1"
 pre-commit = "^3.2.2"
 
+[tool.commitizen]
+name = "cz_conventional_commits"
+tag_format = "$version"
+version_type = "semver"
+version_provider = "poetry"
+update_changelog_on_bump = true
+major_version_zero = true
+version_files = [
+    "pyproject.toml:version",
+    "src/flake8_custom_import_rules/__init__.py:__version__",
+]
+changelog_file = "CHANGELOG.md"
+
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
