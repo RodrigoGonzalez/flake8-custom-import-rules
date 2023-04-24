@@ -30,6 +30,12 @@ version_type = "semver"
 version_provider = "poetry"
 update_changelog_on_bump = true
 major_version_zero = true
+version_files = [
+    "pyproject.toml:version",
+    "src/flake8_custom_import_rules/__init__.py:__version__",
+]
+update_changelog_on_bump = true
+changelog_file = "CHANGELOG.md"
 
 [build-system]
 requires = ["poetry-core"]
