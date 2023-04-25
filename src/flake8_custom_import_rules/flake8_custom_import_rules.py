@@ -1,118 +1,192 @@
+"""Flake8 plugin to check for custom import rules."""
 from __future__ import annotations
 
 import ast
-import sys
+import importlib
+import pkgutil
 from typing import Any
 from typing import Generator
 
-YTT101 = "YTT101 `sys.version[:3]` referenced (python3.10), use `sys.version_info`"  # noqa: E501
-YTT102 = "YTT102 `sys.version[2]` referenced (python3.10), use `sys.version_info`"  # noqa: E501
-YTT103 = (
-    "YTT103 `sys.version` compared to string (python3.10), use `sys.version_info`"  # noqa: E501
-)
-YTT201 = "YTT201 `sys.version_info[0] == 3` referenced (python4), use `>=`"
-YTT202 = "YTT202 `six.PY3` referenced (python4), use `not six.PY2`"
-YTT203 = "YTT203 `sys.version_info[1]` compared to integer (python4), compare `sys.version_info` to tuple"  # noqa: E501
-YTT204 = "YTT204 `sys.version_info.minor` compared to integer (python4), compare `sys.version_info` to tuple"  # noqa: E501
-YTT301 = "YTT301 `sys.version[0]` referenced (python10), use `sys.version_info`"  # noqa: E501
-YTT302 = "YTT302 `sys.version` compared to string (python10), use `sys.version_info`"  # noqa: E501
-YTT303 = "YTT303 `sys.version[:1]` referenced (python10), use `sys.version_info`"  # noqa: E501
+from flake8_import_order.checker import DEFAULT_IMPORT_ORDER_STYLE
+from flake8_import_order.checker import ImportOrderChecker
+from flake8_import_order.checker import ImportVisitor
+from flake8_import_order.styles import lookup_entry_point
 
 
-def _is_index(node: ast.Subscript, n: int) -> bool:
-    if sys.version_info >= (3, 9):  # pragma: >=3.9 cover
-        node_slice = node.slice
-    elif isinstance(node.slice, ast.Index):  # pragma: <3.9 cover
-        node_slice = node.slice.value
-    else:  # pragma: <3.9 cover
-        return False
+def get_package_names(name: str) -> list[str]:
+    """Return a list of package names for a module name."""
+    tree = ast.parse(name)
+    parts = []
+    for node in ast.walk(tree):
+        if isinstance(node, ast.Attribute):
+            parts.append(node.attr)
+        if isinstance(node, ast.Name):
+            parts.append(node.id)
 
-    return isinstance(node_slice, ast.Num) and node_slice.n == n
+    if not parts:
+        return []
+
+    last_package_name = parts.pop()
+    package_names = [last_package_name]
+
+    for part in reversed(parts):
+        last_package_name = f"{last_package_name}.{part}"
+        package_names.append(last_package_name)
+
+    return package_names
 
 
-class Visitor(ast.NodeVisitor):
-    def __init__(self) -> None:
-        self.errors: list[tuple[int, int, str]] = []
-        self._from_imports: dict[str, str] = {}
+def root_package_name(name: str) -> str | None:
+    """Return the root package name from a dotted name."""
+    tree = ast.parse(name)
+    return next(
+        (node.id for node in ast.walk(tree) if isinstance(node, ast.Name)),
+        None,
+    )
+
+
+def get_submodules(module_name: str) -> list:
+    """Return a list of submodules for a module name."""
+    module = importlib.import_module(module_name)
+    module_path = module.__path__[0]
+    submodules = []
+
+    for _, submodule_name, is_pkg in pkgutil.iter_modules([module_path]):
+        if is_pkg:
+            qualified_name = f"{module_name}.{submodule_name}"
+            submodules.append(qualified_name)
+            submodules.extend(get_submodules(qualified_name))
+        else:
+            submodules.append(f"{module_name}.{submodule_name}")
+
+    return submodules
+
+
+def get_base_module_path(base_module_name: str) -> str:
+    """Return the path of a base module."""
+    try:
+        base_module = importlib.import_module(base_module_name)
+        if hasattr(base_module, "__path__"):
+            base_module_path = base_module.__path__[0]
+            return base_module_path
+        else:
+            raise ValueError(f"{base_module_name} is not a package")
+    except ImportError:
+        raise ValueError(f"Failed to import the base module: {base_module_name}")
+
+
+def _parse_custom_rule(rules: list[str] | None) -> dict:
+    """Parse custom rules"""
+    parsed_rules: dict = {}
+    if rules is None:
+        return parsed_rules
+    for rule in rules:
+        src, dest = rule.split(":")
+        parsed_rules[src] = dest.split(",")
+    return parsed_rules
+
+
+class CustomImportRulesVisitor(ImportVisitor):
+    """Custom import rules node visitor."""
+
+    errors: list[tuple[int, int, str]] = []
+    current_modules: list[str] = []
+    package_names: list[list[str]] = []
+
+    def __init__(
+        self, application_import_names: list[str] | str, application_package_names: list[str] | str
+    ) -> None:
+        super().__init__(application_import_names, application_package_names)
+
+    def visit_Import(self, node: ast.Import) -> None:
+        """Visit an Import node."""
+        super().visit_Import(node)
+
+        # if node.col_offset == 0:
+        #     modules = [alias.name for alias in node.names]
+        #     current_modules = [root_package_name(module) for module in modules]
+        #     self.current_modules.extend(current_modules)
+        #     package_names = [get_package_names(module) for module in modules]
+        #     self.package_names.extend(package_names)
+
+        # Ensures a complete traversal of the AST
+        self.generic_visit(node)
 
     def visit_ImportFrom(self, node: ast.ImportFrom) -> None:
-        for alias in node.names:
-            if node.module is not None and not alias.asname:
-                self._from_imports[alias.name] = node.module
-        self.generic_visit(node)
+        """Visit an ImportFrom node."""
+        super().visit_ImportFrom(node)
 
-    def _is_sys(self, attr: str, node: ast.AST) -> bool:
-        return (
-            # subscripting `sys.<thing>`
-            isinstance(node, ast.Attribute)
-            and isinstance(node.value, ast.Name)
-            and node.value.id == "sys"
-            and node.attr == attr
-        ) or (
-            isinstance(node, ast.Name)
-            and node.id == attr
-            and self._from_imports.get(node.id) == "sys"
-        )
-
-    def _is_sys_version_upper_slice(self, node: ast.Subscript, n: int) -> bool:
-        return (
-            self._is_sys("version", node.value)
-            and isinstance(node.slice, ast.Slice)
-            and node.slice.lower is None
-            and isinstance(node.slice.upper, ast.Num)
-            and node.slice.upper.n == n
-            and node.slice.step is None
-        )
-
-    def visit_Subscript(self, node: ast.Subscript) -> None:
-        if self._is_sys_version_upper_slice(node, 1):
-            self.errors.append(
-                (
-                    node.value.lineno,
-                    node.value.col_offset,
-                    YTT303,
-                ),
-            )
-        elif self._is_sys_version_upper_slice(node, 3):
-            self.errors.append(
-                (
-                    node.value.lineno,
-                    node.value.col_offset,
-                    YTT101,
-                ),
-            )
-        elif self._is_sys("version", node.value) and _is_index(node, n=2):
-            self.errors.append(
-                (
-                    node.value.lineno,
-                    node.value.col_offset,
-                    YTT102,
-                ),
-            )
-        elif self._is_sys("version", node.value) and _is_index(node, n=0):
-            self.errors.append(
-                (
-                    node.value.lineno,
-                    node.value.col_offset,
-                    YTT301,
-                ),
-            )
-
-        self.generic_visit(node)
-
-    def visit_Name(self, node: ast.Name) -> None:
-        if node.id == "PY3" and self._from_imports.get(node.id) == "six":
-            self.errors.append((node.lineno, node.col_offset, YTT202))
+        # if node.col_offset == 0:
+        #     module = node.module or ''
+        #     current_module = root_package_name(module)
+        #     self.current_modules.append(current_module)
+        #     package_names = get_package_names(current_module)
+        #     self.package_names.extend([package_names])
+        # Ensures a complete traversal of the AST
         self.generic_visit(node)
 
 
-class Plugin:
-    def __init__(self, tree: ast.AST):
+class CustomImportRulesCheckerPlugin(ImportOrderChecker):
+    """Plugin for checking custom import rules."""
+
+    visitor_class = CustomImportRulesVisitor
+
+    def __init__(self, filename: str | None, tree: ast.AST | None) -> None:
+        super().__init__(filename, tree)
+        # if filename in ("stdin", "-", None):
+        #     filename = "stdin"
+        #     lines = pycodestyle.stdin_get_value().splitlines(True)
+        # else:
+        #     lines = pycodestyle.readlines(filename)
+        self._filename = filename
         self._tree = tree
+        # self._lines = lines
+
+    @property
+    def filename(self) -> str:
+        """Return the filename."""
+        if not self._filename:
+            raise RuntimeError("Filename is not set")
+        return self._filename
+
+    @property
+    def tree(self) -> ast.AST:
+        """Return the tree."""
+        if not self._tree:
+            raise RuntimeError("Tree is not set")
+        return self._tree
+
+    # @property
+    # def lines(self) -> list[str]:
+    #     """Return the lines."""
+    #     return self._lines
+
+    def get_visitor(self) -> CustomImportRulesVisitor:
+        """Return the visitor to use for this plugin."""
+        try:
+            style_entry_point = self.options["import_order_style"]
+        except KeyError:
+            style_entry_point = lookup_entry_point(DEFAULT_IMPORT_ORDER_STYLE)
+        style_cls = style_entry_point.load()
+        return (
+            self.visitor_class(
+                self.options.get("application_import_names", []),
+                self.options.get("application_package_names", []),
+            )
+            if style_cls.accepts_application_package_names
+            else self.visitor_class(
+                self.options.get("application_import_names", []),
+                [],
+            )
+        )
 
     def run(self) -> Generator[tuple[int, int, str, type[Any]], None, None]:
-        visitor = Visitor()
-        visitor.visit(self._tree)
+        """Run the plugin."""
+        if not self.tree or not self.lines:
+            self.load_file()
+
+        visitor = self.get_visitor()
+        visitor.visit(self.tree)
 
         for line, col, msg in visitor.errors:
             yield line, col, msg, type(self)

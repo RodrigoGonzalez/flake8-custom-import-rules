@@ -1,12 +1,12 @@
 [tool.poetry]
-name = "flake8_custom_import"
+name = "flake8_custom_import_rules"
 version = "0.0.1"
 description = "A Flake8 plugin that enforces custom import rules, allowing users to define and maintain clean and consistent import organization across their Python projects."
 authors = ["Rodrigo Gonzalez <r@rodrigo-gonzalez.com>"]
 license = "MIT"
 readme = "README.md"
 packages = [
-    {include = "flake8_custom_import_rules", from = "src"}
+    {include = "flake8_custom_import_rules", from = "build/lib"}
 ]
 
 [tool.poetry.dependencies]
@@ -38,6 +38,7 @@ update_changelog_on_bump = true
 major_version_zero = true
 version_files = [
     "pyproject.toml:version",
+    "setup.cfg:version",
     "src/flake8_custom_import_rules/__init__.py:__version__",
 ]
 changelog_file = "CHANGELOG.md"
@@ -105,10 +106,25 @@ exclude = [
     "example_repos",
     "tests",
 ]
-#plugins = [
-#    "sqlalchemy.ext.mypy.plugin",
+
+[tool.coverage.run]
+plugins = ["covdefaults"]
+omit = ["flake8_custom_import_rules/example_repos/*"]
+
+# Custom plugin settings (use your plugin's name as the prefix)
+#flake8_custom_import.restricted_imports = [
+#    "my_base_module.module_A:my_base_module.module_B",
+#    "my_base_module.module_X:my_base_module.module_Y",
 #]
+#flake8_custom_import.isolated_modules = ["my_base_module.module_C"]
+#flake8_custom_import.standard_library_only = ["my_base_module.module_D"]
+
+[tool.poetry.scripts]
+YTT = "flake8_custom_import_rules:Plugin"
 
 [build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
+#requires = ["poetry-core"]
+#build-backend = "poetry.core.masonry.api"
+# from https://setuptools.pypa.io/en/latest/userguide/pyproject_config.html
+requires = ["setuptools", "setuptools-scm"]
+build-backend = "setuptools.build_meta"

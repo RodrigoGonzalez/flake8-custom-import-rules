@@ -4,3 +4,31 @@ A Flake8 plugin that enforces custom import rules, allowing users to define and 
 Restricted imports: Define a list of modules that are restricted from importing specific modules within your base module. For example, you might want to prevent module A from importing module B or any of its submodules.
 Isolated imports: Specify a list of modules that cannot import from any other modules within your base module. This can be useful for ensuring that certain modules remain standalone and do not introduce unwanted dependencies.
 Standard library only imports: Define a set of modules that can only import from the Python standard library. This rule helps to keep specific modules lightweight and free from third-party dependencies.
+
+# Example Configuration
+
+```toml
+[flake8]
+custom_import_rules.restricted_imports = [
+    "my_base_module.module_A:my_base_module.module_B",
+    "my_base_module.module_X:my_base_module.module_Y",
+]
+custom_import_rules.isolated_modules = ["my_base_module.module_C"]
+custom_import_rules.standard_library_only = ["my_base_module.module_D"]
+custom_import_rules.third_party_only = ["my_base_module.module_E"]
+custom_import_rules.local_folder_only = ["my_base_module.module_F"]
+```
+
+```ini
+[flake8]
+
+[flake8.custom_import_rules]
+restricted_imports =
+    my_base_module.module_A:my_base_module.module_B
+    my_base_module.module_X:my_base_module.module_Y
+isolated_modules = my_base_module.module_C
+standard_library_only = my_base_module.module_D
+third_party_only = my_base_module.module_E
+local_folder_only = my_base_module.module_F
+
+```

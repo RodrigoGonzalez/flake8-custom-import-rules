@@ -1,5 +1,5 @@
 # =============================================================================
-# MAKEFILE FOR DOCS-GENIUS
+# MAKEFILE FOR flake8-custom-import-rules
 # =============================================================================
 #
 # Partially inspired by https://github.com/johschmidt42/python-project-johannes
@@ -165,7 +165,7 @@ lint-mypy-changed:  ## Run mypy on changed Python files & create report
 tests: unit-tests  ## run all tests
 
 unit-tests: ## run unit-tests with pytest
-	poetry run pytest --doctest-modules
+	poetry run pytest --doctest-modules -vvv
 
 unit-tests-cov: ## run unit-tests with pytest and show coverage (terminal + html)
 	poetry run pytest --doctest-modules --cov=src --cov-report term-missing --cov-report=html
