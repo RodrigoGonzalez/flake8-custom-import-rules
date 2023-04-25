@@ -1,0 +1,98 @@
+exclude: ^(example_repos)/
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.4.0
+    hooks:
+      - id: check-ast
+      - id: check-added-large-files
+      - id: check-merge-conflict
+      - id: check-case-conflict
+      - id: check-docstring-first
+      - id: check-yaml
+      - id: debug-statements
+      - id: name-tests-test
+      - id: requirements-txt-fixer
+      - id: pretty-format-json
+        args: [--autofix, --no-sort-keys]
+      - id: check-json
+      - id: trailing-whitespace
+      - id: mixed-line-ending
+      - id: end-of-file-fixer
+
+  - repo: local
+    hooks:
+      - id: autoflake
+        name: autoflake
+        entry: poetry run autoflake -r -i
+        args: [--remove-all-unused-imports, --remove-unused-variables]
+        language: system
+        types: [python]
+        stages: [commit, manual, push]
+
+      - id: isort
+        name: isort-format
+        language: system
+        entry: poetry run isort
+        args: [--settings-path=pyproject.toml]
+        types: [python]
+        stages: [commit, manual]
+
+      - id: isort-check
+        name: isort-lint
+        entry: poetry run isort
+        args: [--settings-path=pyproject.toml, --check-only]
+        language: system
+        types: [python]
+        stages: [commit, manual, push]
+
+      - id: black
+        name: black-format
+        entry: poetry run black src tests
+        args: [--config=pyproject.toml]
+        language: system
+        types: [python]
+        stages: [commit, manual]
+
+      - id: black-check
+        name: black-lint
+        entry: poetry run black src tests --check
+        args: [--config=pyproject.toml]
+        language: system
+        types: [python]
+        stages: [commit, manual, push]
+
+      - id: mypy
+        name: mypy
+        entry: poetry run mypy --install-types --non-interactive --show-error-codes --sqlite-cache src
+        args: [--config-file=pyproject.toml, --cache-dir=.mypy_cache]
+        language: system
+        pass_filenames: false
+        require_serial: false
+        verbose: true
+        types: [python]
+        stages: [commit, manual, push]
+
+  - repo: https://github.com/asottile/pyupgrade
+    rev: v3.3.1
+    hooks:
+      - id: pyupgrade
+        args: [--py37-plus]
+
+  - repo: https://github.com/pre-commit/mirrors-autopep8
+    rev: v2.0.2
+    hooks:
+      - id: autopep8
+
+  - repo: https://github.com/PyCQA/flake8
+    rev: 6.0.0
+    hooks:
+      - id: flake8
+
+  - repo: https://github.com/pre-commit/mirrors-prettier
+    rev: v2.7.1
+    hooks:
+      - id: prettier
+        types: [yaml]
+        exclude: ^(.*/)?\..*\.ya?ml$
+        args: [--write, --ignore-path=.prettierignore]
+        stages: [commit, manual, push]
