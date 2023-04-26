@@ -1,0 +1,1 @@
+# This directory contains example repositories that can be used to test the flake8-custom-import-rules plugin.
