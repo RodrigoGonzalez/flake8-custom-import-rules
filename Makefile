@@ -99,7 +99,8 @@ commit: pre-commit tests  ## Commit changes
 	poetry run cz commit
 
 bump:  ## Bump version and update changelog
-	poetry run cz bump --changelog --check-consistency
+	poetry run cz bump --changelog --check-consistency --annotated-tag
+	git push --follow-tags
 
 .PHONY: pre-commit pre-commit-tool commit
 
