@@ -23,12 +23,19 @@ custom_import_rules.local_folder_only = ["my_base_module.module_F"]
 [flake8]
 
 [flake8.custom_import_rules]
-restricted_imports =
+restricted-imports =
     my_base_module.module_A:my_base_module.module_B
     my_base_module.module_X:my_base_module.module_Y
-isolated_modules = my_base_module.module_C
-standard_library_only = my_base_module.module_D
-third_party_only = my_base_module.module_E
-local_folder_only = my_base_module.module_F
+isolated-modules = my_base_module.module_C
+standard-library_only = my_base_module.module_D
+third-party-only = my_base_module.module_E
+local-folder-only = my_base_module.module_F
 
 ```
+
+
+## Acknowledgements
+[Flake8](https://github.com/PyCQA/flake8) - A wrapper around PyFlakes, pycodestyle and McCabe.
+[flake8-import-order](https://github.com/PyCQA/flake8-import-order) - Flake8 plugin that checks import order against various Python Style Guides. Used as a reference for this plugin.
+[Writing Plugins for Flake8](https://flake8.pycqa.org/en/latest/plugin-development/index.html) - Flake8 documentation on writing plugins.
+[A flake8 plugin from scratch](https://www.youtube.com/watch?v=ot5Z4KQPBL8) - YouTube video on writing a custom Flake8 plugin.

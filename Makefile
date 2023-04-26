@@ -97,6 +97,7 @@ pre-commit-tool:  ## Manually run a single pre-commit hook (e.g. `make pre-commi
 # https://commitizen-tools.github.io/commitizen/bump/
 commit: pre-commit tests  ## Commit changes
 	poetry run cz commit
+	git push -u origin HEAD
 
 bump:  ## Bump version and update changelog
 	poetry run cz bump --changelog --check-consistency --annotated-tag
