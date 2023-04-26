@@ -32,6 +32,7 @@ mypy = "^1.2.0"
 
 [tool.commitizen]
 name = "cz_conventional_commits"
+version = "0.0.1"
 tag_format = "v$version"
 version_type = "semver"
 update_changelog_on_bump = true
