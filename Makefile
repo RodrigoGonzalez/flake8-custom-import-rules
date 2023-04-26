@@ -96,14 +96,13 @@ pre-commit-tool:  ## Manually run a single pre-commit hook (e.g. `make pre-commi
 
 # https://commitizen-tools.github.io/commitizen/bump/
 commit: pre-commit tests  ## Commit changes
-	poetry run cz commit
-	git push -u origin HEAD
+	./scripts/commit.sh
 
 bump:  ## Bump version and update changelog
 	poetry run cz bump --changelog --check-consistency --annotated-tag
 	git push --follow-tags
 
-.PHONY: pre-commit pre-commit-tool commit
+.PHONY: pre-commit pre-commit-tool commit bump
 
 # =============================================================================
 # FORMATTING
@@ -204,35 +203,10 @@ clean-docs: ## remove output files from mkdocs
 build:  pre-commit tests  ## Build the project
 	poetry build
 
-
-bump-major:  ## Bump major version
-	poetry version major
-	git add pyproject.toml
-	cz commit --hook --message "bump: major version to $(shell poetry version -s)"
-	git tag -a "$(shell poetry version -s)" -m "$(shell poetry version -s)"
-	git push --tags
-
-
-bump-minor:  ## Bump minor version
-	poetry version minor
-	git add pyproject.toml
-	cz commit --hook --message "bump: minor version to $(shell poetry version -s)"
-	git tag -a "$(shell poetry version -s)" -m "$(shell poetry version -s)"
-	git push --tags
-
-
-bump-patch:  ## Bump patch version
-	poetry version patch
-	git add pyproject.toml
-	cz commit --hook --message "bump: patch version to $(shell poetry version -s)"
-	git tag -a "$(shell poetry version -s)" -m "$(shell poetry version -s)"
-	git push --tags
-
-
 deploy:  ## Deploy to PyPI
 	poetry publish --build
 
-.PHONY: build bump-major bump-minor bump-patch deploy
+.PHONY: build deploy
 
 
 # -----------------------------------------------------------------------------
@@ -245,6 +219,11 @@ git-commit-num:
 	@echo "+ $@"
 	#@echo $(shell git rev-list --count HEAD)
 	@echo $(shell git rev-list --all --count)
+
+git-main:  ## Switch to main branch
+	git checkout main
+	git pull --all
+	git fetch --tags
 
 .PHONY: git-commit-num
 
