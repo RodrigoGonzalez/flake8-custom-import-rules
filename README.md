@@ -1,38 +1,62 @@
 # flake8-custom-import-rules
 A Flake8 plugin that enforces custom import rules, allowing users to define and maintain clean and consistent import organization across their Python projects.
 
-Restricted imports: Define a list of modules that are restricted from importing specific modules within your base module. For example, you might want to prevent module A from importing module B or any of its submodules.
-Isolated imports: Specify a list of modules that cannot import from any other modules within your base module. This can be useful for ensuring that certain modules remain standalone and do not introduce unwanted dependencies.
-Standard library only imports: Define a set of modules that can only import from the Python standard library. This rule helps to keep specific modules lightweight and free from third-party dependencies.
+Restricted imports: Limit specific import capabilities for packages. Define a list of packages that are restricted from importing certain packages or modules within your base package. For example, you might want to prevent package A from importing package B or any of its subpackages.
+
+Restricted imports can be configured in two ways:
+    - By package: Restrict a package from importing another package, or subpackages or modules from another package.
+      Example: Prevent 'package_A' from importing 'package_B' or any of its subpackages or modules.
+    - By module: Restrict a module from importing specific modules.
+      Example: Prevent 'module_A' from importing 'module_B'.
+
+Restricted packages: Specify a list of packages that are not allowed to be imported into other packages within your base package. This helps maintain a clear separation between high-level and low-level packages.
+Example: Disallow importing 'low_level_package' into 'high_level_package'.
+
+Isolated packages: Define a list of packages that cannot import from any other packages within your base package. This ensures that certain packages remain standalone and do not introduce unwanted dependencies.
+Example: Make 'standalone_package' isolated, so it cannot import from any other packages within the base package.
+
+Standard library only imports: Specify a set of packages that can only import from the Python standard library. This rule helps to keep specific packages lightweight and free from third-party dependencies.
+Example: Allow 'lightweight_package' to import only from Python standard library modules.
 
 # Example Configuration
 
 ```toml
 [flake8]
-custom_import_rules.restricted_imports = [
-    "my_base_module.module_A:my_base_module.module_B",
-    "my_base_module.module_X:my_base_module.module_Y",
+restricted_imports = [
+    "my_base_package.package_A:my_base_package.package_B",
+    "my_base_package.module_X.py:my_base_package.module_Y.py",
 ]
-custom_import_rules.isolated_modules = ["my_base_module.module_C"]
-custom_import_rules.standard_library_only = ["my_base_module.module_D"]
-custom_import_rules.third_party_only = ["my_base_module.module_E"]
-custom_import_rules.local_folder_only = ["my_base_module.module_F"]
+isolated_packages = ["my_base_package.package_C"]
+standard_library_only = ["my_base_package.package_D"]
+third_party_only = ["my_base_package.package_E"]
+local_only = ["my_base_package.package_F"]
 ```
 
 ```ini
 [flake8]
-
-[flake8.custom_import_rules]
 restricted-imports =
-    my_base_module.module_A:my_base_module.module_B
-    my_base_module.module_X:my_base_module.module_Y
-isolated-modules = my_base_module.module_C
-standard-library_only = my_base_module.module_D
-third-party-only = my_base_module.module_E
-local-folder-only = my_base_module.module_F
+    my_base_package.package_A:my_base_package.package_B
+    my_base_package.module_X.py:my_base_package.module_Y.py
+isolated-imports = my_base_package.package_C
+standard-library-only = my_base_package.package_D
+third-party-only = my_base_package.package_E
+local-only = my_base_package.package_F
 
 ```
 
+
+## Limitations
+This plugin is currently only compatible with Python 3.7+.
+
+The plugin does not currently support the following import types:
+- `from . import module`
+- imports that use `__import__` or `importlib`
+- imports in string literals
+- dynamic imports (e.g. `__import__("module_name")`)
+- imports using eval (e.g. `eval("import module_name")`)
+
+## License
+This project is licensed under the terms of the MIT license.
 
 ## Acknowledgements
 [Flake8](https://github.com/PyCQA/flake8) - A wrapper around PyFlakes, pycodestyle and McCabe.

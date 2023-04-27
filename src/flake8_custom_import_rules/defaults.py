@@ -8,7 +8,7 @@ else:
 
 
 class Settings(TypedDict, total=False):
-    base_module: str
+    base_package: str
     # version: Optional[str]
     # version_files: List[str]
     # version_provider: Optional[str]
@@ -31,5 +31,5 @@ class Settings(TypedDict, total=False):
 
 
 DEFAULT_SETTINGS: Settings = {
-    "base_module": "",
+    "base_package": "",
 }
