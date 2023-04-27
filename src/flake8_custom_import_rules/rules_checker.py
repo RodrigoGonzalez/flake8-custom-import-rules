@@ -2,33 +2,33 @@
 from __future__ import annotations
 
 import ast
+from typing import Any
+from typing import Generator
 
 import pycodestyle
-from flake8_import_order.checker import ImportOrderChecker
 
 from flake8_custom_import_rules.node_visitor import CustomImportRulesVisitor
 from flake8_custom_import_rules.node_visitor import ParsedNode
+from flake8_custom_import_rules.parse_utils import NOQA_INLINE_REGEXP
 
 
-class CustomImportRulesChecker(ImportOrderChecker):
+class CustomImportRulesChecker:
     """Custom import rules checker."""
 
-    visitor_class = CustomImportRulesVisitor
     options: dict[str, list[str] | str] = {}
 
-    def __init__(self, filename: str | None = None, tree: ast.AST | None = None):
+    def __init__(self, tree: ast.AST | None = None, filename: str | None = None):
         """Initialize the checker."""
-        self._filename = filename
         self._tree = tree
+        self._filename = filename
         self._lines: list[str] | None = None
         self._nodes: list[ParsedNode] | None = None
-        super().__init__(self.filename, self.tree)
 
     @property
     def filename(self) -> str:
         """Return the filename."""
-        if self._filename is None or self._filename in ["-", "/dev/stdin"]:
-            self._filename = "stdin"
+        if self._filename is None or self._filename in {"-", "/dev/stdin"}:
+            return "stdin"
         return self._filename
 
     @property
@@ -41,30 +41,60 @@ class CustomImportRulesChecker(ImportOrderChecker):
     @property
     def lines(self) -> list[str]:
         """Return the lines."""
-        if not self._lines:
-            if self.filename == "stdin":
-                lines = pycodestyle.stdin_get_value().splitlines(True)
-            else:
-                lines = pycodestyle.readlines(self.filename)
-            self._lines = lines
-        self._lines = self._lines or []
+        if self._lines is None:
+            self._lines = (
+                pycodestyle.stdin_get_value().splitlines(True)
+                if self.filename == "stdin"
+                else pycodestyle.readlines(self.filename)
+            )
         return self._lines
 
     @property
     def nodes(self) -> list[ParsedNode]:
         """Return the nodes."""
-        if not self._nodes:
+        if self._nodes is None:
             visitor = self.get_visitor()
-            visitor.visit(self.tree)
             self._nodes = visitor.nodes
-
-        self._nodes = self._nodes or []
         return self._nodes
+
+    @staticmethod
+    def error(error: Any) -> Any:
+        """Return the error."""
+        return error
 
     def get_visitor(self) -> CustomImportRulesVisitor:
         """Return the visitor to use for this plugin."""
 
-        return self.visitor_class(
+        visitor = CustomImportRulesVisitor(
             self.options.get("base_packages", []),
             [],
         )
+        visitor.visit(self.tree)
+        return visitor
+
+    def error_is_ignored(self, error: Any) -> bool:
+        """Return whether the error is ignored."""
+        noqa_match = NOQA_INLINE_REGEXP.search(self.lines[error.lineno - 1])
+
+        if noqa_match is None:
+            return False
+
+        codes_str = noqa_match.group("codes")
+
+        if codes_str is None:
+            return True
+
+        codes = {code.strip() for code in codes_str.split(",") if code.strip()}
+        return error.code in codes
+
+
+class BaseCustomImportRulePlugin(CustomImportRulesChecker):
+    def __init__(self, tree: ast.AST | None = None, filename: str | None = None):
+        """Initialize the checker."""
+        super().__init__(tree, filename)
+
+    def run(self) -> Generator[Any, None, None]:
+        """Run the plugin."""
+        self.options["base_packages"] = ["my_base_module"]
+        for node in self.nodes:
+            yield node.lineno, node.col_offset, node, type(self)

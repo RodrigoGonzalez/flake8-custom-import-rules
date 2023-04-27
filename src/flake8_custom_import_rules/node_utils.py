@@ -16,38 +16,27 @@ def get_package_names(module_name: str) -> list[str] | None:
 
     """
     tree = ast.parse(module_name)
-    parts = []
-    for node in ast.walk(tree):
-        if isinstance(node, ast.Attribute):
-            parts.append(node.attr)
-        if isinstance(node, ast.Name):
-            parts.append(node.id)
+
+    parts = [
+        node.attr if isinstance(node, ast.Attribute) else node.id
+        for node in ast.walk(tree)
+        if isinstance(node, (ast.Attribute, ast.Name))
+    ]
 
     if not parts:
         return []
 
-    last_package_name = parts.pop()
-    package_names = [last_package_name]
+    package_names = [parts.pop()]
 
     for part in reversed(parts):
-        last_package_name = f"{last_package_name}.{part}"
+        last_package_name = f"{package_names[-1]}.{part}"
         package_names.append(last_package_name)
 
     return package_names
 
 
 def root_package_name(module_name: str) -> str | None:
-    """
-    Return the root package name of a module name.
-
-    Parameters
-    ----------
-    module_name : str
-
-    Returns
-    -------
-
-    """
+    """Return the root package name of a module name."""
     tree = ast.parse(module_name)
     return next(
         (node.id for node in ast.walk(tree) if isinstance(node, ast.Name)),
