@@ -166,13 +166,13 @@ lint-mypy-changed:  ## Run mypy on changed Python files & create report
 tests: unit-tests  ## run all tests
 
 unit-tests: ## run unit-tests with pytest
-	poetry run pytest --doctest-modules
+	poetry run pytest  -vvvvsra --doctest-modules
 
 unit-tests-cov: ## run unit-tests with pytest and show coverage (terminal + html)
-	poetry run pytest --doctest-modules --cov=src --cov-report term-missing --cov-report=html
+	poetry run pytest  -vvvvsra --doctest-modules --cov=src --cov-report term-missing --cov-report=html
 
 unit-tests-cov-fail: ## run unit tests with pytest and show coverage (terminal + html) & fail if coverage too low & create files for CI
-	poetry run pytest --doctest-modules --cov=src --cov-report term-missing --cov-report=html --cov-fail-under=80 --junitxml=pytest.xml | tee pytest-coverage.txt
+	poetry run pytest  -vvvvsra --doctest-modules --cov=src --cov-report term-missing --cov-report=html --cov-fail-under=80 --junitxml=pytest.xml | tee pytest-coverage.txt
 
 .PHONY: tests unit-tests unit-tests-cov unit-tests-cov-fail
 

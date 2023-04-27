@@ -34,12 +34,12 @@ class ParsedFromImport(NamedTuple):
     lineno: int
     col_offset: int
     level: int
-    package: str
+    package: str | None
     package_names: list[str]
 
 
 class ParsedClassDef(NamedTuple):
-    """Parsed import statement"""
+    """Parsed class definition"""
 
     name: str
     lineno: int
@@ -47,11 +47,19 @@ class ParsedClassDef(NamedTuple):
 
 
 class ParsedFunctionDef(NamedTuple):
-    """Parsed import statement"""
+    """Parsed function definition"""
 
     name: str
     lineno: int
     col_offset: int
+
+
+class ParsedComment(NamedTuple):
+    """Parsed noqa comment"""
+
+    lineno: int
+    col_offset: int
+    codes: list[str]
 
 
 ParsedNode = ParsedImport | ParsedFromImport | ParsedClassDef | ParsedFunctionDef
@@ -89,44 +97,15 @@ class CustomImportRulesVisitor(ast.NodeVisitor):
         standard_library_only: list[str],
     ) -> None:
         """Initialize the visitor."""
-        self.application_import_names = frozenset(application_import_names)
-        self.standard_library_only = frozenset(standard_library_only)
-
-        # Use the public import visitor to classify the type of import
-        # TODO: make this a class attribute
-        self.import_visitor = PublicImportVisitor(application_import_names, [])
-
-    def classify_type(self, module: str) -> ImportType:
-        """
-        Classify the type of import.
-
-        Parameters
-        ----------
-        module : str
-            The module name to classify.
-
-        Returns
-        -------
-        ImportType
-
-        Notes
-        -----
-        This method is a wrapper around the `classify_type` method of the
-        `PublicImportVisitor` class.
-
-        This method is inspired by the implementation in the
-        `flake8-import-order` package.
-        See the source code on GitHub for more details:
-        https://github.com/PyCQA/flake8-import-order/blob/master/flake8_import_order/__init__.py
-        """
-        return self.import_visitor.classify_type(module)
+        self.import_visitor = PublicImportVisitor(application_import_names, standard_library_only)
+        self.nodes = []
 
     def visit_Import(self, node: ast.Import) -> None:
         """Visit an Import node."""
         parsed_imports_dict = get_module_info_from_import_node(node)
-        modules = parsed_imports_dict["node_modules_lineno"][node.lineno]
+        modules = parsed_imports_dict["node_modules_lineno"][str(node.lineno)]
         for module in modules:
-            import_type = self.classify_type(module)
+            import_type = self.import_visitor.classify_type(module)
             parsed_imports_dict[module]["import_type"] = import_type
             self.nodes.append(
                 ParsedImport(
@@ -149,9 +128,9 @@ class CustomImportRulesVisitor(ast.NodeVisitor):
         if node.level > 0:
             import_type = ImportType.APPLICATION_RELATIVE
         else:
-            import_type = self.classify_type(module)
+            import_type = self.import_visitor.classify_type(module)
         parsed_from_imports_dict = get_name_info_from_import_node(node)
-        names = parsed_from_imports_dict["node_names_lineno"][node.lineno]
+        names = parsed_from_imports_dict["node_names_lineno"][str(node.lineno)]
         for name in names:
             parsed_from_imports_dict[name]["import_type"] = import_type
             self.nodes.append(
