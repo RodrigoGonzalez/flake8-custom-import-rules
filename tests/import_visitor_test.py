@@ -2,7 +2,7 @@ import pytest
 from flake8_import_order.checker import ImportVisitor
 from flake8_import_order.styles import ImportType
 
-from flake8_custom_import_rules.import_visitor import PublicImportVisitor
+from flake8_custom_import_rules.node_visitor import PublicImportVisitor
 
 
 @pytest.fixture(scope="module")
