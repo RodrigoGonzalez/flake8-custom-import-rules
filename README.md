@@ -15,7 +15,7 @@ Restricted imports can be configured in two ways:
     - By module: Restrict a module from importing specific modules.
       Example: Prevent 'module_A' from importing 'module_B'.
 
-Restricted packages: Specify a list of packages that are not permitted to be imported or used by other packages or modules within your base package. This helps maintain a clear separation between high-level and low-level packages.
+Restricted packages: Specify a list of packages that are not allowed to be imported into other packages within your base package. This helps maintain a clear separation between high-level and low-level packages.
 Example: Disallow importing 'low_level_package' into 'high_level_package'.
 
 Isolated packages: Define a list of packages that cannot import from any other packages within your base package. This ensures that certain packages remain standalone and do not introduce unwanted dependencies.
