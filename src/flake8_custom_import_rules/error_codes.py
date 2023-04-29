@@ -2,9 +2,42 @@
 from __future__ import annotations
 
 from enum import Enum
+from enum import EnumMeta
+from functools import singledispatch
+from typing import Any
+
+from flake8_custom_import_rules.exceptions import ErrorCodeError
+from flake8_custom_import_rules.exceptions import ErrorCodeTypeError
 
 
-class CustomImportRulesErrorCodes(Enum):
+class ErrorCodeMeta(EnumMeta):
+    """Metaclass for error codes."""
+
+    def __contains__(self, item: Any) -> bool:
+        """Check if item is in the error code."""
+        if isinstance(item, str):
+            return item in (member.value.split(" ")[0] for member in self)  # type: ignore
+        elif isinstance(item, Enum):
+            return item.name in self._member_map_
+        else:
+            return False
+
+    def __call__(  # type: ignore
+        cls, input_value: Any, *args: Any, **kwargs: Any
+    ) -> Enum | type[Enum]:
+        """Check if input value is a valid error code."""
+        if not isinstance(input_value, str):
+            try:
+                return super().__call__(input_value, *args, **kwargs)
+            except ValueError as e:
+                raise ErrorCodeTypeError(f"{input_value} is not a valid {cls.__name__} type") from e
+        for member in cls:  # type: ignore
+            if member.value.split(" ")[0] == input_value:
+                return member
+        raise ErrorCodeError(f"{input_value} is not a valid {cls.__name__}")
+
+
+class ErrorCode(Enum, metaclass=ErrorCodeMeta):
     """Error codes for custom import rules."""
 
     # Blocked Imports Rules
@@ -59,3 +92,89 @@ class CustomImportRulesErrorCodes(Enum):
     # Third party only imports:
     CIR501 = "CIR501 Non-third party package import"
     CIR502 = "CIR502 Non-third party package `from import`"
+
+    @staticmethod
+    def get_error_code(error_code: Any) -> str:
+        """Get error code."""
+        return _get_error_code_dispatcher(error_code)
+
+    @classmethod
+    def get_error_message(cls, error_code: Any) -> str:
+        """Get error message."""
+        return _get_error_message_dispatcher(error_code)
+
+    @classmethod
+    def get_error_code_and_message(cls, error_code: str) -> tuple[str, str]:
+        """Get error code and message."""
+        return cls.get_error_code(error_code), cls.get_error_message(error_code)
+
+    @classmethod
+    def get_all_error_code_enums(cls) -> list[ErrorCode]:
+        """Get all error codes."""
+        return list(cls)
+
+    @classmethod
+    def get_all_error_codes(cls) -> list[str]:
+        """Get all error codes."""
+        return [error_code.name for error_code in cls]
+
+    @classmethod
+    def get_all_blocked_import_rule_codes(cls) -> list[str]:
+        """Get all blocked import rule codes."""
+        return list(filter(lambda x: x.startswith("BIR"), cls.get_all_error_codes()))
+
+    @classmethod
+    def get_all_custom_import_rule_codes(cls) -> list[str]:
+        """Get all custom import rule codes."""
+        return list(filter(lambda x: x.startswith("CIR"), cls.get_all_error_codes()))
+
+
+@singledispatch
+def _get_error_code_dispatcher(error_code: Any) -> str:
+    """Get error code dispatcher."""
+    raise NotImplementedError(f"Unsupported type: {type(error_code)}")
+
+
+@_get_error_code_dispatcher.register
+def _(error_code: str) -> str:
+    """Get error code."""
+    if error_code.startswith("ErrorCode."):
+        error_code = error_code.split(".")[1]
+    if error_code.startswith("CIR") or error_code.startswith("BIR"):
+        error_code = error_code.split(" ")[0]
+    if error_code in ErrorCode.get_all_error_codes():
+        return error_code
+    raise ValueError(f"Invalid error code: {error_code}")
+
+
+@_get_error_code_dispatcher.register
+def _(error_code: ErrorCode) -> str:
+    """Get error code."""
+    return error_code.name
+
+
+@singledispatch
+def _get_error_message_dispatcher(error_code: Any) -> str:
+    """Get error message dispatcher."""
+    raise NotImplementedError(f"Unsupported type: {type(error_code)}")
+
+
+@_get_error_message_dispatcher.register
+def _(error_code: str) -> str:
+    """Get error message."""
+    if error_code in ErrorCode.get_all_error_codes():
+        error_code = ErrorCode(error_code).value
+    else:
+        raise ValueError(f"Invalid error code: {error_code}")
+    return " ".join(error_code.split(" ")[1:])
+
+
+@_get_error_message_dispatcher.register
+def _(error_code: ErrorCode) -> str:
+    """Get error message."""
+    return " ".join(error_code.value.split(" ")[1:])
+
+
+AllErrorCodes = ErrorCode.get_all_error_codes()
+AllBlockedImportCodes = ErrorCode.get_all_blocked_import_rule_codes()
+AllCustomImportCodes = ErrorCode.get_all_custom_import_rule_codes()
