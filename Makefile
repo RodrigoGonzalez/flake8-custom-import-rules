@@ -213,19 +213,68 @@ deploy:  ## Deploy to PyPI
 # GIT
 # -----------------------------------------------------------------------------
 
-##@ Git
+##@ Git diff Shortcuts
+
+diff-name:  ## Show diff name
+	@ echo "Running git diff --name-only command:\n" && \
+ 	echo "Files changed:"
+	@ git --no-pager diff --name-only $(shell git merge-base origin/master HEAD)
+
+diff-stat:  ## Show diff stat
+	@ echo "Running git diff --stat command:\n" && \
+ 	echo " Files Changed 	| Lines added "
+	@ git --no-pager diff --stat $(shell git merge-base origin/master HEAD)
+
+diff-num:  ## Show diff numstat
+	@ echo "Running git diff --numstat command:\n" && \
+ 	echo "Lines added | Lines removed | File"
+	@ git --no-pager diff --numstat $(shell git merge-base origin/master HEAD)
+
+diff-summary:  ## Show diff numstat
+	@ echo "Running git diff --summary command:\n"
+	@ git --no-pager diff --summary $(shell git merge-base origin/master HEAD)
+
+list-branches:  ## List branches
+	@ echo "Running git branch --sort=-committerdate:\n"
+	@ git --no-pager branch --sort=-committerdate
+
+
+.PHONY: diff-name diff-stat diff-num list-branches
+
+##@ Git Shortcuts
 
 git-commit-num:
 	@echo "+ $@"
-	#@echo $(shell git rev-list --count HEAD)
 	@echo $(shell git rev-list --all --count)
 
-git-main:  ## Switch to main branch
-	git checkout main
+.PHONY: git-commit-num
+
+current_branch := $(shell git symbolic-ref --short HEAD)
+
+checkout-main:  ## Switch to main branch
+	@echo "+ $@"
+	if [ "$(current_branch)" != "master" ]; then \
+		git checkout master; \
+	fi
 	git pull --all
 	git fetch --tags
 
-.PHONY: git-commit-num
+.PHONY: checkout-main
+
+commit_count := $(shell git rev-list --all --count)
+
+check-branch-name:
+ifeq ($(BRANCH),)
+	$(error BRANCH variable is not set. Please provide a branch name with BRANCH=mybranch)
+endif
+
+new-branch: check-branch-name  ## Create a new branch
+	git checkout -b $(BRANCH)_$(commit_count)
+
+new-feat-branch: check-branch-name  ## Create a new feature branch
+	git checkout -b feat/$(BRANCH)_$(commit_count)
+
+.PHONY: check-branch-name new-branch new-feat-branch
 
 # =============================================================================
 # ADDITIONAL
