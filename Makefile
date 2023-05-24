@@ -253,8 +253,8 @@ current_branch := $(shell git symbolic-ref --short HEAD)
 
 checkout-main:  ## Switch to main branch
 	@echo "+ $@"
-	if [ "$(current_branch)" != "master" ]; then \
-		git checkout master; \
+	if [ "$(current_branch)" != "main" ]; then \
+		git checkout main; \
 	fi
 	git pull --all
 	git fetch --tags
