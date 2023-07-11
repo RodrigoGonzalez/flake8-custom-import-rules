@@ -1,5 +1,5 @@
 # =============================================================================
-# MAKEFILE FOR DOCS-GENIUS
+# MAKEFILE FOR CUSTOM IMPORT RULES
 # =============================================================================
 #
 # Partially inspired by https://github.com/johschmidt42/python-project-johannes

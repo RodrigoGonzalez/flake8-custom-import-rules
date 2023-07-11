@@ -1,6 +1,4 @@
 """Checker for dependency rules checker."""
-from __future__ import annotations
-
 import ast
 from typing import Any
 from typing import Generator
@@ -98,3 +96,7 @@ class BaseCustomImportRulePlugin(CustomImportRulesChecker):
         self.options["base_packages"] = ["my_base_module"]
         for node in self.nodes:
             yield node.lineno, node.col_offset, node, type(self)
+
+    def get_run_list(self) -> list:
+        """Return the run list."""
+        return list(self.run())

@@ -1,6 +1,4 @@
-"Error codes and messages."
-from __future__ import annotations
-
+"""Error codes and messages."""
 from enum import Enum
 from enum import EnumMeta
 from functools import singledispatch
@@ -109,7 +107,7 @@ class ErrorCode(Enum, metaclass=ErrorCodeMeta):
         return cls.get_error_code(error_code), cls.get_error_message(error_code)
 
     @classmethod
-    def get_all_error_code_enums(cls) -> list[ErrorCode]:
+    def get_all_error_code_enums(cls) -> list["ErrorCode"]:
         """Get all error codes."""
         return list(cls)
 

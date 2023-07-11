@@ -1,5 +1,4 @@
-from __future__ import annotations
-
+""" Parse utils. """
 import re
 
 NOQA_INLINE_REGEXP = re.compile(

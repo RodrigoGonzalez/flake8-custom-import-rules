@@ -1,9 +1,10 @@
-from __future__ import annotations
-
+""" Custom Import Rules for Flake8 & Python Projects. """
 from typing import Any
 from typing import Generator
 from typing import NamedTuple
 
+from attrs import define
+from attrs import field
 from flake8_import_order import ImportType
 from stdlib_list import stdlib_list
 
@@ -12,24 +13,46 @@ from flake8_custom_import_rules.parse_utils import parse_custom_rule
 
 
 class ErrorMessage(NamedTuple):
+    """Error message"""
+
     lineno: int
     col_offset: int
     message: str
     type: str
 
 
+@define(slots=True)
 class CustomImportRules:
     """Custom Import Rules for Flake8 & Python Projects"""
 
-    def __init__(self, nodes: list[ParsedNode], options: dict[str, list[str] | str]) -> None:
+    nodes: list[ParsedNode] = field(factory=list)
+    options: dict = field(factory=dict)
+
+    use_python_version: float | int = field(default=3)
+
+    restricted_imports: dict = field(factory=dict)
+    isolated_modules: list[str] = field(factory=list)
+    standard_library_only: list[str] = field(factory=list)
+    check_top_level_only: bool = field(default=False)
+    prohibit_relative_imports: bool = field(default=False)
+    prohibit_conditional_imports: bool = field(default=False)
+    prohibit_local_imports: bool = field(default=False)
+    prohibit_functional_imports: bool = field(default=False)
+    prohibit_dynamic_imports: bool = field(default=False)
+    prohibit_aliased_imports: bool = field(default=False)
+    prohibit_imports_from_init: bool = field(default=False)
+    prohibit_imports_from_tests: bool = field(default=False)
+    prohibit_imports_from_conftest: bool = field(default=False)
+
+    def __attrs_post_init__(self) -> None:
         self.nodes = sorted(
-            nodes,
+            self.nodes,
             key=lambda element: element.lineno,
         )
-        self.options = options
+        options = self.options
 
         # Store the Python version for checking the standard library
-        self.use_python_version = options.get("use_python_version", 3)
+        self.use_python_version = options.get("use_python_version", 3.0)
 
         self.restricted_imports = parse_custom_rule(
             options.get("restricted_imports", []),
