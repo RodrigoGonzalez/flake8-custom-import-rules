@@ -1,4 +1,4 @@
-exclude: ^(example_repos)/
+exclude: ^(scripts)/
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v4.4.0
@@ -73,7 +73,7 @@ repos:
         stages: [commit, manual, push]
 
   - repo: https://github.com/asottile/pyupgrade
-    rev: v3.3.1
+    rev: v3.9.0
     hooks:
       - id: pyupgrade
         args: [--py37-plus]
@@ -89,7 +89,7 @@ repos:
       - id: flake8
 
   - repo: https://github.com/pre-commit/mirrors-prettier
-    rev: v2.7.1
+    rev: v3.0.0
     hooks:
       - id: prettier
         types: [yaml]

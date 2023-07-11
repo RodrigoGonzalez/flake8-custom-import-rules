@@ -8,6 +8,8 @@ else:
 
 
 class Settings(TypedDict, total=False):
+    """The default settings for the flake8_custom_import_rules plugin."""
+
     base_package: str
     # version: Optional[str]
     # version_files: List[str]
