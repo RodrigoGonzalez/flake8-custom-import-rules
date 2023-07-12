@@ -1,13 +1,26 @@
+"""Custom import rules node visitor."""
 import ast
+from enum import IntEnum
 from typing import NamedTuple
 
-from flake8_import_order.checker import ImportVisitor
-from flake8_import_order.styles import ImportType
+from flake8_import_order.stdlib_list import STDLIB_NAMES
 
 from flake8_custom_import_rules.node_utils import get_module_info_from_import_node
 from flake8_custom_import_rules.node_utils import get_name_info_from_import_node
 from flake8_custom_import_rules.node_utils import get_package_names
 from flake8_custom_import_rules.node_utils import root_package_name
+
+
+class ImportType(IntEnum):
+    """Import type enum."""
+
+    FUTURE = 0
+    STDLIB = 10
+    THIRD_PARTY = 20
+    APPLICATION_PACKAGE = 30
+    APPLICATION = 40
+    APPLICATION_RELATIVE = 50
+    MIXED = -1
 
 
 class ParsedImport(NamedTuple):
@@ -63,23 +76,6 @@ class ParsedComment(NamedTuple):
 ParsedNode = ParsedImport | ParsedFromImport | ParsedClassDef | ParsedFunctionDef
 
 
-class PublicImportVisitor(ImportVisitor):
-    """Public class to expose `_classify_type` method."""
-
-    application_import_names: frozenset
-    application_package_names: frozenset
-    imports: list
-
-    def __init__(
-        self, application_import_names: list[str] | str, application_package_names: list[str] | str
-    ) -> None:
-        super().__init__(application_import_names, application_package_names)
-
-    def classify_type(self, module: str) -> ImportType:
-        """Classify the type of import."""
-        return self._classify_type(module)
-
-
 class CustomImportRulesVisitor(ast.NodeVisitor):
     """Custom import rules node visitor."""
 
@@ -95,15 +91,16 @@ class CustomImportRulesVisitor(ast.NodeVisitor):
         standard_library_only: list[str],
     ) -> None:
         """Initialize the visitor."""
-        self.import_visitor = PublicImportVisitor(application_import_names, standard_library_only)
-        self.nodes = []
+        self.nodes: list = []
+        self.current_modules: list = application_import_names
 
     def visit_Import(self, node: ast.Import) -> None:
         """Visit an Import node."""
         parsed_imports_dict = get_module_info_from_import_node(node)
         modules = parsed_imports_dict["node_modules_lineno"][str(node.lineno)]
+
         for module in modules:
-            import_type = self.import_visitor.classify_type(module)
+            import_type = self._classify_type(module)
             parsed_imports_dict[module]["import_type"] = import_type
             self.nodes.append(
                 ParsedImport(
@@ -126,7 +123,7 @@ class CustomImportRulesVisitor(ast.NodeVisitor):
         if node.level > 0:
             import_type = ImportType.APPLICATION_RELATIVE
         else:
-            import_type = self.import_visitor.classify_type(module)
+            import_type = self._classify_type(module)
         parsed_from_imports_dict = get_name_info_from_import_node(node)
         names = parsed_from_imports_dict["node_names_lineno"][str(node.lineno)]
         for name in names:
@@ -168,3 +165,22 @@ class CustomImportRulesVisitor(ast.NodeVisitor):
             )
         )
         self.generic_visit(node)
+
+    def _classify_type(self, module: str) -> ImportType:
+        package_names = get_package_names(module)
+
+        # Walk through package names from most-specific to least-specific,
+        # taking the first match found.
+        for package in reversed(package_names):
+            if package == "__future__":
+                return ImportType.FUTURE
+            elif package in self.current_modules:
+                return ImportType.APPLICATION
+            elif package in self.package_names:
+                return ImportType.APPLICATION_PACKAGE
+            elif package in STDLIB_NAMES:
+                return ImportType.STDLIB
+
+        # Not future, stdlib or an application import.
+        # Must be 3rd party.
+        return ImportType.THIRD_PARTY

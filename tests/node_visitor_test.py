@@ -71,7 +71,7 @@ def test_visit_import_simple(parsed_import):
 
 @pytest.mark.usefixtures("parsed_import")
 def test_visit_import_alias(parsed_import):
-    """Test that the `visit_Import` method correctly parses an`import` Test that the an alias."""
+    """Test that the `visit_Import` method correctly parses an`import` that includes an alias."""
     source = "import os as my_os"
     tree = ast.parse(source)
     visitor = CustomImportRulesVisitor([], [])
