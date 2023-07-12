@@ -1,3 +1,7 @@
+""" A basic module. """
+from __future__ import annotations
+
+import sys
 from datetime import datetime
 from uuid import UUID
 from uuid import uuid4
@@ -7,6 +11,14 @@ from attrs import define
 from attrs import field
 from my_base_module.module_b.module_b_file import B
 from my_base_module.module_c.module_c_file import C
+from my_base_module.module_c.module_d.module_d_file import D as DEE
+
+from .module_a_relative_file import ARelative
+
+if sys.version_info >= (3, 7):
+    from my_base_module.module_c.module_e.module_e_file import OldE as VersionedE
+else:
+    from my_base_module.module_c.module_e.module_e_file import EUpdated as VersionedE
 
 
 @define(slots=True)
@@ -34,6 +46,12 @@ class A:
         """Get the created_at."""
         return self._created_at
 
+    def initialize_class_a_relative(self) -> ARelative:
+        """Get the class A."""
+        return ARelative(
+            name=f"{self._name}: ARelative", description=f"{self._description}: ARelative"
+        )
+
     def initialize_class_b(self) -> B:
         """Get the class B."""
         return B(name=f"{self._name}: B", description=f"{self._description}: B")
@@ -41,3 +59,20 @@ class A:
     def initialize_class_c(self) -> C:
         """Get the class C."""
         return C(name=f"{self._name}: C", description=f"{self._description}: C")
+
+    def initialize_class_dee(self) -> DEE:
+        """Get the class D."""
+        return DEE(name=f"{self._name}: DEE", description=f"{self._description}: DEE")
+
+    def initialize_class_e(self) -> VersionedE:
+        """Get the class E."""
+        return VersionedE(
+            name=f"{self._name}: VersionedE", description=f"{self._description}: VersionedE"
+        )
+
+    def get_name_of_class_x(self) -> str:
+        """Get the name of class X."""
+        from my_base_module.module_x import X
+
+        x = X(name=f"{self._name}: X", description=f"{self._description}: X")
+        return x.name()
