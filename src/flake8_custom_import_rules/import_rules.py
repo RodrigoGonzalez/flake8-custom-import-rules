@@ -32,6 +32,7 @@ class CustomImportRules:
 
     restricted_imports: dict = field(factory=dict)
     isolated_modules: list[str] = field(factory=list)
+    foundation_modules: list[str] = field(factory=list)
     standard_library_only: list[str] = field(factory=list)
     check_top_level_only: bool = field(default=False)
     prohibit_relative_imports: bool = field(default=False)
