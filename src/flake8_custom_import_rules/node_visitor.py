@@ -1,8 +1,8 @@
 """Custom import rules node visitor."""
 import ast
 from enum import IntEnum
-from typing import NamedTuple
 
+from attrs import define
 from flake8_import_order.stdlib_list import STDLIB_NAMES
 
 from flake8_custom_import_rules.node_utils import get_module_info_from_import_node
@@ -23,7 +23,8 @@ class ImportType(IntEnum):
     MIXED = -1
 
 
-class ParsedImport(NamedTuple):
+@define(slots=True)
+class ParsedImport:
     """Parsed import statement"""
 
     import_type: ImportType
@@ -35,7 +36,8 @@ class ParsedImport(NamedTuple):
     package_names: list[str]
 
 
-class ParsedFromImport(NamedTuple):
+@define(slots=True)
+class ParsedFromImport:
     """Parsed import statement"""
 
     import_type: ImportType
@@ -49,7 +51,8 @@ class ParsedFromImport(NamedTuple):
     package_names: list[str]
 
 
-class ParsedClassDef(NamedTuple):
+@define(slots=True)
+class ParsedClassDef:
     """Parsed class definition"""
 
     name: str
@@ -57,7 +60,8 @@ class ParsedClassDef(NamedTuple):
     col_offset: int
 
 
-class ParsedFunctionDef(NamedTuple):
+@define(slots=True)
+class ParsedFunctionDef:
     """Parsed function definition"""
 
     name: str
@@ -65,7 +69,8 @@ class ParsedFunctionDef(NamedTuple):
     col_offset: int
 
 
-class ParsedComment(NamedTuple):
+@define(slots=True)
+class ParsedComment:
     """Parsed noqa comment"""
 
     lineno: int

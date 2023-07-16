@@ -1,6 +1,4 @@
-""" A basic module. """
-from __future__ import annotations
-
+""" A basic module for testing and demonstrating flake8-custom-import-rules. """
 import sys
 from datetime import datetime
 from uuid import UUID
@@ -9,16 +7,16 @@ from uuid import uuid4
 import pendulum
 from attrs import define
 from attrs import field
-from my_base_module.module_b.module_b_file import B
-from my_base_module.module_c.module_c_file import C
-from my_base_module.module_c.module_d.module_d_file import D as DEE
+from my_base_module.package_b.module_b import B
+from my_base_module.package_c.module_c import C
+from my_base_module.package_c.package_d.module_d import D as DEE
 
-from .module_a_relative_file import ARelative
+from .module_a_relative import ARelative
 
 if sys.version_info >= (3, 7):
-    from my_base_module.module_c.module_e.module_e_file import OldE as VersionedE
+    from my_base_module.package_c.package_e.module_e import OldE as VersionedE
 else:
-    from my_base_module.module_c.module_e.module_e_file import EUpdated as VersionedE
+    from my_base_module.package_c.package_e.module_e import EUpdated as VersionedE
 
 
 @define(slots=True)

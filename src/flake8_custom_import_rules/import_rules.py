@@ -1,7 +1,6 @@
 """ Custom Import Rules for Flake8 & Python Projects. """
 from typing import Any
 from typing import Generator
-from typing import NamedTuple
 
 from attrs import define
 from attrs import field
@@ -12,7 +11,8 @@ from flake8_custom_import_rules.node_visitor import ParsedNode
 from flake8_custom_import_rules.parse_utils import parse_custom_rule
 
 
-class ErrorMessage(NamedTuple):
+@define(slots=True)
+class ErrorMessage:
     """Error message"""
 
     lineno: int
