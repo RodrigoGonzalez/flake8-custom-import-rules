@@ -218,21 +218,21 @@ deploy:  ## Deploy to PyPI
 diff-name:  ## Show diff name
 	@ echo "Running git diff --name-only command:\n" && \
  	echo "Files changed:"
-	@ git --no-pager diff --name-only $(shell git merge-base origin/master HEAD)
+	@ git --no-pager diff --name-only $(shell git merge-base origin/main HEAD)
 
 diff-stat:  ## Show diff stat
 	@ echo "Running git diff --stat command:\n" && \
  	echo " Files Changed 	| Lines added "
-	@ git --no-pager diff --stat $(shell git merge-base origin/master HEAD)
+	@ git --no-pager diff --stat $(shell git merge-base origin/main HEAD)
 
 diff-num:  ## Show diff numstat
 	@ echo "Running git diff --numstat command:\n" && \
  	echo "Lines added | Lines removed | File"
-	@ git --no-pager diff --numstat $(shell git merge-base origin/master HEAD)
+	@ git --no-pager diff --numstat $(shell git merge-base origin/main HEAD)
 
 diff-summary:  ## Show diff numstat
 	@ echo "Running git diff --summary command:\n"
-	@ git --no-pager diff --summary $(shell git merge-base origin/master HEAD)
+	@ git --no-pager diff --summary $(shell git merge-base origin/main HEAD)
 
 list-branches:  ## List branches
 	@ echo "Running git branch --sort=-committerdate:\n"
