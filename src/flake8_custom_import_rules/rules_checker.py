@@ -8,6 +8,7 @@ import pycodestyle
 from flake8_custom_import_rules.node_visitor import CustomImportRulesVisitor
 from flake8_custom_import_rules.node_visitor import ParsedNode
 from flake8_custom_import_rules.parse_utils import NOQA_INLINE_REGEXP
+from flake8_custom_import_rules.parse_utils import parse_comma_separated_list
 
 
 class CustomImportRulesChecker:
@@ -82,7 +83,7 @@ class CustomImportRulesChecker:
         if codes_str is None:
             return True
 
-        codes = {code.strip() for code in codes_str.split(",") if code.strip()}
+        codes = parse_comma_separated_list(codes_str)
         return error.code in codes
 
 
