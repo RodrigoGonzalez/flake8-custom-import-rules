@@ -1,3 +1,4 @@
+""" A basic module. """
 from datetime import datetime
 from uuid import UUID
 from uuid import uuid4

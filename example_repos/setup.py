@@ -7,5 +7,6 @@ setup(
     description="An example base module",
     version="0.0.1",
     packages=find_packages(),
+    install_requires=["attrs", "pendulum"],
     extras_require={"dev": ["pytest"]},
 )
