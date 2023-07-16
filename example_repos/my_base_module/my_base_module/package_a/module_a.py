@@ -1,4 +1,6 @@
 """ A basic module for testing and demonstrating flake8-custom-import-rules. """
+from __future__ import annotations  # Do Not Remove Needed for Examples
+
 import sys
 from datetime import datetime
 from uuid import UUID

@@ -18,7 +18,8 @@ class Linter(CustomImportRulesChecker, BaseLinter):
     def __init__(self) -> None:
         super().__init__(None, None)
 
-    def allow(self, path: str) -> bool:
+    @classmethod
+    def allow(cls, path: str) -> bool:
         """Check if path is allowed."""
         return path.endswith(".py")
 

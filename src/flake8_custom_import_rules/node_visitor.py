@@ -172,6 +172,18 @@ class CustomImportRulesVisitor(ast.NodeVisitor):
         self.generic_visit(node)
 
     def _classify_type(self, module: str) -> ImportType:
+        """
+        Classify the import type.
+
+        Parameters
+        ----------
+        module : str
+            Module name
+
+        Returns
+        -------
+        ImportType
+        """
         package_names = get_package_names(module)
 
         # Walk through package names from most-specific to least-specific,

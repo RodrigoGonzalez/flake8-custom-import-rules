@@ -1,10 +1,11 @@
 """ Custom Import Rules for Flake8 & Python Projects. """
+import ast
+import os
 from typing import Any
 from typing import Generator
 
 from attrs import define
 from attrs import field
-from flake8_import_order import ImportType
 from stdlib_list import stdlib_list
 
 from flake8_custom_import_rules.node_visitor import ParsedNode
@@ -18,7 +19,8 @@ class ErrorMessage:
     lineno: int
     col_offset: int
     message: str
-    type: str
+    type: str | None
+    code: str | None
 
 
 @define(slots=True)
@@ -28,8 +30,9 @@ class CustomImportRules:
     nodes: list[ParsedNode] = field(factory=list)
     options: dict = field(factory=dict)
 
-    use_python_version: float | int = field(default=3)
+    use_python_version: float | int | str | None = field(default=3.9)
 
+    filename: str = field(default=None)
     restricted_imports: dict = field(factory=dict)
     isolated_modules: list[str] = field(factory=list)
     foundation_modules: list[str] = field(factory=list)
@@ -53,7 +56,7 @@ class CustomImportRules:
         options = self.options
 
         # Store the Python version for checking the standard library
-        self.use_python_version = options.get("use_python_version", 3.0)
+        self.use_python_version = str(options.get("use_python_version", 3.9))
 
         self.restricted_imports = parse_custom_rule(
             options.get("restricted_imports", []),
@@ -107,49 +110,52 @@ class CustomImportRules:
             False,
         )
 
-    # def check_import_rules(self) -> Generator[tuple[int, int, str], Any, None]:
-    #     """Check imports"""
-    # for node in self.nodes:
-    #     if self.check_top_level_only and node.level != 0:
-    #         break
-    #     yield self._check_import_rules(node)
+    def check_import_rules(self) -> Generator[tuple[int, int, str, str], Any, None]:
+        """Check imports"""
+        for node in self.nodes:
+            if self.check_top_level_only and node.level != 0:
+                break
+            yield self._check_import_rules(node)
 
-    # def _check_import_rules(self, node):
-    # current_module = os.path.split(self.filename)[-1].split('.')[0]
-    # is_from_import = isinstance(node, ast.ImportFrom)
-    # code_offset = 1 if is_from_import else 0
-    #
-    # # Adjust the message based on the import type
-    # import_type = 'from ... import' if is_from_import else 'import'
-    #
-    # for alias in node.names:
-    #     module_name = alias.name.split('.')[0]
-    #
-    #     if is_from_import and isinstance(node, ast.ImportFrom):
-    #         module_name = node.module.split('.')[0]
-    #
-    #     # Check restricted imports
-    #     self._check_restricted_imports(
-    #         code_offset, current_module, import_type, module_name, node
-    #     )
-    #
-    #     # Check isolated imports
-    #     self._check_isolated_imports(
-    #         code_offset, current_module, import_type, module_name, node
-    #     )
-    #
-    #     # Check standard library only imports
-    #     self._check_std_lib_only_imports(
-    #         code_offset, current_module, import_type, module_name, node
-    #     )
-    # _ = node
-    # yield 1, 1, "CIM100", "Custom Import Rules"
+    # TODO: Make sure to remove the type ignore when I figure out how to fix it
+    def _check_import_rules(self, node: ParsedNode) -> tuple[int, int, str, str]:  # type: ignore
+        """Check import rules"""
+        current_module = os.path.split(self.filename)[-1].split(".")[0]
+        is_from_import = isinstance(node, ast.ImportFrom)
+        code_offset = 1 if is_from_import else 0
+
+        # Adjust the message based on the import type
+        import_string = "from ... import" if is_from_import else "import"
+
+        for alias in node.names:
+            module_name = alias.name.split(".")[0]
+
+            if is_from_import and isinstance(node, ast.ImportFrom):
+                # TODO: Remove this ignore when I figure out how to fix it
+                module_name = node.module.split(".")[0]  # type: ignore
+
+            # Check restricted imports
+            self._check_restricted_imports(
+                code_offset, current_module, import_string, module_name, node
+            )
+
+            # Check isolated imports
+            self._check_isolated_imports(
+                code_offset, current_module, import_string, module_name, node
+            )
+
+            # Check standard library only imports
+            self._check_std_lib_only_imports(
+                code_offset, current_module, import_string, module_name, node
+            )
+        _ = node
+        yield 1, 1, "CIM100", "Custom Import Rules"
 
     def _check_restricted_imports(
         self,
         code_offset: int,
         current_module: str,
-        import_type: ImportType,
+        import_string: str,
         module_name: str,
         node: ParsedNode,
     ) -> Generator[tuple[int, int, str, type], Any, Any] | None:
@@ -163,7 +169,7 @@ class CustomImportRules:
                 node.lineno,
                 node.col_offset,
                 (
-                    f"Using '{import_type}' in module '{current_module}' "
+                    f"Using '{import_string}' in module '{current_module}' "
                     f"is not allowed to import '{module_name}'."
                 ),
             )
@@ -172,7 +178,7 @@ class CustomImportRules:
         self,
         code_offset: int,
         current_module: str,
-        import_type: ImportType,
+        import_string: str,
         module_name: str,
         node: ParsedNode,
     ) -> Generator[tuple[int, int, str, type], Any, Any] | None:
@@ -185,7 +191,7 @@ class CustomImportRules:
                 node.lineno,
                 node.col_offset,
                 (
-                    f"Using '{import_type}' in module '{current_module}' "
+                    f"Using '{import_string}' in module '{current_module}' "
                     f"cannot import from other modules within the base module."
                 ),
             )
@@ -194,7 +200,7 @@ class CustomImportRules:
         self,
         code_offset: int,
         current_module: str,
-        import_type: ImportType,
+        import_string: str,
         module_name: str,
         node: ParsedNode,
     ) -> Generator[tuple[int, int, str, type], Any, Any] | None:
@@ -207,7 +213,7 @@ class CustomImportRules:
                 node.lineno,
                 node.col_offset,
                 (
-                    f"Using '{import_type}' in module '{current_module}' "
+                    f"Using '{import_string}' in module '{current_module}' "
                     f"can only import from the Python standard library, "
                     f"'{module_name}' is not allowed."
                 ),
@@ -217,7 +223,7 @@ class CustomImportRules:
         self, code: str, lineno: int, col_offset: int, message: str
     ) -> tuple[int, int, str, type]:
         """Report errors."""
-        return (lineno, col_offset, f"{code} {message}", type(self))
+        return lineno, col_offset, f"{code} {message}", type(self)
         # self.error(*error)
 
     def _is_standard_library_import(self, module_name: str) -> bool:

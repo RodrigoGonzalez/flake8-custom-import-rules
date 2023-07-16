@@ -26,8 +26,28 @@ class Linter(CustomImportRulesChecker):
         # Add options for CustomImportRulesChecker
         # cls.add_custom_rules_options(parser)
 
-        # Add options for ImportOrderChecker
-        # ...
+        register_opt(
+            parser,
+            "--application-import-names",
+            default="",
+            action="store",
+            type=str,
+            help="Import names to consider as application-specific",
+            parse_from_config=True,
+            comma_separated_list=True,
+        )
+        register_opt(
+            parser,
+            "--application-package-names",
+            default="",
+            action="store",
+            type=str,
+            help=(
+                "Package names to consider as company-specific " "(used only by 'appnexus' style)"
+            ),
+            parse_from_config=True,
+            comma_separated_list=True,
+        )
 
     @staticmethod
     def list_available_styles() -> list[str]:
