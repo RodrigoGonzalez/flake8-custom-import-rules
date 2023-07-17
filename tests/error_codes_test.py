@@ -2,12 +2,12 @@ from __future__ import annotations
 
 import pytest
 
-from flake8_custom_import_rules.error_codes import AllBlockedImportCodes
-from flake8_custom_import_rules.error_codes import AllCustomImportCodes
-from flake8_custom_import_rules.error_codes import AllErrorCodes
-from flake8_custom_import_rules.error_codes import ErrorCode
-from flake8_custom_import_rules.exceptions import ErrorCodeError
-from flake8_custom_import_rules.exceptions import ErrorCodeTypeError
+from flake8_custom_import_rules.codes.error_codes import AllBlockedImportCodes
+from flake8_custom_import_rules.codes.error_codes import AllCustomImportCodes
+from flake8_custom_import_rules.codes.error_codes import AllErrorCodes
+from flake8_custom_import_rules.codes.error_codes import ErrorCode
+from flake8_custom_import_rules.codes.exceptions import ErrorCodeError
+from flake8_custom_import_rules.codes.exceptions import ErrorCodeTypeError
 
 BLOCKED_IMPORT_RULES = [
     "BIR101",

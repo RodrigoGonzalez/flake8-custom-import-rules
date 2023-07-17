@@ -3,7 +3,7 @@ from datetime import datetime
 from uuid import UUID
 from uuid import uuid4
 
-import pendulum
+import pendulum, my_base_module.package_c.module_f
 from attrs import define
 from attrs import field
 
@@ -32,3 +32,7 @@ class C:
     def created_at(self):
         """Get the created_at."""
         return self._created_at
+
+    def f(self):
+        """ Get the f."""
+        return my_base_module.package_c.module_f.F()

@@ -2,12 +2,12 @@ import ast
 
 import pytest
 
-from flake8_custom_import_rules.node_visitor import CustomImportRulesVisitor
-from flake8_custom_import_rules.node_visitor import ImportType
-from flake8_custom_import_rules.node_visitor import ParsedClassDef
-from flake8_custom_import_rules.node_visitor import ParsedFromImport
-from flake8_custom_import_rules.node_visitor import ParsedFunctionDef
-from flake8_custom_import_rules.node_visitor import ParsedImport
+from flake8_custom_import_rules.core.node_visitor import CustomImportRulesVisitor
+from flake8_custom_import_rules.core.node_visitor import ImportType
+from flake8_custom_import_rules.core.node_visitor import ParsedClassDef
+from flake8_custom_import_rules.core.node_visitor import ParsedFromImport
+from flake8_custom_import_rules.core.node_visitor import ParsedFunctionDef
+from flake8_custom_import_rules.core.node_visitor import ParsedImport
 
 
 @pytest.fixture(scope="function")
@@ -129,7 +129,7 @@ def test_visit_import_from_relative(parsed_import):
     visitor.visit(tree)
     assert len(visitor.nodes) == 1
     assert visitor.nodes[0] == ParsedFromImport(
-        import_type=ImportType.APPLICATION_RELATIVE,
+        import_type=ImportType.LOCAL,
         module="",
         name="sibling_module",
         asname=None,
@@ -397,7 +397,7 @@ def test_relative_imports(parsed_import):
     visitor.visit(tree)
     assert len(visitor.nodes) == 3
     assert visitor.nodes[0] == parsed_import(
-        import_type=ImportType.APPLICATION_RELATIVE,
+        import_type=ImportType.LOCAL,
         module="",
         name="foo",
         asname=None,
@@ -408,7 +408,7 @@ def test_relative_imports(parsed_import):
         package_names=[],
     )
     assert visitor.nodes[1] == parsed_import(
-        import_type=ImportType.APPLICATION_RELATIVE,
+        import_type=ImportType.LOCAL,
         module="",
         name="bar",
         lineno=3,
@@ -417,7 +417,7 @@ def test_relative_imports(parsed_import):
         package_names=[],
     )
     assert visitor.nodes[2] == parsed_import(
-        import_type=ImportType.APPLICATION_RELATIVE,
+        import_type=ImportType.LOCAL,
         module="",
         name="baz",
         level=3,

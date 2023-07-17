@@ -7,7 +7,7 @@ from typing import Any
 from flake8_import_order.styles import list_entry_points
 
 from flake8_custom_import_rules import __version__
-from flake8_custom_import_rules.rules_checker import CustomImportRulesChecker
+from flake8_custom_import_rules.core.rules_checker import CustomImportRulesChecker
 
 
 class Linter(CustomImportRulesChecker):

@@ -4,14 +4,12 @@ from uuid import UUID
 from uuid import uuid4
 
 import pendulum
-from attrs import (
-    define,
-    field,
-)
+from attrs import define
+from attrs import field
 
 
 @define(slots=True)
-class Z:
+class F:
     """A basic class"""
 
     _id: UUID | None = field(factory=uuid4)

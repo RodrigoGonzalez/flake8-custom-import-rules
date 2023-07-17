@@ -8,8 +8,8 @@ from attrs import define
 from attrs import field
 from stdlib_list import stdlib_list
 
-from flake8_custom_import_rules.node_visitor import ParsedNode
-from flake8_custom_import_rules.parse_utils import parse_custom_rule
+from flake8_custom_import_rules.core.node_visitor import ParsedNode
+from flake8_custom_import_rules.utils.parse_utils import parse_custom_rule
 
 
 @define(slots=True)

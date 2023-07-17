@@ -9,6 +9,7 @@ from uuid import uuid4
 import pendulum
 from attrs import define
 from attrs import field
+
 from my_base_module.package_b.module_b import B
 from my_base_module.package_c.module_c import C
 from my_base_module.package_c.package_d.module_d import D as DEE
