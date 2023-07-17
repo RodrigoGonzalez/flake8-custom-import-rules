@@ -5,10 +5,10 @@ from enum import IntEnum
 from attrs import define
 from flake8_import_order.stdlib_list import STDLIB_NAMES
 
-from flake8_custom_import_rules.node_utils import get_module_info_from_import_node
-from flake8_custom_import_rules.node_utils import get_name_info_from_import_node
-from flake8_custom_import_rules.node_utils import get_package_names
-from flake8_custom_import_rules.node_utils import root_package_name
+from flake8_custom_import_rules.utils.node_utils import get_module_info_from_import_node
+from flake8_custom_import_rules.utils.node_utils import get_name_info_from_import_node
+from flake8_custom_import_rules.utils.node_utils import get_package_names
+from flake8_custom_import_rules.utils.node_utils import root_package_name
 
 
 class ImportType(IntEnum):
@@ -17,10 +17,8 @@ class ImportType(IntEnum):
     FUTURE = 0
     STDLIB = 10
     THIRD_PARTY = 20
-    APPLICATION_PACKAGE = 30
-    APPLICATION = 40
-    APPLICATION_RELATIVE = 50
-    MIXED = -1
+    FIRST_PARTY = 30
+    LOCAL = 40
 
 
 @define(slots=True)
@@ -126,7 +124,7 @@ class CustomImportRulesVisitor(ast.NodeVisitor):
         module = node.module or ""
 
         if node.level > 0:
-            import_type = ImportType.APPLICATION_RELATIVE
+            import_type = ImportType.LOCAL
         else:
             import_type = self._classify_type(module)
         parsed_from_imports_dict = get_name_info_from_import_node(node)
@@ -192,9 +190,7 @@ class CustomImportRulesVisitor(ast.NodeVisitor):
             if package == "__future__":
                 return ImportType.FUTURE
             elif package in self.current_modules:
-                return ImportType.APPLICATION
-            elif package in self.package_names:
-                return ImportType.APPLICATION_PACKAGE
+                return ImportType.FIRST_PARTY
             elif package in STDLIB_NAMES:
                 return ImportType.STDLIB
 

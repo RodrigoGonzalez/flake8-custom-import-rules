@@ -4,8 +4,7 @@ from uuid import UUID
 from uuid import uuid4
 
 import pendulum
-from attrs import define
-from attrs import field
+from attrs import define, field
 
 
 @define(slots=True)

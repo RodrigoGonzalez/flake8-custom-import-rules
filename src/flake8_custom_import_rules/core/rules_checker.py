@@ -5,10 +5,10 @@ from typing import Generator
 
 import pycodestyle
 
-from flake8_custom_import_rules.node_visitor import CustomImportRulesVisitor
-from flake8_custom_import_rules.node_visitor import ParsedNode
-from flake8_custom_import_rules.parse_utils import NOQA_INLINE_REGEXP
-from flake8_custom_import_rules.parse_utils import parse_comma_separated_list
+from flake8_custom_import_rules.core.node_visitor import CustomImportRulesVisitor
+from flake8_custom_import_rules.core.node_visitor import ParsedNode
+from flake8_custom_import_rules.utils.parse_utils import NOQA_INLINE_REGEXP
+from flake8_custom_import_rules.utils.parse_utils import parse_comma_separated_list
 
 
 class CustomImportRulesChecker:

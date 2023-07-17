@@ -7,8 +7,8 @@ from flake8_import_order.styles import lookup_entry_point
 from pylama.lint import Linter as BaseLinter
 
 from flake8_custom_import_rules import __version__
-from flake8_custom_import_rules.import_rules import ErrorMessage
-from flake8_custom_import_rules.rules_checker import CustomImportRulesChecker
+from flake8_custom_import_rules.core.import_rules import ErrorMessage
+from flake8_custom_import_rules.core.rules_checker import CustomImportRulesChecker
 
 
 class Linter(CustomImportRulesChecker, BaseLinter):

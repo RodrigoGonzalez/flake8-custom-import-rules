@@ -50,13 +50,13 @@ changelog_file = "CHANGELOG.md"
 
 [tool.isort]
 profile = "black"
-skip_glob = ["docs"]
+skip_glob = ["docs", "example_repos"]
 line_length = 100
 multi_line_output = 4
 force_single_line = true
 src_paths = ["src", "tests", "scripts"]
 sections = ["FUTURE", "STDLIB", "THIRDPARTY", "FIRSTPARTY", "LOCALFOLDER"]
-known_first_party = ["flake8_custom_import_rules"]
+known_first_party = ["flake8_custom_import_rules", "my_base_module"]
 known_third_party = ["flake8"]
 
 [tool.black]
@@ -73,6 +73,7 @@ exclude = '''
       | build
       | dist
       | docs
+      | example_repos
     )/
 '''
 

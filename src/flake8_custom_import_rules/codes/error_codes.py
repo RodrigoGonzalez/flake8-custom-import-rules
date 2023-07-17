@@ -4,8 +4,8 @@ from enum import EnumMeta
 from functools import singledispatch
 from typing import Any
 
-from flake8_custom_import_rules.exceptions import ErrorCodeError
-from flake8_custom_import_rules.exceptions import ErrorCodeTypeError
+from flake8_custom_import_rules.codes.exceptions import ErrorCodeError
+from flake8_custom_import_rules.codes.exceptions import ErrorCodeTypeError
 
 
 class ErrorCodeMeta(EnumMeta):
