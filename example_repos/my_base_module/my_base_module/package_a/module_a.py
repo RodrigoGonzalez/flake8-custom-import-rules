@@ -71,9 +71,17 @@ class A:
             name=f"{self._name}: VersionedE", description=f"{self._description}: VersionedE"
         )
 
-    def get_name_of_class_x(self) -> str:
+    def get_name_of_class_x(self, print_class_x: bool = True) -> str:
         """Get the name of class X."""
-        from my_base_module.module_x import X
+        import datetime
+        from my_base_module.module_x import X, print_x
 
-        x = X(name=f"{self._name}: X", description=f"{self._description}: X")
+        x = X(
+            name=f"{self._name}: X",
+            description=f"{self._description}: X",
+            created_at=datetime.datetime.now(),
+        )
+        if print_class_x:
+            print_x(x)
+
         return x.name()

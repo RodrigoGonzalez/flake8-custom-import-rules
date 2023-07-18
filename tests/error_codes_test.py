@@ -221,7 +221,6 @@ def test_can_instantiate_using_error_code__error_wrong_type(other_types):
         assert isinstance(ErrorCode(other_types), ErrorCode)
 
 
-##
 @pytest.mark.parametrize("error_code", ALL_ERROR_CODES)
 def test_membership__str(error_code):
     """Test can instantiate using error code."""

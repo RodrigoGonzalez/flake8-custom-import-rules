@@ -13,7 +13,7 @@ def get_package_names(module_name: str) -> list[str] | None:
 
     Returns
     -------
-
+    list[str] | None
     """
     tree = ast.parse(module_name)
 
@@ -36,7 +36,19 @@ def get_package_names(module_name: str) -> list[str] | None:
 
 
 def root_package_name(module_name: str) -> str | None:
-    """Return the root package name of a module name."""
+    """
+    Return the root package name of a module name.
+
+    Parameters
+    ----------
+    module_name : str
+        The module name.
+
+    Returns
+    -------
+    str | None
+        The root package name.
+    """
     tree = ast.parse(module_name)
     return next(
         (node.id for node in ast.walk(tree) if isinstance(node, ast.Name)),
@@ -45,7 +57,19 @@ def root_package_name(module_name: str) -> str | None:
 
 
 def get_module_info_from_import_node(node: ast.Import) -> dict:
-    """Get the names of the import."""
+    """
+    Get the names of the import from the node.
+
+    Parameters
+    ----------
+    node : ast.Import
+        The node to get the names from.
+
+    Returns
+    -------
+    dict
+        The names of the import.
+    """
     module_info: defaultdict[str, dict] = defaultdict(lambda: defaultdict(str))
     package_dict: defaultdict[str, list] = defaultdict(list)
     node_modules_lineno: defaultdict[str, list] = defaultdict(list)
