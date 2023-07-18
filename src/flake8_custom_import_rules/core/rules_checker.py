@@ -67,12 +67,24 @@ class CustomImportRulesChecker:
         visitor = CustomImportRulesVisitor(
             self.options.get("base_packages", []),
             [],
+            filename=self.filename,
         )
         visitor.visit(self.tree)
         return visitor
 
     def error_is_ignored(self, error: Any) -> bool:
-        """Return whether the error is ignored."""
+        """
+        Return whether the error is ignored.
+
+        Parameters
+        ----------
+        error : Any
+            The error to check.
+
+        Returns
+        -------
+        bool
+        """
         noqa_match = NOQA_INLINE_REGEXP.search(self.lines[error.lineno - 1])
 
         if noqa_match is None:

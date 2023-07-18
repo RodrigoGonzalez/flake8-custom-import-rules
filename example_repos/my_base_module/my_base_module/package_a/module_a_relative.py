@@ -32,3 +32,10 @@ class ARelative:
     def created_at(self):
         """Get the created_at."""
         return self._created_at
+
+
+def initialize_class_a_relative(self) -> ARelative:
+    """Get the class A."""
+    return ARelative(
+        name=f"{self._name}: ARelative", description=f"{self._description}: ARelative"
+    )

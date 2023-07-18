@@ -1,3 +1,24 @@
+## v0.3.0 (2023-07-17)
+
+### Feat
+
+- **main-package**: updated node visitor and added tests
+- **makin**: Added linter files (#15)
+- defined error codes for what linter will cover (#10)
+
+### Fix
+
+- added methods to error codes enum (#12)
+
+### Refactor
+
+- **import-rules**: move files into directories (#21)
+- **main-package**: continuuing to implement checker (#20)
+- **example-package**: updating imports and docstrings (#19)
+- **example-package**: rename package and updating imports (#18)
+- **custom-import-rules**: update parameters (#17)
+- **visitor**: Consolidate visitor classes (#16)
+
 ## v0.2.0 (2023-04-27)
 
 ### Feat

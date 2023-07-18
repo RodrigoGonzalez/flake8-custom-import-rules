@@ -1,24 +1,30 @@
 """ Flake8 linter for flake8-custom-import-rules. """
 import ast
 import optparse
+import sys
 from collections.abc import Generator
 from typing import Any
 
-from flake8_import_order.styles import list_entry_points
-
-from flake8_custom_import_rules import __version__
 from flake8_custom_import_rules.core.rules_checker import CustomImportRulesChecker
+
+if sys.version_info < (3, 8):
+    import importlib_metadata
+else:
+    import importlib.metadata as importlib_metadata
 
 
 class Linter(CustomImportRulesChecker):
-    name = "custom-import-rules"
-    version = __version__
+    name = "flake8-custom-import-rules"
+    version = importlib_metadata.version(name)
 
     def __init__(
         self, tree: ast.AST | None = None, filename: str | None = None, lines: list | None = None
     ) -> None:
-        super().__init__(filename, tree)
+        super().__init__(tree, filename)
         self._lines = lines
+        # print(f"filename: {filename}")
+        # print(f"lines: {lines}")
+        # print(f"tree: {tree}")
 
     @classmethod
     def add_options(cls, parser: Any) -> None:
@@ -28,32 +34,14 @@ class Linter(CustomImportRulesChecker):
 
         register_opt(
             parser,
-            "--application-import-names",
-            default="",
+            "--base-package",
+            default="my_base_module",  # TODO: change back to "" when ready
             action="store",
             type=str,
             help="Import names to consider as application-specific",
             parse_from_config=True,
             comma_separated_list=True,
         )
-        register_opt(
-            parser,
-            "--application-package-names",
-            default="",
-            action="store",
-            type=str,
-            help=(
-                "Package names to consider as company-specific " "(used only by 'appnexus' style)"
-            ),
-            parse_from_config=True,
-            comma_separated_list=True,
-        )
-
-    @staticmethod
-    def list_available_styles() -> list[str]:
-        """List available styles."""
-        entry_points = list_entry_points()
-        return sorted(entry_point.name for entry_point in entry_points)
 
     @classmethod
     def parse_options(cls, options: dict) -> None:
@@ -65,13 +53,14 @@ class Linter(CustomImportRulesChecker):
         # Parse options for ImportOrderChecker
         # ...
 
-    def run(self) -> Generator[Any, None, None]:
+    def run(self) -> Generator[tuple[int, int, str, type[Any]], None, None]:
+        """Run flake8-custom-import-rules."""
         # Run CustomImportRulesChecker
         # yield from self.check_custom_import_rules()
 
         # Run ImportOrderChecker
         # ...
-        raise NotImplementedError()
+        yield 1, 0, "CIR101 Custom Import Rule", type(self)
 
 
 def register_opt(parser: Any, *args: Any, **kwargs: Any) -> None:

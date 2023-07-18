@@ -32,3 +32,8 @@ class X:
     def created_at(self):
         """Get the created_at."""
         return self._created_at
+
+
+def print_x(x: X) -> None:
+    """Print X."""
+    print(x)

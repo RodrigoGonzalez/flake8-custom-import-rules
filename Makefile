@@ -41,6 +41,7 @@ setup: poetry-install pre-commit-install  ## Setup Virtual Environment
     poetry-install:  ## Install dependencies using Poetry
 		poetry env use $(PYTHON_INTERPRETER)
 		poetry install
+		# pip install -e .
 
     pre-commit-install:  ## Install pre-commit hooks
 		poetry run pre-commit install

@@ -43,7 +43,6 @@ input. Here's an example:
 """Dynamic Imports Execute Example"""
 module_name = "math"
 exec(f"import {module_name}")
-import math
 print(math.sqrt(4))  # Outputs: 2.0
 ```
 
@@ -60,7 +59,7 @@ import a module into the current namespace:
 ```python
 """Dynamic Imports Globals Example"""
 module_name = "math"
-globals()[module_name] = __import__(module_name)
+globals()[module_name] = __import__("math")
 
 # Now you can use the 'math' module directly
 print(math.sqrt(4))
