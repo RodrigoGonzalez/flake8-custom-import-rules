@@ -1,3 +1,14 @@
+## v0.4.0 (2023-07-19)
+
+### Feat
+
+- **main-package**: updated node visitor and added tests (#22)
+
+### Refactor
+
+- **error-codes**: update error code stem
+- **checker**: use attrs define and fied with slots (#24)
+
 ## v0.3.0 (2023-07-17)
 
 ### Feat

@@ -10,41 +10,41 @@ from flake8_custom_import_rules.codes.exceptions import ErrorCodeError
 from flake8_custom_import_rules.codes.exceptions import ErrorCodeTypeError
 
 BLOCKED_IMPORT_RULES = [
-    "BIR101",
-    "BIR102",
-    "BIR103",
-    "BIR104",
-    "BIR105",
-    "BIR106",
-    "BIR107",
-    "BIR108",
-    "BIR201",
-    "BIR202",
-    "BIR203",
-    "BIR204",
-    "BIR205",
-    "BIR206",
-    "BIR207",
-    "BIR208",
+    "PIR101",
+    "PIR102",
+    "PIR103",
+    "PIR104",
+    "PIR105",
+    "PIR106",
+    "PIR107",
+    "PIR108",
+    "PIR201",
+    "PIR202",
+    "PIR203",
+    "PIR204",
+    "PIR205",
+    "PIR206",
+    "PIR207",
+    "PIR208",
 ]
 
 BLOCKED_IMPORT_RULES_ENUMS = [
-    ErrorCode.BIR101,
-    ErrorCode.BIR102,
-    ErrorCode.BIR103,
-    ErrorCode.BIR104,
-    ErrorCode.BIR105,
-    ErrorCode.BIR106,
-    ErrorCode.BIR107,
-    ErrorCode.BIR108,
-    ErrorCode.BIR201,
-    ErrorCode.BIR202,
-    ErrorCode.BIR203,
-    ErrorCode.BIR204,
-    ErrorCode.BIR205,
-    ErrorCode.BIR206,
-    ErrorCode.BIR207,
-    ErrorCode.BIR208,
+    ErrorCode.PIR101,
+    ErrorCode.PIR102,
+    ErrorCode.PIR103,
+    ErrorCode.PIR104,
+    ErrorCode.PIR105,
+    ErrorCode.PIR106,
+    ErrorCode.PIR107,
+    ErrorCode.PIR108,
+    ErrorCode.PIR201,
+    ErrorCode.PIR202,
+    ErrorCode.PIR203,
+    ErrorCode.PIR204,
+    ErrorCode.PIR205,
+    ErrorCode.PIR206,
+    ErrorCode.PIR207,
+    ErrorCode.PIR208,
 ]
 
 CUSTOM_IMPORT_RULES = [
@@ -122,8 +122,8 @@ def enums_and_codes():
 def test_get_error_codes(error_codes):
     """Test get_error_codes."""
     msg = "ErrorCode changed, update tests."
-    assert ErrorCode.get_all_error_codes() == error_codes, msg
-    assert AllErrorCodes == error_codes, msg
+    assert sorted(ErrorCode.get_all_error_codes()) == sorted(error_codes), msg
+    assert sorted(AllErrorCodes) == sorted(error_codes), msg
 
 
 def test_get_all_blocked_import_rule_codes():
@@ -151,7 +151,7 @@ def test_get_error_code__str(error_code):
     assert ErrorCode.get_error_code(error_code) == error_code
 
 
-@pytest.mark.parametrize("error_code", ["some_string", "", "BIR9999", "CIR9999"])
+@pytest.mark.parametrize("error_code", ["some_string", "", "PIR9999", "CIR9999"])
 def test_get_error_code__str_error(error_code):
     """Test get_error_code does not work with strings that are not codes."""
     with pytest.raises(ValueError, match="Invalid error code"):
@@ -171,7 +171,7 @@ def test_get_error_message__errors(other_types):
         assert ErrorCode.get_error_message(other_types) == other_types
 
 
-@pytest.mark.parametrize("error_code", ["some_string", "", "BIR9999", "CIR9999"])
+@pytest.mark.parametrize("error_code", ["some_string", "", "PIR9999", "CIR9999"])
 def test_get_error_code_message__str_error(error_code):
     """Test get_error_message does not work with invalid strings."""
     with pytest.raises(ValueError, match="Invalid error code"):
@@ -201,7 +201,7 @@ def test_can_instantiate_using_error_code__str(error_code):
     assert isinstance(ErrorCode(error_code), ErrorCode)
 
 
-@pytest.mark.parametrize("wrong_string", ["some_string", "", "BIR9999", "CIR9999"])
+@pytest.mark.parametrize("wrong_string", ["some_string", "", "PIR9999", "CIR9999"])
 def test_instantiate_using_error_code__error_wrong_code(wrong_string):
     """Test get_error_code."""
     with pytest.raises(ErrorCodeError, match="is not a valid ErrorCode"):
@@ -227,7 +227,7 @@ def test_membership__str(error_code):
     assert error_code in ErrorCode
 
 
-@pytest.mark.parametrize("wrong_string", ["some_string", "", "BIR9999", "CIR9999"])
+@pytest.mark.parametrize("wrong_string", ["some_string", "", "PIR9999", "CIR9999"])
 def test_membership__error_wrong_code(wrong_string):
     """Test get_error_code."""
     assert wrong_string not in ErrorCode

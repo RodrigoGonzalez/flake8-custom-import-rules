@@ -13,7 +13,7 @@ from flake8_custom_import_rules.utils.parse_utils import NOQA_INLINE_REGEXP
 from flake8_custom_import_rules.utils.parse_utils import parse_comma_separated_list
 
 
-@define(slots=True)
+@define(slots=True, hash=False)
 class CustomImportRulesChecker:
     """Custom import rules checker."""
 
