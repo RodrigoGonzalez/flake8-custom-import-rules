@@ -4,6 +4,8 @@ from typing import Any
 from typing import Generator
 
 import pycodestyle
+from attrs import define
+from attrs import field
 
 from flake8_custom_import_rules.core.node_visitor import CustomImportRulesVisitor
 from flake8_custom_import_rules.core.node_visitor import ParsedNode
@@ -11,24 +13,15 @@ from flake8_custom_import_rules.utils.parse_utils import NOQA_INLINE_REGEXP
 from flake8_custom_import_rules.utils.parse_utils import parse_comma_separated_list
 
 
+@define(slots=True)
 class CustomImportRulesChecker:
     """Custom import rules checker."""
 
-    options: dict[str, list[str] | str] = {}
-
-    def __init__(self, tree: ast.AST | None = None, filename: str | None = None):
-        """Initialize the checker."""
-        self._tree = tree
-        self._filename = filename
-        self._lines: list[str] | None = None
-        self._nodes: list[ParsedNode] | None = None
-
-    @property
-    def filename(self) -> str:
-        """Return the filename."""
-        if self._filename is None or self._filename in {"-", "/dev/stdin"}:
-            return "stdin"
-        return self._filename
+    _tree: ast.AST | None = None
+    _filename: str | None = None
+    _lines: list[str] | None = None
+    _nodes: list[ParsedNode] | None = None
+    _options: dict[str, list[str] | str] = field(factory=dict)
 
     @property
     def tree(self) -> ast.AST:
@@ -36,6 +29,13 @@ class CustomImportRulesChecker:
         if not self._tree:
             self._tree = ast.parse("".join(self.lines))
         return self._tree
+
+    @property
+    def filename(self) -> str:
+        """Return the filename."""
+        if self._filename is None or self._filename in {"-", "/dev/stdin"}:
+            return "stdin"
+        return self._filename
 
     @property
     def lines(self) -> list[str]:
@@ -55,6 +55,11 @@ class CustomImportRulesChecker:
             visitor = self.get_visitor()
             self._nodes = visitor.nodes
         return self._nodes
+
+    @property
+    def options(self) -> dict:
+        """Return the options."""
+        return self._options
 
     @staticmethod
     def error(error: Any) -> Any:
