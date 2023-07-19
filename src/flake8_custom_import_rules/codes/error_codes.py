@@ -38,26 +38,6 @@ class ErrorCodeMeta(EnumMeta):
 class ErrorCode(Enum, metaclass=ErrorCodeMeta):
     """Error codes for custom import rules."""
 
-    # Blocked Imports Rules
-    BIR101 = "BIR101 Only top level imports are permitted in the project."
-    BIR102 = "BIR102 Relative imports are blocked in the project."
-    BIR103 = "BIR103 Conditional imports are blocked in the project."
-    BIR104 = "BIR104 Local imports are blocked in the project."
-    BIR105 = "BIR105 Functional imports are blocked in the project."
-    BIR106 = "BIR106 Dynamic imports are blocked in the project."
-    BIR107 = "BIR107 Star imports are blocked in the project."
-    BIR108 = "BIR108 Aliased imports are blocked in the project."
-
-    # Blocked Imports Rules for Special Cases
-    BIR201 = "BIR201 Block import test_*/*_test modules."
-    BIR202 = "BIR202 Block imports from test_*.py/*_test.py modules."
-    BIR203 = "BIR203 Block import `conftest`."
-    BIR204 = "BIR204 Block import from `conftest.py` modules."
-    BIR205 = "BIR205 Block import tests package or import tests subdirectories."
-    BIR206 = "BIR206 Block import from tests package or subdirectories."
-    BIR207 = "BIR207 Block import `__init__`."
-    BIR208 = "BIR208 Block imports from `__init__.py files`."
-
     # Custom Import Rules: Restricting imports
     CIR101 = "CIR101 Custom import rule conflicts"
     CIR102 = "CIR102 Restrict package import for specific package or module"
@@ -91,6 +71,26 @@ class ErrorCode(Enum, metaclass=ErrorCodeMeta):
     CIR501 = "CIR501 Non-third party package import"
     CIR502 = "CIR502 Non-third party package `from import`"
 
+    # Project Import Rules
+    PIR101 = "PIR101 Only top level imports are permitted in the project."
+    PIR102 = "PIR102 Relative imports are blocked in the project."
+    PIR103 = "PIR103 Conditional imports are blocked in the project."
+    PIR104 = "PIR104 Local imports are blocked in the project."
+    PIR105 = "PIR105 Functional imports are blocked in the project."
+    PIR106 = "PIR106 Dynamic imports are blocked in the project."
+    PIR107 = "PIR107 Star imports are blocked in the project."
+    PIR108 = "PIR108 Aliased imports are blocked in the project."
+
+    # Project Import Rules for Special Cases
+    PIR201 = "PIR201 Block import test_*/*_test modules."
+    PIR202 = "PIR202 Block imports from test_*.py/*_test.py modules."
+    PIR203 = "PIR203 Block import `conftest`."
+    PIR204 = "PIR204 Block import from `conftest.py` modules."
+    PIR205 = "PIR205 Block import tests package or import tests subdirectories."
+    PIR206 = "PIR206 Block import from tests package or subdirectories."
+    PIR207 = "PIR207 Block import `__init__`."
+    PIR208 = "PIR208 Block imports from `__init__.py files`."
+
     @staticmethod
     def get_error_code(error_code: Any) -> str:
         """Get error code."""
@@ -119,7 +119,7 @@ class ErrorCode(Enum, metaclass=ErrorCodeMeta):
     @classmethod
     def get_all_blocked_import_rule_codes(cls) -> list[str]:
         """Get all blocked import rule codes."""
-        return list(filter(lambda x: x.startswith("BIR"), cls.get_all_error_codes()))
+        return list(filter(lambda x: x.startswith("PIR"), cls.get_all_error_codes()))
 
     @classmethod
     def get_all_custom_import_rule_codes(cls) -> list[str]:
@@ -138,7 +138,7 @@ def _(error_code: str) -> str:
     """Get error code."""
     if error_code.startswith("ErrorCode."):
         error_code = error_code.split(".")[1]
-    if error_code.startswith("CIR") or error_code.startswith("BIR"):
+    if error_code.startswith("CIR") or error_code.startswith("PIR"):
         error_code = error_code.split(" ")[0]
     if error_code in ErrorCode.get_all_error_codes():
         return error_code
