@@ -1,3 +1,10 @@
+## v0.4.1 (2023-07-19)
+
+### Refactor
+
+- updated linter, checker, and visitor classes and tests
+- **error-codes**: update error code stem (#25)
+
 ## v0.4.0 (2023-07-19)
 
 ### Feat

@@ -38,15 +38,15 @@ class CustomImportRules:
     foundation_modules: list[str] = field(factory=list)
     standard_library_only: list[str] = field(factory=list)
     check_top_level_only: bool = field(default=False)
-    prohibit_relative_imports: bool = field(default=False)
-    prohibit_conditional_imports: bool = field(default=False)
-    prohibit_local_imports: bool = field(default=False)
-    prohibit_functional_imports: bool = field(default=False)
-    prohibit_dynamic_imports: bool = field(default=False)
-    prohibit_aliased_imports: bool = field(default=False)
-    prohibit_imports_from_init: bool = field(default=False)
-    prohibit_imports_from_tests: bool = field(default=False)
-    prohibit_imports_from_conftest: bool = field(default=False)
+    restrict_relative_imports: bool = field(default=False)
+    restrict_conditional_imports: bool = field(default=False)
+    restrict_local_imports: bool = field(default=False)
+    restrict_functional_imports: bool = field(default=False)
+    restrict_dynamic_imports: bool = field(default=False)
+    restrict_aliased_imports: bool = field(default=False)
+    restrict_imports_from_init: bool = field(default=False)
+    restrict_imports_from_tests: bool = field(default=False)
+    restrict_imports_from_conftest: bool = field(default=False)
 
     def __attrs_post_init__(self) -> None:
         self.nodes = sorted(
@@ -73,40 +73,40 @@ class CustomImportRules:
             "check_top_level_only",
             False,
         )
-        self.prohibit_relative_imports = options.get(
-            "prohibit_relative_imports",
+        self.restrict_relative_imports = options.get(
+            "restrict_relative_imports",
             False,
         )
-        self.prohibit_conditional_imports = options.get(
-            "prohibit_conditional_imports",
+        self.restrict_conditional_imports = options.get(
+            "restrict_conditional_imports",
             False,
         )
-        self.prohibit_local_imports = options.get(
-            "prohibit_local_imports",
+        self.restrict_local_imports = options.get(
+            "restrict_local_imports",
             False,
         )
-        self.prohibit_functional_imports = options.get(
-            "prohibit_functional_imports",
+        self.restrict_functional_imports = options.get(
+            "restrict_functional_imports",
             False,
         )
-        self.prohibit_dynamic_imports = options.get(
-            "prohibit_dynamic_imports",
+        self.restrict_dynamic_imports = options.get(
+            "restrict_dynamic_imports",
             False,
         )
-        self.prohibit_aliased_imports = options.get(
-            "prohibit_aliased_imports",
+        self.restrict_aliased_imports = options.get(
+            "restrict_aliased_imports",
             False,
         )
-        self.prohibit_imports_from_init = options.get(
-            "prohibit_imports_from_init",
+        self.restrict_imports_from_init = options.get(
+            "restrict_imports_from_init",
             False,
         )
-        self.prohibit_imports_from_tests = options.get(
-            "prohibit_imports_from_tests",
+        self.restrict_imports_from_tests = options.get(
+            "restrict_imports_from_tests",
             False,
         )
-        self.prohibit_imports_from_conftest = options.get(
-            "prohibit_imports_from_conftest",
+        self.restrict_imports_from_conftest = options.get(
+            "restrict_imports_from_conftest",
             False,
         )
 

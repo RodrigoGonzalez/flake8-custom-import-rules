@@ -13,7 +13,7 @@ from flake8_custom_import_rules.core.node_visitor import ParsedImport
 @pytest.fixture(scope="function")
 def import_visitor():
     """Return an instance of the import visitor."""
-    return CustomImportRulesVisitor([], [])
+    return CustomImportRulesVisitor([], None)
 
 
 @pytest.fixture()
@@ -63,7 +63,7 @@ def test_visit_import_simple(parsed_import):
     """Test that the visit_Import method correctly parses an import statement."""
     source = "import os"
     tree = ast.parse(source)
-    visitor = CustomImportRulesVisitor([], [])
+    visitor = CustomImportRulesVisitor([], None)
     visitor.visit(tree)
     assert len(visitor.nodes) == 1
     assert visitor.nodes[0] == parsed_import(name=None, package_names=["os"])
@@ -74,7 +74,7 @@ def test_visit_import_alias(parsed_import):
     """Test that the `visit_Import` method correctly parses an`import` that includes an alias."""
     source = "import os as my_os"
     tree = ast.parse(source)
-    visitor = CustomImportRulesVisitor([], [])
+    visitor = CustomImportRulesVisitor([], None)
     visitor.visit(tree)
     assert len(visitor.nodes) == 1
     assert visitor.nodes[0] == parsed_import(asname="my_os", package_names=["os"])
@@ -87,7 +87,7 @@ def test_visit_import_from_simple():
     """
     source = "from os import path"
     tree = ast.parse(source)
-    visitor = CustomImportRulesVisitor([], [])
+    visitor = CustomImportRulesVisitor([], None)
     visitor.visit(tree)
     assert len(visitor.nodes) == 1
     assert visitor.nodes[0] == ParsedFromImport(
@@ -110,7 +110,7 @@ def test_visit_import_from_alias(parsed_import):
     """
     source = "from os import path as my_path"
     tree = ast.parse(source)
-    visitor = CustomImportRulesVisitor([], [])
+    visitor = CustomImportRulesVisitor([], None)
     visitor.visit(tree)
     assert len(visitor.nodes) == 1
     assert visitor.nodes[0] == parsed_import(
@@ -125,7 +125,7 @@ def test_visit_import_from_relative(parsed_import):
     """
     source = "from . import sibling_module"
     tree = ast.parse(source)
-    visitor = CustomImportRulesVisitor([], [])
+    visitor = CustomImportRulesVisitor([], None)
     visitor.visit(tree)
     assert len(visitor.nodes) == 1
     assert visitor.nodes[0] == ParsedFromImport(
@@ -145,7 +145,7 @@ def test_visit_class_def():
     """Test that the `visit_ClassDef` method correctly parses a class definition."""
     source = "class MyClass:\n    pass"
     tree = ast.parse(source)
-    visitor = CustomImportRulesVisitor([], [])
+    visitor = CustomImportRulesVisitor([], None)
     visitor.visit(tree)
 
     assert len(visitor.nodes) == 1
@@ -155,7 +155,7 @@ def test_visit_class_def_base_class():
     """Test that the`visit_ClassDef`method correctly parses a class definition with a base class."""
     source = "class MyClass(BaseClass):\n    pass"
     tree = ast.parse(source)
-    visitor = CustomImportRulesVisitor([], [])
+    visitor = CustomImportRulesVisitor([], None)
     visitor.visit(tree)
     assert len(visitor.nodes) == 1
     assert visitor.nodes[0] == ParsedClassDef(
@@ -169,7 +169,7 @@ def test_visit_function_def():
     """Test that the`visit_FunctionDef` method correctly parses a function definition."""
     source = "def my_function():\n    pass"
     tree = ast.parse(source)
-    visitor = CustomImportRulesVisitor([], [])
+    visitor = CustomImportRulesVisitor([], None)
     visitor.visit(tree)
     assert len(visitor.nodes) == 1
     assert visitor.nodes[0] == ParsedFunctionDef(
@@ -186,7 +186,7 @@ def test_visit_import_multiple():
     """
     source = "import os, sys"
     tree = ast.parse(source)
-    visitor = CustomImportRulesVisitor([], [])
+    visitor = CustomImportRulesVisitor([], None)
     visitor.visit(tree)
     assert len(visitor.nodes) == 2
     assert visitor.nodes[0] == ParsedImport(
@@ -215,7 +215,7 @@ def test_visit_import_from_multiple():
     statement with multiple names"""
     source = "from os import path, environ"
     tree = ast.parse(source)
-    visitor = CustomImportRulesVisitor([], [])
+    visitor = CustomImportRulesVisitor([], None)
     visitor.visit(tree)
     assert len(visitor.nodes) == 2
     assert visitor.nodes[0] == ParsedFromImport(
@@ -262,7 +262,7 @@ def test_complex_code(parsed_import):
         ""
     )
     tree = ast.parse(source)
-    visitor = CustomImportRulesVisitor([], [])
+    visitor = CustomImportRulesVisitor([], None)
     visitor.visit(tree)
     assert len(visitor.nodes) == 6  # Check the first import statement
     assert visitor.nodes[0] == parsed_import(
@@ -314,7 +314,7 @@ def test_empty_code():
     """Test that the`CustomImportRulesVisitor`correctly handles an empty source code file"""
     source = ""
     tree = ast.parse(source)
-    visitor = CustomImportRulesVisitor([], [])
+    visitor = CustomImportRulesVisitor([], None)
     visitor.visit(tree)
     assert len(visitor.nodes) == 0
 
@@ -327,7 +327,7 @@ def test_aliased_from_import(parsed_import):
     """
     source = """from datetime import datetime as dt"""
     tree = ast.parse(source)
-    visitor = CustomImportRulesVisitor([], [])
+    visitor = CustomImportRulesVisitor([], None)
     visitor.visit(tree)
     assert len(visitor.nodes) == 1
     assert visitor.nodes[0] == parsed_import(
@@ -347,7 +347,7 @@ def test_multiple_imports_same_line(parsed_import):
     """
     source = """import os, sys"""
     tree = ast.parse(source)
-    visitor = CustomImportRulesVisitor([], [])
+    visitor = CustomImportRulesVisitor([], None)
     visitor.visit(tree)
     assert len(visitor.nodes) == 2
     assert visitor.nodes[0] == parsed_import(
@@ -380,7 +380,7 @@ def test_mixture_of_nodes():
         "import requests as req\n"
     )
     tree = ast.parse(source)
-    visitor = CustomImportRulesVisitor([], [])
+    visitor = CustomImportRulesVisitor([], None)
     visitor.visit(tree)
     assert len(visitor.nodes) == 5
 
@@ -393,7 +393,7 @@ def test_relative_imports(parsed_import):
     """
     source = "\n" "from . import foo\n" "from .. import bar\n" "from ... import baz\n" ""
     tree = ast.parse(source)
-    visitor = CustomImportRulesVisitor([], [])
+    visitor = CustomImportRulesVisitor([], None)
     visitor.visit(tree)
     assert len(visitor.nodes) == 3
     assert visitor.nodes[0] == parsed_import(
@@ -435,7 +435,7 @@ def test_multiple_from_imports_same_line(parsed_import):
     """
     source = """from sys import argv, exit"""
     tree = ast.parse(source)
-    visitor = CustomImportRulesVisitor([], [])
+    visitor = CustomImportRulesVisitor([], None)
     visitor.visit(tree)
     assert len(visitor.nodes) == 2
     assert visitor.nodes[0] == parsed_import(
@@ -472,7 +472,7 @@ def test_multiple_classes_and_functions():
         "    pass\n"
     )
     tree = ast.parse(source)
-    visitor = CustomImportRulesVisitor([], [])
+    visitor = CustomImportRulesVisitor([], None)
     visitor.visit(tree)
     assert len(visitor.nodes) == 4
 
@@ -497,7 +497,7 @@ def test_nested_classes_and_functions():
     )
 
     tree = ast.parse(source)
-    visitor = CustomImportRulesVisitor([], [])
+    visitor = CustomImportRulesVisitor([], None)
     visitor.visit(tree)
     assert len(visitor.nodes) == 5
 
@@ -512,6 +512,6 @@ def test_comments():
     # Another comment
     """
     tree = ast.parse(source)
-    visitor = CustomImportRulesVisitor([], [])
+    visitor = CustomImportRulesVisitor([], None)
     visitor.visit(tree)
     assert len(visitor.nodes) == 0

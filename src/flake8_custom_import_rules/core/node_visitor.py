@@ -1,15 +1,19 @@
 """Custom import rules node visitor."""
 import ast
+import logging
 from enum import IntEnum
 from pathlib import Path
 
 from attrs import define
+from attrs import field
 from flake8_import_order.stdlib_list import STDLIB_NAMES
 
 from flake8_custom_import_rules.utils.node_utils import get_module_info_from_import_node
 from flake8_custom_import_rules.utils.node_utils import get_name_info_from_import_node
 from flake8_custom_import_rules.utils.node_utils import get_package_names
 from flake8_custom_import_rules.utils.node_utils import root_package_name
+
+logger = logging.getLogger(f"flake8_custom_import_rules.{__name__}")
 
 
 class ImportType(IntEnum):
@@ -78,6 +82,14 @@ class ParsedCall:
 
 
 @define(slots=True)
+class ParsedIfImport:
+    """Parsed if statement"""
+
+    lineno: int
+    col_offset: int
+
+
+@define(slots=True)
 class ParsedComment:
     """Parsed noqa comment"""
 
@@ -86,33 +98,34 @@ class ParsedComment:
     codes: list[str]
 
 
-ParsedNode = ParsedImport | ParsedFromImport | ParsedClassDef | ParsedFunctionDef | ParsedCall
+ParsedNode = (
+    ParsedImport
+    | ParsedFromImport
+    | ParsedClassDef
+    | ParsedFunctionDef
+    | ParsedCall
+    | ParsedIfImport
+)
 
 
+@define(slots=True)
 class CustomImportRulesVisitor(ast.NodeVisitor):
     """Custom import rules node visitor."""
 
-    errors: list[tuple[int, int, str]] = list()
-    current_modules: list[str] = list()
-    package_names: list[list[str]] = list()
-    imports: list = list()
-    nodes: list = list()
-    filename: Path | None = None
+    package_names: list[str] = field(factory=list)
+    filename: str | None = None
+    errors: list[tuple[int, int, str]] = field(factory=list)
+    nodes: list = field(factory=list)
+    current_package: list[str] = field(factory=list)
+    file_path: Path | None = None
+    resolve_local_imports: bool | None = field(default=False)
 
-    def __init__(
-        self,
-        application_import_names: list[str],
-        standard_library_only: list[str],
-        filename: str | None = None,
-    ) -> None:
-        """Initialize the visitor."""
-        self.nodes: list = []
-        self.current_modules: list = application_import_names
-        self.standard_library_only = standard_library_only
-        self.filename = Path(filename) if filename else None
-        print(f"Visitor filename: {self.filename}")
-        self.resolve_local_imports = filename not in {"stdin", "-", "/dev/stdin", None}
-        print(f"Resolve local imports: {self.resolve_local_imports}")
+    def __attrs_post_init__(self) -> None:
+        filename = self.filename
+        self.file_path = Path(filename) if filename else None
+        logger.info(f"Visitor filename: {self.filename}")
+        self.resolve_local_imports = filename not in {"stdin", "-", "/dev/stdin", "", None}
+        logger.info(f"Resolve local imports: {self.resolve_local_imports}")
 
     def visit_Import(self, node: ast.Import) -> None:
         """Visit an Import node."""
@@ -140,7 +153,7 @@ class CustomImportRulesVisitor(ast.NodeVisitor):
 
     def _resolve_local_import(self, module: str, node_level: int) -> Path | None:
         """Resolve a local import."""
-        parent = self.filename.parents[node_level - 1] if self.filename else None
+        parent = self.file_path.parents[node_level - 1] if self.file_path else None
         return parent / f"{module}.py" if parent else None
 
     def _get_import_type(self, module: str, node_level: int) -> ImportType:
@@ -245,6 +258,28 @@ class CustomImportRulesVisitor(ast.NodeVisitor):
         #     )
         self.generic_visit(node)
 
+    @staticmethod
+    def _get_if_import_location(node: ast.Import | ast.ImportFrom) -> tuple[int, int]:
+        """Get the location for import nodes within an If node."""
+        return node.lineno, node.col_offset
+
+    def visit_If(self, node: ast.If) -> None:
+        """Visit an If node."""
+        if_nodes = node.body + node.orelse
+        if conditional_imports := (
+            self._get_if_import_location(sub_node)
+            for sub_node in if_nodes
+            if isinstance(sub_node, (ast.Import, ast.ImportFrom))
+        ):
+            for lineno, col_offset in conditional_imports:
+                self.nodes.append(
+                    ParsedIfImport(
+                        lineno=lineno,
+                        col_offset=col_offset,
+                    )
+                )
+        self.generic_visit(node)
+
     def _classify_type(self, module: str) -> ImportType:
         """
         Classify the import type.
@@ -265,7 +300,7 @@ class CustomImportRulesVisitor(ast.NodeVisitor):
         for package in reversed(package_names):
             if package == "__future__":
                 return ImportType.FUTURE
-            elif package in self.current_modules:
+            elif package in self.current_package:
                 return ImportType.FIRST_PARTY
             elif package in STDLIB_NAMES:
                 return ImportType.STDLIB
