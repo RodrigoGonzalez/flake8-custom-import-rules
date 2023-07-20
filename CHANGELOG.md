@@ -1,3 +1,15 @@
+## v0.4.3 (2023-07-20)
+
+### Refactor
+
+- **test-cases**: updated wildcard import checks
+- **tests**: update tests to use linter fixture (#32)
+- implement and connect import rules (#31)
+- **import-rules**: remove option arguments, use option dict directly (#30)
+- update setting option keys (#29)
+- update linters and vistor and error codes (#28)
+- **error-codes**: add properties for code and message (#27)
+
 ## v0.4.2 (2023-07-19)
 
 ### Refactor
