@@ -15,12 +15,6 @@ def test_noop() -> None:
     assert results("") == set()
 
 
-def test_star() -> None:
-    """Test star."""
-    # assert results("from my_base_module.module_z import *") == {"1:0: CIR101 Custom Import Rule"}
-    assert results("from my_base_module.module_z import *") == set()
-
-
 def test_eval() -> None:
     """Test eval."""
     # assert results("eval('import datetime')") == set()

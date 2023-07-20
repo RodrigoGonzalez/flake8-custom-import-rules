@@ -130,12 +130,17 @@ class CustomImportRules:
         self, node: ParsedNode
     ) -> Generator[ErrorMessage, None, None]:
         """Check project level restrictions"""
-        # yield from self._check_standard_import_restrictions(node)
+        yield from self._check_standard_import_restrictions(node)
         yield from self._check_special_cases_import_restrictions(node)
 
-    def _check_standard_import_restrictions(self, node: ParsedNode) -> None:
+    def _check_standard_import_restrictions(
+        self, node: ParsedNode
+    ) -> Generator[ErrorMessage, None, None]:
         """Check standard import restrictions"""
-        _ = node
+        if self.checker_settings.RESTRICT_WILDCARD_IMPORTS and (
+            isinstance(node, (ParsedImport, ParsedFromImport))
+        ):
+            yield from self._check_for_pir107(node)
 
     def _check_special_cases_import_restrictions(
         self, node: ParsedNode
@@ -362,9 +367,12 @@ class CustomImportRules:
         if ErrorCode.PIR106.code in self.codes_to_check:
             yield generate_from_node(node, ErrorCode.PIR106)
 
-    def _check_for_pir107(self, node: ParsedNode) -> Generator[ErrorMessage, None, None]:
-        """Check for PIR107."""
-        if ErrorCode.PIR107.code in self.codes_to_check:
+    def _check_for_pir107(
+        self, node: ParsedFromImport | ParsedImport
+    ) -> Generator[ErrorMessage, None, None]:
+        """Check for PIR107 from * imports."""
+        condition = "*" in node.module or "*" in node.name if hasattr(node, "name") else False
+        if ErrorCode.PIR107.code in self.codes_to_check and condition:
             yield generate_from_node(node, ErrorCode.PIR107)
 
     def _check_for_pir108(self, node: ParsedNode) -> Generator[ErrorMessage, None, None]:
@@ -403,13 +411,13 @@ class CustomImportRules:
             yield generate_from_node(node, ErrorCode.PIR206)
 
     def _check_for_pir207(self, node: ParsedImport) -> Generator[ErrorMessage, None, None]:
-        """Check for PIR207."""
+        """Check for PIR207, import __init__."""
         condition = "__init__" in node.module
         if ErrorCode.PIR207.code in self.codes_to_check and condition:
             yield generate_from_node(node, ErrorCode.PIR207)
 
     def _check_for_pir208(self, node: ParsedFromImport) -> Generator[ErrorMessage, None, None]:
-        """Check for PIR208."""
+        """Check for PIR208, from __init__ imports."""
         condition = "__init__" in node.module or "__init__" in node.name
         if ErrorCode.PIR208.code in self.codes_to_check and condition:
             yield generate_from_node(node, ErrorCode.PIR208)
