@@ -42,4 +42,4 @@ class Settings:
         return [key for key in settings.keys() if key.isupper()]
 
 
-DEFAULT_SETTINGS = Settings()
+DEFAULT_CHECKER_SETTINGS = Settings()

@@ -10,6 +10,8 @@ import pendulum
 from attrs import define
 from attrs import field
 
+import my_base_module.module_y
+from my_base_module import module_z
 from my_base_module.package_b.module_b import B
 from my_base_module.package_c.module_c import C
 from my_base_module.package_c.package_d.module_d import D as DEE
@@ -78,7 +80,9 @@ class A:
     def get_name_of_class_x(self, print_class_x: bool = True) -> str:
         """Get the name of class X."""
         import datetime
-        from my_base_module.module_x import X, print_x
+
+        from my_base_module.module_x import X
+        from my_base_module.module_x import print_x
 
         x = X(
             name=f"{self._name}: X",
@@ -89,6 +93,18 @@ class A:
             print_x(x)
 
         return x.name()
+
+    @staticmethod
+    def get_created_at_class_y() -> datetime:
+        """Get the time of class Y."""
+        y = my_base_module.module_y.Y()
+        return y.created_at()
+
+    @staticmethod
+    def get_id_class_z() -> datetime:
+        """Get the time of class Y."""
+        z = module_z.Z()
+        return z.id()
 
     @staticmethod
     def dynamic_imports_one() -> None:
