@@ -7,8 +7,10 @@ import pycodestyle
 from attrs import define
 from attrs import field
 
+from flake8_custom_import_rules.core.import_rules import CustomImportRules
 from flake8_custom_import_rules.core.node_visitor import CustomImportRulesVisitor
 from flake8_custom_import_rules.core.node_visitor import ParsedNode
+from flake8_custom_import_rules.defaults import DEFAULT_CHECKER_SETTINGS
 from flake8_custom_import_rules.utils.parse_utils import NOQA_INLINE_REGEXP
 from flake8_custom_import_rules.utils.parse_utils import parse_comma_separated_list
 
@@ -94,7 +96,9 @@ class CustomImportRulesChecker:
         """Run the plugin."""
         # print(f"Options under: {self._options}")
         # print(f"Visitor: {self.visitor}")
-        print(f"Nodes: {self.nodes}")
+        # print(f"Nodes: {self.nodes}")
+        checker_settings = self.options.get("checker_settings", DEFAULT_CHECKER_SETTINGS)
+        import_rules = CustomImportRules(nodes=self.nodes, checker_settings=checker_settings)
         # newlines = [
         #     EmptyLine(lineno)  # Lines are ordinal, no zero line
         #     for lineno, line in enumerate(self.lines, start=1)
@@ -104,7 +108,10 @@ class CustomImportRulesChecker:
         #     chain(newlines, self.nodes),
         #     key=lambda element: element.lineno,
         # )
-        yield 1, 0, "CIR101 Custom Import Rule", type(self)
+        for error in import_rules.check_import_rules():
+            if not self.error_is_ignored(error):
+                yield self.error(error)
+        # yield 1, 0, "CIR101 Custom Import Rule", type(self)
 
     @staticmethod
     def error(error: Any) -> Any:

@@ -11,7 +11,7 @@ from flake8.options.manager import OptionManager
 
 from flake8_custom_import_rules.core.import_rules import ErrorMessage
 from flake8_custom_import_rules.core.rules_checker import CustomImportRulesChecker
-from flake8_custom_import_rules.defaults import DEFAULT_SETTINGS
+from flake8_custom_import_rules.defaults import DEFAULT_CHECKER_SETTINGS
 from flake8_custom_import_rules.defaults import Settings
 
 if sys.version_info < (3, 8):
@@ -63,7 +63,7 @@ class Linter(CustomImportRulesChecker):
         register_opt(
             option_manager,
             "--top-level-only",
-            default=DEFAULT_SETTINGS.TOP_LEVEL_ONLY,
+            default=DEFAULT_CHECKER_SETTINGS.TOP_LEVEL_ONLY,
             action="store",
             type=bool,
             help="Only top level imports are permitted in the project.",
@@ -75,7 +75,7 @@ class Linter(CustomImportRulesChecker):
         register_opt(
             option_manager,
             "--restrict-relative-imports",
-            default=DEFAULT_SETTINGS.RESTRICT_RELATIVE_IMPORTS,
+            default=DEFAULT_CHECKER_SETTINGS.RESTRICT_RELATIVE_IMPORTS,
             action="store",
             type=bool,
             help="Relative imports are not permitted in the project.",
@@ -87,7 +87,7 @@ class Linter(CustomImportRulesChecker):
         register_opt(
             option_manager,
             "--restrict-local-imports",
-            default=DEFAULT_SETTINGS.RESTRICT_LOCAL_IMPORTS,
+            default=DEFAULT_CHECKER_SETTINGS.RESTRICT_LOCAL_IMPORTS,
             action="store",
             type=bool,
             help="Local imports are not permitted in the project.",
@@ -99,7 +99,7 @@ class Linter(CustomImportRulesChecker):
         register_opt(
             option_manager,
             "--restrict-conditional-imports",
-            default=DEFAULT_SETTINGS.RESTRICT_CONDITIONAL_IMPORTS,
+            default=DEFAULT_CHECKER_SETTINGS.RESTRICT_CONDITIONAL_IMPORTS,
             action="store",
             type=bool,
             help="Conditional imports are not permitted in the project.",
@@ -111,7 +111,7 @@ class Linter(CustomImportRulesChecker):
         register_opt(
             option_manager,
             "--restrict-dynamic-imports",
-            default=DEFAULT_SETTINGS.RESTRICT_DYNAMIC_IMPORTS,
+            default=DEFAULT_CHECKER_SETTINGS.RESTRICT_DYNAMIC_IMPORTS,
             action="store",
             type=bool,
             help="Dynamic imports are not permitted in the project.",
@@ -123,7 +123,7 @@ class Linter(CustomImportRulesChecker):
         register_opt(
             option_manager,
             "--restrict-functional-imports",
-            default=DEFAULT_SETTINGS.RESTRICT_FUNCTIONAL_IMPORTS,
+            default=DEFAULT_CHECKER_SETTINGS.RESTRICT_FUNCTIONAL_IMPORTS,
             action="store",
             type=bool,
             help="Functional imports are not permitted in the project.",
@@ -135,7 +135,7 @@ class Linter(CustomImportRulesChecker):
         register_opt(
             option_manager,
             "--restrict-wildcard-imports",
-            default=DEFAULT_SETTINGS.RESTRICT_WILDCARD_IMPORTS,
+            default=DEFAULT_CHECKER_SETTINGS.RESTRICT_WILDCARD_IMPORTS,
             action="store",
             type=bool,
             help="Wildcard/star imports are not permitted in the project.",
@@ -147,7 +147,7 @@ class Linter(CustomImportRulesChecker):
         register_opt(
             option_manager,
             "--restrict-aliased-imports",
-            default=DEFAULT_SETTINGS.RESTRICT_ALIASED_IMPORTS,
+            default=DEFAULT_CHECKER_SETTINGS.RESTRICT_ALIASED_IMPORTS,
             action="store",
             type=bool,
             help="Dynamic imports are not permitted in the project.",
@@ -159,7 +159,7 @@ class Linter(CustomImportRulesChecker):
         register_opt(
             option_manager,
             "--restrict-init-imports",
-            default=DEFAULT_SETTINGS.RESTRICT_INIT_IMPORTS,
+            default=DEFAULT_CHECKER_SETTINGS.RESTRICT_INIT_IMPORTS,
             action="store",
             type=bool,
             help="Init imports are not permitted in the project.",
@@ -171,7 +171,7 @@ class Linter(CustomImportRulesChecker):
         register_opt(
             option_manager,
             "--restrict-test-imports",
-            default=DEFAULT_SETTINGS.RESTRICT_TEST_IMPORTS,
+            default=DEFAULT_CHECKER_SETTINGS.RESTRICT_TEST_IMPORTS,
             action="store",
             type=bool,
             help="Test imports are not permitted in the project.",
@@ -183,7 +183,7 @@ class Linter(CustomImportRulesChecker):
         register_opt(
             option_manager,
             "--restrict-conftest-imports",
-            default=DEFAULT_SETTINGS.RESTRICT_CONFTEST_IMPORTS,
+            default=DEFAULT_CHECKER_SETTINGS.RESTRICT_CONFTEST_IMPORTS,
             action="store",
             type=bool,
             help="Conftest imports are not permitted in the project.",
@@ -213,7 +213,7 @@ class Linter(CustomImportRulesChecker):
             ]
 
         options: dict = {"base_package": base_packages}
-        for option_key in DEFAULT_SETTINGS.get_option_keys():
+        for option_key in DEFAULT_CHECKER_SETTINGS.get_option_keys():
             option_value = getattr(parse_options, option_key.lower())
             if option_value is not None:
                 options[option_key] = option_value
