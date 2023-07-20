@@ -50,15 +50,6 @@ class CustomImportRules:
     foundation_modules: list[str] = field(factory=list)
     standard_library_only: list[str] = field(factory=list)
     check_top_level_only: bool = field(default=False)
-    restrict_relative_imports: bool = field(default=False)
-    restrict_conditional_imports: bool = field(default=False)
-    restrict_local_imports: bool = field(default=False)
-    restrict_functional_imports: bool = field(default=False)
-    restrict_dynamic_imports: bool = field(default=False)
-    restrict_aliased_imports: bool = field(default=False)
-    restrict_imports_from_init: bool = field(default=False)
-    restrict_imports_from_tests: bool = field(default=False)
-    restrict_imports_from_conftest: bool = field(default=False)
 
     def __attrs_post_init__(self) -> None:
         self.nodes = sorted(
@@ -80,46 +71,6 @@ class CustomImportRules:
         self.standard_library_only = options.get(
             "standard_library_only",
             [],
-        )
-        self.check_top_level_only = options.get(
-            "check_top_level_only",
-            False,
-        )
-        self.restrict_relative_imports = options.get(
-            "restrict_relative_imports",
-            False,
-        )
-        self.restrict_conditional_imports = options.get(
-            "restrict_conditional_imports",
-            False,
-        )
-        self.restrict_local_imports = options.get(
-            "restrict_local_imports",
-            False,
-        )
-        self.restrict_functional_imports = options.get(
-            "restrict_functional_imports",
-            False,
-        )
-        self.restrict_dynamic_imports = options.get(
-            "restrict_dynamic_imports",
-            False,
-        )
-        self.restrict_aliased_imports = options.get(
-            "restrict_aliased_imports",
-            False,
-        )
-        self.restrict_imports_from_init = options.get(
-            "restrict_imports_from_init",
-            False,
-        )
-        self.restrict_imports_from_tests = options.get(
-            "restrict_imports_from_tests",
-            False,
-        )
-        self.restrict_imports_from_conftest = options.get(
-            "restrict_imports_from_conftest",
-            False,
         )
 
     def check_import_rules(self) -> Generator[tuple[int, int, str, str], Any, None]:
