@@ -41,6 +41,16 @@ from flake8_custom_import_rules.defaults import Settings
             set(),
             False,
         ),
+        (
+            "import os; from datetime import datetime",
+            set(),
+            True,
+        ),
+        (
+            "from __init__ import module; from .module_a import A",
+            set(),
+            False,
+        ),
     ],
 )
 def test_init_import_codes(

@@ -170,6 +170,11 @@ class CustomImportRules:
         ):
             yield from self._check_for_pir107(node)
 
+        if self.checker_settings.RESTRICT_ALIASED_IMPORTS and (
+            isinstance(node, (ParsedImport, ParsedFromImport))
+        ):
+            yield from self._check_for_pir108(node)
+
     def _check_special_cases_import_restrictions(
         self, node: ParsedNode
     ) -> Generator[ErrorMessage, None, None]:
@@ -404,9 +409,12 @@ class CustomImportRules:
         if ErrorCode.PIR107.code in self.codes_to_check and condition:
             yield generate_from_node(node, ErrorCode.PIR107)
 
-    def _check_for_pir108(self, node: ParsedNode) -> Generator[ErrorMessage, None, None]:
+    def _check_for_pir108(
+        self, node: ParsedFromImport | ParsedImport
+    ) -> Generator[ErrorMessage, None, None]:
         """Check for PIR108, aliased import restrictions."""
-        if ErrorCode.PIR108.code in self.codes_to_check:
+        condition = hasattr(node, "asname") and node.asname is not None
+        if ErrorCode.PIR108.code in self.codes_to_check and condition:
             yield generate_from_node(node, ErrorCode.PIR108)
 
     def _check_for_pir201(self, node: ParsedNode) -> Generator[ErrorMessage, None, None]:
