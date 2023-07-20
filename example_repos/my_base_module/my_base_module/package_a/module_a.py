@@ -90,7 +90,6 @@ class A:
 
         return x.name()
 
-
     @staticmethod
     def dynamic_imports_one() -> None:
         """Use dynamic imports."""
