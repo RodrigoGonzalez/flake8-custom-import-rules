@@ -92,7 +92,7 @@ class CustomImportRulesChecker:
 
     def check_custom_import_rules(self) -> Generator[Any, None, None]:
         """Run the plugin."""
-        print(f"Options under: {self._options}")
+        # print(f"Options under: {self._options}")
         # print(f"Visitor: {self.visitor}")
         print(f"Nodes: {self.nodes}")
         # newlines = [

@@ -12,6 +12,7 @@ from flake8.options.manager import OptionManager
 from flake8_custom_import_rules.core.import_rules import ErrorMessage
 from flake8_custom_import_rules.core.rules_checker import CustomImportRulesChecker
 from flake8_custom_import_rules.defaults import DEFAULT_SETTINGS
+from flake8_custom_import_rules.defaults import Settings
 
 if sys.version_info < (3, 8):
     import importlib_metadata
@@ -155,6 +156,42 @@ class Linter(CustomImportRulesChecker):
             normalize_paths=False,
         )
 
+        register_opt(
+            option_manager,
+            "--restrict-init-imports",
+            default=DEFAULT_SETTINGS.RESTRICT_INIT_IMPORTS,
+            action="store",
+            type=bool,
+            help="Dynamic imports are not permitted in the project.",
+            parse_from_config=True,
+            comma_separated_list=False,
+            normalize_paths=False,
+        )
+
+        register_opt(
+            option_manager,
+            "--restrict-test-imports",
+            default=DEFAULT_SETTINGS.RESTRICT_TEST_IMPORTS,
+            action="store",
+            type=bool,
+            help="Dynamic imports are not permitted in the project.",
+            parse_from_config=True,
+            comma_separated_list=False,
+            normalize_paths=False,
+        )
+
+        register_opt(
+            option_manager,
+            "--restrict-conftest-imports",
+            default=DEFAULT_SETTINGS.RESTRICT_CONFTEST_IMPORTS,
+            action="store",
+            type=bool,
+            help="Dynamic imports are not permitted in the project.",
+            parse_from_config=True,
+            comma_separated_list=False,
+            normalize_paths=False,
+        )
+
     @classmethod
     def parse_options(
         cls, option_manager: OptionManager, parse_options: Namespace, *args: Any
@@ -164,8 +201,8 @@ class Linter(CustomImportRulesChecker):
         logger.debug(f"Options: {parse_options}")
         logger.debug(f"Args: {args}")
         # print(f"\nOption Manager: {option_manager}")
-        print(f"\nOptions: {parse_options}")
-        print(f"\nArgs: {args}")
+        # print(f"\nOptions: {parse_options}")
+        # print(f"\nArgs: {args}")
         # Parse options for CustomImportRulesChecker
         # cls.parse_custom_rules_options(options)
 
@@ -175,9 +212,15 @@ class Linter(CustomImportRulesChecker):
                 pkg.strip() for pkg in parse_options.application_import_names.split(",")
             ]
 
+        options: dict = {"base_package": base_packages}
+        for option_key in DEFAULT_SETTINGS.get_option_keys():
+            option_value = getattr(parse_options, option_key.lower())
+            if option_value is not None:
+                options[option_key] = option_value
+
         parsed_options: dict = {
             "base_packages": base_packages,
-            "checker_settings": DEFAULT_SETTINGS,
+            "checker_settings": Settings(**options),
         }
 
         logger.debug(f"Parsed Options: {parsed_options}")
