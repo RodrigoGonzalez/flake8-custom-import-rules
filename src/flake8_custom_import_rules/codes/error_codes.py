@@ -91,6 +91,16 @@ class ErrorCode(Enum, metaclass=ErrorCodeMeta):
     PIR207 = "PIR207 Block import `__init__`."
     PIR208 = "PIR208 Block imports from `__init__.py files`."
 
+    @property
+    def code(self) -> str:
+        """Get error code."""
+        return self.name
+
+    @property
+    def message(self) -> str:
+        """Get error code."""
+        return self.value.split(f"{self.name} ")[1]
+
     @staticmethod
     def get_error_code(error_code: Any) -> str:
         """Get error code."""
@@ -117,7 +127,7 @@ class ErrorCode(Enum, metaclass=ErrorCodeMeta):
         return [error_code.name for error_code in cls]
 
     @classmethod
-    def get_all_blocked_import_rule_codes(cls) -> list[str]:
+    def get_all_project_import_rule_codes(cls) -> list[str]:
         """Get all blocked import rule codes."""
         return list(filter(lambda x: x.startswith("PIR"), cls.get_all_error_codes()))
 
@@ -174,5 +184,5 @@ def _(error_code: ErrorCode) -> str:
 
 
 AllErrorCodes = ErrorCode.get_all_error_codes()
-AllBlockedImportCodes = ErrorCode.get_all_blocked_import_rule_codes()
+AllProjectImportCodes = ErrorCode.get_all_project_import_rule_codes()
 AllCustomImportCodes = ErrorCode.get_all_custom_import_rule_codes()

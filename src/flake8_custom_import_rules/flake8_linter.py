@@ -9,6 +9,7 @@ from typing import Any
 
 from flake8.options.manager import OptionManager
 
+from flake8_custom_import_rules.core.import_rules import ErrorMessage
 from flake8_custom_import_rules.core.rules_checker import CustomImportRulesChecker
 from flake8_custom_import_rules.defaults import DEFAULT_SETTINGS
 
@@ -23,7 +24,7 @@ logger = logging.getLogger(f"flake8_custom_import_rules.{__name__}")
 class Linter(CustomImportRulesChecker):
     name = "flake8-custom-import-rules"
     version = importlib_metadata.version(name)
-    _options: dict[str, list[str] | str] | None = None
+    _options: dict[str, list[str] | str] = {}
 
     def __init__(
         self, tree: ast.AST | None = None, filename: str | None = None, lines: list | None = None
@@ -96,11 +97,11 @@ class Linter(CustomImportRulesChecker):
         # print(f"Parsed Options: {parsed_options}")
         cls._options = parsed_options
 
-    def error(self, error: Any) -> tuple:
+    def error(self, error: ErrorMessage) -> tuple:
         """Return the error."""
         return (
             error.lineno,
-            0,
+            error.col_offset,
             f"{error.code} {error.message}",
             Linter,
         )
@@ -111,17 +112,22 @@ class Linter(CustomImportRulesChecker):
         # print(f"Slots: {self.__slots__}")
         yield from self.check_custom_import_rules()
 
+    # def setup_test_run(self, options: dict) -> None:
+    #     """Run flake8-custom-import-rules."""
+    #     self._options = options
+    #     # yield from self.check_custom_import_rules()
 
-def register_opt(option_manager: OptionManager, *args: Any, **kwargs: Any) -> None:
+
+def register_opt(self: OptionManager, *args: Any, **kwargs: Any) -> None:
     """Register options for flake8-custom-import-rules."""
     try:
         # Flake8 3.x registration
-        option_manager.add_option(*args, **kwargs)
+        self.add_option(*args, **kwargs)
     except (optparse.OptionError, TypeError):
         # Flake8 2.x registration
         parse_from_config = kwargs.pop("parse_from_config", False)
         kwargs.pop("comma_separated_list", False)
         kwargs.pop("normalize_paths", False)
-        option_manager.add_option(*args, **kwargs)
+        self.add_option(*args, **kwargs)
         if parse_from_config:
-            option_manager.config_options.append(args[-1].lstrip("-"))
+            self.config_options.append(args[-1].lstrip("-"))

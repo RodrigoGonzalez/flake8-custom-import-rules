@@ -15,6 +15,8 @@ NOQA_INLINE_REGEXP = re.compile(
     re.IGNORECASE,
 )
 
+BLANK_LINE_RE = re.compile(r"\s*\n")
+
 
 def parse_comma_separated_list(value: str) -> set[str]:
     """Parse a comma-separated list of values."""

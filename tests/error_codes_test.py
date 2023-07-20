@@ -2,14 +2,14 @@ from __future__ import annotations
 
 import pytest
 
-from flake8_custom_import_rules.codes.error_codes import AllBlockedImportCodes
 from flake8_custom_import_rules.codes.error_codes import AllCustomImportCodes
 from flake8_custom_import_rules.codes.error_codes import AllErrorCodes
+from flake8_custom_import_rules.codes.error_codes import AllProjectImportCodes
 from flake8_custom_import_rules.codes.error_codes import ErrorCode
 from flake8_custom_import_rules.codes.exceptions import ErrorCodeError
 from flake8_custom_import_rules.codes.exceptions import ErrorCodeTypeError
 
-BLOCKED_IMPORT_RULES = [
+PROJECT_IMPORT_RULES = [
     "PIR101",
     "PIR102",
     "PIR103",
@@ -28,7 +28,7 @@ BLOCKED_IMPORT_RULES = [
     "PIR208",
 ]
 
-BLOCKED_IMPORT_RULES_ENUMS = [
+PROJECT_IMPORT_RULES_ENUMS = [
     ErrorCode.PIR101,
     ErrorCode.PIR102,
     ErrorCode.PIR103,
@@ -95,9 +95,9 @@ CUSTOM_IMPORT_RULES_ENUMS = [
     ErrorCode.CIR502,
 ]
 
-ALL_ERROR_CODES = BLOCKED_IMPORT_RULES + CUSTOM_IMPORT_RULES
+ALL_ERROR_CODES = PROJECT_IMPORT_RULES + CUSTOM_IMPORT_RULES
 
-ALL_ERROR_CODES_ENUMS = BLOCKED_IMPORT_RULES_ENUMS + CUSTOM_IMPORT_RULES_ENUMS
+ALL_ERROR_CODES_ENUMS = PROJECT_IMPORT_RULES_ENUMS + CUSTOM_IMPORT_RULES_ENUMS
 
 
 @pytest.fixture(scope="module")
@@ -126,10 +126,10 @@ def test_get_error_codes(error_codes):
     assert sorted(AllErrorCodes) == sorted(error_codes), msg
 
 
-def test_get_all_blocked_import_rule_codes():
-    """Test get_all_blocked_import_rule_codes."""
-    assert ErrorCode.get_all_blocked_import_rule_codes() == BLOCKED_IMPORT_RULES
-    assert AllBlockedImportCodes == BLOCKED_IMPORT_RULES
+def test_get_all_project_import_rule_codes():
+    """Test get_all_project_import_rule_codes."""
+    assert ErrorCode.get_all_project_import_rule_codes() == PROJECT_IMPORT_RULES
+    assert AllProjectImportCodes == PROJECT_IMPORT_RULES
 
 
 def test_get_all_custom_import_rule_codes():
