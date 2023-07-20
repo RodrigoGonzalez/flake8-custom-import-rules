@@ -10,6 +10,7 @@ from flake8_custom_import_rules.codes.error_codes import ErrorCode
 from flake8_custom_import_rules.core.node_visitor import ParsedFromImport
 from flake8_custom_import_rules.core.node_visitor import ParsedIfImport
 from flake8_custom_import_rules.core.node_visitor import ParsedImport
+from flake8_custom_import_rules.core.node_visitor import ParsedLocalImport
 from flake8_custom_import_rules.core.node_visitor import ParsedNode
 from flake8_custom_import_rules.defaults import Settings
 from flake8_custom_import_rules.utils.parse_utils import parse_custom_rule
@@ -145,10 +146,8 @@ class CustomImportRules:
         if self.checker_settings.RESTRICT_RELATIVE_IMPORTS and (isinstance(node, ParsedFromImport)):
             yield from self._check_for_pir102(node)
 
-        # if self.checker_settings.RESTRICT_LOCAL_IMPORTS and (
-        #     isinstance(node, (ParsedImport, ParsedFromImport))
-        # ):
-        #     yield from self._check_for_pir103(node)
+        if self.checker_settings.RESTRICT_LOCAL_IMPORTS and (isinstance(node, ParsedLocalImport)):
+            yield from self._check_for_pir103(node)
 
         if self.checker_settings.RESTRICT_CONDITIONAL_IMPORTS and (
             isinstance(node, ParsedIfImport)
@@ -383,7 +382,8 @@ class CustomImportRules:
 
     def _check_for_pir103(self, node: ParsedNode) -> Generator[ErrorMessage, None, None]:
         """Check for PIR103, local import restrictions."""
-        if ErrorCode.PIR103.code in self.codes_to_check:
+        condition = isinstance(node, ParsedLocalImport)
+        if ErrorCode.PIR103.code in self.codes_to_check and condition:
             yield generate_from_node(node, ErrorCode.PIR103)
 
     def _check_for_pir104(self, node: ParsedNode) -> Generator[ErrorMessage, None, None]:

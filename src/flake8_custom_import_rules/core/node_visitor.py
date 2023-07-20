@@ -65,6 +65,15 @@ class ParsedFromImport:
 
 
 @define(slots=True)
+class ParsedLocalImport:
+    """Parsed class definition"""
+
+    lineno: int
+    col_offset: int
+    local_node_type: str
+
+
+@define(slots=True)
 class ParsedClassDef:
     """Parsed class definition"""
 
@@ -114,6 +123,7 @@ class ParsedComment:
 ParsedNode = (
     ParsedImport
     | ParsedFromImport
+    | ParsedLocalImport
     | ParsedClassDef
     | ParsedFunctionDef
     | ParsedCall
@@ -199,6 +209,20 @@ class CustomImportRulesVisitor(ast.NodeVisitor):
         # Ensures a complete traversal of the AST
         self.generic_visit(node)
 
+    def _check_local_import(
+        self, node: ast.ClassDef | ast.FunctionDef | ast.AsyncFunctionDef
+    ) -> None:
+        """Check if a local import is resolved."""
+        for stmt in node.body:
+            if isinstance(stmt, (ast.Import, ast.ImportFrom)):
+                self.nodes.append(
+                    ParsedLocalImport(
+                        lineno=node.lineno,
+                        col_offset=node.col_offset,
+                        local_node_type=str(type(node)),
+                    )
+                )
+
     def visit_ClassDef(self, node: ast.ClassDef) -> None:
         """Visit a ClassDef node."""
         self.nodes.append(
@@ -208,6 +232,7 @@ class CustomImportRulesVisitor(ast.NodeVisitor):
                 col_offset=node.col_offset,
             )
         )
+        self._check_local_import(node)
         self.generic_visit(node)
 
     def visit_FunctionDef(self, node: ast.FunctionDef) -> None:
@@ -219,6 +244,7 @@ class CustomImportRulesVisitor(ast.NodeVisitor):
                 col_offset=node.col_offset,
             )
         )
+        self._check_local_import(node)
         self.generic_visit(node)
 
     def visit_AsyncFunctionDef(self, node: ast.AsyncFunctionDef) -> None:
@@ -230,6 +256,7 @@ class CustomImportRulesVisitor(ast.NodeVisitor):
                 col_offset=node.col_offset,
             )
         )
+        self._check_local_import(node)
         self.generic_visit(node)
 
     @staticmethod
