@@ -14,6 +14,7 @@ from flake8_custom_import_rules.core.rules_checker import CustomImportRulesCheck
 class Linter(CustomImportRulesChecker, BaseLinter):
     name = "custom-import-rules"
     version = __version__
+    ast_tree = None
 
     def __init__(self) -> None:
         super().__init__(None, None)
@@ -24,6 +25,7 @@ class Linter(CustomImportRulesChecker, BaseLinter):
         return path.endswith(".py")
 
     def error(self, error: ErrorMessage) -> dict:
+        """Convert an error message to a dictionary."""
         return {
             "lnum": error.lineno,
             "col": 0,
@@ -31,13 +33,12 @@ class Linter(CustomImportRulesChecker, BaseLinter):
             "type": error.code,
         }
 
-    def run(self, path: str, **meta: Any) -> Generator[Any, None, None]:
+    def run(self, path: str, **meta: dict) -> Generator[Any, None, None]:
         self._filename = path
-        self.ast_tree = None
         meta.setdefault("import_order_style", DEFAULT_IMPORT_ORDER_STYLE)
         meta["import_order_style"] = lookup_entry_point(
             meta["import_order_style"],
         )
-        self.options = meta
+        self._options = meta
 
         yield from self.check_order()

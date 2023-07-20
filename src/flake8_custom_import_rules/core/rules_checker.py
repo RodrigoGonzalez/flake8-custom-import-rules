@@ -21,7 +21,12 @@ class CustomImportRulesChecker:
     _filename: str | None = None
     _lines: list[str] | None = None
     _nodes: list[ParsedNode] | None = None
-    _options: dict[str, list[str] | str] = field(factory=dict)
+    _visitor: CustomImportRulesVisitor | None = None
+    _options: dict[str, list[str] | str] = field(init=False)
+
+    # def __attrs_post_init__(self) -> None:
+    #     """Post init."""
+    #     self._options = self._parsed_options
 
     @property
     def tree(self) -> ast.AST:
@@ -61,21 +66,33 @@ class CustomImportRulesChecker:
         """Return the options."""
         return self._options
 
-    @staticmethod
-    def error(error: Any) -> Any:
-        """Return the error."""
-        return error
+    @property
+    def visitor(self) -> CustomImportRulesVisitor:
+        """Return the visitor to use for this plugin."""
+        if self._visitor is None:
+            self._visitor = self.get_visitor()
+        return self._visitor
 
     def get_visitor(self) -> CustomImportRulesVisitor:
         """Return the visitor to use for this plugin."""
-
+        print(f"Options: {self.options}")
         visitor = CustomImportRulesVisitor(
             self.options.get("base_packages", []),
-            [],
             filename=self.filename,
         )
         visitor.visit(self.tree)
         return visitor
+
+    def check_custom_import_rules(self) -> Generator[Any, None, None]:
+        """Run the plugin."""
+        print(f"Options under: {self._options}")
+        # print(f"Visitor: {self.visitor}")
+        yield 1, 0, "CIR101 Custom Import Rule", type(self)
+
+    @staticmethod
+    def error(error: Any) -> Any:
+        """Return the error."""
+        return error
 
     def error_is_ignored(self, error: Any) -> bool:
         """
@@ -105,13 +122,16 @@ class CustomImportRulesChecker:
 
 
 class BaseCustomImportRulePlugin(CustomImportRulesChecker):
-    def __init__(self, tree: ast.AST | None = None, filename: str | None = None):
+    def __init__(
+        self, tree: ast.AST | None = None, filename: str | None = None, lines: list | None = None
+    ) -> None:
         """Initialize the checker."""
-        super().__init__(tree, filename)
+        super().__init__(tree=tree, filename=filename, lines=lines)
+        self._options = {}
 
     def run(self) -> Generator[Any, None, None]:
         """Run the plugin."""
-        self.options["base_packages"] = ["my_base_module"]
+        self._options["base_packages"] = ["my_base_module"]
         for node in self.nodes:
             yield node.lineno, node.col_offset, node, type(self)
 
