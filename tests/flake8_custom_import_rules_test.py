@@ -7,7 +7,7 @@ from flake8_custom_import_rules.flake8_linter import Linter
 
 def results(s) -> set[str]:
     """Return a list of results."""
-    return {"{}:{}: {}".format(*r) for r in Linter(ast.parse(s)).run()}
+    return {"{}:{}: {}".format(*r) for r in Linter(ast.parse(s), lines=s.split("; ")).run()}
 
 
 def test_noop() -> None:
