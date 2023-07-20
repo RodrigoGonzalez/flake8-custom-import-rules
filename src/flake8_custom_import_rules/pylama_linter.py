@@ -1,4 +1,5 @@
 """ Pylama linter for flake8-custom-import-rules. """
+import sys
 from collections.abc import Generator
 from typing import Any
 
@@ -6,14 +7,18 @@ from flake8_import_order.checker import DEFAULT_IMPORT_ORDER_STYLE
 from flake8_import_order.styles import lookup_entry_point
 from pylama.lint import Linter as BaseLinter
 
-from flake8_custom_import_rules import __version__
 from flake8_custom_import_rules.core.import_rules import ErrorMessage
 from flake8_custom_import_rules.core.rules_checker import CustomImportRulesChecker
 
+if sys.version_info < (3, 8):
+    import importlib_metadata
+else:
+    import importlib.metadata as importlib_metadata
+
 
 class Linter(CustomImportRulesChecker, BaseLinter):
-    name = "custom-import-rules"
-    version = __version__
+    name = "flake8-custom-import-rules"
+    version = importlib_metadata.version(name)
     ast_tree = None
 
     def __init__(self) -> None:
@@ -28,7 +33,7 @@ class Linter(CustomImportRulesChecker, BaseLinter):
         """Convert an error message to a dictionary."""
         return {
             "lnum": error.lineno,
-            "col": 0,
+            "col": error.col_offset,
             "text": error.message,
             "type": error.code,
         }

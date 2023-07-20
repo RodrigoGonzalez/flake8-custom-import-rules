@@ -13,6 +13,13 @@ from flake8_custom_import_rules.utils.parse_utils import NOQA_INLINE_REGEXP
 from flake8_custom_import_rules.utils.parse_utils import parse_comma_separated_list
 
 
+@define(slots=True)
+class EmptyLine:
+    """Empty line."""
+
+    lineno: int
+
+
 @define(slots=True, hash=False)
 class CustomImportRulesChecker:
     """Custom import rules checker."""
@@ -75,7 +82,7 @@ class CustomImportRulesChecker:
 
     def get_visitor(self) -> CustomImportRulesVisitor:
         """Return the visitor to use for this plugin."""
-        print(f"Options: {self.options}")
+        # print(f"Options: {self.options}")
         visitor = CustomImportRulesVisitor(
             self.options.get("base_packages", []),
             filename=self.filename,
@@ -87,6 +94,16 @@ class CustomImportRulesChecker:
         """Run the plugin."""
         print(f"Options under: {self._options}")
         # print(f"Visitor: {self.visitor}")
+        print(f"Nodes: {self.nodes}")
+        # newlines = [
+        #     EmptyLine(lineno)  # Lines are ordinal, no zero line
+        #     for lineno, line in enumerate(self.lines, start=1)
+        #     if BLANK_LINE_RE.match(line)
+        # ]
+        # combined = sorted(
+        #     chain(newlines, self.nodes),
+        #     key=lambda element: element.lineno,
+        # )
         yield 1, 0, "CIR101 Custom Import Rule", type(self)
 
     @staticmethod
