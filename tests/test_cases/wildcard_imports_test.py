@@ -1,4 +1,7 @@
-""" Test star imports restriction. """ ""
+""" Test wildcard/star imports restriction.
+
+PIR107 = "PIR107 Wildcard imports are not permitted in the project."
+"""
 import pytest
 
 from flake8_custom_import_rules.defaults import Settings
@@ -24,4 +27,5 @@ def test_star_imports(
 ) -> None:
     """Test wildcard imports."""
     options = {"checker_settings": Settings(**{"RESTRICT_WILDCARD_IMPORTS": restrict_star_imports})}
-    assert get_flake8_linter_results(s=test_case, options=options) == expected
+    actual = get_flake8_linter_results(s=test_case, options=options)
+    assert actual == expected

@@ -124,7 +124,6 @@ class CustomImportRules:
         #     if self.check_top_level_only and node.level != 0:
         #         break
         yield from self._check_project_level_restrictions(node)
-        # yield 1, 1, "CIM100", "Custom Import Rules"
 
     def _check_project_level_restrictions(
         self, node: ParsedNode
@@ -137,6 +136,34 @@ class CustomImportRules:
         self, node: ParsedNode
     ) -> Generator[ErrorMessage, None, None]:
         """Check standard import restrictions"""
+        # if self.checker_settings.TOP_LEVEL_ONLY and (
+        #     isinstance(node, (ParsedImport, ParsedFromImport))
+        # ):
+        #     yield from self._check_for_pir101(node)
+
+        if self.checker_settings.RESTRICT_RELATIVE_IMPORTS and (isinstance(node, ParsedFromImport)):
+            yield from self._check_for_pir102(node)
+
+        # if self.checker_settings.RESTRICT_LOCAL_IMPORTS and (
+        #     isinstance(node, (ParsedImport, ParsedFromImport))
+        # ):
+        #     yield from self._check_for_pir103(node)
+        #
+        # if self.checker_settings.RESTRICT_CONDITIONAL_IMPORTS and (
+        #     isinstance(node, ParsedIfImport)
+        # ):
+        #     yield from self._check_for_pir104(node)
+        #
+        # if self.checker_settings.RESTRICT_DYNAMIC_IMPORTS and (
+        #     isinstance(node, (ParsedImport, ParsedFromImport))
+        # ):
+        #     yield from self._check_for_pir105(node)
+        #
+        # if self.checker_settings.RESTRICT_PRIVATE_IMPORTS and (
+        #     isinstance(node, (ParsedImport, ParsedFromImport))
+        # ):
+        #     yield from self._check_for_pir106(node)
+
         if self.checker_settings.RESTRICT_WILDCARD_IMPORTS and (
             isinstance(node, (ParsedImport, ParsedFromImport))
         ):
@@ -338,45 +365,46 @@ class CustomImportRules:
             yield generate_from_node(node, ErrorCode.CIR502)
 
     def _check_for_pir101(self, node: ParsedNode) -> Generator[ErrorMessage, None, None]:
-        """Check for PIR101."""
+        """Check for PIR101, only top level imports are permitted."""
         if ErrorCode.PIR101.code in self.codes_to_check:
             yield generate_from_node(node, ErrorCode.PIR101)
 
-    def _check_for_pir102(self, node: ParsedNode) -> Generator[ErrorMessage, None, None]:
-        """Check for PIR102."""
-        if ErrorCode.PIR102.code in self.codes_to_check:
+    def _check_for_pir102(self, node: ParsedFromImport) -> Generator[ErrorMessage, None, None]:
+        """Check for PIR102, relative import restrictions."""
+        condition = node.level > 0
+        if ErrorCode.PIR102.code in self.codes_to_check and condition:
             yield generate_from_node(node, ErrorCode.PIR102)
 
     def _check_for_pir103(self, node: ParsedNode) -> Generator[ErrorMessage, None, None]:
-        """Check for PIR103."""
+        """Check for PIR103, local import restrictions."""
         if ErrorCode.PIR103.code in self.codes_to_check:
             yield generate_from_node(node, ErrorCode.PIR103)
 
     def _check_for_pir104(self, node: ParsedNode) -> Generator[ErrorMessage, None, None]:
-        """Check for PIR104."""
+        """Check for PIR104, conditional import restrictions."""
         if ErrorCode.PIR104.code in self.codes_to_check:
             yield generate_from_node(node, ErrorCode.PIR104)
 
     def _check_for_pir105(self, node: ParsedNode) -> Generator[ErrorMessage, None, None]:
-        """Check for PIR105."""
+        """Check for PIR105, dynamic import restrictions."""
         if ErrorCode.PIR105.code in self.codes_to_check:
             yield generate_from_node(node, ErrorCode.PIR105)
 
     def _check_for_pir106(self, node: ParsedNode) -> Generator[ErrorMessage, None, None]:
-        """Check for PIR106."""
+        """Check for PIR106, functional import restrictions."""
         if ErrorCode.PIR106.code in self.codes_to_check:
             yield generate_from_node(node, ErrorCode.PIR106)
 
     def _check_for_pir107(
         self, node: ParsedFromImport | ParsedImport
     ) -> Generator[ErrorMessage, None, None]:
-        """Check for PIR107 from * imports."""
+        """Check for PIR107, wildcard or star import restrictions (i.e., from * imports)."""
         condition = "*" in node.module or "*" in node.name if hasattr(node, "name") else False
         if ErrorCode.PIR107.code in self.codes_to_check and condition:
             yield generate_from_node(node, ErrorCode.PIR107)
 
     def _check_for_pir108(self, node: ParsedNode) -> Generator[ErrorMessage, None, None]:
-        """Check for PIR108."""
+        """Check for PIR108, aliased import restrictions."""
         if ErrorCode.PIR108.code in self.codes_to_check:
             yield generate_from_node(node, ErrorCode.PIR108)
 

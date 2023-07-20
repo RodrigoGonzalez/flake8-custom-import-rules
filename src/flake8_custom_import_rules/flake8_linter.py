@@ -122,11 +122,11 @@ class Linter(CustomImportRulesChecker):
 
         register_opt(
             option_manager,
-            "--restrict-functional-imports",
-            default=DEFAULT_CHECKER_SETTINGS.RESTRICT_FUNCTIONAL_IMPORTS,
+            "--restrict-private-imports",
+            default=DEFAULT_CHECKER_SETTINGS.RESTRICT_PRIVATE_IMPORTS,
             action="store",
             type=bool,
-            help="Functional imports are not permitted in the project.",
+            help="Private imports are not permitted in the project.",
             parse_from_config=True,
             comma_separated_list=False,
             normalize_paths=False,

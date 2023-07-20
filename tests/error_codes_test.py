@@ -26,6 +26,8 @@ PROJECT_IMPORT_RULES = [
     "PIR206",
     "PIR207",
     "PIR208",
+    "PIR209",
+    "PIR210",
 ]
 
 PROJECT_IMPORT_RULES_ENUMS = [
@@ -45,6 +47,8 @@ PROJECT_IMPORT_RULES_ENUMS = [
     ErrorCode.PIR206,
     ErrorCode.PIR207,
     ErrorCode.PIR208,
+    ErrorCode.PIR209,
+    ErrorCode.PIR210,
 ]
 
 CUSTOM_IMPORT_RULES = [
@@ -122,7 +126,10 @@ def enums_and_codes():
 def test_get_error_codes(error_codes):
     """Test get_error_codes."""
     msg = "ErrorCode changed, update tests."
-    assert sorted(ErrorCode.get_all_error_codes()) == sorted(error_codes), msg
+    actual = set(ErrorCode.get_all_error_codes())
+    expected = set(error_codes)
+
+    assert actual == expected, msg
     assert sorted(AllErrorCodes) == sorted(error_codes), msg
 
 
