@@ -1,3 +1,10 @@
+## v0.4.2 (2023-07-19)
+
+### Refactor
+
+- **error-codes**: add properties for code and message
+- updated linter, checker, and visitor classes and tests (#26)
+
 ## v0.4.1 (2023-07-19)
 
 ### Refactor
