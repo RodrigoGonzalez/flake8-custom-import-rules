@@ -1,6 +1,6 @@
 """ Test local import restrictions.
 
-PIR103 = "PIR103 Local imports are not permitted in the project."
+PIR103 = "PIR103 Local imports are currently disabled for this project."
 """
 # import pytest
 #
@@ -12,7 +12,7 @@ PIR103 = "PIR103 Local imports are not permitted in the project."
 #     [
 #         (
 #             "from .module_z import Z",
-#             {"1:0: PIR103 Local imports are not permitted in the project."},
+#             {"1:0: PIR103 Local imports are currently disabled for this project."},
 #             True,
 #         ),
 #         (
@@ -22,7 +22,7 @@ PIR103 = "PIR103 Local imports are not permitted in the project."
 #         ),
 #         (
 #             "from . import module_z",
-#             {"1:0: PIR103 Local imports are not permitted in the project."},
+#             {"1:0: PIR103 Local imports are currently disabled for this project."},
 #             True,
 #         ),
 #         (
@@ -32,7 +32,7 @@ PIR103 = "PIR103 Local imports are not permitted in the project."
 #         ),
 #         (
 #             "from ..module_z import Z",
-#             {"1:0: PIR103 Local imports are not permitted in the project."},
+#             {"1:0: PIR103 Local imports are currently disabled for this project."},
 #             True,
 #         ),
 #         (
