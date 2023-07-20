@@ -1,47 +1,56 @@
-""" Test cases for restricting init imports: 207 and 208. """
+""" Test cases for restricting init imports
+
+PIR207 = "PIR207 Importing `__init__` is not permitted."
+PIR208 = "PIR208 Importing from `__init__.py` files is not permitted."
+"""
 import pytest
 
 from flake8_custom_import_rules.defaults import Settings
 
 
 @pytest.mark.parametrize(
-    ("test_case", "expected", "checker_settings"),
+    ("test_case", "expected", "restrict_init_imports"),
     [
         (
             "import __init__; from .module_a import A",
             {"1:0: PIR207 Importing `__init__` is not permitted."},
-            {"RESTRICT_INIT_IMPORTS": True},
+            True,
         ),
         (
             "import __init__; from .module_a import A",
             set(),
-            {"RESTRICT_INIT_IMPORTS": False},
+            False,
         ),
         (
             "from . import __init__; from .module_a import A",
             {"1:0: PIR208 Importing from `__init__.py` files is not permitted."},
-            {"RESTRICT_INIT_IMPORTS": True},
+            True,
         ),
         (
             "from . import __init__; from .module_a import A",
             set(),
-            {"RESTRICT_INIT_IMPORTS": False},
+            False,
         ),
         (
             "from __init__ import module; from .module_a import A",
             {"1:0: PIR208 Importing from `__init__.py` files is not permitted."},
-            {"RESTRICT_INIT_IMPORTS": True},
+            True,
         ),
         (
             "from __init__ import module; from .module_a import A",
             set(),
-            {"RESTRICT_INIT_IMPORTS": False},
+            False,
         ),
     ],
 )
 def test_init_import_codes(
-    test_case: str, expected: set, checker_settings: dict, get_flake8_linter_results: callable
+    test_case: str, expected: set, restrict_init_imports: bool, get_flake8_linter_results: callable
 ) -> None:
     """Test init imports."""
-    options = {"checker_settings": Settings(**checker_settings)}
-    assert get_flake8_linter_results(s=test_case, options=options) == expected
+    options = {
+        "checker_settings": Settings(
+            **{"RESTRICT_INIT_IMPORTS": restrict_init_imports, "RESTRICT_RELATIVE_IMPORTS": False}
+        )
+    }
+    actual = get_flake8_linter_results(s=test_case, options=options)
+    assert actual == expected

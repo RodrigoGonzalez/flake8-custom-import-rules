@@ -61,7 +61,7 @@ class ErrorCode(Enum, metaclass=ErrorCodeMeta):
     CIR303 = "CIR303 Isolated module import from any other package in your project"
     CIR304 = "CIR304 Isolated module `from import` from any other package in your project"
 
-    # Standard library only imports:
+    # Standard library only import in specified packages or modules
     CIR401 = "CIR401 Non-standard library package import"
     CIR402 = "CIR402 Non-standard library package `from import`"
     CIR403 = "CIR403 Non-standard library module import"
@@ -71,25 +71,27 @@ class ErrorCode(Enum, metaclass=ErrorCodeMeta):
     CIR501 = "CIR501 Non-third party package import"
     CIR502 = "CIR502 Non-third party package `from import`"
 
-    # Project Import Rules
+    # Project Level Import Rules and Restrictions
     PIR101 = "PIR101 Only top level imports are permitted in the project."
     PIR102 = "PIR102 Relative imports are not permitted in the project."
     PIR103 = "PIR103 Local imports are not permitted in the project."
     PIR104 = "PIR104 Conditional imports are not permitted in the project."
     PIR105 = "PIR105 Dynamic imports are not permitted in the project."
-    PIR106 = "PIR106 Functional imports are not permitted in the project."
+    PIR106 = "PIR106 Private imports are not permitted in the project."
     PIR107 = "PIR107 Wildcard imports are not permitted in the project."
     PIR108 = "PIR108 Aliased imports are not permitted in the project."
 
-    # Project Import Rules for Special Cases
-    PIR201 = "PIR201 Block import test_*/*_test modules."
-    PIR202 = "PIR202 Block imports from test_*.py/*_test.py modules."
-    PIR203 = "PIR203 Block import `conftest`."
-    PIR204 = "PIR204 Block import from `conftest.py` modules."
-    PIR205 = "PIR205 Block import tests package or import tests subdirectories."
-    PIR206 = "PIR206 Block import from tests package or subdirectories."
+    # Project Level Import Rules for Special Cases
+    PIR201 = "PIR201 Importing test_*/*_test modules is not permitted."
+    PIR202 = "PIR202 Importing from test_*.py/*_test.py modules is not permitted."
+    PIR203 = "PIR203 Importing 'conftest' is not permitted."
+    PIR204 = "PIR204 Importing from `conftest.py` modules is not permitted."
+    PIR205 = "PIR205 Importing tests package or tests subdirectories is not permitted."
+    PIR206 = "PIR206 Importing from tests package or subdirectories is not permitted."
     PIR207 = "PIR207 Importing `__init__` is not permitted."
     PIR208 = "PIR208 Importing from `__init__.py` files is not permitted."
+    PIR209 = "PIR209 Importing `__main__` is not permitted."
+    PIR210 = "PIR210 Importing from `__main__.py` files is not permitted."
 
     @property
     def code(self) -> str:

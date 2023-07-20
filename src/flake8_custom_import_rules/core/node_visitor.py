@@ -33,7 +33,7 @@ class ImportType(IntEnum):
     STDLIB = 10
     THIRD_PARTY = 20
     FIRST_PARTY = 30
-    LOCAL = 40
+    RELATIVE = 40
 
 
 @define(slots=True)
@@ -170,7 +170,7 @@ class CustomImportRulesVisitor(ast.NodeVisitor):
 
     def _get_import_type(self, module: str, node_level: int) -> ImportType:
         """Get the import type for a module."""
-        return ImportType.LOCAL if node_level > 0 else self._classify_type(module)
+        return ImportType.RELATIVE if node_level > 0 else self._classify_type(module)
 
     def visit_ImportFrom(self, node: ast.ImportFrom) -> None:
         """Visit an Import node."""

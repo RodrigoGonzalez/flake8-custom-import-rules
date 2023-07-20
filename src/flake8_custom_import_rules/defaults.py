@@ -15,7 +15,7 @@ class Settings:
     RESTRICT_LOCAL_IMPORTS: bool = field(default=True)
     RESTRICT_CONDITIONAL_IMPORTS: bool = field(default=True)
     RESTRICT_DYNAMIC_IMPORTS: bool = field(default=True)
-    RESTRICT_FUNCTIONAL_IMPORTS: bool = field(default=False)
+    RESTRICT_PRIVATE_IMPORTS: bool = field(default=False)
     RESTRICT_WILDCARD_IMPORTS: bool = field(default=True)
     RESTRICT_ALIASED_IMPORTS: bool = field(default=False)
 
