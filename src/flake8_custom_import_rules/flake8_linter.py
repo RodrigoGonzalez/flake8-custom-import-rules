@@ -71,6 +71,90 @@ class Linter(CustomImportRulesChecker):
             normalize_paths=False,
         )
 
+        register_opt(
+            option_manager,
+            "--restrict-relative-imports",
+            default=DEFAULT_SETTINGS.RESTRICT_RELATIVE_IMPORTS,
+            action="store",
+            type=bool,
+            help="Relative imports are not permitted in the project.",
+            parse_from_config=True,
+            comma_separated_list=False,
+            normalize_paths=False,
+        )
+
+        register_opt(
+            option_manager,
+            "--restrict-local-imports",
+            default=DEFAULT_SETTINGS.RESTRICT_LOCAL_IMPORTS,
+            action="store",
+            type=bool,
+            help="Local imports are not permitted in the project.",
+            parse_from_config=True,
+            comma_separated_list=False,
+            normalize_paths=False,
+        )
+
+        register_opt(
+            option_manager,
+            "--restrict-conditional-imports",
+            default=DEFAULT_SETTINGS.RESTRICT_CONDITIONAL_IMPORTS,
+            action="store",
+            type=bool,
+            help="Conditional imports are not permitted in the project.",
+            parse_from_config=True,
+            comma_separated_list=False,
+            normalize_paths=False,
+        )
+
+        register_opt(
+            option_manager,
+            "--restrict-dynamic-imports",
+            default=DEFAULT_SETTINGS.RESTRICT_DYNAMIC_IMPORTS,
+            action="store",
+            type=bool,
+            help="Dynamic imports are not permitted in the project.",
+            parse_from_config=True,
+            comma_separated_list=False,
+            normalize_paths=False,
+        )
+
+        register_opt(
+            option_manager,
+            "--restrict-functional-imports",
+            default=DEFAULT_SETTINGS.RESTRICT_FUNCTIONAL_IMPORTS,
+            action="store",
+            type=bool,
+            help="Functional imports are not permitted in the project.",
+            parse_from_config=True,
+            comma_separated_list=False,
+            normalize_paths=False,
+        )
+
+        register_opt(
+            option_manager,
+            "--restrict-wildcard-imports",
+            default=DEFAULT_SETTINGS.RESTRICT_WILDCARD_IMPORTS,
+            action="store",
+            type=bool,
+            help="Wildcard/star imports are not permitted in the project.",
+            parse_from_config=True,
+            comma_separated_list=False,
+            normalize_paths=False,
+        )
+
+        register_opt(
+            option_manager,
+            "--restrict-aliased-imports",
+            default=DEFAULT_SETTINGS.RESTRICT_ALIASED_IMPORTS,
+            action="store",
+            type=bool,
+            help="Dynamic imports are not permitted in the project.",
+            parse_from_config=True,
+            comma_separated_list=False,
+            normalize_paths=False,
+        )
+
     @classmethod
     def parse_options(
         cls, option_manager: OptionManager, parse_options: Namespace, *args: Any
@@ -80,8 +164,8 @@ class Linter(CustomImportRulesChecker):
         logger.debug(f"Options: {parse_options}")
         logger.debug(f"Args: {args}")
         # print(f"\nOption Manager: {option_manager}")
-        # print(f"\nOptions: {parse_options}")
-        # print(f"\nArgs: {args}")
+        print(f"\nOptions: {parse_options}")
+        print(f"\nArgs: {args}")
         # Parse options for CustomImportRulesChecker
         # cls.parse_custom_rules_options(options)
 
@@ -91,7 +175,10 @@ class Linter(CustomImportRulesChecker):
                 pkg.strip() for pkg in parse_options.application_import_names.split(",")
             ]
 
-        parsed_options: dict = {"base_packages": base_packages}
+        parsed_options: dict = {
+            "base_packages": base_packages,
+            "checker_settings": DEFAULT_SETTINGS,
+        }
 
         logger.debug(f"Parsed Options: {parsed_options}")
         # print(f"Parsed Options: {parsed_options}")

@@ -16,6 +16,16 @@ from flake8_custom_import_rules.utils.node_utils import root_package_name
 logger = logging.getLogger(f"flake8_custom_import_rules.{__name__}")
 
 
+DYNAMIC_IMPORTS = {
+    "__import__",
+    "importlib",
+    "importlib.import_module",
+    "import_module",
+    "eval",
+    "exec",
+}
+
+
 class ImportType(IntEnum):
     """Import type enum."""
 
@@ -79,6 +89,9 @@ class ParsedCall:
     func: str
     lineno: int
     col_offset: int
+    call_type: str
+    values: list[str]
+    module: str | None = None
 
 
 @define(slots=True)
@@ -114,7 +127,6 @@ class CustomImportRulesVisitor(ast.NodeVisitor):
 
     package_names: list[str] = field(factory=list)
     filename: str | None = None
-    errors: list[tuple[int, int, str]] = field(factory=list)
     nodes: list = field(factory=list)
     current_package: list[str] = field(factory=list)
     file_path: Path | None = None
@@ -230,45 +242,44 @@ class CustomImportRulesVisitor(ast.NodeVisitor):
         """Get the function name."""
         return func.attr
 
+    @staticmethod
+    def _get_args_for_calls(args: list) -> list[str]:
+        """Get the function args."""
+        return [arg.value for arg in args if hasattr(arg, "value")]
+
     def visit_Call(self, node: ast.Call) -> None:
         """Visit a Call node."""
         if isinstance(node.func, ast.Name):
-            self.nodes.append(
-                ParsedCall(
-                    func=self._func_name(node.func),
-                    lineno=node.lineno,
-                    col_offset=node.col_offset,
+            if self._func_name(node.func) in DYNAMIC_IMPORTS:
+                self.nodes.append(
+                    ParsedCall(
+                        func=self._func_name(node.func),
+                        lineno=node.lineno,
+                        col_offset=node.col_offset,
+                        call_type="ast.Name",
+                        values=self._get_args_for_calls(node.args),
+                    )
                 )
-            )
         elif isinstance(node.func, ast.Attribute):
-            self.nodes.append(
-                ParsedCall(
-                    func=self._func_attribute(node.func),
-                    lineno=node.lineno,
-                    col_offset=node.col_offset,
+            if self._func_attribute(node.func) in DYNAMIC_IMPORTS:
+                self.nodes.append(
+                    ParsedCall(
+                        func=self._func_attribute(node.func),
+                        module=node.func.value.id if hasattr(node.func.value, "id") else None,
+                        lineno=node.lineno,
+                        col_offset=node.col_offset,
+                        call_type="ast.Attribute",
+                        values=self._get_args_for_calls(node.args),
+                    )
                 )
-            )
-        # else:
-        #     self.nodes.append(
-        #         ParsedCall(
-        #             func=self._func_name(node),
-        #             lineno=node.lineno,
-        #             col_offset=node.col_offset,
-        #         )
-        #     )
         self.generic_visit(node)
-
-    @staticmethod
-    def _get_if_import_location(node: ast.Import | ast.ImportFrom) -> tuple[int, int]:
-        """Get the location for import nodes within an If node."""
-        return node.lineno, node.col_offset
 
     def visit_If(self, node: ast.If) -> None:
         """Visit an If node."""
-        if_nodes = node.body + node.orelse
+        other_nodes = node.body + node.orelse
         if conditional_imports := (
-            self._get_if_import_location(sub_node)
-            for sub_node in if_nodes
+            (sub_node.lineno, sub_node.col_offset)
+            for sub_node in other_nodes
             if isinstance(sub_node, (ast.Import, ast.ImportFrom))
         ):
             for lineno, col_offset in conditional_imports:

@@ -16,6 +16,9 @@ NOQA_INLINE_REGEXP = re.compile(
 )
 
 BLANK_LINE_RE = re.compile(r"\s*\n")
+IMPORT_RE = re.compile(r"\bimport\b")
+# string = "lot sof wel;kjhtrjklwehc  import dskjsdfk import akjsdjk"
+# match = IMPORT_RE.search(string)
 
 
 def parse_comma_separated_list(value: str) -> set[str]:

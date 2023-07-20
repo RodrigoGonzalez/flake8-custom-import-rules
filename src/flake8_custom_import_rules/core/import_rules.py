@@ -8,6 +8,7 @@ from attrs import define
 from attrs import field
 from stdlib_list import stdlib_list
 
+from flake8_custom_import_rules.codes.error_codes import ErrorCode
 from flake8_custom_import_rules.core.node_visitor import ParsedNode
 from flake8_custom_import_rules.utils.parse_utils import parse_custom_rule
 
@@ -18,9 +19,18 @@ class ErrorMessage:
 
     lineno: int
     col_offset: int
+    code: str
     message: str
-    type: str | None
-    code: str | None
+
+
+def generate_from_node(node: ParsedNode, error_code: ErrorCode) -> ErrorMessage:
+    """Generate error message from node."""
+    return ErrorMessage(
+        lineno=node.lineno,
+        col_offset=node.col_offset,
+        code=error_code.code,
+        message=error_code.message,
+    )
 
 
 @define(slots=True)
@@ -29,6 +39,8 @@ class CustomImportRules:
 
     nodes: list[ParsedNode] = field(factory=list)
     options: dict = field(factory=dict)
+    errors: list[ErrorMessage] = field(factory=list)
+    codes_to_check: list[ErrorCode] = ErrorCode.get_all_error_codes()
 
     use_python_version: float | int | str | None = field(default=3.9)
 
@@ -230,3 +242,188 @@ class CustomImportRules:
         """Check module is standard library module using specific Python version."""
         standard_lib_modules = stdlib_list(self.use_python_version)
         return module_name in standard_lib_modules
+
+    def _check_for_cir101(self, node: ParsedNode) -> None:
+        """Check for CIR101."""
+        if ErrorCode.CIR101.code in self.codes_to_check:
+            self.errors.append(generate_from_node(node, ErrorCode.CIR101))
+
+    def _check_for_cir102(self, node: ParsedNode) -> None:
+        """Check for CIR102."""
+        if ErrorCode.CIR102.code in self.codes_to_check:
+            self.errors.append(generate_from_node(node, ErrorCode.CIR102))
+
+    def _check_for_cir103(self, node: ParsedNode) -> None:
+        """Check for CIR103."""
+        if ErrorCode.CIR103.code in self.codes_to_check:
+            self.errors.append(generate_from_node(node, ErrorCode.CIR103))
+
+    def _check_for_cir104(self, node: ParsedNode) -> None:
+        """Check for CIR104."""
+        if ErrorCode.CIR104.code in self.codes_to_check:
+            self.errors.append(generate_from_node(node, ErrorCode.CIR104))
+
+    def _check_for_cir105(self, node: ParsedNode) -> None:
+        """Check for CIR105."""
+        if ErrorCode.CIR105.code in self.codes_to_check:
+            self.errors.append(generate_from_node(node, ErrorCode.CIR105))
+
+    def _check_for_cir106(self, node: ParsedNode) -> None:
+        """Check for CIR106."""
+        if ErrorCode.CIR106.code in self.codes_to_check:
+            self.errors.append(generate_from_node(node, ErrorCode.CIR106))
+
+    def _check_for_cir107(self, node: ParsedNode) -> None:
+        """Check for CIR107."""
+        if ErrorCode.CIR107.code in self.codes_to_check:
+            self.errors.append(generate_from_node(node, ErrorCode.CIR107))
+
+    def _check_for_cir201(self, node: ParsedNode) -> None:
+        """Check for CIR201."""
+        if ErrorCode.CIR201.code in self.codes_to_check:
+            self.errors.append(generate_from_node(node, ErrorCode.CIR201))
+
+    def _check_for_cir202(self, node: ParsedNode) -> None:
+        """Check for CIR202."""
+        if ErrorCode.CIR202.code in self.codes_to_check:
+            self.errors.append(generate_from_node(node, ErrorCode.CIR202))
+
+    def _check_for_cir203(self, node: ParsedNode) -> None:
+        """Check for CIR203."""
+        if ErrorCode.CIR203.code in self.codes_to_check:
+            self.errors.append(generate_from_node(node, ErrorCode.CIR203))
+
+    def _check_for_cir204(self, node: ParsedNode) -> None:
+        """Check for CIR204."""
+        if ErrorCode.CIR204.code in self.codes_to_check:
+            self.errors.append(generate_from_node(node, ErrorCode.CIR204))
+
+    def _check_for_cir301(self, node: ParsedNode) -> None:
+        """Check for CIR301."""
+        if ErrorCode.CIR301.code in self.codes_to_check:
+            self.errors.append(generate_from_node(node, ErrorCode.CIR301))
+
+    def _check_for_cir302(self, node: ParsedNode) -> None:
+        """Check for CIR302."""
+        if ErrorCode.CIR302.code in self.codes_to_check:
+            self.errors.append(generate_from_node(node, ErrorCode.CIR302))
+
+    def _check_for_cir303(self, node: ParsedNode) -> None:
+        """Check for CIR303."""
+        if ErrorCode.CIR303.code in self.codes_to_check:
+            self.errors.append(generate_from_node(node, ErrorCode.CIR303))
+
+    def _check_for_cir304(self, node: ParsedNode) -> None:
+        """Check for CIR304."""
+        if ErrorCode.CIR304.code in self.codes_to_check:
+            self.errors.append(generate_from_node(node, ErrorCode.CIR304))
+
+    def _check_for_cir401(self, node: ParsedNode) -> None:
+        """Check for CIR401."""
+        if ErrorCode.CIR401.code in self.codes_to_check:
+            self.errors.append(generate_from_node(node, ErrorCode.CIR401))
+
+    def _check_for_cir402(self, node: ParsedNode) -> None:
+        """Check for CIR402."""
+        if ErrorCode.CIR402.code in self.codes_to_check:
+            self.errors.append(generate_from_node(node, ErrorCode.CIR402))
+
+    def _check_for_cir403(self, node: ParsedNode) -> None:
+        """Check for CIR403."""
+        if ErrorCode.CIR403.code in self.codes_to_check:
+            self.errors.append(generate_from_node(node, ErrorCode.CIR403))
+
+    def _check_for_cir404(self, node: ParsedNode) -> None:
+        """Check for CIR404."""
+        if ErrorCode.CIR404.code in self.codes_to_check:
+            self.errors.append(generate_from_node(node, ErrorCode.CIR404))
+
+    def _check_for_cir501(self, node: ParsedNode) -> None:
+        """Check for CIR501."""
+        if ErrorCode.CIR501.code in self.codes_to_check:
+            self.errors.append(generate_from_node(node, ErrorCode.CIR501))
+
+    def _check_for_cir502(self, node: ParsedNode) -> None:
+        """Check for CIR502."""
+        if ErrorCode.CIR502.code in self.codes_to_check:
+            self.errors.append(generate_from_node(node, ErrorCode.CIR502))
+
+    def _check_for_pir101(self, node: ParsedNode) -> None:
+        """Check for PIR101."""
+        if ErrorCode.PIR101.code in self.codes_to_check:
+            self.errors.append(generate_from_node(node, ErrorCode.PIR101))
+
+    def _check_for_pir102(self, node: ParsedNode) -> None:
+        """Check for PIR102."""
+        if ErrorCode.PIR102.code in self.codes_to_check:
+            self.errors.append(generate_from_node(node, ErrorCode.PIR102))
+
+    def _check_for_pir103(self, node: ParsedNode) -> None:
+        """Check for PIR103."""
+        if ErrorCode.PIR103.code in self.codes_to_check:
+            self.errors.append(generate_from_node(node, ErrorCode.PIR103))
+
+    def _check_for_pir104(self, node: ParsedNode) -> None:
+        """Check for PIR104."""
+        if ErrorCode.PIR104.code in self.codes_to_check:
+            self.errors.append(generate_from_node(node, ErrorCode.PIR104))
+
+    def _check_for_pir105(self, node: ParsedNode) -> None:
+        """Check for PIR105."""
+        if ErrorCode.PIR105.code in self.codes_to_check:
+            self.errors.append(generate_from_node(node, ErrorCode.PIR105))
+
+    def _check_for_pir106(self, node: ParsedNode) -> None:
+        """Check for PIR106."""
+        if ErrorCode.PIR106.code in self.codes_to_check:
+            self.errors.append(generate_from_node(node, ErrorCode.PIR106))
+
+    def _check_for_pir107(self, node: ParsedNode) -> None:
+        """Check for PIR107."""
+        if ErrorCode.PIR107.code in self.codes_to_check:
+            self.errors.append(generate_from_node(node, ErrorCode.PIR107))
+
+    def _check_for_pir108(self, node: ParsedNode) -> None:
+        """Check for PIR108."""
+        if ErrorCode.PIR108.code in self.codes_to_check:
+            self.errors.append(generate_from_node(node, ErrorCode.PIR108))
+
+    def _check_for_pir201(self, node: ParsedNode) -> None:
+        """Check for PIR201."""
+        if ErrorCode.PIR201.code in self.codes_to_check:
+            self.errors.append(generate_from_node(node, ErrorCode.PIR201))
+
+    def _check_for_pir202(self, node: ParsedNode) -> None:
+        """Check for PIR202."""
+        if ErrorCode.PIR202.code in self.codes_to_check:
+            self.errors.append(generate_from_node(node, ErrorCode.PIR202))
+
+    def _check_for_pir203(self, node: ParsedNode) -> None:
+        """Check for PIR203."""
+        if ErrorCode.PIR203.code in self.codes_to_check:
+            self.errors.append(generate_from_node(node, ErrorCode.PIR203))
+
+    def _check_for_pir204(self, node: ParsedNode) -> None:
+        """Check for PIR204."""
+        if ErrorCode.PIR204.code in self.codes_to_check:
+            self.errors.append(generate_from_node(node, ErrorCode.PIR204))
+
+    def _check_for_pir205(self, node: ParsedNode) -> None:
+        """Check for PIR205."""
+        if ErrorCode.PIR205.code in self.codes_to_check:
+            self.errors.append(generate_from_node(node, ErrorCode.PIR205))
+
+    def _check_for_pir206(self, node: ParsedNode) -> None:
+        """Check for PIR206."""
+        if ErrorCode.PIR206.code in self.codes_to_check:
+            self.errors.append(generate_from_node(node, ErrorCode.PIR206))
+
+    def _check_for_pir207(self, node: ParsedNode) -> None:
+        """Check for PIR207."""
+        if ErrorCode.PIR207.code in self.codes_to_check:
+            self.errors.append(generate_from_node(node, ErrorCode.PIR207))
+
+    def _check_for_pir208(self, node: ParsedNode) -> None:
+        """Check for PIR208."""
+        if ErrorCode.PIR208.code in self.codes_to_check:
+            self.errors.append(generate_from_node(node, ErrorCode.PIR208))

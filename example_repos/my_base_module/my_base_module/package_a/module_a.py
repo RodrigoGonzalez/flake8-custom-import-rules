@@ -22,6 +22,10 @@ else:
     from my_base_module.package_c.package_e.module_e import EUpdated as VersionedE
 
 
+SOME_CONSTANT = "some_constant"
+COMPLEX_CONSTANT = {"some_key": "some_value"}
+
+
 @define(slots=True)
 class A:
     """A basic class"""
@@ -85,3 +89,19 @@ class A:
             print_x(x)
 
         return x.name()
+
+
+    @staticmethod
+    def dynamic_imports_one() -> None:
+        """Use dynamic imports."""
+        import importlib
+        importlib.import_module('datetime')
+        exec('import datetime')
+        eval('import datetime')
+
+    @staticmethod
+    def dynamic_imports_two() -> None:
+        """Use dynamic imports."""
+        from importlib import import_module
+        import_module('datetime')
+        __import__('datetime')
