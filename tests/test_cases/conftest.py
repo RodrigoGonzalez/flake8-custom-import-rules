@@ -11,7 +11,11 @@ from flake8_custom_import_rules.flake8_linter import Linter
 def get_flake8_linter_results() -> partial:
     """Return a set of results."""
 
-    def results(s: str, options: dict[str, list[str] | str] | None = None) -> set[str]:
+    def results(
+        s: str,
+        options: dict[str, list[str] | str] | None = None,
+        splitter: str = "; ",
+    ) -> set[str]:
         """Return a set of results."""
         if options is None:
             options = {}
@@ -25,7 +29,7 @@ def get_flake8_linter_results() -> partial:
         #     "test_env": False,
         # }
 
-        linter = Linter(ast.parse(s), lines=s.split("; "))
+        linter = Linter(ast.parse(s), lines=s.split(splitter))
         linter.update_checker_settings(options)
         return {"{}:{}: {}".format(*r) for r in linter.run()}
 

@@ -8,6 +8,7 @@ from stdlib_list import stdlib_list
 
 from flake8_custom_import_rules.codes.error_codes import ErrorCode
 from flake8_custom_import_rules.core.node_visitor import ParsedFromImport
+from flake8_custom_import_rules.core.node_visitor import ParsedIfImport
 from flake8_custom_import_rules.core.node_visitor import ParsedImport
 from flake8_custom_import_rules.core.node_visitor import ParsedNode
 from flake8_custom_import_rules.defaults import Settings
@@ -148,12 +149,12 @@ class CustomImportRules:
         #     isinstance(node, (ParsedImport, ParsedFromImport))
         # ):
         #     yield from self._check_for_pir103(node)
-        #
-        # if self.checker_settings.RESTRICT_CONDITIONAL_IMPORTS and (
-        #     isinstance(node, ParsedIfImport)
-        # ):
-        #     yield from self._check_for_pir104(node)
-        #
+
+        if self.checker_settings.RESTRICT_CONDITIONAL_IMPORTS and (
+            isinstance(node, ParsedIfImport)
+        ):
+            yield from self._check_for_pir104(node)
+
         # if self.checker_settings.RESTRICT_DYNAMIC_IMPORTS and (
         #     isinstance(node, (ParsedImport, ParsedFromImport))
         # ):

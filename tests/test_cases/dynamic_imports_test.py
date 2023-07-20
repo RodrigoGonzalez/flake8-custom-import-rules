@@ -1,6 +1,6 @@
 """ Test dynamic import restrictions.
 
-PIR105 = "PIR105 Dynamic imports are not permitted in the project."
+PIR105 = "PIR105 Dynamic imports are currently disabled for this project."
 """
 import ast
 

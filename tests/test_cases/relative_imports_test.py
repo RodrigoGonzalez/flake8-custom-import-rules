@@ -1,6 +1,6 @@
 """ Test relative import restrictions.
 
-PIR102 = "PIR102 Relative imports are not permitted in the project."
+PIR102 = "PIR102 Relative imports are currently disabled for this project."
 """
 import pytest
 
@@ -12,7 +12,7 @@ from flake8_custom_import_rules.defaults import Settings
     [
         (
             "from .module_z import Z",
-            {"1:0: PIR102 Relative imports are not permitted in the project."},
+            {"1:0: PIR102 Relative imports are currently disabled for this project."},
             True,
         ),
         (
@@ -22,7 +22,7 @@ from flake8_custom_import_rules.defaults import Settings
         ),
         (
             "from . import module_z",
-            {"1:0: PIR102 Relative imports are not permitted in the project."},
+            {"1:0: PIR102 Relative imports are currently disabled for this project."},
             True,
         ),
         (
@@ -32,7 +32,7 @@ from flake8_custom_import_rules.defaults import Settings
         ),
         (
             "from ..module_z import Z",
-            {"1:0: PIR102 Relative imports are not permitted in the project."},
+            {"1:0: PIR102 Relative imports are currently disabled for this project."},
             True,
         ),
         (
