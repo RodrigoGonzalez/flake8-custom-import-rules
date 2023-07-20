@@ -75,6 +75,15 @@ class CustomImportRulesChecker:
         """Return the options."""
         return self._options
 
+    def update_checker_settings(self, updated_options: dict) -> None:
+        """Return the options."""
+        test_env = self.options.get("test_env", True)
+        if not test_env:
+            raise ValueError("Cannot update options in a non-test environment.")
+        # print(f"Updated Options: {updated_options}")
+        for key, value in updated_options.items():
+            self._options[key] = value
+
     @property
     def visitor(self) -> CustomImportRulesVisitor:
         """Return the visitor to use for this plugin."""
@@ -99,19 +108,10 @@ class CustomImportRulesChecker:
         # print(f"Nodes: {self.nodes}")
         checker_settings = self.options.get("checker_settings", DEFAULT_CHECKER_SETTINGS)
         import_rules = CustomImportRules(nodes=self.nodes, checker_settings=checker_settings)
-        # newlines = [
-        #     EmptyLine(lineno)  # Lines are ordinal, no zero line
-        #     for lineno, line in enumerate(self.lines, start=1)
-        #     if BLANK_LINE_RE.match(line)
-        # ]
-        # combined = sorted(
-        #     chain(newlines, self.nodes),
-        #     key=lambda element: element.lineno,
-        # )
+
         for error in import_rules.check_import_rules():
             if not self.error_is_ignored(error):
                 yield self.error(error)
-        # yield 1, 0, "CIR101 Custom Import Rule", type(self)
 
     @staticmethod
     def error(error: Any) -> Any:

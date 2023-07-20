@@ -221,6 +221,7 @@ class Linter(CustomImportRulesChecker):
         parsed_options: dict = {
             "base_packages": base_packages,
             "checker_settings": Settings(**options),
+            "test_env": False,
         }
 
         logger.debug(f"Parsed Options: {parsed_options}")

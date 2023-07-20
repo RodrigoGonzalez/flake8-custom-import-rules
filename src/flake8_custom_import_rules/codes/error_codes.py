@@ -88,8 +88,8 @@ class ErrorCode(Enum, metaclass=ErrorCodeMeta):
     PIR204 = "PIR204 Block import from `conftest.py` modules."
     PIR205 = "PIR205 Block import tests package or import tests subdirectories."
     PIR206 = "PIR206 Block import from tests package or subdirectories."
-    PIR207 = "PIR207 Block import `__init__`."
-    PIR208 = "PIR208 Block imports from `__init__.py files`."
+    PIR207 = "PIR207 Importing `__init__` is not permitted."
+    PIR208 = "PIR208 Importing from `__init__.py` files is not permitted."
 
     @property
     def code(self) -> str:
