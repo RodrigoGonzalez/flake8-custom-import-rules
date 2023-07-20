@@ -1,3 +1,11 @@
+## v0.4.4 (2023-07-20)
+
+### Refactor
+
+- **import-rules**: add conditional import restrictions
+- **import-rules**: add relative import restrictions (#34)
+- **test-cases**: updated wildcard import checks (#33)
+
 ## v0.4.3 (2023-07-20)
 
 ### Refactor
