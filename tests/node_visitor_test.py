@@ -3,11 +3,11 @@ import ast
 import pytest
 
 from flake8_custom_import_rules.core.node_visitor import CustomImportRulesVisitor
-from flake8_custom_import_rules.core.node_visitor import ImportType
-from flake8_custom_import_rules.core.node_visitor import ParsedClassDef
-from flake8_custom_import_rules.core.node_visitor import ParsedFromImport
-from flake8_custom_import_rules.core.node_visitor import ParsedFunctionDef
-from flake8_custom_import_rules.core.node_visitor import ParsedImport
+from flake8_custom_import_rules.core.nodes import ImportType
+from flake8_custom_import_rules.core.nodes import ParsedClassDef
+from flake8_custom_import_rules.core.nodes import ParsedFromImport
+from flake8_custom_import_rules.core.nodes import ParsedFunctionDef
+from flake8_custom_import_rules.core.nodes import ParsedImport
 
 
 @pytest.fixture(scope="function")

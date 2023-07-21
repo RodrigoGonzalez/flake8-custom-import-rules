@@ -9,9 +9,9 @@ from attrs import field
 
 from flake8_custom_import_rules.core.import_rules import CustomImportRules
 from flake8_custom_import_rules.core.node_visitor import CustomImportRulesVisitor
-from flake8_custom_import_rules.core.node_visitor import ParsedFromImport
-from flake8_custom_import_rules.core.node_visitor import ParsedImport
-from flake8_custom_import_rules.core.node_visitor import ParsedNode
+from flake8_custom_import_rules.core.nodes import ParsedFromImport
+from flake8_custom_import_rules.core.nodes import ParsedImport
+from flake8_custom_import_rules.core.nodes import ParsedNode
 from flake8_custom_import_rules.defaults import DEFAULT_CHECKER_SETTINGS
 from flake8_custom_import_rules.utils.parse_utils import NOQA_INLINE_REGEXP
 from flake8_custom_import_rules.utils.parse_utils import parse_comma_separated_list
