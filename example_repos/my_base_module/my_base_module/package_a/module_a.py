@@ -1,8 +1,9 @@
 """ A basic module for testing and demonstrating flake8-custom-import-rules. """
 from __future__ import annotations  # Do Not Remove Needed for Examples
 
-import sys
+import sys, os, re
 from datetime import datetime
+from math import pi, sqrt
 from uuid import UUID
 from uuid import uuid4
 
@@ -120,3 +121,13 @@ class A:
         from importlib import import_module
         import_module('datetime')
         __import__('datetime')
+
+    @staticmethod
+    def sqrt_of_four() -> float:
+        """Get the square root of 4."""
+        return sqrt(4)
+
+    @staticmethod
+    def get_pi() -> float:
+        """Get pi."""
+        return pi

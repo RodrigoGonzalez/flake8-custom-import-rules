@@ -33,6 +33,7 @@ def parsed_import():
         level=0,
         package="os",
         package_names=None,
+        alias_col_offset=7,
     ):
         if name:
             return ParsedFromImport(
@@ -45,6 +46,10 @@ def parsed_import():
                 level=level,
                 package=package,
                 package_names=package_names,
+                node_col_offset=col_offset,
+                alias_col_offset=alias_col_offset,
+                private_import=False,
+                private_module_import=False,
             )
         return ParsedImport(
             import_type=import_type,
@@ -54,6 +59,10 @@ def parsed_import():
             col_offset=col_offset,
             package=package,
             package_names=package_names,
+            node_col_offset=col_offset,
+            alias_col_offset=alias_col_offset,
+            private_import=False,
+            private_module_import=False,
         )
 
     return _create_parsed_import
@@ -100,6 +109,10 @@ def test_visit_import_from_simple():
         level=0,
         package="os",
         package_names=["os"],
+        node_col_offset=0,
+        alias_col_offset=15,
+        private_import=False,
+        private_module_import=False,
     )
 
 
@@ -114,7 +127,11 @@ def test_visit_import_from_alias(parsed_import):
     visitor.visit(tree)
     assert len(visitor.nodes) == 1
     assert visitor.nodes[0] == parsed_import(
-        name="path", asname="my_path", level=0, package_names=["os"]
+        name="path",
+        asname="my_path",
+        level=0,
+        package_names=["os"],
+        alias_col_offset=15,
     )
 
 
@@ -138,6 +155,10 @@ def test_visit_import_from_relative(parsed_import):
         level=1,
         package=None,
         package_names=[],
+        node_col_offset=0,
+        alias_col_offset=14,
+        private_import=False,
+        private_module_import=False,
     )
 
 
@@ -197,6 +218,10 @@ def test_visit_import_multiple():
         col_offset=0,
         package="os",
         package_names=["os"],
+        node_col_offset=0,
+        alias_col_offset=7,
+        private_import=False,
+        private_module_import=False,
     )
     assert visitor.nodes[1] == ParsedImport(
         import_type=ImportType.STDLIB,
@@ -206,6 +231,10 @@ def test_visit_import_multiple():
         col_offset=0,
         package="sys",
         package_names=["sys"],
+        node_col_offset=0,
+        alias_col_offset=11,
+        private_import=False,
+        private_module_import=False,
     )
 
 
@@ -228,6 +257,10 @@ def test_visit_import_from_multiple():
         level=0,
         package="os",
         package_names=["os"],
+        node_col_offset=0,
+        alias_col_offset=15,
+        private_import=False,
+        private_module_import=False,
     )
     assert visitor.nodes[1] == ParsedFromImport(
         import_type=ImportType.STDLIB,
@@ -239,6 +272,10 @@ def test_visit_import_from_multiple():
         level=0,
         package="os",
         package_names=["os"],
+        node_col_offset=0,
+        alias_col_offset=21,
+        private_import=False,
+        private_module_import=False,
     )
 
 
@@ -279,6 +316,7 @@ def test_complex_code(parsed_import):
         lineno=3,
         package="sys",
         package_names=["sys"],
+        alias_col_offset=16,
     )
     # Check the third import statement
     assert visitor.nodes[2] == parsed_import(
@@ -336,6 +374,7 @@ def test_aliased_from_import(parsed_import):
         asname="dt",
         package="datetime",
         package_names=["datetime"],
+        alias_col_offset=21,
     )
 
 
@@ -358,6 +397,7 @@ def test_multiple_imports_same_line(parsed_import):
         module="sys",
         package="sys",
         package_names=["sys"],
+        alias_col_offset=11,
     )
 
 
@@ -406,6 +446,7 @@ def test_relative_imports(parsed_import):
         level=1,
         package=None,
         package_names=[],
+        alias_col_offset=14,
     )
     assert visitor.nodes[1] == parsed_import(
         import_type=ImportType.RELATIVE,
@@ -415,6 +456,7 @@ def test_relative_imports(parsed_import):
         level=2,
         package=None,
         package_names=[],
+        alias_col_offset=15,
     )
     assert visitor.nodes[2] == parsed_import(
         import_type=ImportType.RELATIVE,
@@ -424,6 +466,7 @@ def test_relative_imports(parsed_import):
         lineno=4,
         package=None,
         package_names=[],
+        alias_col_offset=16,
     )
 
 
@@ -443,12 +486,14 @@ def test_multiple_from_imports_same_line(parsed_import):
         name="argv",
         package="sys",
         package_names=["sys"],
+        alias_col_offset=16,
     )
     assert visitor.nodes[1] == parsed_import(
         module="sys",
         name="exit",
         package="sys",
         package_names=["sys"],
+        alias_col_offset=22,
     )
 
 

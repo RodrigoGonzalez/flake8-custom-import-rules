@@ -28,9 +28,9 @@ LOCAL_IMPORT_CODE = dedent(
         (
             LOCAL_IMPORT_CODE,
             {
-                "2:0: PIR103 Local imports are currently disabled for this project.",
-                "5:0: PIR103 Local imports are currently disabled for this project.",
-                "8:0: PIR103 Local imports are currently disabled for this project.",
+                "3:4: PIR103 Local imports are currently disabled for this project.",
+                "6:4: PIR103 Local imports are currently disabled for this project.",
+                "9:4: PIR103 Local imports are currently disabled for this project.",
             },
             True,
         ),

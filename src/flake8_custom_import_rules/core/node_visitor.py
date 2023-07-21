@@ -45,8 +45,12 @@ class ParsedImport:
     asname: str | None
     lineno: int
     col_offset: int
+    node_col_offset: int
+    alias_col_offset: int
     package: str
     package_names: list[str]
+    private_import: bool
+    private_module_import: bool
 
 
 @define(slots=True)
@@ -59,9 +63,13 @@ class ParsedFromImport:
     asname: str | None
     lineno: int
     col_offset: int
+    node_col_offset: int
+    alias_col_offset: int
     level: int
     package: str | None
     package_names: list[str]
+    private_import: bool
+    private_module_import: bool
 
 
 @define(slots=True)
@@ -149,34 +157,35 @@ class CustomImportRulesVisitor(ast.NodeVisitor):
         self.resolve_local_imports = filename not in {"stdin", "-", "/dev/stdin", "", None}
         logger.info(f"Resolve local imports: {self.resolve_local_imports}")
 
+    def _resolve_local_import(self, module: str, node_level: int) -> Path | None:
+        """Resolve a local import."""
+        parent = self.file_path.parents[node_level - 1] if self.file_path else None
+        return parent / f"{module}.py" if parent else None
+
     def visit_Import(self, node: ast.Import) -> None:
         """Visit an Import node."""
         parsed_imports_dict = get_module_info_from_import_node(node)
-        modules = parsed_imports_dict["node_modules_lineno"][str(node.lineno)]
-
-        for module in modules:
+        for alias in node.names:
+            module = alias.name
             module_info = parsed_imports_dict[module]
-            import_type = self._classify_type(module)
-            module_info["import_type"] = import_type
             self.nodes.append(
                 ParsedImport(
-                    import_type=import_type,
+                    import_type=self._classify_type(module),
                     module=module,
                     asname=module_info["asname"],
                     lineno=node.lineno,
                     col_offset=node.col_offset,
+                    node_col_offset=node.col_offset,
+                    alias_col_offset=module_info["alias_col_offset"],
                     package=root_package_name(module),
                     package_names=get_package_names(module),
+                    private_import=module_info["private_import"],
+                    private_module_import=module_info["private_module_import"],
                 )
             )
 
         # Ensures a complete traversal of the AST
         self.generic_visit(node)
-
-    def _resolve_local_import(self, module: str, node_level: int) -> Path | None:
-        """Resolve a local import."""
-        parent = self.file_path.parents[node_level - 1] if self.file_path else None
-        return parent / f"{module}.py" if parent else None
 
     def _get_import_type(self, module: str, node_level: int) -> ImportType:
         """Get the import type for a module."""
@@ -184,25 +193,26 @@ class CustomImportRulesVisitor(ast.NodeVisitor):
 
     def visit_ImportFrom(self, node: ast.ImportFrom) -> None:
         """Visit an Import node."""
-        module = node.module or ""
-        import_type = self._get_import_type(module, node.level)
         parsed_from_imports_dict = get_name_info_from_import_node(node)
-        names = parsed_from_imports_dict["node_names_lineno"][str(node.lineno)]
-
-        for name in names:
+        for alias in node.names:
+            name = alias.name
             name_info = parsed_from_imports_dict[name]
-            name_info["import_type"] = import_type
+            module = name_info["module"]
             self.nodes.append(
                 ParsedFromImport(
-                    import_type=import_type,
+                    import_type=self._get_import_type(module, node.level),
                     module=module,
                     name=name,
                     asname=name_info["asname"],
                     lineno=node.lineno,
                     col_offset=node.col_offset,
+                    node_col_offset=node.col_offset,
+                    alias_col_offset=name_info["alias_col_offset"],
                     level=node.level,
                     package=root_package_name(module),
                     package_names=get_package_names(module),
+                    private_import=name_info["private_import"],
+                    private_module_import=name_info["private_module_import"],
                 )
             )
 
@@ -217,8 +227,8 @@ class CustomImportRulesVisitor(ast.NodeVisitor):
             if isinstance(stmt, (ast.Import, ast.ImportFrom)):
                 self.nodes.append(
                     ParsedLocalImport(
-                        lineno=node.lineno,
-                        col_offset=node.col_offset,
+                        lineno=stmt.lineno,
+                        col_offset=stmt.col_offset,
                         local_node_type=str(type(node)),
                     )
                 )

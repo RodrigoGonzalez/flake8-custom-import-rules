@@ -56,6 +56,39 @@ def root_package_name(module_name: str) -> str | None:
     )
 
 
+def is_private_import(node: ast.Import | ast.ImportFrom) -> bool:
+    """Check if a node is a private import."""
+    if isinstance(node, (ast.Import, ast.ImportFrom)):
+        for alias in node.names:
+            if alias.name.startswith("_"):
+                return True
+    return False
+
+
+def is_private_module_import(node: ast.Import | ast.ImportFrom) -> bool:
+    """Check if a node is a private module import."""
+    if isinstance(node, ast.Import):
+        for alias in node.names:
+            if alias.name.split(".")[0].startswith("_"):
+                return True
+    elif isinstance(node, ast.ImportFrom):
+        if node.module:
+            for sub_module in node.module.split("."):
+                if sub_module.startswith("_"):
+                    return True
+    return False
+
+
+def import_node_private_module_import(module: str) -> bool:
+    """Check if an Import node is a private module import."""
+    submodules = module.split(".")
+    if len(submodules) > 1:
+        for sub_module in submodules[:-1]:
+            if sub_module.startswith("_"):
+                return True
+    return False
+
+
 def get_module_info_from_import_node(node: ast.Import) -> dict:
     """
     Get the names of the import from the node.
@@ -71,60 +104,50 @@ def get_module_info_from_import_node(node: ast.Import) -> dict:
         The names of the import.
     """
     module_info: defaultdict[str, dict] = defaultdict(lambda: defaultdict(str))
-    package_dict: defaultdict[str, list] = defaultdict(list)
-    node_modules_lineno: defaultdict[str, list] = defaultdict(list)
 
     for alias in node.names:
         module = alias.name
-
         package = root_package_name(module)
-        if package:
-            package_dict[package].append(module)
         package_names = get_package_names(module)
-        node_modules_lineno[str(node.lineno)].append(module)
 
         module_info[module].update(
             {
                 "module": module,
                 "asname": alias.asname,
                 "lineno": node.lineno,
-                "col_offset": node.col_offset,
+                "alias_col_offset": alias.col_offset,
                 "package": package,
                 "package_names": package_names,
+                "private_import": alias.name.split(".")[-1].startswith("_"),
+                "private_module_import": import_node_private_module_import(module),
             }
         )
 
-    module_info["node_modules_lineno"] = node_modules_lineno
-    module_info["package_dict"] = package_dict
     return module_info
 
 
 def get_name_info_from_import_node(node: ast.ImportFrom) -> dict:
     """Get the names of the import."""
     name_info: defaultdict[str, dict] = defaultdict(lambda: defaultdict(str))
-    node_names_lineno: defaultdict[str, list] = defaultdict(list)
-
     module = node.module or ""
     package = root_package_name(module)
     package_names = get_package_names(module)
 
     for alias in node.names:
         name = alias.name
-        node_names_lineno[str(node.lineno)].append(name)
-
         name_info[name].update(
             {
                 "name": name,
                 "module": module,
                 "asname": alias.asname,
                 "lineno": node.lineno,
-                "col_offset": node.col_offset,
+                "alias_col_offset": alias.col_offset,
                 "package": package,
                 "package_names": package_names,
                 "level": node.level,
+                "private_import": alias.name.startswith("_"),
+                "private_module_import": is_private_module_import(node),
             }
         )
-
-    name_info["node_names_lineno"] = node_names_lineno
 
     return name_info
