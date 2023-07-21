@@ -175,7 +175,15 @@ unit-tests-cov: ## run unit-tests with pytest and show coverage (terminal + html
 unit-tests-cov-fail: ## run unit tests with pytest and show coverage (terminal + html) & fail if coverage too low & create files for CI
 	poetry run pytest  -vvvvsra --doctest-modules --cov=src --cov-report term-missing --cov-report=html --cov-fail-under=80 --junitxml=pytest.xml | tee pytest-coverage.txt
 
-.PHONY: tests unit-tests unit-tests-cov unit-tests-cov-fail
+clean-cov: ## remove output files from pytest & coverage
+	@rm -rf .coverage
+	@rm -rf coverage.xml
+	@rm -rf htmlcov
+	@rm -rf pytest.xml
+	@rm -rf pytest-coverage.txt
+	@rm -rf dist
+
+.PHONY: tests unit-tests unit-tests-cov unit-tests-cov-fail clean-cov
 
 # =============================================================================
 # DOCUMENTATION
@@ -195,19 +203,27 @@ docs-deploy: ## build & deploy documentation to "gh-pages" branch
 clean-docs: ## remove output files from mkdocs
 	rm -rf site
 
+.PHONY: docs-serve docs-build docs-deploy clean-docs
+
 # =============================================================================
 # BUILD & RELEASE
 # =============================================================================
 
 ##@ Build & Release
 
-build:  pre-commit tests  ## Build the project
+clean: clean-docs  clean-cov  ## Clean package
+	find . -type d -name '__pycache__' | xargs rm -rf
+	find . -type d -name '.temp' | xargs rm -rf
+	find . -type f -name '.coverage' | xargs rm -rf
+	rm -rf build dist
+
+build:  pre-commit tests clean ## Build the project
 	poetry build
 
 deploy:  ## Deploy to PyPI
 	poetry publish --build
 
-.PHONY: build deploy
+.PHONY: build deploy clean
 
 
 # -----------------------------------------------------------------------------

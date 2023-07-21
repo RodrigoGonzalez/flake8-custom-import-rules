@@ -1,6 +1,7 @@
 """Functions for processing nodes."""
 import ast
 from collections import defaultdict
+from typing import Generator
 
 from flake8_custom_import_rules.utils.parse_utils import parse_module_string
 
@@ -58,6 +59,34 @@ def root_package_name(module_name: str) -> str | None:
     )
 
 
+def generate_identifier_path(node: ast.AST | ast.expr) -> Generator[str, None, None]:
+    """
+    Generates a node path for a given node in the Abstract Syntax Tree (AST).
+
+    Parameters
+    ----------
+    node : ast.AST
+        A node in the AST.
+
+    Yields
+    ------
+    str
+        The node path of the node.
+    """
+    if isinstance(node, ast.Attribute):
+        yield from generate_identifier_path(node.value)
+        yield node.attr
+    elif isinstance(node, ast.Call):
+        yield from generate_identifier_path(node.func)
+    elif isinstance(node, ast.Name):
+        yield node.id
+    elif isinstance(node, ast.Subscript):
+        yield from generate_identifier_path(node.value)
+        yield from generate_identifier_path(node.slice)
+    elif isinstance(node, ast.Constant):
+        yield str(node.value)
+
+
 def check_private_module_import(module: str) -> bool:
     """Check if an Import node is a private module import."""
     return bool(_ := parse_module_string(module, prefix="_"))
@@ -89,11 +118,14 @@ def get_module_info_from_import_node(node: ast.Import) -> dict:
                 "module": module,
                 "asname": alias.asname,
                 "lineno": node.lineno,
+                "col_offset": node.col_offset,
+                "node_col_offset": node.col_offset,
                 "alias_col_offset": alias.col_offset,
                 "package": package,
                 "package_names": package_names,
                 "private_identifier_import": False,
                 "private_module_import": check_private_module_import(module),
+                "import_node": ast.unparse(node),
             }
         )
 
@@ -103,6 +135,7 @@ def get_module_info_from_import_node(node: ast.Import) -> dict:
 def get_name_info_from_import_node(node: ast.ImportFrom) -> dict:
     """Get the names of the import."""
     name_info: defaultdict[str, dict] = defaultdict(lambda: defaultdict(str))
+
     module = node.module or ""
     package = root_package_name(module)
     package_names = get_package_names(module)
@@ -115,12 +148,15 @@ def get_name_info_from_import_node(node: ast.ImportFrom) -> dict:
                 "module": module,
                 "asname": alias.asname,
                 "lineno": node.lineno,
+                "col_offset": node.col_offset,
+                "node_col_offset": node.col_offset,
                 "alias_col_offset": alias.col_offset,
                 "package": package,
                 "package_names": package_names,
                 "level": node.level,
-                "private_identifier_import": alias.name.startswith("_"),
+                "private_identifier_import": check_private_module_import(alias.name),
                 "private_module_import": check_private_module_import(module),
+                "import_node": ast.unparse(node),
             }
         )
 

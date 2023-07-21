@@ -54,3 +54,19 @@ def test_relative_imports(
     }
     actual = get_flake8_linter_results(s=test_case, options=options)
     assert actual == expected
+
+
+@pytest.mark.parametrize("restrict_relative_imports", [True, False])
+def test_relative_import_settings_do_not_error(
+    valid_custom_import_rules_imports: str,
+    get_flake8_linter_results: callable,
+    restrict_relative_imports: bool,
+) -> None:
+    """Test relative imports do not have an effect on regular import methods."""
+    options = {
+        "checker_settings": Settings(**{"RESTRICT_RELATIVE_IMPORTS": restrict_relative_imports})
+    }
+    actual = get_flake8_linter_results(
+        s=valid_custom_import_rules_imports, options=options, delimiter="\n"
+    )
+    assert actual == set()

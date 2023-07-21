@@ -9,6 +9,8 @@ from attrs import field
 
 from flake8_custom_import_rules.core.import_rules import CustomImportRules
 from flake8_custom_import_rules.core.node_visitor import CustomImportRulesVisitor
+from flake8_custom_import_rules.core.node_visitor import ParsedFromImport
+from flake8_custom_import_rules.core.node_visitor import ParsedImport
 from flake8_custom_import_rules.core.node_visitor import ParsedNode
 from flake8_custom_import_rules.defaults import DEFAULT_CHECKER_SETTINGS
 from flake8_custom_import_rules.utils.parse_utils import NOQA_INLINE_REGEXP
@@ -146,6 +148,8 @@ class CustomImportRulesChecker:
 
 
 class BaseCustomImportRulePlugin(CustomImportRulesChecker):
+    _run_list: list
+
     def __init__(
         self, tree: ast.AST | None = None, filename: str | None = None, lines: list | None = None
     ) -> None:
@@ -161,4 +165,11 @@ class BaseCustomImportRulePlugin(CustomImportRulesChecker):
 
     def get_run_list(self) -> list:
         """Return the run list."""
-        return list(self.run())
+        self._run_list = list(self.run())
+        return self._run_list
+
+    def get_import_nodes(self) -> list[ParsedNode]:
+        """Return the import nodes."""
+        return [
+            node for node in self._run_list if isinstance(node[2], (ParsedImport, ParsedFromImport))
+        ]

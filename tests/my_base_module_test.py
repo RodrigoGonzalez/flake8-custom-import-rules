@@ -18,7 +18,7 @@ tree = ast.parse("".join(lines))
 plugin = BaseCustomImportRulePlugin(tree=tree, filename=filename)
 plugin.get_run_list()
 
-# data = "from .module_a_relative import ARelative"
+# data = "import sys; attrs = sys.modules['attrs']"
 # tree = ast.parse(data)
 
 visitor = CustomImportRulesVisitor(["my_base_module"], None)
