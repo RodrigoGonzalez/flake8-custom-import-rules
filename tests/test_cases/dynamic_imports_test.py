@@ -2,46 +2,109 @@
 
 PIR105 = "PIR105 Dynamic imports are currently disabled for this project."
 """
-import ast
+import pytest
 
-from flake8_custom_import_rules.flake8_linter import Linter
-
-
-def results(s) -> set[str]:
-    """Return a list of results."""
-    return {"{}:{}: {}".format(*r) for r in Linter(ast.parse(s), lines=s.split("; ")).run()}
+from flake8_custom_import_rules.defaults import Settings
 
 
-def test_eval() -> None:
-    """Test eval."""
-    # assert results("eval('import datetime')") == set()
-    assert results("eval('from my_base_module.module_z import Z')") == set()
+@pytest.mark.parametrize(
+    ("test_case", "expected", "restrict_dynamic_imports"),
+    [
+        (
+            "eval('from my_base_module.module_z import Z')",
+            set(),
+            True,
+        ),
+        (
+            "eval('from my_base_module.module_z import Z')",
+            set(),
+            False,
+        ),
+        (
+            "exec('import datetime')",
+            set(),
+            True,
+        ),
+        (
+            "exec('import datetime')",
+            set(),
+            False,
+        ),
+        (
+            "import importlib; importlib.import_module('datetime')",
+            set(),
+            True,
+        ),
+        (
+            "import importlib; importlib.import_module('datetime')",
+            set(),
+            False,
+        ),
+        (
+            "from importlib import import_module; importlib.import_module('datetime')",
+            set(),
+            True,
+        ),
+        (
+            "from importlib import import_module; importlib.import_module('datetime')",
+            set(),
+            False,
+        ),
+        (
+            "import sys; dynamic_datetime = sys.modules['datetime']",
+            set(),
+            True,
+        ),
+        (
+            "import sys; dynamic_datetime = sys.modules['datetime']",
+            set(),
+            False,
+        ),
+        (
+            (
+                "from zipimport import zipimporter; "
+                "zipimporter = zipimporter('my_module.zip'); "
+                "my_module = zipimporter.load_module('my_module')"
+            ),
+            set(),
+            True,
+        ),
+        (
+            (
+                "from zipimport import zipimporter; "
+                "zipimporter = zipimporter('my_module.zip'); "
+                "my_module = zipimporter.load_module('my_module')"
+            ),
+            set(),
+            False,
+        ),
+    ],
+)
+def test_dynamic_imports(
+    test_case: str,
+    expected: set,
+    restrict_dynamic_imports: bool,
+    get_flake8_linter_results: callable,
+) -> None:
+    """Test wildcard imports."""
+    options = {
+        "checker_settings": Settings(**{"RESTRICT_DYNAMIC_IMPORTS": restrict_dynamic_imports})
+    }
+    actual = get_flake8_linter_results(s=test_case, options=options, delimiter=";")
+    assert actual == expected
 
 
-def test_exec() -> None:
-    """Test exec."""
-    # assert results("exec('import datetime')") == {"1:0: CIR101 Custom Import Rule"}
-    assert results("exec('import datetime')") == set()
-
-
-def test_import_module_attribute() -> None:
-    """Test import_module."""
-    # assert results("import importlib; importlib.import_module('datetime')") == {
-    #     "1:0: CIR101 Custom Import Rule"
-    # }
-    assert results("import importlib; importlib.import_module('datetime')") == set()
-
-
-def test_import_module_name() -> None:
-    """Test importlib.import_module."""
-    # TODO: Add reload
-    # assert results("from importlib import import_module; import_module('datetime')") == {
-    #     "1:0: CIR101 Custom Import Rule"
-    # }
-    assert results("import importlib; importlib.import_module('datetime')") == set()
-
-
-def test_import_using_sys() -> None:
-    """attrs = sys.modules["attrs"]"""
-    # TODO: Add reload
-    assert results("import sys; attrs = sys.modules['attrs']") == set()
+@pytest.mark.parametrize("restrict_dynamic_imports", [True, False])
+def test_dynamic_import_settings_do_not_error(
+    valid_custom_import_rules_imports: str,
+    get_flake8_linter_results: callable,
+    restrict_dynamic_imports: bool,
+) -> None:
+    """Test dynamic imports do not have an effect on regular import methods."""
+    options = {
+        "checker_settings": Settings(**{"RESTRICT_DYNAMIC_IMPORTS": restrict_dynamic_imports})
+    }
+    actual = get_flake8_linter_results(
+        s=valid_custom_import_rules_imports, options=options, delimiter="\n"
+    )
+    assert actual == set()

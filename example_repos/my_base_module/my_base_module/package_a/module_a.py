@@ -2,6 +2,7 @@
 from __future__ import annotations  # Do Not Remove Needed for Examples
 
 import sys, os, re
+from sys import modules
 from datetime import datetime
 from math import pi, sqrt
 from uuid import UUID
@@ -26,7 +27,7 @@ else:
 
 
 SOME_CONSTANT = "some_constant"
-COMPLEX_CONSTANT = {"some_key": "some_value"}
+COMPLEX_CONSTANT = {"some_key": "some_value", "some_other_key": "some_other_value"}
 
 
 @define(slots=True)
@@ -111,16 +112,32 @@ class A:
     def dynamic_imports_one() -> None:
         """Use dynamic imports."""
         import importlib
+
         importlib.import_module('datetime')
         exec('import datetime')
+        exec('from datetime import datetime')
         eval('import datetime')
+        eval('from datetime import datetime')
 
     @staticmethod
     def dynamic_imports_two() -> None:
         """Use dynamic imports."""
         from importlib import import_module
+
         import_module('datetime')
         __import__('datetime')
+
+    @staticmethod
+    def dynamic_imports_three() -> datetime:
+        """Use dynamic imports."""
+        dynamic_pendulum = sys.modules['pendulum']
+        return dynamic_pendulum.now()
+
+    @staticmethod
+    def dynamic_imports_four() -> datetime:
+        """Use dynamic imports."""
+        dynamic_datetime = modules['datetime']
+        return dynamic_datetime.now()
 
     @staticmethod
     def sqrt_of_four() -> float:
@@ -131,3 +148,13 @@ class A:
     def get_pi() -> float:
         """Get pi."""
         return pi
+
+    @staticmethod
+    def load_more_dynamic_imports() -> None:
+        """Use dynamic imports."""
+        import pkgutil
+
+        # Load the 'os' module
+        pkgutil.get_loader('typing').load_module()
+        for module_info in pkgutil.iter_modules(['calendar']):
+            print(module_info)

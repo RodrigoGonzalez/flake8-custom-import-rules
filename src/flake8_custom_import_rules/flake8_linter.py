@@ -225,6 +225,8 @@ class Linter(CustomImportRulesChecker):
             ]
 
         options: dict = {"base_package": base_packages}
+
+        # Update options with the options set in the config or on the command line
         for option_key in DEFAULT_CHECKER_SETTINGS.get_option_keys():
             option_value = getattr(parse_options, option_key.lower())
             if option_value is not None:

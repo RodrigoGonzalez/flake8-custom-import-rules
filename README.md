@@ -1,9 +1,38 @@
 # flake8-custom-import-rules
-A Flake8 plugin that enforces custom import rules, allowing users to define
-and maintain clean and consistent import organization across their Python
-projects.
+A Flake8 plugin that enforces custom import rules, allowing users to define and
+maintain clean and consistent import organization across their Python projects.
+
 
 ## Motivation
+This Flake8 plugin is extremely useful for enforcing custom import rules and
+maintaining a consistent import organization across Python projects. By
+allowing users to define specific restrictions, isolated packages, and import
+rules, this plugin helps to prevent unwanted dependencies and ensures a clear
+separation between high-level and low-level packages. Furthermore, it aids in
+managing lightweight packages by restricting them to import only from the
+Python standard library or third-party libraries, keeping them free
+from unnecessary dependencies.
+
+This plugin not only enhances code readability and maintainability but also
+encourages a modular architecture that is easier to understand, test, and debug.
+As a result, developers can effortlessly adhere to best practices, ensuring
+their projects remain clean, well-organized, and optimized for efficient
+collaboration.
+
+In today's digital age, with the prolific production of code at many
+organizations and the increasing number of contributors to various projects,
+one of the significant challenges we face is the maintainability and
+comprehensibility of code. Ensuring consistent and clean code is not merely
+an aesthetic or pedantic pursuit; it directly impacts the efficiency of
+onboarding new team members and the associated costs. Misunderstandings and
+inconsistencies in code can lead to miscommunication, errors, and increased
+time spent onboarding and training new staff. By enforcing custom import
+rules and maintaining a consistent import organization across Python projects,
+we can significantly mitigate these issues, streamlining the process of
+integrating new team members and maintaining the high quality and readability
+of our codebase.
+
+<Rewrite this paragraph>
 Developers will find this Flake8 plugin extremely useful for enforcing custom
 import rules and maintaining a consistent import organization across their
 Python projects. By allowing users to define specific restrictions, isolated
@@ -60,13 +89,13 @@ library modules.
 ```toml
 [flake8]
 restricted_imports = [
-    "my_base_package.package_A:my_base_package.package_B",
-    "my_base_package.module_X.py:my_base_package.module_Y.py",
+    "my_base_package.package_A:my_base_package.package_B",  # Restrict `package_A` from importing `package_B`
+    "my_base_package.module_X.py:my_base_package.module_Y.py",  # Restrict `module_X.py` from importing `module_Y.py`
 ]
-isolated_packages = ["my_base_package.package_C"]
-standard_library_only = ["my_base_package.package_D"]
-third_party_only = ["my_base_package.package_E"]
-local_only = ["my_base_package.package_F"]
+isolated_packages = ["my_base_package.package_C"]  # Make `package_C` an isolated package
+standard_library_only = ["my_base_package.package_D"]  # Allow `package_D` to import only from the standard library
+third_party_only = ["my_base_package.package_E"]  # Allow `package_E` to import only from third-party libraries
+local_only = ["my_base_package.package_F"]  # Allow `package_F` to import only from the local package
 ```
 
 ```ini
@@ -114,14 +143,7 @@ TFI1: Non-third party module 'from import'
 
 
 ## Limitations
-This plugin is currently only compatible with Python 3.7+.
-
-The plugin does not currently support the following import types:
-- `from . import module`
-- imports that use `__import__` or `importlib`
-- imports in string literals
-- dynamic imports (e.g. `__import__("module_name")`)
-- imports using eval (e.g. `eval("import module_name")`)
+This plugin is currently only compatible with Python 3.8+.
 
 ## License
 This project is licensed under the terms of the MIT license.

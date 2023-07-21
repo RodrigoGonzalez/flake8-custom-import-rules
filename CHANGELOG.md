@@ -1,3 +1,14 @@
+## v0.5.0 (2023-07-21)
+
+### Feat
+
+- added support for dynamic imports and fixed numerous tests
+
+### Refactor
+
+- **import-rules**: add restrictions for main imports (#39)
+- **import-rules**: add private import restrictions (#38)
+
 ## v0.4.5 (2023-07-20)
 
 ### Refactor
