@@ -49,8 +49,15 @@ class ParsedImport:
     alias_col_offset: int
     package: str
     package_names: list[str]
-    private_import: bool
+    private_identifier_import: bool
     private_module_import: bool
+    identifier: str = field(init=False)
+
+    def __attrs_post_init__(self) -> None:
+        """Post init hook."""
+        # if self.level > 0:
+        #     self.package = root_package_name(self.module)
+        self.identifier = self.module
 
 
 @define(slots=True)
@@ -68,8 +75,15 @@ class ParsedFromImport:
     level: int
     package: str | None
     package_names: list[str]
-    private_import: bool
+    private_identifier_import: bool
     private_module_import: bool
+    identifier: str = field(init=False)
+
+    def __attrs_post_init__(self) -> None:
+        """Post init hook."""
+        # if self.level > 0:
+        #     self.package = root_package_name(self.module)
+        self.identifier = f"{self.module}.{self.name}"
 
 
 @define(slots=True)
@@ -179,7 +193,7 @@ class CustomImportRulesVisitor(ast.NodeVisitor):
                     alias_col_offset=module_info["alias_col_offset"],
                     package=root_package_name(module),
                     package_names=get_package_names(module),
-                    private_import=module_info["private_import"],
+                    private_identifier_import=module_info["private_identifier_import"],
                     private_module_import=module_info["private_module_import"],
                 )
             )
@@ -211,7 +225,7 @@ class CustomImportRulesVisitor(ast.NodeVisitor):
                     level=node.level,
                     package=root_package_name(module),
                     package_names=get_package_names(module),
-                    private_import=name_info["private_import"],
+                    private_identifier_import=name_info["private_identifier_import"],
                     private_module_import=name_info["private_module_import"],
                 )
             )

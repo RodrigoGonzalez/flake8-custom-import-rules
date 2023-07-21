@@ -1,7 +1,7 @@
 """ Test cases for restricting __main__ imports
 
-PIR209 = "PIR209 Importing `__main__` is not permitted."
-PIR210 = "PIR210 Importing from `__main__.py` files is not permitted."
+PIR209 = "PIR209 Importing `__main__` is restricted."
+PIR210 = "PIR210 Importing from `__main__.py` files is restricted."
 """
 from textwrap import dedent
 
@@ -28,9 +28,9 @@ MAIN_IMPORT_CODE = dedent(
         (
             MAIN_IMPORT_CODE,
             {
-                "2:0: PIR209 Importing `__main__` is not permitted.",
-                "7:0: PIR210 Importing from `__main__.py` files is not permitted.",
-                "8:0: PIR210 Importing from `__main__.py` files is not permitted.",
+                "2:0: PIR209 Importing `__main__` is restricted.",
+                "7:0: PIR210 Importing from `__main__.py` files is restricted.",
+                "8:0: PIR210 Importing from `__main__.py` files is restricted.",
             },
             True,
         ),
@@ -53,7 +53,7 @@ def test_main_imports(
             **{"RESTRICT_MAIN_IMPORTS": restrict_main_imports, "RESTRICT_RELATIVE_IMPORTS": False}
         )
     }
-    actual = get_flake8_linter_results(s=test_case, options=options, splitter="\n")
+    actual = get_flake8_linter_results(s=test_case, options=options, delimiter="\n")
     assert actual == expected
 
 
@@ -66,6 +66,6 @@ def test_main_import_settings_do_not_error(
     """Test main imports do not have an effect on regular import methods."""
     options = {"checker_settings": Settings(**{"RESTRICT_MAIN_IMPORTS": restrict_main_imports})}
     actual = get_flake8_linter_results(
-        s=valid_custom_import_rules_imports, options=options, splitter="\n"
+        s=valid_custom_import_rules_imports, options=options, delimiter="\n"
     )
     assert actual == set()

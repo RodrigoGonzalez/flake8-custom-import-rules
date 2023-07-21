@@ -53,7 +53,7 @@ def test_private_imports(
     options = {
         "checker_settings": Settings(**{"RESTRICT_PRIVATE_IMPORTS": restrict_private_imports})
     }
-    actual = get_flake8_linter_results(s=test_case, options=options, splitter="\n")
+    actual = get_flake8_linter_results(s=test_case, options=options, delimiter="\n")
     assert actual == expected
 
 
@@ -68,6 +68,6 @@ def test_private_import_settings_do_not_error(
         "checker_settings": Settings(**{"RESTRICT_PRIVATE_IMPORTS": restrict_private_imports})
     }
     actual = get_flake8_linter_results(
-        s=valid_custom_import_rules_imports, options=options, splitter="\n"
+        s=valid_custom_import_rules_imports, options=options, delimiter="\n"
     )
     assert actual == set()

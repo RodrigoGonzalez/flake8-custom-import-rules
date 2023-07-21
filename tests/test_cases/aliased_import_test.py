@@ -67,6 +67,6 @@ def test_aliased_import_settings_do_not_error(
         "checker_settings": Settings(**{"RESTRICT_ALIASED_IMPORTS": restrict_aliased_imports})
     }
     actual = get_flake8_linter_results(
-        s=valid_custom_import_rules_imports, options=options, splitter="\n"
+        s=valid_custom_import_rules_imports, options=options, delimiter="\n"
     )
     assert actual == set()

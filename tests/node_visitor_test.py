@@ -48,7 +48,7 @@ def parsed_import():
                 package_names=package_names,
                 node_col_offset=col_offset,
                 alias_col_offset=alias_col_offset,
-                private_import=False,
+                private_identifier_import=False,
                 private_module_import=False,
             )
         return ParsedImport(
@@ -61,7 +61,7 @@ def parsed_import():
             package_names=package_names,
             node_col_offset=col_offset,
             alias_col_offset=alias_col_offset,
-            private_import=False,
+            private_identifier_import=False,
             private_module_import=False,
         )
 
@@ -111,7 +111,7 @@ def test_visit_import_from_simple():
         package_names=["os"],
         node_col_offset=0,
         alias_col_offset=15,
-        private_import=False,
+        private_identifier_import=False,
         private_module_import=False,
     )
 
@@ -157,7 +157,7 @@ def test_visit_import_from_relative(parsed_import):
         package_names=[],
         node_col_offset=0,
         alias_col_offset=14,
-        private_import=False,
+        private_identifier_import=False,
         private_module_import=False,
     )
 
@@ -220,7 +220,7 @@ def test_visit_import_multiple():
         package_names=["os"],
         node_col_offset=0,
         alias_col_offset=7,
-        private_import=False,
+        private_identifier_import=False,
         private_module_import=False,
     )
     assert visitor.nodes[1] == ParsedImport(
@@ -233,7 +233,7 @@ def test_visit_import_multiple():
         package_names=["sys"],
         node_col_offset=0,
         alias_col_offset=11,
-        private_import=False,
+        private_identifier_import=False,
         private_module_import=False,
     )
 
@@ -259,7 +259,7 @@ def test_visit_import_from_multiple():
         package_names=["os"],
         node_col_offset=0,
         alias_col_offset=15,
-        private_import=False,
+        private_identifier_import=False,
         private_module_import=False,
     )
     assert visitor.nodes[1] == ParsedFromImport(
@@ -274,7 +274,7 @@ def test_visit_import_from_multiple():
         package_names=["os"],
         node_col_offset=0,
         alias_col_offset=21,
-        private_import=False,
+        private_identifier_import=False,
         private_module_import=False,
     )
 

@@ -13,6 +13,7 @@ from flake8_custom_import_rules.core.node_visitor import ParsedImport
 from flake8_custom_import_rules.core.node_visitor import ParsedLocalImport
 from flake8_custom_import_rules.core.node_visitor import ParsedNode
 from flake8_custom_import_rules.defaults import Settings
+from flake8_custom_import_rules.utils.parse_utils import check_string
 from flake8_custom_import_rules.utils.parse_utils import parse_custom_rule
 
 
@@ -190,6 +191,21 @@ class CustomImportRules:
                 yield from self._check_for_pir209(node)
             elif isinstance(node, ParsedFromImport):
                 yield from self._check_for_pir210(node)
+
+    def _check_test_import_restrictions(
+        self, node: ParsedNode
+    ) -> Generator[ErrorMessage, None, None]:
+        """Check test import restrictions"""
+        if self.checker_settings.RESTRICT_TEST_IMPORTS:
+            if isinstance(node, ParsedImport):
+                yield from self._check_for_pir201(node)
+                yield from self._check_for_pir203(node)
+                yield from self._check_for_pir205(node)
+
+            elif isinstance(node, ParsedFromImport):
+                yield from self._check_for_pir202(node)
+                yield from self._check_for_pir204(node)
+                yield from self._check_for_pir206(node)
 
     def _check_restricted_imports(
         self,
@@ -407,7 +423,7 @@ class CustomImportRules:
         self, node: ParsedImport | ParsedFromImport
     ) -> Generator[ErrorMessage, None, None]:
         """Check for PIR106, private import restrictions."""
-        condition = node.private_import or node.private_module_import
+        condition = node.private_identifier_import or node.private_module_import
         if ErrorCode.PIR106.code in self.codes_to_check and condition:
             yield generate_from_node(node, ErrorCode.PIR106)
 
@@ -415,7 +431,7 @@ class CustomImportRules:
         self, node: ParsedImport | ParsedFromImport
     ) -> Generator[ErrorMessage, None, None]:
         """Check for PIR107, wildcard or star import restrictions (i.e., from * imports)."""
-        condition = "*" in node.module or "*" in node.name if hasattr(node, "name") else False
+        condition = check_string(node.identifier, substring_match="*")
         if ErrorCode.PIR107.code in self.codes_to_check and condition:
             yield generate_from_node(node, ErrorCode.PIR107)
 
@@ -428,55 +444,61 @@ class CustomImportRules:
             yield generate_from_node(node, ErrorCode.PIR108)
 
     def _check_for_pir201(self, node: ParsedImport) -> Generator[ErrorMessage, None, None]:
-        """Check for PIR201."""
-        if ErrorCode.PIR201.code in self.codes_to_check:
+        """Check for PIR201, import test_*/*_test modules is restricted."""
+        condition = check_string(node.identifier, prefix="test_", suffix="_test")
+        if ErrorCode.PIR201.code in self.codes_to_check and condition:
             yield generate_from_node(node, ErrorCode.PIR201)
 
     def _check_for_pir202(self, node: ParsedFromImport) -> Generator[ErrorMessage, None, None]:
-        """Check for PIR202."""
-        if ErrorCode.PIR202.code in self.codes_to_check:
+        """Check for PIR202, import from test_*/*_test modules is restricted."""
+        condition = check_string(node.identifier, prefix="test_", suffix="_test")
+        if ErrorCode.PIR202.code in self.codes_to_check and condition:
             yield generate_from_node(node, ErrorCode.PIR202)
 
     def _check_for_pir203(self, node: ParsedImport) -> Generator[ErrorMessage, None, None]:
-        """Check for PIR203."""
-        if ErrorCode.PIR203.code in self.codes_to_check:
+        """Check for PIR203, import conftest is restricted."""
+        condition = check_string(node.identifier, substring_match="conftest")
+        if ErrorCode.PIR203.code in self.codes_to_check and condition:
             yield generate_from_node(node, ErrorCode.PIR203)
 
     def _check_for_pir204(self, node: ParsedFromImport) -> Generator[ErrorMessage, None, None]:
-        """Check for PIR204."""
-        if ErrorCode.PIR204.code in self.codes_to_check:
+        """Check for PIR204, import from conftest is restricted."""
+        condition = check_string(node.identifier, substring_match="conftest")
+        if ErrorCode.PIR204.code in self.codes_to_check and condition:
             yield generate_from_node(node, ErrorCode.PIR204)
 
     def _check_for_pir205(self, node: ParsedImport) -> Generator[ErrorMessage, None, None]:
-        """Check for PIR205."""
-        if ErrorCode.PIR205.code in self.codes_to_check:
+        """Check for PIR205 import tests directory is restricted."""
+        condition = check_string(node.package, substring_match="tests")
+        if ErrorCode.PIR205.code in self.codes_to_check and condition:
             yield generate_from_node(node, ErrorCode.PIR205)
 
     def _check_for_pir206(self, node: ParsedFromImport) -> Generator[ErrorMessage, None, None]:
-        """Check for PIR206."""
-        if ErrorCode.PIR206.code in self.codes_to_check:
+        """Check for PIR206, import from tests directory is restricted."""
+        condition = check_string(node.package, substring_match="tests")
+        if ErrorCode.PIR206.code in self.codes_to_check and condition:
             yield generate_from_node(node, ErrorCode.PIR206)
 
     def _check_for_pir207(self, node: ParsedImport) -> Generator[ErrorMessage, None, None]:
         """Check for PIR207, import __init__."""
-        condition = "__init__" in node.module
+        condition = check_string(node.identifier, substring_match="__init__")
         if ErrorCode.PIR207.code in self.codes_to_check and condition:
             yield generate_from_node(node, ErrorCode.PIR207)
 
     def _check_for_pir208(self, node: ParsedFromImport) -> Generator[ErrorMessage, None, None]:
         """Check for PIR208, from __init__ imports."""
-        condition = "__init__" in node.module or "__init__" in node.name
+        condition = check_string(node.identifier, substring_match="__init__")
         if ErrorCode.PIR208.code in self.codes_to_check and condition:
             yield generate_from_node(node, ErrorCode.PIR208)
 
     def _check_for_pir209(self, node: ParsedImport) -> Generator[ErrorMessage, None, None]:
         """Check for PIR209 import __main__."""
-        condition = "__main__" in node.module
+        condition = check_string(node.identifier, substring_match="__main__")
         if ErrorCode.PIR209.code in self.codes_to_check and condition:
             yield generate_from_node(node, ErrorCode.PIR209)
 
     def _check_for_pir210(self, node: ParsedFromImport) -> Generator[ErrorMessage, None, None]:
         """Check for PIR210 for from __main__ imports."""
-        condition = "__main__" in node.module or "__main__" in node.name
+        condition = check_string(node.identifier, substring_match="__main__")
         if ErrorCode.PIR210.code in self.codes_to_check and condition:
             yield generate_from_node(node, ErrorCode.PIR210)

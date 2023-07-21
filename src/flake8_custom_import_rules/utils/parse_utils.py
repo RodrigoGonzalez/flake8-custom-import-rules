@@ -27,6 +27,48 @@ def parse_comma_separated_list(value: str) -> set[str]:
     return {item for item in items if item}
 
 
+def parse_module_string(
+    value: str,
+    substring_match: list | str | None = None,
+    prefix: str | None = None,
+    suffix: str | None = None,
+    delimiter: str = ".",
+) -> list:
+    """Parse a module."""
+    substrings = value.split(delimiter)
+    if isinstance(substring_match, str):
+        substring_match = [substring_match]
+    if substring_match or prefix or suffix:
+        matches: list[str] = []
+        matches.extend(
+            substring
+            for substring in substrings
+            if (substring_match and substring in substring_match)
+            or (prefix and substring.startswith(prefix))
+            or (suffix and substring.endswith(suffix))
+        )
+        return matches
+    else:
+        return substrings
+
+
+def check_string(
+    strings_to_check: list | str,
+    substring_match: list | str | None = None,
+    prefix: str | None = None,
+    suffix: str | None = None,
+    delimiter: str = ".",
+) -> bool:
+    """Check string for matches."""
+    if substring_match or prefix or suffix:
+        if isinstance(strings_to_check, list):
+            strings_to_check = f"{delimiter}".join(strings_to_check)
+        matches = parse_module_string(strings_to_check, substring_match, prefix, suffix, delimiter)
+        return bool(matches)
+    else:
+        return False
+
+
 def parse_custom_rule(rules: list[str]) -> dict[str, list[str]]:
     """Parse custom rules."""
     return {src.strip(): dest.split(",") for rule in rules for src, dest in (rule.split(":"),)}

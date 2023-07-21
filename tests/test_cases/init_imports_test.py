@@ -1,7 +1,7 @@
 """ Test cases for restricting init imports
 
-PIR207 = "PIR207 Importing `__init__` is not permitted."
-PIR208 = "PIR208 Importing from `__init__.py` files is not permitted."
+PIR207 = "PIR207 Importing `__init__` is restricted."
+PIR208 = "PIR208 Importing from `__init__.py` files is restricted."
 """
 import pytest
 
@@ -13,7 +13,7 @@ from flake8_custom_import_rules.defaults import Settings
     [
         (
             "import __init__; from .module_a import A",
-            {"1:0: PIR207 Importing `__init__` is not permitted."},
+            {"1:0: PIR207 Importing `__init__` is restricted."},
             True,
         ),
         (
@@ -23,7 +23,7 @@ from flake8_custom_import_rules.defaults import Settings
         ),
         (
             "from . import __init__; from .module_a import A",
-            {"1:0: PIR208 Importing from `__init__.py` files is not permitted."},
+            {"1:0: PIR208 Importing from `__init__.py` files is restricted."},
             True,
         ),
         (
@@ -33,7 +33,7 @@ from flake8_custom_import_rules.defaults import Settings
         ),
         (
             "from __init__ import module; from .module_a import A",
-            {"1:0: PIR208 Importing from `__init__.py` files is not permitted."},
+            {"1:0: PIR208 Importing from `__init__.py` files is restricted."},
             True,
         ),
         (
@@ -65,6 +65,6 @@ def test_init_import_settings_do_not_error(
     """Test init imports do not have an effect on regular import methods."""
     options = {"checker_settings": Settings(**{"RESTRICT_INIT_IMPORTS": restrict_init_imports})}
     actual = get_flake8_linter_results(
-        s=valid_custom_import_rules_imports, options=options, splitter="\n"
+        s=valid_custom_import_rules_imports, options=options, delimiter="\n"
     )
     assert actual == set()
