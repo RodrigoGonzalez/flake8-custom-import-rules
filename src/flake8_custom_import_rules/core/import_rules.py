@@ -7,11 +7,11 @@ from attrs import field
 from stdlib_list import stdlib_list
 
 from flake8_custom_import_rules.codes.error_codes import ErrorCode
-from flake8_custom_import_rules.core.node_visitor import ParsedFromImport
-from flake8_custom_import_rules.core.node_visitor import ParsedIfImport
-from flake8_custom_import_rules.core.node_visitor import ParsedImport
-from flake8_custom_import_rules.core.node_visitor import ParsedLocalImport
-from flake8_custom_import_rules.core.node_visitor import ParsedNode
+from flake8_custom_import_rules.core.nodes import ParsedFromImport
+from flake8_custom_import_rules.core.nodes import ParsedIfImport
+from flake8_custom_import_rules.core.nodes import ParsedImport
+from flake8_custom_import_rules.core.nodes import ParsedLocalImport
+from flake8_custom_import_rules.core.nodes import ParsedNode
 from flake8_custom_import_rules.defaults import Settings
 from flake8_custom_import_rules.utils.parse_utils import check_string
 from flake8_custom_import_rules.utils.parse_utils import parse_custom_rule
