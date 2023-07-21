@@ -46,7 +46,7 @@ def test_local_imports(
 ) -> None:
     """Test wildcard imports."""
     options = {"checker_settings": Settings(**{"RESTRICT_LOCAL_IMPORTS": restrict_local_imports})}
-    actual = get_flake8_linter_results(s=test_case, options=options, splitter="\n")
+    actual = get_flake8_linter_results(s=test_case, options=options, delimiter="\n")
     assert actual == expected
 
 
@@ -59,6 +59,6 @@ def test_local_import_settings_do_not_error(
     """Test local imports do not have an effect on regular import methods."""
     options = {"checker_settings": Settings(**{"RESTRICT_LOCAL_IMPORTS": restrict_local_imports})}
     actual = get_flake8_linter_results(
-        s=valid_custom_import_rules_imports, options=options, splitter="\n"
+        s=valid_custom_import_rules_imports, options=options, delimiter="\n"
     )
     assert actual == set()

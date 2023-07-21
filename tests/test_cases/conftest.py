@@ -15,13 +15,13 @@ def get_flake8_linter_results() -> partial:
     def results(
         s: str,
         options: dict[str, list[str] | str] | None = None,
-        splitter: str = "; ",
+        delimiter: str = "; ",
     ) -> set[str]:
         """Return a set of results."""
         if options is None:
             options = {}
 
-        linter = Linter(ast.parse(s), lines=s.split(splitter))
+        linter = Linter(ast.parse(s), lines=s.split(delimiter))
         linter.update_checker_settings(options)
         return {"{}:{}: {}".format(*r) for r in linter.run()}
 

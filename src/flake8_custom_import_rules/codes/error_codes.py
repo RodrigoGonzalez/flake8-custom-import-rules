@@ -82,16 +82,16 @@ class ErrorCode(Enum, metaclass=ErrorCodeMeta):
     PIR108 = "PIR108 Aliased imports are currently disabled for this project."
 
     # Project Level Import Rules for Special Cases
-    PIR201 = "PIR201 Importing test_*/*_test modules is not permitted."
-    PIR202 = "PIR202 Importing from test_*.py/*_test.py modules is not permitted."
-    PIR203 = "PIR203 Importing 'conftest' is not permitted."
-    PIR204 = "PIR204 Importing from `conftest.py` modules is not permitted."
-    PIR205 = "PIR205 Importing tests package or tests subdirectories is not permitted."
-    PIR206 = "PIR206 Importing from tests package or subdirectories is not permitted."
-    PIR207 = "PIR207 Importing `__init__` is not permitted."
-    PIR208 = "PIR208 Importing from `__init__.py` files is not permitted."
-    PIR209 = "PIR209 Importing `__main__` is not permitted."
-    PIR210 = "PIR210 Importing from `__main__.py` files is not permitted."
+    PIR201 = "PIR201 Importing test_*/*_test modules is restricted."
+    PIR202 = "PIR202 Importing from test_*.py/*_test.py modules is restricted."
+    PIR203 = "PIR203 Importing 'conftest' is restricted."
+    PIR204 = "PIR204 Importing from `conftest.py` modules is restricted."
+    PIR205 = "PIR205 Importing tests directory or tests subdirectories is restricted."
+    PIR206 = "PIR206 Importing from tests directory or tests subdirectories is restricted."
+    PIR207 = "PIR207 Importing `__init__` is restricted."
+    PIR208 = "PIR208 Importing from `__init__.py` files is restricted."
+    PIR209 = "PIR209 Importing `__main__` is restricted."
+    PIR210 = "PIR210 Importing from `__main__.py` files is restricted."
 
     @property
     def code(self) -> str:

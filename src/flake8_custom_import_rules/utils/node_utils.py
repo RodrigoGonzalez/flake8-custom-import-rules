@@ -2,6 +2,8 @@
 import ast
 from collections import defaultdict
 
+from flake8_custom_import_rules.utils.parse_utils import parse_module_string
+
 
 def get_package_names(module_name: str) -> list[str] | None:
     """
@@ -56,37 +58,9 @@ def root_package_name(module_name: str) -> str | None:
     )
 
 
-def is_private_import(node: ast.Import | ast.ImportFrom) -> bool:
-    """Check if a node is a private import."""
-    if isinstance(node, (ast.Import, ast.ImportFrom)):
-        for alias in node.names:
-            if alias.name.startswith("_"):
-                return True
-    return False
-
-
-def is_private_module_import(node: ast.Import | ast.ImportFrom) -> bool:
-    """Check if a node is a private module import."""
-    if isinstance(node, ast.Import):
-        for alias in node.names:
-            if alias.name.split(".")[0].startswith("_"):
-                return True
-    elif isinstance(node, ast.ImportFrom):
-        if node.module:
-            for sub_module in node.module.split("."):
-                if sub_module.startswith("_"):
-                    return True
-    return False
-
-
-def import_node_private_module_import(module: str) -> bool:
+def check_private_module_import(module: str) -> bool:
     """Check if an Import node is a private module import."""
-    submodules = module.split(".")
-    if len(submodules) > 1:
-        for sub_module in submodules[:-1]:
-            if sub_module.startswith("_"):
-                return True
-    return False
+    return bool(_ := parse_module_string(module, prefix="_"))
 
 
 def get_module_info_from_import_node(node: ast.Import) -> dict:
@@ -118,8 +92,8 @@ def get_module_info_from_import_node(node: ast.Import) -> dict:
                 "alias_col_offset": alias.col_offset,
                 "package": package,
                 "package_names": package_names,
-                "private_import": alias.name.split(".")[-1].startswith("_"),
-                "private_module_import": import_node_private_module_import(module),
+                "private_identifier_import": False,
+                "private_module_import": check_private_module_import(module),
             }
         )
 
@@ -145,8 +119,8 @@ def get_name_info_from_import_node(node: ast.ImportFrom) -> dict:
                 "package": package,
                 "package_names": package_names,
                 "level": node.level,
-                "private_import": alias.name.startswith("_"),
-                "private_module_import": is_private_module_import(node),
+                "private_identifier_import": alias.name.startswith("_"),
+                "private_module_import": check_private_module_import(module),
             }
         )
 
