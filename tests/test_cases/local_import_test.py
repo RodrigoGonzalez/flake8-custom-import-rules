@@ -44,7 +44,7 @@ LOCAL_IMPORT_CODE = dedent(
 def test_local_imports(
     test_case: str, expected: set, restrict_local_imports: bool, get_flake8_linter_results: callable
 ) -> None:
-    """Test wildcard imports."""
+    """Test local imports."""
     options = {"checker_settings": Settings(**{"RESTRICT_LOCAL_IMPORTS": restrict_local_imports})}
     actual = get_flake8_linter_results(s=test_case, options=options, delimiter="\n")
     assert actual == expected
