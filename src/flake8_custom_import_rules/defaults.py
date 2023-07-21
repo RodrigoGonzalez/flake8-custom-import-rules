@@ -20,6 +20,7 @@ class Settings:
     RESTRICT_ALIASED_IMPORTS: bool = field(default=False)
 
     RESTRICT_INIT_IMPORTS: bool = field(default=True)
+    RESTRICT_MAIN_IMPORTS: bool = field(default=True)
     RESTRICT_TEST_IMPORTS: bool = field(default=True)
     RESTRICT_CONFTEST_IMPORTS: bool = field(default=True)
 

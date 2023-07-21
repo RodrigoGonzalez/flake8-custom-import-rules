@@ -162,7 +162,19 @@ class Linter(CustomImportRulesChecker):
             default=DEFAULT_CHECKER_SETTINGS.RESTRICT_INIT_IMPORTS,
             action="store",
             type=bool,
-            help="Init imports are currently disabled for this project.",
+            help="__init__ imports are currently disabled for this project.",
+            parse_from_config=True,
+            comma_separated_list=False,
+            normalize_paths=False,
+        )
+
+        register_opt(
+            option_manager,
+            "--restrict-main-imports",
+            default=DEFAULT_CHECKER_SETTINGS.RESTRICT_INIT_IMPORTS,
+            action="store",
+            type=bool,
+            help="__main__ imports are currently disabled for this project.",
             parse_from_config=True,
             comma_separated_list=False,
             normalize_paths=False,
