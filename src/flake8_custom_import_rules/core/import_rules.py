@@ -192,6 +192,9 @@ class CustomImportRules:
             elif isinstance(node, ParsedFromImport):
                 yield from self._check_for_pir210(node)
 
+        if self.checker_settings.RESTRICT_TEST_IMPORTS:
+            yield from self._check_test_import_restrictions(node)
+
     def _check_test_import_restrictions(
         self, node: ParsedNode
     ) -> Generator[ErrorMessage, None, None]:
@@ -469,13 +472,13 @@ class CustomImportRules:
 
     def _check_for_pir205(self, node: ParsedImport) -> Generator[ErrorMessage, None, None]:
         """Check for PIR205 import tests directory is restricted."""
-        condition = check_string(node.package, substring_match="tests")
+        condition = node.package == "tests"
         if ErrorCode.PIR205.code in self.codes_to_check and condition:
             yield generate_from_node(node, ErrorCode.PIR205)
 
     def _check_for_pir206(self, node: ParsedFromImport) -> Generator[ErrorMessage, None, None]:
         """Check for PIR206, import from tests directory is restricted."""
-        condition = check_string(node.package, substring_match="tests")
+        condition = node.package == "tests"
         if ErrorCode.PIR206.code in self.codes_to_check and condition:
             yield generate_from_node(node, ErrorCode.PIR206)
 

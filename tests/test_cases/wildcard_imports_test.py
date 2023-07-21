@@ -29,3 +29,19 @@ def test_star_imports(
     options = {"checker_settings": Settings(**{"RESTRICT_WILDCARD_IMPORTS": restrict_star_imports})}
     actual = get_flake8_linter_results(s=test_case, options=options)
     assert actual == expected
+
+
+@pytest.mark.parametrize("restrict_wildcard_imports", [True, False])
+def test_wildcard_import_settings_do_not_error(
+    valid_custom_import_rules_imports: str,
+    get_flake8_linter_results: callable,
+    restrict_wildcard_imports: bool,
+) -> None:
+    """Test wildcard imports do not have an effect on regular import methods."""
+    options = {
+        "checker_settings": Settings(**{"RESTRICT_WILDCARD_IMPORTS": restrict_wildcard_imports})
+    }
+    actual = get_flake8_linter_results(
+        s=valid_custom_import_rules_imports, options=options, delimiter="\n"
+    )
+    assert actual == set()
