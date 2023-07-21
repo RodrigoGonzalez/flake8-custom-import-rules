@@ -158,11 +158,11 @@ class CustomImportRules:
         #     isinstance(node, (ParsedImport, ParsedFromImport))
         # ):
         #     yield from self._check_for_pir105(node)
-        #
-        # if self.checker_settings.RESTRICT_PRIVATE_IMPORTS and (
-        #     isinstance(node, (ParsedImport, ParsedFromImport))
-        # ):
-        #     yield from self._check_for_pir106(node)
+
+        if self.checker_settings.RESTRICT_PRIVATE_IMPORTS and (
+            isinstance(node, (ParsedImport, ParsedFromImport))
+        ):
+            yield from self._check_for_pir106(node)
 
         if self.checker_settings.RESTRICT_WILDCARD_IMPORTS and (
             isinstance(node, (ParsedImport, ParsedFromImport))
@@ -396,13 +396,16 @@ class CustomImportRules:
         if ErrorCode.PIR105.code in self.codes_to_check:
             yield generate_from_node(node, ErrorCode.PIR105)
 
-    def _check_for_pir106(self, node: ParsedNode) -> Generator[ErrorMessage, None, None]:
-        """Check for PIR106, functional import restrictions."""
-        if ErrorCode.PIR106.code in self.codes_to_check:
+    def _check_for_pir106(
+        self, node: ParsedImport | ParsedFromImport
+    ) -> Generator[ErrorMessage, None, None]:
+        """Check for PIR106, private import restrictions."""
+        condition = node.private_import or node.private_module_import
+        if ErrorCode.PIR106.code in self.codes_to_check and condition:
             yield generate_from_node(node, ErrorCode.PIR106)
 
     def _check_for_pir107(
-        self, node: ParsedFromImport | ParsedImport
+        self, node: ParsedImport | ParsedFromImport
     ) -> Generator[ErrorMessage, None, None]:
         """Check for PIR107, wildcard or star import restrictions (i.e., from * imports)."""
         condition = "*" in node.module or "*" in node.name if hasattr(node, "name") else False
@@ -410,7 +413,7 @@ class CustomImportRules:
             yield generate_from_node(node, ErrorCode.PIR107)
 
     def _check_for_pir108(
-        self, node: ParsedFromImport | ParsedImport
+        self, node: ParsedImport | ParsedFromImport
     ) -> Generator[ErrorMessage, None, None]:
         """Check for PIR108, aliased import restrictions."""
         condition = hasattr(node, "asname") and node.asname is not None
