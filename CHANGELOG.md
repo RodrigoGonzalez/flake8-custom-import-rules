@@ -1,3 +1,12 @@
+## v0.4.5 (2023-07-20)
+
+### Refactor
+
+- **import-rules**: add private import restrictions
+- **import-rules**: implement local import restrictions (#37)
+- **import-rules**: add aliased import restrictions (#36)
+- **import-rules**: add conditional import restrictions (#35)
+
 ## v0.4.4 (2023-07-20)
 
 ### Refactor
