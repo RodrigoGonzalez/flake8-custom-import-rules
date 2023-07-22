@@ -12,7 +12,7 @@ from flake8_custom_import_rules.defaults import Settings
     [
         (
             "eval('from my_base_module.module_z import Z')",
-            set(),
+            {"1:0: PIR105 Dynamic imports are currently disabled for this project."},
             True,
         ),
         (
@@ -22,7 +22,7 @@ from flake8_custom_import_rules.defaults import Settings
         ),
         (
             "exec('import datetime')",
-            set(),
+            {"1:0: PIR105 Dynamic imports are currently disabled for this project."},
             True,
         ),
         (
@@ -32,7 +32,7 @@ from flake8_custom_import_rules.defaults import Settings
         ),
         (
             "import importlib; importlib.import_module('datetime')",
-            set(),
+            {"1:18: PIR105 Dynamic imports are currently disabled for this project."},
             True,
         ),
         (
@@ -42,7 +42,7 @@ from flake8_custom_import_rules.defaults import Settings
         ),
         (
             "from importlib import import_module; importlib.import_module('datetime')",
-            set(),
+            {"1:37: PIR105 Dynamic imports are currently disabled for this project."},
             True,
         ),
         (
@@ -51,8 +51,18 @@ from flake8_custom_import_rules.defaults import Settings
             False,
         ),
         (
+            "from sys import modules; dynamic_datetime = modules['datetime']",
+            {"1:25: PIR105 Dynamic imports are currently disabled for this project."},
+            True,
+        ),
+        (
             "import sys; dynamic_datetime = sys.modules['datetime']",
             set(),
+            False,
+        ),
+        (
+            "import sys; dynamic_datetime = sys.modules['datetime']",
+            {"1:12: PIR105 Dynamic imports are currently disabled for this project."},
             True,
         ),
         (
@@ -66,7 +76,12 @@ from flake8_custom_import_rules.defaults import Settings
                 "zipimporter = zipimporter('my_module.zip'); "
                 "my_module = zipimporter.load_module('my_module')"
             ),
-            set(),
+            {
+                "1:35: PIR105 Dynamic imports are currently disabled for this project.",
+                "1:49: PIR105 Dynamic imports are currently disabled for this project.",
+                "1:79: PIR105 Dynamic imports are currently disabled for this project.",
+                "1:91: PIR105 Dynamic imports are currently disabled for this project.",
+            },
             True,
         ),
         (
@@ -87,6 +102,7 @@ def test_dynamic_imports(
     get_flake8_linter_results: callable,
 ) -> None:
     """Test wildcard imports."""
+    # restrict_dynamic_imports = True
     options = {
         "checker_settings": Settings(**{"RESTRICT_DYNAMIC_IMPORTS": restrict_dynamic_imports})
     }

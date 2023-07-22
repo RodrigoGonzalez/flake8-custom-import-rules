@@ -28,6 +28,7 @@ PROJECT_IMPORT_RULES = [
     "PIR208",
     "PIR209",
     "PIR210",
+    "PIR301",
 ]
 
 PROJECT_IMPORT_RULES_ENUMS = [
@@ -49,6 +50,7 @@ PROJECT_IMPORT_RULES_ENUMS = [
     ErrorCode.PIR208,
     ErrorCode.PIR209,
     ErrorCode.PIR210,
+    ErrorCode.PIR301,
 ]
 
 CUSTOM_IMPORT_RULES = [

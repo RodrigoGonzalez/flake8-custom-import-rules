@@ -1,3 +1,4 @@
+"""Parsed Nodes for custom import rules."""
 from enum import IntEnum
 
 from attr import define
@@ -12,6 +13,7 @@ class ImportType(IntEnum):
     THIRD_PARTY = 20
     FIRST_PARTY = 30
     RELATIVE = 40
+    DYNAMIC = 100
 
 
 @define(slots=True)
@@ -40,6 +42,11 @@ class ParsedImport:
 
 
 @define(slots=True)
+class DynamicStringImport(ParsedImport):
+    """Dynamic string import."""
+
+
+@define(slots=True)
 class ParsedFromImport:
     """Parsed import statement"""
 
@@ -64,6 +71,11 @@ class ParsedFromImport:
         # if self.level > 0:
         #     self.package = root_package_name(self.module)
         self.identifier = f"{self.module}.{self.name}"
+
+
+@define(slots=True)
+class DynamicStringFromImport(ParsedFromImport):
+    """Dynamic string import."""
 
 
 @define(slots=True)
@@ -116,6 +128,7 @@ class ParsedDynamicImport:
     dynamic_import: str
     identifier: str
     confirmed: bool = False
+    values: list[str] | None = None
 
 
 @define(slots=True)
