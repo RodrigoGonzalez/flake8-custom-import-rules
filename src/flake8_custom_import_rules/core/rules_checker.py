@@ -9,6 +9,7 @@ from attrs import define
 from attrs import field
 
 from flake8_custom_import_rules.core.import_rules import CustomImportRules
+from flake8_custom_import_rules.core.import_rules import ErrorMessage
 from flake8_custom_import_rules.core.node_visitor import CustomImportRulesVisitor
 from flake8_custom_import_rules.core.nodes import ParsedFromImport
 from flake8_custom_import_rules.core.nodes import ParsedImport
@@ -18,19 +19,12 @@ from flake8_custom_import_rules.utils.parse_utils import NOQA_INLINE_REGEXP
 from flake8_custom_import_rules.utils.parse_utils import parse_comma_separated_list
 
 
-@define(slots=True)
-class EmptyLine:
-    """Empty line."""
-
-    lineno: int
-
-
 @define(slots=True, hash=False)
 class CustomImportRulesChecker:
     """Custom import rules checker."""
 
     _tree: ast.AST | None = None
-    _filename: str | None = None
+    _file_name: str | None = None
     _lines: list[str] | None = None
     _nodes: list[ParsedNode] | None = None
     _visitor: CustomImportRulesVisitor | None = None
@@ -46,11 +40,11 @@ class CustomImportRulesChecker:
         return self._tree
 
     @property
-    def filename(self) -> str:
-        """Return the filename."""
-        if self._filename is None or self._filename in {"-", "/dev/stdin"}:
+    def file_name(self) -> str:
+        """Return the file_name."""
+        if self._file_name is None or self._file_name in {"-", "/dev/stdin"}:
             return "stdin"
-        return self._filename
+        return self._file_name
 
     @property
     def lines(self) -> list[str]:
@@ -58,8 +52,8 @@ class CustomImportRulesChecker:
         if self._lines is None:
             self._lines = (
                 pycodestyle.stdin_get_value().splitlines(True)
-                if self.filename == "stdin"
-                else pycodestyle.readlines(self.filename)
+                if self.file_name == "stdin"
+                else pycodestyle.readlines(self.file_name)
             )
         return self._lines
 
@@ -99,8 +93,8 @@ class CustomImportRulesChecker:
         """Return the visitor to use for this plugin."""
         # print(f"Options: {self.options}")
         visitor = CustomImportRulesVisitor(
-            package_names=self.options.get("base_packages", []),
-            filename=self.filename,
+            base_packages=self.options.get("base_packages", []),
+            file_name=self.file_name,
         )
         visitor.visit(self.tree)
         return visitor
@@ -111,7 +105,7 @@ class CustomImportRulesChecker:
         return self._options
 
     def update_checker_settings(self, updated_options: dict) -> None:
-        """Return the options."""
+        """Update the checker settings."""
         test_env = self.options.get("test_env", True)
         if not test_env:
             raise ValueError("Cannot update options in a non-test environment.")
@@ -120,7 +114,7 @@ class CustomImportRulesChecker:
             self._options[key] = value
 
     def get_custom_import_rules(self) -> CustomImportRules:
-        """Return the custom import rules."""
+        """Return the custom import rules class."""
         return CustomImportRules(
             nodes=self.nodes,
             checker_settings=self.options.get("checker_settings", DEFAULT_CHECKER_SETTINGS),
@@ -141,11 +135,11 @@ class CustomImportRulesChecker:
                 yield self.error(error)
 
     @staticmethod
-    def error(error: Any) -> Any:
+    def error(error: ErrorMessage) -> ErrorMessage:
         """Return the error."""
         return error
 
-    def error_is_ignored(self, error: Any) -> bool:
+    def error_is_ignored(self, error: ErrorMessage) -> bool:
         """
         Return whether the error is ignored.
 
@@ -176,10 +170,10 @@ class BaseCustomImportRulePlugin(CustomImportRulesChecker):
     _run_list: list
 
     def __init__(
-        self, tree: ast.AST | None = None, filename: str | None = None, lines: list | None = None
+        self, tree: ast.AST | None = None, file_name: str | None = None, lines: list | None = None
     ) -> None:
         """Initialize the checker."""
-        super().__init__(tree=tree, filename=filename, lines=lines)
+        super().__init__(tree=tree, file_name=file_name, lines=lines)
         self._options = {}
 
     def run(self) -> Generator[Any, None, None]:
@@ -188,9 +182,11 @@ class BaseCustomImportRulePlugin(CustomImportRulesChecker):
         for node in self.nodes:
             yield node.lineno, node.col_offset, node, type(self)
 
-    def get_run_list(self) -> list:
+    def get_run_list(self, sort: bool = True) -> list:
         """Return the run list."""
         self._run_list = list(self.run())
+        if sort:
+            self._run_list.sort(key=lambda x: x[0])
         return self._run_list
 
     def get_import_nodes(self) -> list[ParsedNode]:

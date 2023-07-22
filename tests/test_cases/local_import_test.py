@@ -1,6 +1,6 @@
 """ Test local import restrictions.
 
-PIR103 = "PIR103 Local imports are currently disabled for this project."
+PIR103 = "PIR103 Local imports are disabled for this project."
 """
 from textwrap import dedent
 
@@ -28,9 +28,9 @@ LOCAL_IMPORT_CODE = dedent(
         (
             LOCAL_IMPORT_CODE,
             {
-                "3:4: PIR103 Local imports are currently disabled for this project.",
-                "6:4: PIR103 Local imports are currently disabled for this project.",
-                "9:4: PIR103 Local imports are currently disabled for this project.",
+                "3:4: PIR103 Local imports are disabled for this project.",
+                "6:4: PIR103 Local imports are disabled for this project.",
+                "9:4: PIR103 Local imports are disabled for this project.",
             },
             True,
         ),

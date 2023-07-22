@@ -28,9 +28,9 @@ POTENTIAL_DYNAMIC_IMPORTS = {
 class Settings:
     """The default settings for the flake8_custom_import_rules plugin."""
 
-    base_package: str | list[str] | None = field(default=None)
+    base_packages: str | list[str] | None = field(default=None)
 
-    TOP_LEVEL_ONLY: bool = field(default=True)
+    TOP_LEVEL_ONLY_IMPORTS: bool = field(default=True)
     RESTRICT_RELATIVE_IMPORTS: bool = field(default=True)
     RESTRICT_LOCAL_IMPORTS: bool = field(default=True)
     RESTRICT_CONDITIONAL_IMPORTS: bool = field(default=True)
@@ -49,10 +49,9 @@ class Settings:
 
     def __attrs_post_init__(self) -> None:
         self.restricted_imports = set(self.restricted_imports)
-        self.base_package = (
-            [self.base_package] if isinstance(self.base_package, str) else self.base_package
+        self.base_packages = (
+            [self.base_packages] if isinstance(self.base_packages, str) else self.base_packages
         )
-        # Assign minor version if it's less than 10, else assign 9
 
     def to_dict(self) -> dict:
         """Return the settings as a dictionary."""

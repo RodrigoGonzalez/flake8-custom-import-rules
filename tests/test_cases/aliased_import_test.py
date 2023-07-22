@@ -1,6 +1,6 @@
 """ Test aliased import restrictions.
 
-PIR108 = "PIR108 Aliased imports are currently disabled for this project."
+PIR108 = "PIR108 Aliased imports are disabled for this project."
 """
 import pytest
 
@@ -12,7 +12,7 @@ from flake8_custom_import_rules.defaults import Settings
     [
         (
             "from module_z import Z as Zee",
-            {"1:0: PIR108 Aliased imports are currently disabled for this project."},
+            {"1:0: PIR108 Aliased imports are disabled for this project."},
             True,
         ),
         (
@@ -22,7 +22,7 @@ from flake8_custom_import_rules.defaults import Settings
         ),
         (
             "import numpy as np",
-            {"1:0: PIR108 Aliased imports are currently disabled for this project."},
+            {"1:0: PIR108 Aliased imports are disabled for this project."},
             True,
         ),
         (
@@ -32,7 +32,7 @@ from flake8_custom_import_rules.defaults import Settings
         ),
         (
             "import pandas as pd",
-            {"1:0: PIR108 Aliased imports are currently disabled for this project."},
+            {"1:0: PIR108 Aliased imports are disabled for this project."},
             True,
         ),
         (

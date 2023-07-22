@@ -73,13 +73,13 @@ class ErrorCode(Enum, metaclass=ErrorCodeMeta):
 
     # Project Level Import Rules and Restrictions
     PIR101 = "PIR101 Only top level imports are permitted in the project."
-    PIR102 = "PIR102 Relative imports are currently disabled for this project."
-    PIR103 = "PIR103 Local imports are currently disabled for this project."
-    PIR104 = "PIR104 Conditional imports are currently disabled for this project."
-    PIR105 = "PIR105 Dynamic imports are currently disabled for this project."
-    PIR106 = "PIR106 Private imports are currently disabled for this project."
-    PIR107 = "PIR107 Wildcard imports are currently disabled for this project."
-    PIR108 = "PIR108 Aliased imports are currently disabled for this project."
+    PIR102 = "PIR102 Relative imports are disabled for this project."
+    PIR103 = "PIR103 Local imports are disabled for this project."
+    PIR104 = "PIR104 Conditional imports are disabled for this project."
+    PIR105 = "PIR105 Dynamic imports are disabled for this project."
+    PIR106 = "PIR106 Private imports are disabled for this project."
+    PIR107 = "PIR107 Wildcard imports are disabled for this project."
+    PIR108 = "PIR108 Aliased imports are disabled for this project."
 
     # Project Level Import Rules for Special Cases
     PIR201 = "PIR201 Importing test_*/*_test modules is restricted."
@@ -105,6 +105,11 @@ class ErrorCode(Enum, metaclass=ErrorCodeMeta):
     def message(self) -> str:
         """Get error code."""
         return self.value.split(f"{self.name} ")[1]
+
+    @property
+    def full_message(self) -> str:
+        """Get error code."""
+        return self.value
 
     @staticmethod
     def get_error_code(error_code: Any) -> str:

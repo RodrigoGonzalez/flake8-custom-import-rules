@@ -19,6 +19,7 @@ from flake8_custom_import_rules.core.nodes import ParsedFunctionDef
 from flake8_custom_import_rules.core.nodes import ParsedIfImport
 from flake8_custom_import_rules.core.nodes import ParsedImport
 from flake8_custom_import_rules.core.nodes import ParsedLocalImport
+from flake8_custom_import_rules.core.nodes import ParsedNode
 from flake8_custom_import_rules.defaults import POTENTIAL_DYNAMIC_IMPORTS
 from flake8_custom_import_rules.utils.node_utils import generate_identifier_path
 from flake8_custom_import_rules.utils.node_utils import get_module_info_from_import_node
@@ -30,13 +31,43 @@ logger = logging.getLogger(f"flake8_custom_import_rules.{__name__}")
 
 @define(slots=True)
 class CustomImportRulesVisitor(ast.NodeVisitor):
-    """Custom import rules node visitor."""
+    """Custom import rules node visitor.
 
-    package_names: list[str] = field(factory=list)
-    filename: str | None = None
+    Attributes
+    ----------
+    base_packages : list[str]
+        Base packages
+    file_name : str | None
+        The current file name
+    nodes : list
+        The resulting nodes from the visitor
+    dynamic_nodes : defaultdict[str, list]
+        The resulting nodes from the visitor that parses dynamic strings
+    package_root : list[str]
+        The absolute path to the package root
+    file_path : Path | None
+        File path equal to Path(file_name) if file_name is not empty or None,
+        otherwise None
+    resolve_local_imports : bool | None
+        Resolve local imports
+    identifiers : defaultdict[str, dict]
+        An identifier is the name of a variable, function, class, module, or
+        other object. When you import something, you're essentially creating a
+        new identifier in your current namespace that refers to the object
+        you're importing.
+    identifiers_by_lineno : defaultdict[str, list]
+        Identifiers by line number
+    python_version : str
+        The current python version
+    stdlib_names : set | frozenset
+        Standard library names for the current Python version
+    """
+
+    base_packages: list[str] = field(factory=list)
+    file_name: str | None = None
     nodes: list = field(factory=list)
     dynamic_nodes: defaultdict[str, list] = defaultdict(list)
-    current_package: list[str] = field(factory=list)
+    package_root: list[str] = field(factory=list)
     file_path: Path | None = None
     resolve_local_imports: bool | None = field(default=False)
     identifiers: defaultdict[str, dict] = defaultdict(lambda: defaultdict(str))
@@ -45,10 +76,17 @@ class CustomImportRulesVisitor(ast.NodeVisitor):
     stdlib_names: set | frozenset = field(init=False)
 
     def __attrs_post_init__(self) -> None:
-        filename = self.filename
-        self.file_path = Path(filename) if filename else None
-        logger.info(f"Visitor filename: {self.filename}")
-        self.resolve_local_imports = filename not in {"stdin", "-", "/dev/stdin", "", None}
+        """Initialize the attributes after object creation.
+
+        If the current Python version is less than (3, 10), it assigns the set
+        of standard library names for the current Python version to
+        self.stdlib_names using stdlib_list. Otherwise, it assigns
+        sys.stdlib_module_names to self.stdlib_names.
+        """
+        file_name = self.file_name
+        self.file_path = Path(file_name) if file_name else None
+        logger.info(f"Visitor file_name: {self.file_name}")
+        self.resolve_local_imports = file_name not in {"stdin", "-", "/dev/stdin", "", None}
         logger.info(f"Resolve local imports: {self.resolve_local_imports}")
 
         self.python_version = f"{sys.version_info.major}.{sys.version_info.minor}"
@@ -58,6 +96,10 @@ class CustomImportRulesVisitor(ast.NodeVisitor):
         else:
             self.stdlib_names = sys.stdlib_module_names
 
+    def get_all_nodes(self) -> list[ParsedNode]:
+        """Get all nodes."""
+        return self.nodes + list(self.dynamic_nodes.values())
+
     def _resolve_local_import(self, module: str, node_level: int) -> Path | None:
         """Resolve a local import."""
         parent = self.file_path.parents[node_level - 1] if self.file_path else None
@@ -65,7 +107,18 @@ class CustomImportRulesVisitor(ast.NodeVisitor):
 
     @staticmethod
     def _get_import_node(module_info: dict) -> ParsedImport:
-        """Get a parsed import node."""
+        """
+        Get a parsed import node.
+
+        Parameters
+        ----------
+        module_info : dict
+            A dictionary containing information about the module.
+
+        Returns
+        -------
+        ParsedImport
+        """
         return ParsedImport(
             import_type=module_info["import_type"],
             module=module_info["module"],
@@ -101,13 +154,37 @@ class CustomImportRulesVisitor(ast.NodeVisitor):
         # Ensures a complete traversal of the AST
         self.generic_visit(node)
 
-    def _get_import_type(self, node_level: int, package_names: list[str]) -> ImportType:
-        """Get the import type for a module."""
+    def _get_from_import_type(self, node_level: int, package_names: list[str]) -> ImportType:
+        """Get the import type for a module. This will be used to determine
+        whether the custom import rules is violated.
+
+        Parameters
+        ----------
+        node_level : int
+            The level of the node.
+        package_names : list[str]
+            The package names.
+
+        Returns
+        -------
+        ImportType
+        """
         return ImportType.RELATIVE if node_level > 0 else self._classify_type(package_names)
 
     @staticmethod
     def _get_from_import_node(name_info: dict) -> ParsedFromImport:
-        """Get a parsed from import node."""
+        """
+        Get a parsed from import node.
+
+        Parameters
+        ----------
+        name_info : dict
+            A dictionary containing information about the from input.
+
+        Returns
+        -------
+        ParsedFromImport
+        """
         return ParsedFromImport(
             import_type=name_info["import_type"],
             module=name_info["module"],
@@ -134,7 +211,7 @@ class CustomImportRulesVisitor(ast.NodeVisitor):
 
         for alias in node.names:
             name_info = parsed_from_imports_dict[alias.name]
-            name_info["import_type"] = self._get_import_type(
+            name_info["import_type"] = self._get_from_import_type(
                 name_info["level"], name_info["package_names"]
             )
             parsed_from_import = self._get_from_import_node(name_info)
@@ -153,7 +230,7 @@ class CustomImportRulesVisitor(ast.NodeVisitor):
         """Check if a local import is resolved."""
         for stmt in node.body:
             if isinstance(stmt, (ast.Import, ast.ImportFrom)):
-                assert isinstance(stmt, ast.AST)
+                assert isinstance(stmt, ast.AST)  # for mypy
                 self.nodes.append(
                     ParsedLocalImport(
                         lineno=stmt.lineno,
@@ -202,8 +279,8 @@ class CustomImportRulesVisitor(ast.NodeVisitor):
     def _get_dynamic_string_visitor(self, lineno: int, col_offset: int) -> "DynamicStringVisitor":
         """Get the dynamic string visitor."""
         return DynamicStringVisitor(
-            package_names=self.package_names,
-            filename=self.filename,
+            base_packages=self.base_packages,
+            file_name=self.file_name,
             lineno=lineno,
             col_offset=col_offset,
         )
@@ -212,6 +289,7 @@ class CustomImportRulesVisitor(ast.NodeVisitor):
         """Attempt to parse the value strings and handle exceptions."""
         try:
             node = ast.parse(value)
+
         except SyntaxError:
             logger.warning(f"Syntax error in string {value} at line {lineno}, column {col_offset}")
             return value
@@ -374,25 +452,24 @@ class CustomImportRulesVisitor(ast.NodeVisitor):
         for package in reversed(package_names):
             if package == "__future__":
                 return ImportType.FUTURE
-            elif package in self.current_package:
+            elif package in self.base_packages:
                 return ImportType.FIRST_PARTY
             elif package in self.stdlib_names:
                 return ImportType.STDLIB
 
-            if package == "os":
-                print(f"\n\nstdlib_names: {self.stdlib_names}")
-
-        # Not future, stdlib or an application import.
-        # Must be 3rd party.
         return ImportType.THIRD_PARTY
 
 
 @define(slots=True)
 class DynamicStringVisitor(ast.NodeVisitor):
-    """Dynamic string visitor for parse dynamic imports."""
+    """Dynamic string visitor for parsing dynamic imports.
 
-    package_names: list[str] = field(factory=list)
-    filename: str | None = None
+    Future support will be added for parsing dynamic strings for custom
+    import rules, so that users can specify custom rules for dynamic imports.
+    """
+
+    base_packages: list[str] = field(factory=list)
+    file_name: str | None = None
     nodes: list = field(factory=list)
 
     # we want the line number and column offset to match the node that

@@ -28,10 +28,10 @@ class Linter(CustomImportRulesChecker):
     _options: dict[str, list[str] | str] = {}
 
     def __init__(
-        self, tree: ast.AST | None = None, filename: str | None = None, lines: list | None = None
+        self, tree: ast.AST | None = None, file_name: str | None = None, lines: list | None = None
     ) -> None:
-        super().__init__(tree=tree, filename=filename, lines=lines)
-        logger.info(f"filename: {filename}")
+        super().__init__(tree=tree, file_name=file_name, lines=lines)
+        logger.info(f"file_name: {file_name}")
         logger.debug(f"lines: {lines}")
         logger.debug(f"tree: {tree}")
 
@@ -48,7 +48,7 @@ class Linter(CustomImportRulesChecker):
         register_opt(
             option_manager,
             "--base-packages",
-            default="my_base_module",  # TODO: change back to "" when ready
+            default="",
             action="store",
             type=str,
             help=(
@@ -63,7 +63,7 @@ class Linter(CustomImportRulesChecker):
         register_opt(
             option_manager,
             "--top-level-only",
-            default=DEFAULT_CHECKER_SETTINGS.TOP_LEVEL_ONLY,
+            default=DEFAULT_CHECKER_SETTINGS.TOP_LEVEL_ONLY_IMPORTS,
             action="store",
             type=bool,
             help="Only top level imports are permitted in the project.",
@@ -78,7 +78,7 @@ class Linter(CustomImportRulesChecker):
             default=DEFAULT_CHECKER_SETTINGS.RESTRICT_RELATIVE_IMPORTS,
             action="store",
             type=bool,
-            help="Relative imports are currently disabled for this project.",
+            help="Relative imports are disabled for this project.",
             parse_from_config=True,
             comma_separated_list=False,
             normalize_paths=False,
@@ -90,7 +90,7 @@ class Linter(CustomImportRulesChecker):
             default=DEFAULT_CHECKER_SETTINGS.RESTRICT_LOCAL_IMPORTS,
             action="store",
             type=bool,
-            help="Local imports are currently disabled for this project.",
+            help="Local imports are disabled for this project.",
             parse_from_config=True,
             comma_separated_list=False,
             normalize_paths=False,
@@ -102,7 +102,7 @@ class Linter(CustomImportRulesChecker):
             default=DEFAULT_CHECKER_SETTINGS.RESTRICT_CONDITIONAL_IMPORTS,
             action="store",
             type=bool,
-            help="Conditional imports are currently disabled for this project.",
+            help="Conditional imports are disabled for this project.",
             parse_from_config=True,
             comma_separated_list=False,
             normalize_paths=False,
@@ -114,7 +114,7 @@ class Linter(CustomImportRulesChecker):
             default=DEFAULT_CHECKER_SETTINGS.RESTRICT_DYNAMIC_IMPORTS,
             action="store",
             type=bool,
-            help="Dynamic imports are currently disabled for this project.",
+            help="Dynamic imports are disabled for this project.",
             parse_from_config=True,
             comma_separated_list=False,
             normalize_paths=False,
@@ -126,7 +126,7 @@ class Linter(CustomImportRulesChecker):
             default=DEFAULT_CHECKER_SETTINGS.RESTRICT_PRIVATE_IMPORTS,
             action="store",
             type=bool,
-            help="Private imports are currently disabled for this project.",
+            help="Private imports are disabled for this project.",
             parse_from_config=True,
             comma_separated_list=False,
             normalize_paths=False,
@@ -138,7 +138,7 @@ class Linter(CustomImportRulesChecker):
             default=DEFAULT_CHECKER_SETTINGS.RESTRICT_WILDCARD_IMPORTS,
             action="store",
             type=bool,
-            help="Wildcard/star imports are currently disabled for this project.",
+            help="Wildcard/star imports are disabled for this project.",
             parse_from_config=True,
             comma_separated_list=False,
             normalize_paths=False,
@@ -150,7 +150,7 @@ class Linter(CustomImportRulesChecker):
             default=DEFAULT_CHECKER_SETTINGS.RESTRICT_ALIASED_IMPORTS,
             action="store",
             type=bool,
-            help="Dynamic imports are currently disabled for this project.",
+            help="Dynamic imports are disabled for this project.",
             parse_from_config=True,
             comma_separated_list=False,
             normalize_paths=False,
@@ -162,7 +162,7 @@ class Linter(CustomImportRulesChecker):
             default=DEFAULT_CHECKER_SETTINGS.RESTRICT_INIT_IMPORTS,
             action="store",
             type=bool,
-            help="__init__ imports are currently disabled for this project.",
+            help="__init__ imports are disabled for this project.",
             parse_from_config=True,
             comma_separated_list=False,
             normalize_paths=False,
@@ -174,7 +174,7 @@ class Linter(CustomImportRulesChecker):
             default=DEFAULT_CHECKER_SETTINGS.RESTRICT_MAIN_IMPORTS,
             action="store",
             type=bool,
-            help="__main__ imports are currently disabled for this project.",
+            help="__main__ imports are disabled for this project.",
             parse_from_config=True,
             comma_separated_list=False,
             normalize_paths=False,
@@ -186,7 +186,7 @@ class Linter(CustomImportRulesChecker):
             default=DEFAULT_CHECKER_SETTINGS.RESTRICT_TEST_IMPORTS,
             action="store",
             type=bool,
-            help="Test imports are currently disabled for this project.",
+            help="Test imports are disabled for this project.",
             parse_from_config=True,
             comma_separated_list=False,
             normalize_paths=False,
@@ -198,7 +198,7 @@ class Linter(CustomImportRulesChecker):
             default=DEFAULT_CHECKER_SETTINGS.RESTRICT_CONFTEST_IMPORTS,
             action="store",
             type=bool,
-            help="Conftest imports are currently disabled for this project.",
+            help="Conftest imports are disabled for this project.",
             parse_from_config=True,
             comma_separated_list=False,
             normalize_paths=False,
@@ -212,9 +212,11 @@ class Linter(CustomImportRulesChecker):
         logger.debug(f"Option Manager: {option_manager}")
         logger.debug(f"Options: {parse_options}")
         logger.debug(f"Args: {args}")
-        # pprint("\nOptions:")
-        # pprint(parse_options)
-        # pprint(f"\nArgs: {args}")
+        from pprint import pprint
+
+        pprint("\nOptions:")
+        pprint(parse_options)
+        pprint(f"\nArgs: {args}")
 
         # Parse options for CustomImportRulesChecker
         base_packages: str | list = parse_options.base_packages
@@ -223,7 +225,7 @@ class Linter(CustomImportRulesChecker):
                 pkg.strip() for pkg in parse_options.application_import_names.split(",")
             ]
 
-        options: dict = {"base_package": base_packages}
+        options: dict = {"base_packages": base_packages}
 
         # Update options with the options set in the config or on the command line
         for option_key in DEFAULT_CHECKER_SETTINGS.get_option_keys():

@@ -154,7 +154,7 @@ class A:
         """Use dynamic imports."""
         import pkgutil
 
-        # Load the 'os' module
+        # Load the 'typing' module
         pkgutil.get_loader('typing').load_module()
         for module_info in pkgutil.iter_modules(['calendar']):
             print(module_info)

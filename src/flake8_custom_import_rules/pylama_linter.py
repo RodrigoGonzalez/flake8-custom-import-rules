@@ -20,6 +20,7 @@ class Linter(CustomImportRulesChecker, BaseLinter):
     name = "flake8-custom-import-rules"
     version = importlib_metadata.version(name)
     ast_tree = None
+    _filename = None
 
     def __init__(self) -> None:
         super().__init__(None, None)

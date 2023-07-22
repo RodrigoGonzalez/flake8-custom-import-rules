@@ -36,8 +36,6 @@ class ParsedImport:
 
     def __attrs_post_init__(self) -> None:
         """Post init hook."""
-        # if self.level > 0:
-        #     self.package = root_package_name(self.module)
         self.identifier = self.module
 
 
@@ -68,8 +66,6 @@ class ParsedFromImport:
 
     def __attrs_post_init__(self) -> None:
         """Post init hook."""
-        # if self.level > 0:
-        #     self.package = root_package_name(self.module)
         self.identifier = f"{self.module}.{self.name}"
 
 
@@ -149,4 +145,6 @@ ParsedNode = (
     | ParsedCall
     | ParsedDynamicImport
     | ParsedIfImport
+    | DynamicStringImport
+    | DynamicStringFromImport
 )
