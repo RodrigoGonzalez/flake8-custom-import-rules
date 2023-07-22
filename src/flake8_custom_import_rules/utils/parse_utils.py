@@ -117,6 +117,7 @@ def check_string(
     """
     if substring_match or prefix or suffix:
         if isinstance(strings_to_check, list):
+            # delimiter = "."
             strings_to_check = f"{delimiter}".join(strings_to_check)
         matches = parse_module_string(strings_to_check, substring_match, prefix, suffix, delimiter)
         return bool(matches)

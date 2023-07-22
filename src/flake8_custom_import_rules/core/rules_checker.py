@@ -1,5 +1,6 @@
 """Checker for dependency rules checker."""
 import ast
+from collections import defaultdict
 from typing import Any
 from typing import Generator
 
@@ -33,6 +34,8 @@ class CustomImportRulesChecker:
     _lines: list[str] | None = None
     _nodes: list[ParsedNode] | None = None
     _visitor: CustomImportRulesVisitor | None = None
+    _identifiers: defaultdict[str, dict] | None = None
+    _identifiers_by_lineno: defaultdict[str, list] | None = None
     _options: dict[str, list[str] | str] = field(init=False)
 
     # def __attrs_post_init__(self) -> None:
@@ -68,9 +71,43 @@ class CustomImportRulesChecker:
     def nodes(self) -> list[ParsedNode]:
         """Return the nodes."""
         if self._nodes is None:
-            visitor = self.get_visitor()
-            self._nodes = visitor.nodes
+            if self._visitor is None:
+                visitor = self.visitor
+                self._nodes = visitor.nodes
+            else:
+                self._nodes = self.visitor.nodes
         return self._nodes
+
+    @property
+    def visitor(self) -> CustomImportRulesVisitor:
+        """Return the visitor to use for this plugin."""
+        if self._visitor is None:
+            self._visitor = self.get_visitor()
+        return self._visitor
+
+    @property
+    def identifiers(self) -> defaultdict[str, dict]:
+        """Return the identifiers."""
+        if self._identifiers is None:
+            self._identifiers = self.visitor.identifiers
+        return self._identifiers
+
+    @property
+    def identifiers_by_lineno(self) -> defaultdict[str, list]:
+        """Return the identifiers by lineno."""
+        if self._identifiers_by_lineno is None:
+            self._identifiers_by_lineno = self.visitor.identifiers_by_lineno
+        return self._identifiers_by_lineno
+
+    def get_visitor(self) -> CustomImportRulesVisitor:
+        """Return the visitor to use for this plugin."""
+        # print(f"Options: {self.options}")
+        visitor = CustomImportRulesVisitor(
+            self.options.get("base_packages", []),
+            filename=self.filename,
+        )
+        visitor.visit(self.tree)
+        return visitor
 
     @property
     def options(self) -> dict:
@@ -86,30 +123,22 @@ class CustomImportRulesChecker:
         for key, value in updated_options.items():
             self._options[key] = value
 
-    @property
-    def visitor(self) -> CustomImportRulesVisitor:
-        """Return the visitor to use for this plugin."""
-        if self._visitor is None:
-            self._visitor = self.get_visitor()
-        return self._visitor
-
-    def get_visitor(self) -> CustomImportRulesVisitor:
-        """Return the visitor to use for this plugin."""
-        # print(f"Options: {self.options}")
-        visitor = CustomImportRulesVisitor(
-            self.options.get("base_packages", []),
-            filename=self.filename,
+    def get_custom_import_rules(self) -> CustomImportRules:
+        """Return the custom import rules."""
+        return CustomImportRules(
+            nodes=self.nodes,
+            checker_settings=self.options.get("checker_settings", DEFAULT_CHECKER_SETTINGS),
+            identifiers=self.identifiers,
+            identifiers_by_lineno=self.identifiers_by_lineno,
+            dynamic_nodes=self.visitor.dynamic_nodes,
         )
-        visitor.visit(self.tree)
-        return visitor
 
     def check_custom_import_rules(self) -> Generator[Any, None, None]:
         """Run the plugin."""
         # print(f"Options under: {self._options}")
         # print(f"Visitor: {self.visitor}")
         # print(f"Nodes: {self.nodes}")
-        checker_settings = self.options.get("checker_settings", DEFAULT_CHECKER_SETTINGS)
-        import_rules = CustomImportRules(nodes=self.nodes, checker_settings=checker_settings)
+        import_rules = self.get_custom_import_rules()
 
         for error in import_rules.check_import_rules():
             if not self.error_is_ignored(error):

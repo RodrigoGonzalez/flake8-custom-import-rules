@@ -93,6 +93,9 @@ class ErrorCode(Enum, metaclass=ErrorCodeMeta):
     PIR209 = "PIR209 Importing `__main__` is restricted."
     PIR210 = "PIR210 Importing from `__main__.py` files is restricted."
 
+    # Dynamic Imports Rules and Special Cases
+    PIR301 = "PIR301 Potential dynamic import failed confirmation checks."
+
     @property
     def code(self) -> str:
         """Get error code."""

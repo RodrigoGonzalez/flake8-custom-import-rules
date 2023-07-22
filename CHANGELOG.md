@@ -1,3 +1,14 @@
+## v0.6.0 (2023-07-22)
+
+### Feat
+
+- **dynamic**: added dynamic string visitor to capture dynamic string imports
+- added support for dynamic imports and fixed numerous tests (#42)
+
+### Refactor
+
+- **nodes**: moved parsed nodes to their own file (#43)
+
 ## v0.5.0 (2023-07-21)
 
 ### Feat

@@ -1,4 +1,5 @@
 """ Custom Import Rules for Flake8 & Python Projects. """
+from collections import defaultdict
 from typing import Any
 from typing import Generator
 
@@ -7,6 +8,9 @@ from attrs import field
 from stdlib_list import stdlib_list
 
 from flake8_custom_import_rules.codes.error_codes import ErrorCode
+from flake8_custom_import_rules.core.nodes import DynamicStringFromImport
+from flake8_custom_import_rules.core.nodes import DynamicStringImport
+from flake8_custom_import_rules.core.nodes import ParsedDynamicImport
 from flake8_custom_import_rules.core.nodes import ParsedFromImport
 from flake8_custom_import_rules.core.nodes import ParsedIfImport
 from flake8_custom_import_rules.core.nodes import ParsedImport
@@ -48,7 +52,10 @@ class CustomImportRules:
     """Custom Import Rules for Flake8 & Python Projects"""
 
     nodes: list[ParsedNode] = field(factory=list)
+    dynamic_nodes: defaultdict[str, list] = defaultdict(list)
     options: dict = field(factory=dict)
+    identifiers: defaultdict[str, dict] = defaultdict(lambda: defaultdict(str))
+    identifiers_by_lineno: defaultdict[str, list] = defaultdict(list)
     checker_settings: Settings = field(factory=Settings)
     errors: list[ErrorMessage] = field(factory=list)
     codes_to_check: list[ErrorCode] = ErrorCode.get_all_error_codes()
@@ -155,10 +162,10 @@ class CustomImportRules:
         ):
             yield from self._check_for_pir104(node)
 
-        # if self.checker_settings.RESTRICT_DYNAMIC_IMPORTS and (
-        #     isinstance(node, (ParsedImport, ParsedFromImport))
-        # ):
-        #     yield from self._check_for_pir105(node)
+        if self.checker_settings.RESTRICT_DYNAMIC_IMPORTS and (
+            isinstance(node, ParsedDynamicImport)
+        ):
+            yield from self._check_for_pir105(node)
 
         if self.checker_settings.RESTRICT_PRIVATE_IMPORTS and (
             isinstance(node, (ParsedImport, ParsedFromImport))
@@ -417,10 +424,29 @@ class CustomImportRules:
         if ErrorCode.PIR104.code in self.codes_to_check:
             yield generate_from_node(node, ErrorCode.PIR104)
 
-    def _check_for_pir105(self, node: ParsedNode) -> Generator[ErrorMessage, None, None]:
+    def _dynamic_import_check(self, node: ParsedDynamicImport) -> bool:
+        """Check if a node is a dynamic import."""
+        if not node.confirmed and check_string(node.identifier, substring_match="modules"):
+            node.confirmed = self.identifiers["modules"]["package"] == "sys"
+
+        if not node.confirmed and check_string(node.identifier, substring_match=["eval", "exec"]):
+            dynamic_nodes = [
+                dynamic_node
+                for dynamic_node in self.dynamic_nodes[str(node.lineno)]
+                if isinstance(dynamic_node, (DynamicStringImport, DynamicStringFromImport))
+            ]
+            print(dynamic_nodes)
+            node.confirmed = bool(dynamic_nodes)
+
+        return bool(node.confirmed)
+
+    def _check_for_pir105(self, node: ParsedDynamicImport) -> Generator[ErrorMessage, None, None]:
         """Check for PIR105, dynamic import restrictions."""
-        if ErrorCode.PIR105.code in self.codes_to_check:
+        condition = self._dynamic_import_check(node)
+        if ErrorCode.PIR105.code in self.codes_to_check and condition:
             yield generate_from_node(node, ErrorCode.PIR105)
+        # if ErrorCode.PIR301.code in self.codes_to_check and not condition:
+        #     yield generate_from_node(node, ErrorCode.PIR301)
 
     def _check_for_pir106(
         self, node: ParsedImport | ParsedFromImport
