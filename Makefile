@@ -5,7 +5,7 @@
 # Partially inspired by https://github.com/johschmidt42/python-project-johannes
 #
 # To do stuff with make, you type `make` in a directory that has a file called
-# "Makefile". You can also type `make -f <makefile>` to use a different filename.
+# "Makefile". You can also type `make -f <makefile>` to use a different file_name.
 #
 # A Makefile is a collection of rules. Each rule is a recipe to do a specific
 # thing, sort of like a grunt task or an npm package.json script.

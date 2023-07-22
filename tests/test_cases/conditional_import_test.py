@@ -1,6 +1,6 @@
 """ Test conditional import restrictions.
 
-PIR104 = "PIR104 Conditional imports are currently disabled for this project."
+PIR104 = "PIR104 Conditional imports are disabled for this project."
 """
 from textwrap import dedent
 
@@ -26,8 +26,8 @@ CONDITIONAL_TEST_CODE = dedent(
         (
             CONDITIONAL_TEST_CODE,
             {
-                "5:4: PIR104 Conditional imports are currently disabled for this project.",
-                "7:4: PIR104 Conditional imports are currently disabled for this project.",
+                "5:4: PIR104 Conditional imports are disabled for this project.",
+                "7:4: PIR104 Conditional imports are disabled for this project.",
             },
             True,
         ),
