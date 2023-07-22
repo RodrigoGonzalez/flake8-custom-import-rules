@@ -5,7 +5,6 @@ from typing import Generator
 
 from attrs import define
 from attrs import field
-from stdlib_list import stdlib_list
 
 from flake8_custom_import_rules.codes.error_codes import ErrorCode
 from flake8_custom_import_rules.core.nodes import DynamicStringFromImport
@@ -60,8 +59,6 @@ class CustomImportRules:
     errors: list[ErrorMessage] = field(factory=list)
     codes_to_check: list[ErrorCode] = ErrorCode.get_all_error_codes()
 
-    use_python_version: float | int | str | None = field(default=3.9)
-
     filename: str = field(default=None)
     restricted_imports: dict = field(factory=dict)
     isolated_modules: list[str] = field(factory=list)
@@ -75,9 +72,6 @@ class CustomImportRules:
             key=lambda element: element.lineno,
         )
         options = self.options
-
-        # Store the Python version for checking the standard library
-        self.use_python_version = str(options.get("use_python_version", 3.9))
 
         self.restricted_imports = parse_custom_rule(
             options.get("restricted_imports", []),
@@ -98,7 +92,6 @@ class CustomImportRules:
                 break
             yield from self._check_import_rules(node)
 
-    # TODO: Make sure to remove the type ignore when I figure out how to fix it
     def _check_import_rules(self, node: ParsedNode) -> Generator[ErrorMessage, None, None]:
         """Check import rules"""
         # current_module = os.path.split(self.filename)[-1].split(".")[0]
@@ -146,41 +139,52 @@ class CustomImportRules:
         self, node: ParsedNode
     ) -> Generator[ErrorMessage, None, None]:
         """Check standard import restrictions"""
-        # if self.checker_settings.TOP_LEVEL_ONLY and (
-        #     isinstance(node, (ParsedImport, ParsedFromImport))
-        # ):
-        #     yield from self._check_for_pir101(node)
+        restrictions = [
+            # (
+            #     self.checker_settings.TOP_LEVEL_ONLY,
+            #     [ParsedImport, ParsedFromImport],
+            #     self._check_for_pir101,
+            # ),
+            (
+                self.checker_settings.RESTRICT_RELATIVE_IMPORTS,
+                [ParsedFromImport],
+                self._check_for_pir102,
+            ),
+            (
+                self.checker_settings.RESTRICT_LOCAL_IMPORTS,
+                [ParsedLocalImport],
+                self._check_for_pir103,
+            ),
+            (
+                self.checker_settings.RESTRICT_CONDITIONAL_IMPORTS,
+                [ParsedIfImport],
+                self._check_for_pir104,
+            ),
+            (
+                self.checker_settings.RESTRICT_DYNAMIC_IMPORTS,
+                [ParsedDynamicImport],
+                self._check_for_pir105,
+            ),
+            (
+                self.checker_settings.RESTRICT_PRIVATE_IMPORTS,
+                [ParsedImport, ParsedFromImport],
+                self._check_for_pir106,
+            ),
+            (
+                self.checker_settings.RESTRICT_WILDCARD_IMPORTS,
+                [ParsedImport, ParsedFromImport],
+                self._check_for_pir107,
+            ),
+            (
+                self.checker_settings.RESTRICT_ALIASED_IMPORTS,
+                [ParsedImport, ParsedFromImport],
+                self._check_for_pir108,
+            ),
+        ]
 
-        if self.checker_settings.RESTRICT_RELATIVE_IMPORTS and (isinstance(node, ParsedFromImport)):
-            yield from self._check_for_pir102(node)
-
-        if self.checker_settings.RESTRICT_LOCAL_IMPORTS and (isinstance(node, ParsedLocalImport)):
-            yield from self._check_for_pir103(node)
-
-        if self.checker_settings.RESTRICT_CONDITIONAL_IMPORTS and (
-            isinstance(node, ParsedIfImport)
-        ):
-            yield from self._check_for_pir104(node)
-
-        if self.checker_settings.RESTRICT_DYNAMIC_IMPORTS and (
-            isinstance(node, ParsedDynamicImport)
-        ):
-            yield from self._check_for_pir105(node)
-
-        if self.checker_settings.RESTRICT_PRIVATE_IMPORTS and (
-            isinstance(node, (ParsedImport, ParsedFromImport))
-        ):
-            yield from self._check_for_pir106(node)
-
-        if self.checker_settings.RESTRICT_WILDCARD_IMPORTS and (
-            isinstance(node, (ParsedImport, ParsedFromImport))
-        ):
-            yield from self._check_for_pir107(node)
-
-        if self.checker_settings.RESTRICT_ALIASED_IMPORTS and (
-            isinstance(node, (ParsedImport, ParsedFromImport))
-        ):
-            yield from self._check_for_pir108(node)
+        for is_restriction_active, node_types, check_func in restrictions:
+            if is_restriction_active and isinstance(node, tuple(node_types)):
+                yield from check_func(node)
 
     def _check_special_cases_import_restrictions(
         self, node: ParsedNode
@@ -206,16 +210,15 @@ class CustomImportRules:
         self, node: ParsedNode
     ) -> Generator[ErrorMessage, None, None]:
         """Check test import restrictions"""
-        if self.checker_settings.RESTRICT_TEST_IMPORTS:
-            if isinstance(node, ParsedImport):
-                yield from self._check_for_pir201(node)
-                yield from self._check_for_pir203(node)
-                yield from self._check_for_pir205(node)
+        if isinstance(node, ParsedImport):
+            yield from self._check_for_pir201(node)
+            yield from self._check_for_pir203(node)
+            yield from self._check_for_pir205(node)
 
-            elif isinstance(node, ParsedFromImport):
-                yield from self._check_for_pir202(node)
-                yield from self._check_for_pir204(node)
-                yield from self._check_for_pir206(node)
+        elif isinstance(node, ParsedFromImport):
+            yield from self._check_for_pir202(node)
+            yield from self._check_for_pir204(node)
+            yield from self._check_for_pir206(node)
 
     def _check_restricted_imports(
         self,
@@ -262,28 +265,28 @@ class CustomImportRules:
                 ),
             )
 
-    def _check_std_lib_only_imports(
-        self,
-        code_offset: int,
-        current_module: str,
-        import_string: str,
-        module_name: str,
-        node: ParsedNode,
-    ) -> Generator[tuple[int, int, str, type], Any, Any] | None:
-        """Check standard library only imports"""
-        if current_module in self.standard_library_only and not self._is_standard_library_import(
-            module_name
-        ):
-            yield self.error(
-                f"CIM{301 + code_offset}",
-                node.lineno,
-                node.col_offset,
-                (
-                    f"Using '{import_string}' in module '{current_module}' "
-                    f"can only import from the Python standard library, "
-                    f"'{module_name}' is not allowed."
-                ),
-            )
+    # def _check_std_lib_only_imports(
+    #     self,
+    #     code_offset: int,
+    #     current_module: str,
+    #     import_string: str,
+    #     module_name: str,
+    #     node: ParsedNode,
+    # ) -> Generator[tuple[int, int, str, type], Any, Any] | None:
+    #     """Check standard library only imports"""
+    #     if current_module in self.standard_library_only and not self._is_standard_library_import(
+    #         module_name
+    #     ):
+    #         yield self.error(
+    #             f"CIM{301 + code_offset}",
+    #             node.lineno,
+    #             node.col_offset,
+    #             (
+    #                 f"Using '{import_string}' in module '{current_module}' "
+    #                 f"can only import from the Python standard library, "
+    #                 f"'{module_name}' is not allowed."
+    #             ),
+    #         )
 
     def error(
         self, code: str, lineno: int, col_offset: int, message: str
@@ -292,10 +295,10 @@ class CustomImportRules:
         return lineno, col_offset, f"{code} {message}", type(self)
         # self.error(*error)
 
-    def _is_standard_library_import(self, module_name: str) -> bool:
-        """Check module is standard library module using specific Python version."""
-        standard_lib_modules = stdlib_list(self.use_python_version)
-        return module_name in standard_lib_modules
+    # def _is_standard_library_import(self, module_name: str) -> bool:
+    #     """Check module is standard library module using specific Python version."""
+    #     standard_lib_modules = stdlib_list(self.use_python_version)
+    #     return module_name in standard_lib_modules
 
     def _check_for_cir101(self, node: ParsedNode) -> Generator[ErrorMessage, None, None]:
         """Check for CIR101."""
@@ -428,6 +431,10 @@ class CustomImportRules:
         """Check if a node is a dynamic import."""
         if not node.confirmed and check_string(node.identifier, substring_match="modules"):
             node.confirmed = self.identifiers["modules"]["package"] == "sys"
+        if not node.confirmed and check_string(
+            node.identifier, substring_match=["get_loader", "iter_modules"]
+        ):
+            node.confirmed = self.identifiers["get_loader"]["package"] == "pkgutil"
 
         if not node.confirmed and check_string(node.identifier, substring_match=["eval", "exec"]):
             dynamic_nodes = [
@@ -435,7 +442,6 @@ class CustomImportRules:
                 for dynamic_node in self.dynamic_nodes[str(node.lineno)]
                 if isinstance(dynamic_node, (DynamicStringImport, DynamicStringFromImport))
             ]
-            print(dynamic_nodes)
             node.confirmed = bool(dynamic_nodes)
 
         return bool(node.confirmed)
