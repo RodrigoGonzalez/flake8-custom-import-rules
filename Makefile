@@ -59,19 +59,9 @@ update-deps: pip-upgrade poetry-update pre-commit-autoupdate  ## Update dependen
 		poetry run pre-commit autoupdate -c .pre-commit-config.yaml
 
 local: setup update-deps  ## Locally install the package
-	docs-genius --help
+	custom-imports --help
 
-add:  ## Adds packages with poetry. (e.g. To add requests and numpy run `make add PACKAGES="requests numpy"`)
-	poetry add $(PACKAGES)
-
-add-dev:  ## Adds development packages with poetry. (e.g. To add requests and numpy run `make add-dev PACKAGES="commitizen pre-commit"`)
-	poetry add --group dev $(PACKAGES)
-
-add-lint:  ## Adds lint packages with poetry. (e.g. To add black and flake8 run `make add-lint PACKAGES="black flake8"`)
-	poetry add --group lint $(PACKAGES)
-
-
-.PHONY: setup update-deps local add add-dev add-lint
+.PHONY: setup update-deps local
 
 # =============================================================================
 # DEVELOPMENT

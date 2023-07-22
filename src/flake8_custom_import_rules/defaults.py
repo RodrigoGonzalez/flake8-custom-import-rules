@@ -3,6 +3,26 @@ from attrs import asdict
 from attrs import define
 from attrs import field
 
+POTENTIAL_DYNAMIC_IMPORTS = {
+    "__import__",
+    "importlib",
+    "importlib.import_module",
+    "import_module",
+    # "pkgutil",
+    "pkgutil.get_loader",
+    "get_loader",
+    "pkgutil.iter_modules",
+    "iter_modules",
+    "sys.modules",
+    "modules",
+    "zipimport",
+    "zipimport.zipimporter",
+    "zipimporter",
+    "zipimporter.load_module",
+    "eval",
+    "exec",
+}
+
 
 @define(slots=True)
 class Settings:
@@ -32,6 +52,7 @@ class Settings:
         self.base_package = (
             [self.base_package] if isinstance(self.base_package, str) else self.base_package
         )
+        # Assign minor version if it's less than 10, else assign 9
 
     def to_dict(self) -> dict:
         """Return the settings as a dictionary."""

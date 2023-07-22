@@ -38,10 +38,6 @@ class CustomImportRulesChecker:
     _identifiers_by_lineno: defaultdict[str, list] | None = None
     _options: dict[str, list[str] | str] = field(init=False)
 
-    # def __attrs_post_init__(self) -> None:
-    #     """Post init."""
-    #     self._options = self._parsed_options
-
     @property
     def tree(self) -> ast.AST:
         """Return the tree."""
@@ -103,7 +99,7 @@ class CustomImportRulesChecker:
         """Return the visitor to use for this plugin."""
         # print(f"Options: {self.options}")
         visitor = CustomImportRulesVisitor(
-            self.options.get("base_packages", []),
+            package_names=self.options.get("base_packages", []),
             filename=self.filename,
         )
         visitor.visit(self.tree)

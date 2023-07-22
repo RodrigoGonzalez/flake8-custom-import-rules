@@ -1,17 +1,17 @@
 """Custom import rules node visitor."""
 import ast
 import logging
+import sys
 from collections import defaultdict
 from pathlib import Path
 
 from attrs import define
 from attrs import field
-from flake8_import_order.stdlib_list import STDLIB_NAMES
+from stdlib_list import stdlib_list
 
 from flake8_custom_import_rules.core.nodes import DynamicStringFromImport
 from flake8_custom_import_rules.core.nodes import DynamicStringImport
 from flake8_custom_import_rules.core.nodes import ImportType
-from flake8_custom_import_rules.core.nodes import ParsedCall
 from flake8_custom_import_rules.core.nodes import ParsedClassDef
 from flake8_custom_import_rules.core.nodes import ParsedDynamicImport
 from flake8_custom_import_rules.core.nodes import ParsedFromImport
@@ -19,31 +19,13 @@ from flake8_custom_import_rules.core.nodes import ParsedFunctionDef
 from flake8_custom_import_rules.core.nodes import ParsedIfImport
 from flake8_custom_import_rules.core.nodes import ParsedImport
 from flake8_custom_import_rules.core.nodes import ParsedLocalImport
+from flake8_custom_import_rules.defaults import POTENTIAL_DYNAMIC_IMPORTS
 from flake8_custom_import_rules.utils.node_utils import generate_identifier_path
 from flake8_custom_import_rules.utils.node_utils import get_module_info_from_import_node
 from flake8_custom_import_rules.utils.node_utils import get_name_info_from_import_node
 from flake8_custom_import_rules.utils.parse_utils import check_string
 
 logger = logging.getLogger(f"flake8_custom_import_rules.{__name__}")
-
-
-POTENTIAL_DYNAMIC_IMPORTS = {
-    "__import__",
-    "importlib",
-    "importlib.import_module",
-    "import_module",
-    "pkgutil",
-    "pkgutil.get_loader",
-    "pkgutil.iter_modules",
-    "sys.modules",
-    "modules",
-    "zipimport",
-    "zipimport.zipimporter",
-    "zipimporter",
-    "zipimporter.load_module",
-    "eval",
-    "exec",
-}
 
 
 @define(slots=True)
@@ -59,6 +41,8 @@ class CustomImportRulesVisitor(ast.NodeVisitor):
     resolve_local_imports: bool | None = field(default=False)
     identifiers: defaultdict[str, dict] = defaultdict(lambda: defaultdict(str))
     identifiers_by_lineno: defaultdict[str, list] = defaultdict(list)
+    python_version: str = field(init=False)
+    stdlib_names: set | frozenset = field(init=False)
 
     def __attrs_post_init__(self) -> None:
         filename = self.filename
@@ -66,6 +50,13 @@ class CustomImportRulesVisitor(ast.NodeVisitor):
         logger.info(f"Visitor filename: {self.filename}")
         self.resolve_local_imports = filename not in {"stdin", "-", "/dev/stdin", "", None}
         logger.info(f"Resolve local imports: {self.resolve_local_imports}")
+
+        self.python_version = f"{sys.version_info.major}.{sys.version_info.minor}"
+        if sys.version_info < (3, 10):
+            # stdlib_list only supports up to Python 3.9
+            self.stdlib_names = set(stdlib_list(self.python_version))
+        else:
+            self.stdlib_names = sys.stdlib_module_names
 
     def _resolve_local_import(self, module: str, node_level: int) -> Path | None:
         """Resolve a local import."""
@@ -162,6 +153,7 @@ class CustomImportRulesVisitor(ast.NodeVisitor):
         """Check if a local import is resolved."""
         for stmt in node.body:
             if isinstance(stmt, (ast.Import, ast.ImportFrom)):
+                assert isinstance(stmt, ast.AST)
                 self.nodes.append(
                     ParsedLocalImport(
                         lineno=stmt.lineno,
@@ -207,19 +199,8 @@ class CustomImportRulesVisitor(ast.NodeVisitor):
         self._check_local_import(node)
         self.generic_visit(node)
 
-    @staticmethod
-    def _func_name(func: ast.Name) -> str:
-        """Get the function name."""
-        return func.id
-
-    @staticmethod
-    def _func_attribute(func: ast.Attribute) -> str:
-        """Get the function name."""
-        return func.attr
-
     def _get_dynamic_string_visitor(self, lineno: int, col_offset: int) -> "DynamicStringVisitor":
         """Get the dynamic string visitor."""
-        print(f"get_dynamic_string_visitor: {lineno}")
         return DynamicStringVisitor(
             package_names=self.package_names,
             filename=self.filename,
@@ -227,27 +208,33 @@ class CustomImportRulesVisitor(ast.NodeVisitor):
             col_offset=col_offset,
         )
 
-    def _parse_value_string(self, value: str, lineno: int, col_offset: int) -> str:
-        """Parse the value strings."""
-        print(f"parse_value_string: {value}")
-        node = ast.parse(value)
-        print(f"node: {node}")
+    def _try_parse_value_string(self, value: str, lineno: int, col_offset: int) -> str:
+        """Attempt to parse the value strings and handle exceptions."""
+        try:
+            node = ast.parse(value)
+        except SyntaxError:
+            logger.warning(f"Syntax error in string {value} at line {lineno}, column {col_offset}")
+            return value
+
         dynamic_string_visitor = self._get_dynamic_string_visitor(lineno, col_offset)
         dynamic_string_visitor.visit(node)
 
         for dynamic_node in dynamic_string_visitor.nodes:
             self.dynamic_nodes[str(lineno)].append(dynamic_node)
-            self.nodes.append(dynamic_node)
 
         return value
 
+    @staticmethod
+    def _has_value(arg: ast.Constant) -> bool:
+        """Check if the argument has a value attribute."""
+        return hasattr(arg, "value")
+
     def _get_args_for_calls(self, args: list, lineno: int, col_offset: int) -> list[str]:
         """Get the function args."""
-        print(f"get_args_for_calls: {args} lineno: {lineno}")
         return [
-            self._parse_value_string(arg.value, lineno, col_offset)
+            self._try_parse_value_string(arg.value, lineno, col_offset)
             for arg in args
-            if hasattr(arg, "value")
+            if self._has_value(arg)
         ]
 
     @staticmethod
@@ -285,8 +272,8 @@ class CustomImportRulesVisitor(ast.NodeVisitor):
         )
 
     @staticmethod
-    def _check_if_bare_modules(strings_to_check: list[str]) -> bool:
-        """Check if the string is a bare module.
+    def _check_if_contains_package(strings_to_check: list[str]) -> bool:
+        """Check if the string does not contain package information.
 
         "modules" is a common object name, so we need to check
         that it was imported from the "sys" package.
@@ -296,56 +283,45 @@ class CustomImportRulesVisitor(ast.NodeVisitor):
             # if "modules" is in the string, check if it was imported from "sys"
             # if "sys" is not in the string, the following will return True
             return not check_string(strings_to_check, substring_match="sys")
+
+        if check_string(strings_to_check, substring_match=["get_loader", "iter_modules"]):
+            return not check_string(strings_to_check, substring_match="pkgutil")
+
         return False
 
     def _check_if_confirmed_dynamic_import(self, strings_to_check: list[str]) -> bool:
+        """Check if the dynamic import is confirmed.
         # a bare "modules" is not a confirmed dynamic import
-        if self._check_if_bare_modules(strings_to_check):
+        """
+        if self._check_if_contains_package(strings_to_check):
             return False
         return not self._check_dynamic_code_execution_functions(strings_to_check)
+
+    def _get_parsed_dynamic_import(
+        self, strings_to_check: list[str], node: ast.Call | ast.Assign
+    ) -> ParsedDynamicImport:
+        values = None
+
+        if isinstance(node, ast.Call):
+            values = self._get_args_for_calls(node.args, node.lineno, node.col_offset)
+
+        return ParsedDynamicImport(
+            lineno=node.lineno,
+            col_offset=node.col_offset,
+            dynamic_import=ast.unparse(node),
+            identifier=".".join(strings_to_check),
+            confirmed=self._check_if_confirmed_dynamic_import(strings_to_check),
+            values=values,
+        )
 
     def visit_Call(self, node: ast.Call) -> None:
         """Visit a Call node."""
         identifier_path = list(generate_identifier_path(node.func))
-        print(f"{node.lineno} visit_Call: {identifier_path}")
+
         if self._check_for_dynamic_imports(identifier_path):
-            parsed_dynamic_import = ParsedDynamicImport(
-                lineno=node.lineno,
-                col_offset=node.col_offset,
-                dynamic_import=ast.unparse(node),
-                identifier=".".join(identifier_path),
-                confirmed=self._check_if_confirmed_dynamic_import(identifier_path),
-                values=self._get_args_for_calls(node.args, node.lineno, node.col_offset),
-            )
+            parsed_dynamic_import = self._get_parsed_dynamic_import(identifier_path, node)
             self.nodes.append(parsed_dynamic_import)
 
-        if isinstance(node.func, ast.Name):
-            # print(f"visit_Call: {node.func}")
-            if self._func_name(node.func) in POTENTIAL_DYNAMIC_IMPORTS:
-                self.nodes.append(
-                    ParsedCall(
-                        func=self._func_name(node.func),
-                        lineno=node.lineno,
-                        col_offset=node.col_offset,
-                        call_type="ast.Name",
-                        values=self._get_args_for_calls(node.args, node.lineno, node.col_offset),
-                        call=ast.unparse(node),
-                    )
-                )
-        elif isinstance(node.func, ast.Attribute):
-            # print(f"visit_Call: {node.func}")
-            if self._func_attribute(node.func) in POTENTIAL_DYNAMIC_IMPORTS:
-                self.nodes.append(
-                    ParsedCall(
-                        func=self._func_attribute(node.func),
-                        module=node.func.value.id if hasattr(node.func.value, "id") else None,
-                        lineno=node.lineno,
-                        col_offset=node.col_offset,
-                        call_type="ast.Attribute",
-                        values=self._get_args_for_calls(node.args, node.lineno, node.col_offset),
-                        call=ast.unparse(node),
-                    )
-                )
         self.generic_visit(node)
 
     def visit_Assign(self, node: ast.Assign) -> None:
@@ -353,39 +329,38 @@ class CustomImportRulesVisitor(ast.NodeVisitor):
         identifier_path = list(generate_identifier_path(node.value))
 
         if self._check_for_dynamic_imports(identifier_path):
-            self.nodes.append(
-                ParsedDynamicImport(
-                    lineno=node.lineno,
-                    col_offset=node.col_offset,
-                    dynamic_import=ast.unparse(node),
-                    identifier=".".join(identifier_path),
-                    confirmed=self._check_if_confirmed_dynamic_import(identifier_path),
-                )
-            )
+            parsed_dynamic_import = self._get_parsed_dynamic_import(identifier_path, node)
+            self.nodes.append(parsed_dynamic_import)
 
         self.generic_visit(node)
 
     def visit_If(self, node: ast.If) -> None:
         """Visit an If node."""
-        other_nodes = node.body + node.orelse
-        if conditional_imports := (
+        all_branch_nodes = node.body + node.orelse
+        conditional_imports = (
             (sub_node.lineno, sub_node.col_offset, sub_node)
-            for sub_node in other_nodes
+            for sub_node in all_branch_nodes
             if isinstance(sub_node, (ast.Import, ast.ImportFrom))
-        ):
-            for lineno, col_offset, sub_node in conditional_imports:
-                self.nodes.append(
-                    ParsedIfImport(
-                        lineno=lineno,
-                        col_offset=col_offset,
-                        sub_node=ast.unparse(sub_node),
-                    )
+        )
+
+        for lineno, col_offset, sub_node in conditional_imports:
+            assert isinstance(sub_node, ast.AST)
+            self.nodes.append(
+                ParsedIfImport(
+                    lineno=lineno,
+                    col_offset=col_offset,
+                    sub_node=ast.unparse(sub_node),
                 )
+            )
+
         self.generic_visit(node)
 
     def _classify_type(self, package_names: list[str]) -> ImportType:
         """
         Classify the import type.
+
+        Start by walking through package names from most-specific to
+        least-specific, taking the first match found.
 
         Parameters
         ----------
@@ -396,16 +371,16 @@ class CustomImportRulesVisitor(ast.NodeVisitor):
         -------
         ImportType
         """
-
-        # Walk through package names from most-specific to least-specific,
-        # taking the first match found.
         for package in reversed(package_names):
             if package == "__future__":
                 return ImportType.FUTURE
             elif package in self.current_package:
                 return ImportType.FIRST_PARTY
-            elif package in STDLIB_NAMES:
+            elif package in self.stdlib_names:
                 return ImportType.STDLIB
+
+            if package == "os":
+                print(f"\n\nstdlib_names: {self.stdlib_names}")
 
         # Not future, stdlib or an application import.
         # Must be 3rd party.
@@ -420,7 +395,8 @@ class DynamicStringVisitor(ast.NodeVisitor):
     filename: str | None = None
     nodes: list = field(factory=list)
 
-    # we want the line number to match the node that contains the dynamic string
+    # we want the line number and column offset to match the node that
+    # contains the dynamic string
     lineno: int | None = 0
     col_offset: int | None = 0
 
@@ -437,7 +413,7 @@ class DynamicStringVisitor(ast.NodeVisitor):
                 module=module_info["module"],
                 asname=module_info["asname"],
                 lineno=self.lineno,
-                col_offset=module_info["col_offset"],
+                col_offset=self.col_offset,
                 node_col_offset=module_info["node_col_offset"],
                 alias_col_offset=module_info["alias_col_offset"],
                 package=module_info["package"],
@@ -457,6 +433,7 @@ class DynamicStringVisitor(ast.NodeVisitor):
         for alias in node.names:
             name_info = parsed_from_imports_dict[alias.name]
             name_info["import_type"] = ImportType.DYNAMIC
+
             dynamic_string_from_import = DynamicStringFromImport(
                 import_type=name_info["import_type"],
                 module=name_info["module"],

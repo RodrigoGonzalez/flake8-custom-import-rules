@@ -171,7 +171,7 @@ class Linter(CustomImportRulesChecker):
         register_opt(
             option_manager,
             "--restrict-main-imports",
-            default=DEFAULT_CHECKER_SETTINGS.RESTRICT_INIT_IMPORTS,
+            default=DEFAULT_CHECKER_SETTINGS.RESTRICT_MAIN_IMPORTS,
             action="store",
             type=bool,
             help="__main__ imports are currently disabled for this project.",
@@ -212,12 +212,11 @@ class Linter(CustomImportRulesChecker):
         logger.debug(f"Option Manager: {option_manager}")
         logger.debug(f"Options: {parse_options}")
         logger.debug(f"Args: {args}")
-        # print(f"\nOption Manager: {option_manager}")
-        # print(f"\nOptions: {parse_options}")
-        # print(f"\nArgs: {args}")
-        # Parse options for CustomImportRulesChecker
-        # cls.parse_custom_rules_options(options)
+        # pprint("\nOptions:")
+        # pprint(parse_options)
+        # pprint(f"\nArgs: {args}")
 
+        # Parse options for CustomImportRulesChecker
         base_packages: str | list = parse_options.base_packages
         if not isinstance(base_packages, list):
             base_packages = [
@@ -239,7 +238,7 @@ class Linter(CustomImportRulesChecker):
         }
 
         logger.debug(f"Parsed Options: {parsed_options}")
-        # print(f"Parsed Options: {parsed_options}")
+        # print(f"\n\nParsed Options: {parsed_options}")
         cls._options = parsed_options
 
     def error(self, error: ErrorMessage) -> tuple:
@@ -254,13 +253,7 @@ class Linter(CustomImportRulesChecker):
     def run(self) -> Generator[tuple[int, int, str, type[Any]], None, None]:
         """Run flake8-custom-import-rules."""
         # Run CustomImportRulesChecker
-        # print(f"Slots: {self.__slots__}")
         yield from self.check_custom_import_rules()
-
-    # def setup_test_run(self, options: dict) -> None:
-    #     """Run flake8-custom-import-rules."""
-    #     self._options = options
-    #     # yield from self.check_custom_import_rules()
 
 
 def register_opt(self: OptionManager, *args: Any, **kwargs: Any) -> None:
