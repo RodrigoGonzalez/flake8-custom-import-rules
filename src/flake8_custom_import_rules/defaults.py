@@ -11,6 +11,32 @@ from flake8.options.manager import OptionManager
 # import argparse
 # argparse.ArgumentParser.add_argument
 
+
+STANDARD_PROJECT_LEVEL_RESTRICTION_KEYS = [
+    "relative",
+    "local",
+    "conditional",
+    "dynamic",
+    "private",
+    "wildcard",
+    "aliased",
+    "init",
+    "main",
+    "test",
+    "conftest",
+]
+
+CUSTOM_IMPORT_RULES = [
+    # "BASE_PACKAGES",
+    "RESTRICTED_IMPORTS",
+    "RESTRICTED_PACKAGES",
+    "ISOLATED_PACKAGES",
+    "STD_LIB_ONLY",
+    "THIRD_PARTY_ONLY",
+    "FIRST_PARTY_ONLY",
+    "PROJECT_ONLY",
+]
+
 POTENTIAL_DYNAMIC_IMPORTS = {
     "__import__",
     "importlib",
@@ -56,7 +82,7 @@ class Settings:
     TOP_LEVEL_ONLY_IMPORTS: bool = True
     RESTRICT_RELATIVE_IMPORTS: bool = True
     RESTRICT_LOCAL_IMPORTS: bool = True
-    RESTRICT_CONDITIONAL_IMPORTS: bool = True
+    RESTRICT_CONDITIONAL_IMPORTS: bool = False
     RESTRICT_DYNAMIC_IMPORTS: bool = True
     RESTRICT_PRIVATE_IMPORTS: bool = True
     RESTRICT_WILDCARD_IMPORTS: bool = True
@@ -101,54 +127,6 @@ class Settings:
 
 
 DEFAULT_CHECKER_SETTINGS = Settings()
-
-
-def register_project_restrictions(
-    option_manager: OptionManager, project_restriction: list | str, **kwargs: Any
-) -> None:
-    """Register project restrictions.
-
-    If using short options, set both the following options:
-        short_option_name: str | _ARG = _ARG.NO
-        long_option_name: str | _ARG = _ARG.NO
-
-    If using long options, just pass a single string into register_opt.
-    """
-    if isinstance(project_restriction, list):
-        for restriction in project_restriction:
-            register_project_restrictions(option_manager, restriction, **kwargs)
-        return
-
-    assert isinstance(project_restriction, str), (
-        f"Project restrictions must be a str. "
-        f"Got {type(project_restriction).__name__} for {project_restriction}."
-    )
-
-    setting_key = f"RESTRICT_{project_restriction.upper()}_IMPORTS"
-    default_value = DEFAULT_CHECKER_SETTINGS.get_settings_value(setting_key)
-
-    if not isinstance(default_value, bool):
-        raise TypeError(
-            f"Project restrictions must be a bool. Default value for "
-            f"{setting_key} must be a bool if registering as a project restriction."
-        )
-
-    help_string = (
-        f"Disables {project_restriction.title()} Imports for this project. "
-        f"(default: {default_value})"
-    )
-
-    register_opt(
-        option_manager,
-        f"--restrict-{project_restriction.lower()}-imports",
-        default=default_value,
-        action="store",
-        type=bool,
-        help=help_string,
-        parse_from_config=True,
-        comma_separated_list=False,
-        normalize_paths=False,
-    )
 
 
 def register_custom_import_rules(
@@ -275,28 +253,3 @@ def normalize_path(path: str, parent: str = os.curdir) -> str:
     if path == "." or separator in path or (alternate_separator and alternate_separator in path):
         path = os.path.abspath(os.path.join(parent, path))
     return path.rstrip(separator + alternate_separator)
-
-
-STANDARD_PROJECT_LEVEL_RESTRICTION_KEYS = [
-    "relative",
-    "local",
-    "conditional",
-    "dynamic",
-    "private",
-    "wildcard",
-    "aliased",
-    "init",
-    "main",
-    "test",
-    "conftest",
-]
-CUSTOM_IMPORT_RULES = [
-    # "BASE_PACKAGES",
-    "RESTRICTED_IMPORTS",
-    "RESTRICTED_PACKAGES",
-    "ISOLATED_PACKAGES",
-    "STD_LIB_ONLY",
-    "THIRD_PARTY_ONLY",
-    "FIRST_PARTY_ONLY",
-    "PROJECT_ONLY",
-]
