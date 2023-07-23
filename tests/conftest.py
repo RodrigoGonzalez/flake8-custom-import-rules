@@ -2,7 +2,6 @@
 import configparser
 
 import pytest
-from flake8_import_order.checker import ImportVisitor
 
 
 def load_config(path: str) -> configparser.RawConfigParser:
@@ -26,10 +25,10 @@ def load_config(path: str) -> configparser.RawConfigParser:
 # 				return cfg_path
 
 
-@pytest.fixture(scope="session")
-def import_visitor():
-    """Return an instance of the public import visitor."""
-    return ImportVisitor(["application_module", "tests"], ["company_module"])
+# @pytest.fixture(scope="session")
+# def import_visitor():
+#     """Return an instance of the public import visitor."""
+#     return ImportVisitor(["application_module", "tests"], ["company_module"])
 
 
 @pytest.fixture(scope="session")
@@ -37,10 +36,7 @@ def list_flake8_extensions():
     """List all installed flake8 extensions."""
     from pkg_resources import iter_entry_points
 
-    extensions = []
-    for entry_point in iter_entry_points(group="flake8.extension"):
-        extensions.append(entry_point.name)
-
+    extensions = [entry_point.name for entry_point in iter_entry_points(group="flake8.extension")]
     print(extensions)
     return extensions
 

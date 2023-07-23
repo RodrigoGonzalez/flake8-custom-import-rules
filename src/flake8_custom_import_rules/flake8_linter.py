@@ -14,7 +14,6 @@ from flake8_custom_import_rules.defaults import CUSTOM_IMPORT_RULES
 from flake8_custom_import_rules.defaults import DEFAULT_CHECKER_SETTINGS
 from flake8_custom_import_rules.defaults import STANDARD_PROJECT_LEVEL_RESTRICTION_KEYS
 from flake8_custom_import_rules.defaults import Settings
-from flake8_custom_import_rules.defaults import register_custom_import_rules
 from flake8_custom_import_rules.defaults import register_opt
 from flake8_custom_import_rules.defaults import register_options
 
@@ -72,7 +71,7 @@ class Linter(CustomImportRulesChecker):
             normalize_paths=False,
         )
 
-        register_custom_import_rules(option_manager, CUSTOM_IMPORT_RULES)
+        register_options(option_manager, CUSTOM_IMPORT_RULES, is_restriction=False)
 
         register_opt(
             option_manager,
@@ -90,7 +89,6 @@ class Linter(CustomImportRulesChecker):
         )
 
         # Additional project restrictions
-        # register_project_restrictions(option_manager, STANDARD_PROJECT_LEVEL_RESTRICTION_KEYS)
         register_options(
             option_manager, STANDARD_PROJECT_LEVEL_RESTRICTION_KEYS, is_restriction=True
         )
@@ -130,7 +128,7 @@ class Linter(CustomImportRulesChecker):
         }
 
         logger.debug(f"Parsed Options: {parsed_options}")
-        print(f"\n\nParsed Options: {parsed_options}")
+        # print(f"\n\nParsed Options: {parsed_options}")
         cls._options = parsed_options
 
     def error(self, error: ErrorMessage) -> tuple:
