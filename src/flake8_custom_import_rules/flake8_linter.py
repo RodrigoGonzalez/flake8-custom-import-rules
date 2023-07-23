@@ -1,7 +1,6 @@
 """ Flake8 linter for flake8-custom-import-rules. """
 import ast
 import logging
-import optparse
 import sys
 from argparse import Namespace
 from collections.abc import Generator
@@ -13,6 +12,8 @@ from flake8_custom_import_rules.core.import_rules import ErrorMessage
 from flake8_custom_import_rules.core.rules_checker import CustomImportRulesChecker
 from flake8_custom_import_rules.defaults import DEFAULT_CHECKER_SETTINGS
 from flake8_custom_import_rules.defaults import Settings
+from flake8_custom_import_rules.defaults import register_opt
+from flake8_custom_import_rules.defaults import register_project_restrictions
 
 if sys.version_info < (3, 8):
     import importlib_metadata
@@ -20,6 +21,21 @@ else:
     import importlib.metadata as importlib_metadata
 
 logger = logging.getLogger(f"flake8_custom_import_rules.{__name__}")
+
+
+STANDARD_PROJECT_LEVEL_RESTRICTIONS = [
+    "relative",
+    "local",
+    "conditional",
+    "dynamic",
+    "private",
+    "wildcard",
+    "aliased",
+    "init",
+    "main",
+    "test",
+    "conftest",
+]
 
 
 class Linter(CustomImportRulesChecker):
@@ -43,7 +59,6 @@ class Linter(CustomImportRulesChecker):
         https://github.com/PyCQA/flake8/blob/main/src/flake8/options/manager.py
         """
         # Add options for CustomImportRulesChecker
-        # cls.add_custom_rules_options(option_manager)
 
         register_opt(
             option_manager,
@@ -53,7 +68,8 @@ class Linter(CustomImportRulesChecker):
             type=str,
             help=(
                 "Import names to consider as first party modules (i.e., the name of "
-                "your package or library)."
+                "your package or library). If not set, some functionality will be "
+                "disabled. (default: '')"
             ),
             parse_from_config=True,
             comma_separated_list=True,
@@ -62,147 +78,21 @@ class Linter(CustomImportRulesChecker):
 
         register_opt(
             option_manager,
-            "--top-level-only",
+            "--top-level-only-imports",
             default=DEFAULT_CHECKER_SETTINGS.TOP_LEVEL_ONLY_IMPORTS,
             action="store",
             type=bool,
-            help="Only top level imports are permitted in the project.",
+            help=(
+                f"Only top level imports are permitted in the project. "
+                f"(default: {DEFAULT_CHECKER_SETTINGS.TOP_LEVEL_ONLY_IMPORTS})"
+            ),
             parse_from_config=True,
             comma_separated_list=False,
             normalize_paths=False,
         )
 
-        register_opt(
-            option_manager,
-            "--restrict-relative-imports",
-            default=DEFAULT_CHECKER_SETTINGS.RESTRICT_RELATIVE_IMPORTS,
-            action="store",
-            type=bool,
-            help="Relative imports are disabled for this project.",
-            parse_from_config=True,
-            comma_separated_list=False,
-            normalize_paths=False,
-        )
-
-        register_opt(
-            option_manager,
-            "--restrict-local-imports",
-            default=DEFAULT_CHECKER_SETTINGS.RESTRICT_LOCAL_IMPORTS,
-            action="store",
-            type=bool,
-            help="Local imports are disabled for this project.",
-            parse_from_config=True,
-            comma_separated_list=False,
-            normalize_paths=False,
-        )
-
-        register_opt(
-            option_manager,
-            "--restrict-conditional-imports",
-            default=DEFAULT_CHECKER_SETTINGS.RESTRICT_CONDITIONAL_IMPORTS,
-            action="store",
-            type=bool,
-            help="Conditional imports are disabled for this project.",
-            parse_from_config=True,
-            comma_separated_list=False,
-            normalize_paths=False,
-        )
-
-        register_opt(
-            option_manager,
-            "--restrict-dynamic-imports",
-            default=DEFAULT_CHECKER_SETTINGS.RESTRICT_DYNAMIC_IMPORTS,
-            action="store",
-            type=bool,
-            help="Dynamic imports are disabled for this project.",
-            parse_from_config=True,
-            comma_separated_list=False,
-            normalize_paths=False,
-        )
-
-        register_opt(
-            option_manager,
-            "--restrict-private-imports",
-            default=DEFAULT_CHECKER_SETTINGS.RESTRICT_PRIVATE_IMPORTS,
-            action="store",
-            type=bool,
-            help="Private imports are disabled for this project.",
-            parse_from_config=True,
-            comma_separated_list=False,
-            normalize_paths=False,
-        )
-
-        register_opt(
-            option_manager,
-            "--restrict-wildcard-imports",
-            default=DEFAULT_CHECKER_SETTINGS.RESTRICT_WILDCARD_IMPORTS,
-            action="store",
-            type=bool,
-            help="Wildcard/star imports are disabled for this project.",
-            parse_from_config=True,
-            comma_separated_list=False,
-            normalize_paths=False,
-        )
-
-        register_opt(
-            option_manager,
-            "--restrict-aliased-imports",
-            default=DEFAULT_CHECKER_SETTINGS.RESTRICT_ALIASED_IMPORTS,
-            action="store",
-            type=bool,
-            help="Dynamic imports are disabled for this project.",
-            parse_from_config=True,
-            comma_separated_list=False,
-            normalize_paths=False,
-        )
-
-        register_opt(
-            option_manager,
-            "--restrict-init-imports",
-            default=DEFAULT_CHECKER_SETTINGS.RESTRICT_INIT_IMPORTS,
-            action="store",
-            type=bool,
-            help="__init__ imports are disabled for this project.",
-            parse_from_config=True,
-            comma_separated_list=False,
-            normalize_paths=False,
-        )
-
-        register_opt(
-            option_manager,
-            "--restrict-main-imports",
-            default=DEFAULT_CHECKER_SETTINGS.RESTRICT_MAIN_IMPORTS,
-            action="store",
-            type=bool,
-            help="__main__ imports are disabled for this project.",
-            parse_from_config=True,
-            comma_separated_list=False,
-            normalize_paths=False,
-        )
-
-        register_opt(
-            option_manager,
-            "--restrict-test-imports",
-            default=DEFAULT_CHECKER_SETTINGS.RESTRICT_TEST_IMPORTS,
-            action="store",
-            type=bool,
-            help="Test imports are disabled for this project.",
-            parse_from_config=True,
-            comma_separated_list=False,
-            normalize_paths=False,
-        )
-
-        register_opt(
-            option_manager,
-            "--restrict-conftest-imports",
-            default=DEFAULT_CHECKER_SETTINGS.RESTRICT_CONFTEST_IMPORTS,
-            action="store",
-            type=bool,
-            help="Conftest imports are disabled for this project.",
-            parse_from_config=True,
-            comma_separated_list=False,
-            normalize_paths=False,
-        )
+        # Additional project restrictions
+        register_project_restrictions(option_manager, STANDARD_PROJECT_LEVEL_RESTRICTIONS)
 
     @classmethod
     def parse_options(
@@ -256,18 +146,3 @@ class Linter(CustomImportRulesChecker):
         """Run flake8-custom-import-rules."""
         # Run CustomImportRulesChecker
         yield from self.check_custom_import_rules()
-
-
-def register_opt(self: OptionManager, *args: Any, **kwargs: Any) -> None:
-    """Register options for flake8-custom-import-rules."""
-    try:
-        # Flake8 3.x registration
-        self.add_option(*args, **kwargs)
-    except (optparse.OptionError, TypeError):
-        # Flake8 2.x registration
-        parse_from_config = kwargs.pop("parse_from_config", False)
-        kwargs.pop("comma_separated_list", False)
-        kwargs.pop("normalize_paths", False)
-        self.add_option(*args, **kwargs)
-        if parse_from_config:
-            self.config_options.append(args[-1].lstrip("-"))

@@ -48,11 +48,12 @@ class ErrorCode(Enum, metaclass=ErrorCodeMeta):
     CIR106 = "CIR106 Restricted package import, no one can import from this package"
     CIR107 = "CIR107 Restricted package `from import`, no one can import from this package"
 
-    # Local only imports, packages and modules in your project:
-    CIR201 = "CIR201 Non-local module import from a module or package outside your project"
-    CIR202 = "CIR202 Non-local module `from import`"
-    CIR203 = "CIR203 Non-local module import"
-    CIR204 = "CIR204 Non-local module `from import`"
+    # Project only imports. No packages and modules from outside your project
+    # (i.e. No Third Party Imports)
+    CIR201 = "CIR201 Non-project package import."
+    CIR202 = "CIR202 Non-project module `from ... import`"
+    CIR203 = "CIR203 Non-project module import"
+    CIR204 = "CIR204 Non-project module `from import`"
 
     # Isolated package: Package/module that can not import from any other package in your project.
     # Standalone package.
@@ -95,6 +96,19 @@ class ErrorCode(Enum, metaclass=ErrorCodeMeta):
 
     # Dynamic Imports Rules and Special Cases
     PIR301 = "PIR301 Potential dynamic import failed confirmation checks."
+    PIR302 = "PIR302 Attempt to parse dynamic value string failed"
+
+    # conditions = {
+    #     CIR101: lambda node: "__init__" in node.module,
+    #     CIR102: lambda node: "restricted_package" in node.module,
+    #     # ... other conditions ...
+    # }
+    #
+    # @classmethod
+    # def check_condition(cls, error_code, node):
+    #     if condition := cls.conditions.get(error_code):
+    #         return condition(node)
+    #     return False
 
     @property
     def code(self) -> str:
@@ -139,12 +153,12 @@ class ErrorCode(Enum, metaclass=ErrorCodeMeta):
     @classmethod
     def get_all_project_import_rule_codes(cls) -> list[str]:
         """Get all blocked import rule codes."""
-        return list(filter(lambda x: x.startswith("PIR"), cls.get_all_error_codes()))
+        return [code for code in cls.get_all_error_codes() if code.startswith("PIR")]
 
     @classmethod
     def get_all_custom_import_rule_codes(cls) -> list[str]:
         """Get all custom import rule codes."""
-        return list(filter(lambda x: x.startswith("CIR"), cls.get_all_error_codes()))
+        return [code for code in cls.get_all_error_codes() if code.startswith("CIR")]
 
 
 @singledispatch
