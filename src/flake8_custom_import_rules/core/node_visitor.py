@@ -38,7 +38,7 @@ class CustomImportRulesVisitor(ast.NodeVisitor):
     ----------
     base_packages : list[str]
         Base packages
-    file_name : str | None
+    filename : str | None
         The current file name
     nodes : list
         The resulting nodes from the visitor
@@ -47,7 +47,7 @@ class CustomImportRulesVisitor(ast.NodeVisitor):
     package_root : list[str]
         The absolute path to the package root
     file_path : Path | None
-        File path equal to Path(file_name) if file_name is not empty or None,
+        File path equal to Path(filename) if filename is not empty or None,
         otherwise None
     resolve_local_imports : bool | None
         Resolve local imports
@@ -65,7 +65,7 @@ class CustomImportRulesVisitor(ast.NodeVisitor):
     """
 
     base_packages: list[str] = field(factory=list)
-    file_name: str | None = None
+    filename: str | None = None
     nodes: list = field(factory=list)
     dynamic_nodes: defaultdict[str, list] = defaultdict(list)
     package_root: list[str] = field(factory=list)
@@ -84,10 +84,10 @@ class CustomImportRulesVisitor(ast.NodeVisitor):
         self.stdlib_names using stdlib_list. Otherwise, it assigns
         sys.stdlib_module_names to self.stdlib_names.
         """
-        file_name = self.file_name
-        self.file_path = Path(file_name) if file_name else None
-        logger.info(f"Visitor file_name: {self.file_name}")
-        self.resolve_local_imports = file_name not in {"stdin", "-", "/dev/stdin", "", None}
+        filename = self.filename
+        self.file_path = Path(filename) if filename else None
+        logger.info(f"Visitor filename: {self.filename}")
+        self.resolve_local_imports = filename not in {"stdin", "-", "/dev/stdin", "", None}
         logger.info(f"Resolve local imports: {self.resolve_local_imports}")
 
         self.python_version = f"{sys.version_info.major}.{sys.version_info.minor}"
@@ -289,7 +289,7 @@ class CustomImportRulesVisitor(ast.NodeVisitor):
         """Get the dynamic string visitor."""
         return DynamicStringVisitor(
             base_packages=self.base_packages,
-            file_name=self.file_name,
+            filename=self.filename,
             lineno=lineno,
             col_offset=col_offset,
         )
@@ -482,7 +482,7 @@ class DynamicStringVisitor(ast.NodeVisitor):
     """
 
     base_packages: list[str] = field(factory=list)
-    file_name: str | None = None
+    filename: str | None = None
     nodes: list = field(factory=list)
 
     # we want the line number and column offset to match the node that

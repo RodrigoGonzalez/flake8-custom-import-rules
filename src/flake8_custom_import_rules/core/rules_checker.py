@@ -24,7 +24,7 @@ class CustomImportRulesChecker:
     """Custom import rules checker."""
 
     _tree: ast.AST | None = None
-    _file_name: str | None = None
+    _filename: str | None = None
     _lines: list[str] | None = None
     _nodes: list[ParsedNode] | None = None
     _visitor: CustomImportRulesVisitor | None = None
@@ -40,11 +40,11 @@ class CustomImportRulesChecker:
         return self._tree
 
     @property
-    def file_name(self) -> str:
-        """Return the file_name."""
-        if self._file_name is None or self._file_name in {"-", "/dev/stdin"}:
+    def filename(self) -> str:
+        """Return the filename."""
+        if self._filename is None or self._filename in {"-", "/dev/stdin"}:
             return "stdin"
-        return self._file_name
+        return self._filename
 
     @property
     def lines(self) -> list[str]:
@@ -52,8 +52,8 @@ class CustomImportRulesChecker:
         if self._lines is None:
             self._lines = (
                 pycodestyle.stdin_get_value().splitlines(True)
-                if self.file_name == "stdin"
-                else pycodestyle.readlines(self.file_name)
+                if self.filename == "stdin"
+                else pycodestyle.readlines(self.filename)
             )
         return self._lines
 
@@ -94,7 +94,7 @@ class CustomImportRulesChecker:
         # print(f"Options: {self.options}")
         visitor = CustomImportRulesVisitor(
             base_packages=self.options.get("base_packages", []),
-            file_name=self.file_name,
+            filename=self.filename,
         )
         visitor.visit(self.tree)
         return visitor
@@ -170,10 +170,10 @@ class BaseCustomImportRulePlugin(CustomImportRulesChecker):
     _run_list: list
 
     def __init__(
-        self, tree: ast.AST | None = None, file_name: str | None = None, lines: list | None = None
+        self, tree: ast.AST | None = None, filename: str | None = None, lines: list | None = None
     ) -> None:
         """Initialize the checker."""
-        super().__init__(tree=tree, file_name=file_name, lines=lines)
+        super().__init__(tree=tree, filename=filename, lines=lines)
         self._options = {}
 
     def run(self) -> Generator[Any, None, None]:
