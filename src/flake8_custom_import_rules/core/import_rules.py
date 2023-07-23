@@ -427,6 +427,14 @@ class CustomImportRules:
         if ErrorCode.PIR104.code in self.codes_to_check:
             yield generate_from_node(node, ErrorCode.PIR104)
 
+    def _get_dynamic_import_nodes(self, node: ParsedDynamicImport) -> list[ParsedNode]:
+        """Get dynamic nodes."""
+        return [
+            dynamic_node
+            for dynamic_node in self.dynamic_nodes[str(node.lineno)]
+            if isinstance(dynamic_node, (DynamicStringImport, DynamicStringFromImport))
+        ]
+
     def _dynamic_import_check(self, node: ParsedDynamicImport) -> bool:
         """Check if a node is a dynamic import."""
         if not node.confirmed and check_string(node.identifier, substring_match="modules"):
@@ -437,11 +445,7 @@ class CustomImportRules:
             node.confirmed = self.identifiers["get_loader"]["package"] == "pkgutil"
 
         if not node.confirmed and check_string(node.identifier, substring_match=["eval", "exec"]):
-            dynamic_nodes = [
-                dynamic_node
-                for dynamic_node in self.dynamic_nodes[str(node.lineno)]
-                if isinstance(dynamic_node, (DynamicStringImport, DynamicStringFromImport))
-            ]
+            dynamic_nodes = self._get_dynamic_import_nodes(node)
             node.confirmed = bool(dynamic_nodes)
 
         return bool(node.confirmed)

@@ -88,6 +88,7 @@ library modules.
 
 ```toml
 [flake8]
+base_packages = ["my_base_package", "my_other_base_package"]  # Define the base packages
 restricted_imports = [
     "my_base_package.package_A:my_base_package.package_B",  # Restrict `package_A` from importing `package_B`
     "my_base_package.module_X.py:my_base_package.module_Y.py",  # Restrict `module_X.py` from importing `module_Y.py`
@@ -95,7 +96,8 @@ restricted_imports = [
 isolated_packages = ["my_base_package.package_C"]  # Make `package_C` an isolated package
 standard_library_only = ["my_base_package.package_D"]  # Allow `package_D` to import only from the standard library
 third_party_only = ["my_base_package.package_E"]  # Allow `package_E` to import only from third-party libraries
-local_only = ["my_base_package.package_F"]  # Allow `package_F` to import only from the local package
+first_party_only = ["my_base_package.package_F"]  # Allow `package_F` to import only from the local packages and the project's top-level package. This will treat the first package defined in `base_packages` as the top-level package.
+project_only = ["my_base_package.package_F"]  # Allow `package_G` to import only from the local package
 ```
 
 ```ini
@@ -106,7 +108,7 @@ restricted-imports =
 isolated-imports = my_base_package.package_C
 standard-library-only = my_base_package.package_D
 third-party-only = my_base_package.package_E
-local-only = my_base_package.package_F
+project-only = my_base_package.package_F
 
 ```
 

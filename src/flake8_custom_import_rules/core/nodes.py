@@ -136,6 +136,15 @@ class ParsedIfImport:
     sub_node: str
 
 
+@define(slots=True)
+class DynamicStringParseSyntaxFailure:
+    """Dynamic string import syntax failure."""
+
+    lineno: int
+    col_offset: int
+    value: str
+
+
 ParsedNode = (
     ParsedImport
     | ParsedFromImport

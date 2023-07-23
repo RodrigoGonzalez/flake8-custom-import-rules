@@ -11,6 +11,7 @@ from stdlib_list import stdlib_list
 
 from flake8_custom_import_rules.core.nodes import DynamicStringFromImport
 from flake8_custom_import_rules.core.nodes import DynamicStringImport
+from flake8_custom_import_rules.core.nodes import DynamicStringParseSyntaxFailure
 from flake8_custom_import_rules.core.nodes import ImportType
 from flake8_custom_import_rules.core.nodes import ParsedClassDef
 from flake8_custom_import_rules.core.nodes import ParsedDynamicImport
@@ -104,6 +105,14 @@ class CustomImportRulesVisitor(ast.NodeVisitor):
         """Resolve a local import."""
         parent = self.file_path.parents[node_level - 1] if self.file_path else None
         return parent / f"{module}.py" if parent else None
+
+    def resolve_relative_import(self, relative_import: str) -> str:
+        """Resolve a relative import to its absolute form."""
+        # Remove leading dots from the relative import
+
+        # relative_import = relative_import.lstrip('.')
+        # return f"{self}.{relative_import}"
+        raise NotImplementedError("This method is not implemented yet.")
 
     @staticmethod
     def _get_import_node(module_info: dict) -> ParsedImport:
@@ -292,6 +301,10 @@ class CustomImportRulesVisitor(ast.NodeVisitor):
 
         except SyntaxError:
             logger.warning(f"Syntax error in string {value} at line {lineno}, column {col_offset}")
+            dynamic_node_failure = DynamicStringParseSyntaxFailure(
+                lineno=lineno, col_offset=col_offset, value=value
+            )
+            self.dynamic_nodes[str(lineno)].append(dynamic_node_failure)
             return value
 
         dynamic_string_visitor = self._get_dynamic_string_visitor(lineno, col_offset)
