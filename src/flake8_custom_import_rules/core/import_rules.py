@@ -59,7 +59,7 @@ class CustomImportRules:
     errors: list[ErrorMessage] = field(factory=list)
     codes_to_check: list[ErrorCode] = ErrorCode.get_all_error_codes()
 
-    file_name: str = field(default=None)
+    filename: str = field(default=None)
     restricted_imports: dict = field(factory=dict)
     isolated_modules: list[str] = field(factory=list)
     foundation_modules: list[str] = field(factory=list)
@@ -94,7 +94,7 @@ class CustomImportRules:
 
     def _check_import_rules(self, node: ParsedNode) -> Generator[ErrorMessage, None, None]:
         """Check import rules"""
-        # current_module = os.path.split(self.file_name)[-1].split(".")[0]
+        # current_module = os.path.split(self.filename)[-1].split(".")[0]
         # is_from_import = isinstance(node, ast.ImportFrom)
         # code_offset = 1 if is_from_import else 0
         #

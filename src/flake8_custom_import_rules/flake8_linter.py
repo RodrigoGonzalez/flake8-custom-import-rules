@@ -12,6 +12,7 @@ from flake8_custom_import_rules.core.import_rules import ErrorMessage
 from flake8_custom_import_rules.core.rules_checker import CustomImportRulesChecker
 from flake8_custom_import_rules.defaults import DEFAULT_CHECKER_SETTINGS
 from flake8_custom_import_rules.defaults import Settings
+from flake8_custom_import_rules.defaults import register_custom_import_rules
 from flake8_custom_import_rules.defaults import register_opt
 from flake8_custom_import_rules.defaults import register_project_restrictions
 
@@ -23,7 +24,7 @@ else:
 logger = logging.getLogger(f"flake8_custom_import_rules.{__name__}")
 
 
-STANDARD_PROJECT_LEVEL_RESTRICTIONS = [
+STANDARD_PROJECT_LEVEL_RESTRICTION_KEYS = [
     "relative",
     "local",
     "conditional",
@@ -37,6 +38,17 @@ STANDARD_PROJECT_LEVEL_RESTRICTIONS = [
     "conftest",
 ]
 
+CUSTOM_IMPORT_RULES = [
+    # "base_packages",
+    "restricted_imports",
+    "restricted_packages",
+    "isolated_packages",
+    "standard_library_only",
+    "third_party_only",
+    "first_party_only",
+    "project_only",
+]
+
 
 class Linter(CustomImportRulesChecker):
     name = "flake8-custom-import-rules"
@@ -44,10 +56,15 @@ class Linter(CustomImportRulesChecker):
     _options: dict[str, list[str] | str] = {}
 
     def __init__(
-        self, tree: ast.AST | None = None, file_name: str | None = None, lines: list | None = None
+        self, tree: ast.AST | None = None, filename: str | None = None, lines: list | None = None
     ) -> None:
-        super().__init__(tree=tree, file_name=file_name, lines=lines)
-        logger.info(f"file_name: {file_name}")
+        """Initialize flake8-custom-import-rules."""
+        # print(f"\n\nTree: {tree}\n\n")
+        # from flake8_custom_import_rules.defaults import normalize_path
+        # print(f"\n\nFile Name: {normalize_path(filename)}\n\n")
+        # print(f"\n\nLines: {lines}\n\n")
+        super().__init__(tree=tree, filename=filename, lines=lines)
+        logger.info(f"filename: {filename}")
         logger.debug(f"lines: {lines}")
         logger.debug(f"tree: {tree}")
 
@@ -76,6 +93,8 @@ class Linter(CustomImportRulesChecker):
             normalize_paths=False,
         )
 
+        register_custom_import_rules(option_manager, CUSTOM_IMPORT_RULES)
+
         register_opt(
             option_manager,
             "--top-level-only-imports",
@@ -92,7 +111,7 @@ class Linter(CustomImportRulesChecker):
         )
 
         # Additional project restrictions
-        register_project_restrictions(option_manager, STANDARD_PROJECT_LEVEL_RESTRICTIONS)
+        register_project_restrictions(option_manager, STANDARD_PROJECT_LEVEL_RESTRICTION_KEYS)
 
     @classmethod
     def parse_options(
