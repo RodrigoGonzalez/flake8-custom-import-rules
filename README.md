@@ -97,19 +97,21 @@ isolated_packages = ["my_base_package.package_C"]  # Make `package_C` an isolate
 standard_library_only = ["my_base_package.package_D"]  # Allow `package_D` to import only from the standard library
 third_party_only = ["my_base_package.package_E"]  # Allow `package_E` to import only from third-party libraries
 first_party_only = ["my_base_package.package_F"]  # Allow `package_F` to import only from the local packages and the project's top-level package. This will treat the first package defined in `base_packages` as the top-level package.
-project_only = ["my_base_package.package_F"]  # Allow `package_G` to import only from the local package
+project_only = ["my_base_package.package_G"]  # Allow `package_G` to import only from the local package
 ```
 
 ```ini
 [flake8]
+base-packages = my_base_package,my_other_base_package
 restricted-imports =
     my_base_package.package_A:my_base_package.package_B
     my_base_package.module_X.py:my_base_package.module_Y.py
+restricted-packages = my_base_package.package_B
 isolated-imports = my_base_package.package_C
 standard-library-only = my_base_package.package_D
 third-party-only = my_base_package.package_E
-project-only = my_base_package.package_F
-
+first-party-only = my_base_package.package_F
+project-only = my_base_package.package_G
 ```
 
 Restricted imports:

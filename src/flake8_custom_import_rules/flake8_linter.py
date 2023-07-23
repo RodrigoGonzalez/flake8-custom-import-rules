@@ -10,11 +10,13 @@ from flake8.options.manager import OptionManager
 
 from flake8_custom_import_rules.core.import_rules import ErrorMessage
 from flake8_custom_import_rules.core.rules_checker import CustomImportRulesChecker
+from flake8_custom_import_rules.defaults import CUSTOM_IMPORT_RULES
 from flake8_custom_import_rules.defaults import DEFAULT_CHECKER_SETTINGS
+from flake8_custom_import_rules.defaults import STANDARD_PROJECT_LEVEL_RESTRICTION_KEYS
 from flake8_custom_import_rules.defaults import Settings
 from flake8_custom_import_rules.defaults import register_custom_import_rules
 from flake8_custom_import_rules.defaults import register_opt
-from flake8_custom_import_rules.defaults import register_project_restrictions
+from flake8_custom_import_rules.defaults import register_options
 
 if sys.version_info < (3, 8):
     import importlib_metadata
@@ -24,39 +26,16 @@ else:
 logger = logging.getLogger(f"flake8_custom_import_rules.{__name__}")
 
 
-STANDARD_PROJECT_LEVEL_RESTRICTION_KEYS = [
-    "relative",
-    "local",
-    "conditional",
-    "dynamic",
-    "private",
-    "wildcard",
-    "aliased",
-    "init",
-    "main",
-    "test",
-    "conftest",
-]
-
-CUSTOM_IMPORT_RULES = [
-    # "base_packages",
-    "restricted_imports",
-    "restricted_packages",
-    "isolated_packages",
-    "standard_library_only",
-    "third_party_only",
-    "first_party_only",
-    "project_only",
-]
-
-
 class Linter(CustomImportRulesChecker):
     name = "flake8-custom-import-rules"
     version = importlib_metadata.version(name)
     _options: dict[str, list[str] | str] = {}
 
     def __init__(
-        self, tree: ast.AST | None = None, filename: str | None = None, lines: list | None = None
+        self,
+        tree: ast.AST | None = None,
+        filename: str | None = None,
+        lines: list | None = None,
     ) -> None:
         """Initialize flake8-custom-import-rules."""
         # print(f"\n\nTree: {tree}\n\n")
@@ -111,7 +90,10 @@ class Linter(CustomImportRulesChecker):
         )
 
         # Additional project restrictions
-        register_project_restrictions(option_manager, STANDARD_PROJECT_LEVEL_RESTRICTION_KEYS)
+        # register_project_restrictions(option_manager, STANDARD_PROJECT_LEVEL_RESTRICTION_KEYS)
+        register_options(
+            option_manager, STANDARD_PROJECT_LEVEL_RESTRICTION_KEYS, is_restriction=True
+        )
 
     @classmethod
     def parse_options(
@@ -121,11 +103,9 @@ class Linter(CustomImportRulesChecker):
         logger.debug(f"Option Manager: {option_manager}")
         logger.debug(f"Options: {parse_options}")
         logger.debug(f"Args: {args}")
-        from pprint import pprint
-
-        pprint("\nOptions:")
-        pprint(parse_options)
-        pprint(f"\nArgs: {args}")
+        # print("\nOptions:")
+        # print(parse_options)
+        # print(f"\nArgs: {args}")
 
         # Parse options for CustomImportRulesChecker
         base_packages: str | list = parse_options.base_packages
@@ -134,10 +114,11 @@ class Linter(CustomImportRulesChecker):
                 pkg.strip() for pkg in parse_options.application_import_names.split(",")
             ]
 
-        options: dict = {"base_packages": base_packages}
+        options: dict = {"BASE_PACKAGES": base_packages}
 
         # Update options with the options set in the config or on the command line
         for option_key in DEFAULT_CHECKER_SETTINGS.get_option_keys():
+            # print(f"\n\nOption Key: {option_key}")
             option_value = getattr(parse_options, option_key.lower())
             if option_value is not None:
                 options[option_key] = option_value
@@ -149,7 +130,7 @@ class Linter(CustomImportRulesChecker):
         }
 
         logger.debug(f"Parsed Options: {parsed_options}")
-        # print(f"\n\nParsed Options: {parsed_options}")
+        print(f"\n\nParsed Options: {parsed_options}")
         cls._options = parsed_options
 
     def error(self, error: ErrorMessage) -> tuple:
