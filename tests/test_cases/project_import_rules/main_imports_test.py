@@ -39,6 +39,47 @@ MAIN_IMPORT_CODE = dedent(
             set(),
             False,
         ),
+        # check noqa works
+        (
+            "import __main__",
+            {"1:0: PIR209 Importing `__main__` is restricted."},
+            True,
+        ),
+        (
+            "import __main__  # noqa",
+            set(),
+            True,
+        ),
+        (
+            "import __main__  # NOQA",
+            set(),
+            True,
+        ),
+        (
+            "import __main__  # noqa: PIR210",
+            {"1:0: PIR209 Importing `__main__` is restricted."},
+            True,
+        ),
+        (
+            "import __main__  # noqa: PIR209",
+            set(),
+            True,
+        ),
+        (
+            "import __main__  # noqa: PIR209, PIR210",
+            set(),
+            True,
+        ),
+        (
+            "import __main__  # NOQA: PIR209",
+            set(),
+            True,
+        ),
+        (
+            "import __main__  # NOQA: PIR209, PIR210",
+            set(),
+            True,
+        ),
     ],
 )
 def test_main_imports(
