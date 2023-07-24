@@ -6,25 +6,32 @@ NOQA_INLINE_REGEXP = re.compile(
     # ``# noqa``
     # ``# noqa: E123``
     # ``# noqa: E123,W451,F921``
-    # ``# NoQA: E123,W451,F921``
+    # ``# NoQA: E1 23,W451,F921``
     # ``# NOQA: E123,W451,F921``
     # We do not care about the ``: `` that follows ``noqa``
     # We do not care about the casing of ``noqa``
     # We want a comma-separated list of errors
-    r"# noqa(?:: (?P<codes>([A-Z][0-9]+(?:[,\s]+)?)+))?",
+    # r'# noqa(?:: (?P<codes>([A-Z][0-9]+(?:[,\s]+)?)+))?',
+    r"# noqa *:?(?P<codes>[A-Za-z0-9, ]+)?",
     re.IGNORECASE,
 )
 
 BLANK_LINE_RE = re.compile(r"\s*\n")
 IMPORT_RE = re.compile(r"\bimport\b")
+COMMA_SEPARATED_LIST_RE = re.compile(r"[,\s]")
 # string = "lot sof wel;kjhtrjklwehc  import dskjsdfk import akjsdjk"
 # match = IMPORT_RE.search(string)
 
 
-def parse_comma_separated_list(value: str) -> set[str]:
+def parse_comma_separated_list(value: list | str) -> set[str]:
     """Parse a comma-separated list of values."""
-    items = re.split(r"\s*,\s*", value)
-    return {item for item in items if item}
+    # items = re.split(r"\s*,\s*", value)
+    # return {item.strip() for item in items if item}
+    if isinstance(value, list):
+        return {item.strip() for item in value if item}
+    value = COMMA_SEPARATED_LIST_RE.split(value)
+    item_gen = (item.strip() for item in value)
+    return {item for item in item_gen if item}
 
 
 def parse_module_string(

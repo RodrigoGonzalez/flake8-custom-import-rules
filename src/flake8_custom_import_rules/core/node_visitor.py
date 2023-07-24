@@ -239,7 +239,7 @@ class CustomImportRulesVisitor(ast.NodeVisitor):
         """Check if a local import is resolved."""
         for stmt in node.body:
             if isinstance(stmt, (ast.Import, ast.ImportFrom)):
-                assert isinstance(stmt, ast.AST)  # for mypy
+                assert isinstance(stmt, ast.AST)  # for linters
                 self.nodes.append(
                     ParsedLocalImport(
                         lineno=stmt.lineno,

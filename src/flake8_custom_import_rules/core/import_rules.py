@@ -88,8 +88,6 @@ class CustomImportRules:
     def check_import_rules(self) -> Generator[ErrorMessage, None, None]:
         """Check imports"""
         for node in self.nodes:
-            if self.check_top_level_only and node.level != 0:
-                break
             yield from self._check_import_rules(node)
 
     def _check_import_rules(self, node: ParsedNode) -> Generator[ErrorMessage, None, None]:
@@ -294,11 +292,6 @@ class CustomImportRules:
         """Report errors."""
         return lineno, col_offset, f"{code} {message}", type(self)
         # self.error(*error)
-
-    # def _is_standard_library_import(self, module_name: str) -> bool:
-    #     """Check module is standard library module using specific Python version."""
-    #     standard_lib_modules = stdlib_list(self.use_python_version)
-    #     return module_name in standard_lib_modules
 
     def _check_for_cir101(self, node: ParsedNode) -> Generator[ErrorMessage, None, None]:
         """Check for CIR101."""
