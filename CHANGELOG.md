@@ -1,3 +1,9 @@
+## v0.7.1 (2023-07-25)
+
+### Refactor
+
+- cleaned up functions and improved method names
+
 ## v0.7.0 (2023-07-25)
 
 ### Feat
