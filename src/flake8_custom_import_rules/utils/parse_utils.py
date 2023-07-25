@@ -268,3 +268,49 @@ def normalize_path(path: str, parent: str = os.curdir) -> str:
     if path == "." or separator in path or (alternate_separator and alternate_separator in path):
         path = os.path.abspath(os.path.join(parent, path))
     return path.rstrip(separator + alternate_separator)
+
+
+def get_file_path_from_module_name(module_name: str) -> str | None:
+    """
+    Get the file path for a given module name. If the module is a package,
+    return the path to its __init__.py file.
+
+    Parameters
+    ----------
+    module_name : str
+        The module name to get the file path for.
+
+    Returns
+    -------
+    str | None
+    """
+    # Construct possible full file paths
+    possible_paths = [
+        os.path.join(path, file_path)
+        for path in sys.path
+        for file_path in convert_module_to_file_paths(module_name)
+    ]
+
+    if existing_paths := list(filter(os.path.isfile, possible_paths)):
+        return max(existing_paths, key=len) if existing_paths else None
+
+    else:
+        # raise FileNotFoundError(module_name)
+        return None
+
+
+def convert_module_to_file_paths(module_name: str) -> list[str]:
+    """
+    Convert module name to a relative file path by replacing . with /
+    and adding .py and /__init__.py extensions.
+
+    Parameters
+    ----------
+    module_name : str
+        The module name to convert.
+
+    Returns
+    -------
+    str
+    """
+    return [module_name.replace(".", "/") + ext for ext in [".py", "/__init__.py"]]

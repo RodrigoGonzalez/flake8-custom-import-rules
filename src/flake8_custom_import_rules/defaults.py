@@ -53,7 +53,7 @@ CUSTOM_IMPORT_RULES = [
     # "BASE_PACKAGES",
     "IMPORT_RESTRICTIONS",
     "RESTRICTED_PACKAGES",
-    "ISOLATED_PACKAGES",
+    "ISOLATED_MODULES",
     "STD_LIB_ONLY",
     "THIRD_PARTY_ONLY",
     "FIRST_PARTY_ONLY",
@@ -76,7 +76,7 @@ class Settings:
     BASE_PACKAGES: str | list[str] | None = None
     IMPORT_RESTRICTIONS: str | list[str] | None = None
     RESTRICTED_PACKAGES: str | list[str] | None = None
-    ISOLATED_PACKAGES: str | list[str] | None = None
+    ISOLATED_MODULES: str | list[str] | None = None
     STD_LIB_ONLY: str | list[str] | None = None
     THIRD_PARTY_ONLY: str | list[str] | None = None
     FIRST_PARTY_ONLY: str | list[str] | None = None
@@ -109,7 +109,7 @@ class Settings:
         self.BASE_PACKAGES = convert_to_list(self.BASE_PACKAGES)
         self.IMPORT_RESTRICTIONS = convert_to_list(self.IMPORT_RESTRICTIONS)
         self.RESTRICTED_PACKAGES = convert_to_list(self.RESTRICTED_PACKAGES)
-        self.ISOLATED_PACKAGES = convert_to_list(self.ISOLATED_PACKAGES)
+        self.ISOLATED_MODULES = convert_to_list(self.ISOLATED_MODULES)
         self.STD_LIB_ONLY = convert_to_list(self.STD_LIB_ONLY)
         self.THIRD_PARTY_ONLY = convert_to_list(self.THIRD_PARTY_ONLY)
         self.FIRST_PARTY_ONLY = convert_to_list(self.FIRST_PARTY_ONLY)

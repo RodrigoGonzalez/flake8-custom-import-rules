@@ -120,7 +120,7 @@ import_restrictions = [
     "my_base_package.module_X.py:my_base_package.module_Y.py",  # Restrict `module_X.py` from importing `module_Y.py`
 ]
 # Make `package_C` an isolated package
-isolated_packages = ["my_base_package.package_C"]
+isolated_modules = ["my_base_package.package_C"]
 # Allow `package_D` to import only from the standard library
 std_lib_only = ["my_base_package.package_D"]
 # Allow `package_E` to import only from third-party libraries
@@ -139,7 +139,7 @@ import-restrictions =
     my_base_package.package_A:my_base_package.package_B
     my_base_package.module_X.py:my_base_package.module_Y.py
 restricted-packages = my_base_package.package_B
-isolated-imports = my_base_package.package_C
+isolated-modules = my_base_package.package_C
 std-lib-only = my_base_package.package_D
 third-party-only = my_base_package.package_E
 first-party-only = my_base_package.package_F

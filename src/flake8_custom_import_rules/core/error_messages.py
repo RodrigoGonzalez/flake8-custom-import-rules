@@ -35,6 +35,18 @@ def standard_error_message(
     )
 
 
+def isolated_imports_error(
+    node: ParsedNode,
+    error_code: ErrorCode,
+    file_identifier: str,
+) -> ErrorMessage:
+    """Generate error message for isolated imports."""
+    custom_explanation = (
+        f"Using '{node.import_node}' in module '{file_identifier}' " f"cannot import from project."
+    )
+    return standard_error_message(node, error_code, custom_explanation)
+
+
 def std_lib_only_error(
     node: ParsedNode,
     error_code: ErrorCode,
