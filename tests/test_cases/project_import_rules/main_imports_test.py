@@ -71,12 +71,27 @@ MAIN_IMPORT_CODE = dedent(
             True,
         ),
         (
+            "import __main__  # noqa: PIR209,PIR210",
+            set(),
+            True,
+        ),
+        (
             "import __main__  # NOQA: PIR209",
             set(),
             True,
         ),
         (
+            "import __main__  # NOQA:PIR209",
+            set(),
+            True,
+        ),
+        (
             "import __main__  # NOQA: PIR209, PIR210",
+            set(),
+            True,
+        ),
+        (
+            "import __main__  # NOQA: PIR209,PIR210",
             set(),
             True,
         ),

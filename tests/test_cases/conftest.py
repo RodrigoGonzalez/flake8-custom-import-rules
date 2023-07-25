@@ -16,12 +16,13 @@ def get_flake8_linter_results() -> partial:
         s: str,
         options: dict[str, list[str] | str] | None = None,
         delimiter: str = "; ",
+        filename: str | None = None,
     ) -> set[str]:
         """Return a set of results."""
         if options is None:
             options = {}
 
-        linter = Linter(ast.parse(s), lines=s.split(delimiter))
+        linter = Linter(ast.parse(s), lines=s.split(delimiter), filename=filename)
         linter.update_checker_settings(options)
         return {"{}:{}: {}".format(*r) for r in linter.run()}
 

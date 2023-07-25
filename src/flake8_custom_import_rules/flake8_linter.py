@@ -40,6 +40,7 @@ class Linter(CustomImportRulesChecker):
         # print(f"\n\nTree: {tree}\n\n")
         # from flake8_custom_import_rules.defaults import normalize_path
         # print(f"\n\nFile Name: {normalize_path(filename)}\n\n")
+        print(f"\n\nFile Name: {filename}\n\n")
         # print(f"\n\nLines: {lines}\n\n")
         super().__init__(tree=tree, filename=filename, lines=lines)
         logger.info(f"filename: {filename}")
@@ -101,9 +102,9 @@ class Linter(CustomImportRulesChecker):
         logger.debug(f"Option Manager: {option_manager}")
         logger.debug(f"Options: {parse_options}")
         logger.debug(f"Args: {args}")
-        # print("\nOptions:")
-        # print(parse_options)
-        # print(f"\nArgs: {args}")
+        print("\nOptions:")
+        print(parse_options)
+        print(f"\nArgs: {args}")
 
         # Parse options for CustomImportRulesChecker
         base_packages: str | list = parse_options.base_packages

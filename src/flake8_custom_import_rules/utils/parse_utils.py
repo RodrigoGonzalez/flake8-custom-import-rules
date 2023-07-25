@@ -1,4 +1,5 @@
 """ Parse utils. """
+import os
 import re
 
 NOQA_INLINE_REGEXP = re.compile(
@@ -6,7 +7,7 @@ NOQA_INLINE_REGEXP = re.compile(
     # ``# noqa``
     # ``# noqa: E123``
     # ``# noqa: E123,W451,F921``
-    # ``# NoQA: E1 23,W451,F921``
+    # ``# NoQA: E123,W451,F921``
     # ``# NOQA: E123,W451,F921``
     # We do not care about the ``: `` that follows ``noqa``
     # We do not care about the casing of ``noqa``
@@ -17,10 +18,7 @@ NOQA_INLINE_REGEXP = re.compile(
 )
 
 BLANK_LINE_RE = re.compile(r"\s*\n")
-IMPORT_RE = re.compile(r"\bimport\b")
 COMMA_SEPARATED_LIST_RE = re.compile(r"[,\s]")
-# string = "lot sof wel;kjhtrjklwehc  import dskjsdfk import akjsdjk"
-# match = IMPORT_RE.search(string)
 
 
 def parse_comma_separated_list(value: list | str) -> set[str]:
@@ -64,7 +62,7 @@ def parse_module_string(
     list
         A list of substrings from the value that match the provided criteria.
     """
-    substrings = value.split(delimiter)
+    substrings = [item.strip() for item in value.split(delimiter) if item]
     if isinstance(substring_match, str):
         substring_match = [substring_match]
 
@@ -80,7 +78,7 @@ def parse_module_string(
                 and substring.startswith(prefix)
                 and not (
                     checking_private_identifiers
-                    and substring.startswith("__")
+                    and substring.startswith("__")  # exclude dunder methods
                     and substring.endswith("__")
                 )
             )
@@ -135,3 +133,19 @@ def check_string(
 def parse_custom_rule(rules: list[str]) -> dict[str, list[str]]:
     """Parse custom rules."""
     return {src.strip(): dest.split(",") for rule in rules for src, dest in (rule.split(":"),)}
+
+
+def get_module_name(base_module: str, file_path: str) -> str | None:
+    """Get the module name for a given file path based on a base module."""
+
+    # Check if the base module is in the file path
+    if base_module not in file_path:
+        raise ValueError(f"The base module {base_module} is not in the file path {file_path}")
+
+    # Get the part of the file path that is relative to the base module
+    relative_path = file_path.partition(base_module)[2].strip("/")
+
+    # Remove the .py extension and replace / with . to get the module name
+    module_name = os.path.splitext(relative_path)[0].replace("/", ".")
+
+    return module_name

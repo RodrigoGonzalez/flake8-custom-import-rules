@@ -60,7 +60,7 @@ class CustomImportRules:
     codes_to_check: list[ErrorCode] = ErrorCode.get_all_error_codes()
 
     filename: str = field(default=None)
-    restricted_imports: dict = field(factory=dict)
+    import_restrictions: dict = field(factory=dict)
     isolated_modules: list[str] = field(factory=list)
     foundation_modules: list[str] = field(factory=list)
     standard_library_only: list[str] = field(factory=list)
@@ -73,8 +73,8 @@ class CustomImportRules:
         )
         options = self.options
 
-        self.restricted_imports = parse_custom_rule(
-            options.get("restricted_imports", []),
+        self.import_restrictions = parse_custom_rule(
+            options.get("import_restrictions", []),
         )
         self.isolated_modules = options.get(
             "isolated_modules",
@@ -228,8 +228,8 @@ class CustomImportRules:
     ) -> Generator[tuple[int, int, str, type], Any, Any] | None:
         """Check restricted imports"""
         if (
-            current_module in self.restricted_imports
-            and module_name in self.restricted_imports[current_module]
+            current_module in self.import_restrictions
+            and module_name in self.import_restrictions[current_module]
         ):
             yield self.error(
                 f"CIM{101 + code_offset}",
@@ -501,13 +501,13 @@ class CustomImportRules:
 
     def _check_for_pir205(self, node: ParsedImport) -> Generator[ErrorMessage, None, None]:
         """Check for PIR205 import tests directory is restricted."""
-        condition = node.package == "tests"
+        condition = check_string(node.identifier, substring_match="tests")
         if ErrorCode.PIR205.code in self.codes_to_check and condition:
             yield generate_from_node(node, ErrorCode.PIR205)
 
     def _check_for_pir206(self, node: ParsedFromImport) -> Generator[ErrorMessage, None, None]:
         """Check for PIR206, import from tests directory is restricted."""
-        condition = node.package == "tests"
+        condition = check_string(node.identifier, substring_match="tests")
         if ErrorCode.PIR206.code in self.codes_to_check and condition:
             yield generate_from_node(node, ErrorCode.PIR206)
 

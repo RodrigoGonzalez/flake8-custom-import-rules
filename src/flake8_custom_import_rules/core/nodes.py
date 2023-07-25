@@ -40,11 +40,6 @@ class ParsedImport:
 
 
 @define(slots=True)
-class DynamicStringImport(ParsedImport):
-    """Dynamic string import."""
-
-
-@define(slots=True)
 class ParsedFromImport:
     """Parsed import statement"""
 
@@ -67,11 +62,6 @@ class ParsedFromImport:
     def __attrs_post_init__(self) -> None:
         """Post init hook."""
         self.identifier = f"{self.module}.{self.name}"
-
-
-@define(slots=True)
-class DynamicStringFromImport(ParsedFromImport):
-    """Dynamic string import."""
 
 
 @define(slots=True)
@@ -134,6 +124,16 @@ class ParsedIfImport:
     lineno: int
     col_offset: int
     sub_node: str
+
+
+@define(slots=True)
+class DynamicStringFromImport(ParsedFromImport):
+    """Dynamic string import."""
+
+
+@define(slots=True)
+class DynamicStringImport(ParsedImport):
+    """Dynamic string import."""
 
 
 @define(slots=True)
