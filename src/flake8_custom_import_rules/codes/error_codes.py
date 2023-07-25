@@ -70,7 +70,7 @@ class ErrorCode(Enum, metaclass=ErrorCodeMeta):
 
     # Third party only imports:
     CIR501 = "CIR501 Non-third party package import."
-    CIR502 = "CIR502 Non-third party package `from import`."
+    CIR502 = "CIR502 Non-third party module import."
 
     # Project Level Import Rules and Restrictions
     PIR101 = "PIR101 Only top level imports are permitted in the project."
