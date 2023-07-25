@@ -39,38 +39,38 @@ class ErrorCode(Enum, metaclass=ErrorCodeMeta):
     """Error codes for custom import rules."""
 
     # Custom Import Rules: Restricting imports
-    CIR101 = "CIR101 Custom import rule conflicts"
-    CIR102 = "CIR102 Restrict package import for specific package or module"
-    CIR103 = "CIR103 Restrict package `from import` for specific package or module"
-    CIR104 = "CIR104 Restrict module import for specific package or module"
-    CIR105 = "CIR105 Restrict module `from import` for specific package or module"
+    CIR101 = "CIR101 Custom import rule conflicts."
+    CIR102 = "CIR102 Restrict package import for specific package or module."
+    CIR103 = "CIR103 Restrict package `from import` for specific package or module."
+    CIR104 = "CIR104 Restrict module import for specific package or module."
+    CIR105 = "CIR105 Restrict module `from import` for specific package or module."
     # Restricted package: For example the high level package can `app` is restricted
-    CIR106 = "CIR106 Restricted package import, no one can import from this package"
-    CIR107 = "CIR107 Restricted package `from import`, no one can import from this package"
+    CIR106 = "CIR106 Restricted package import, no one can import from this package."
+    CIR107 = "CIR107 Restricted package `from import`, no one can import from this package."
 
     # Project only imports. No packages and modules from outside your project
     # (i.e. No Third Party Imports)
     CIR201 = "CIR201 Non-project package import."
-    CIR202 = "CIR202 Non-project module `from ... import`"
-    CIR203 = "CIR203 Non-project module import"
-    CIR204 = "CIR204 Non-project module `from import`"
+    CIR202 = "CIR202 Non-project module `from ... import`."
+    CIR203 = "CIR203 Non-project module import."
+    CIR204 = "CIR204 Non-project module `from import`."
 
     # Isolated package: Package/module that can not import from any other package in your project.
     # Standalone package.
-    CIR301 = "CIR301 Isolated package import from any other package in your project"
-    CIR302 = "CIR302 Isolated package `from import` from any other package in your project"
-    CIR303 = "CIR303 Isolated module import from any other package in your project"
-    CIR304 = "CIR304 Isolated module `from import` from any other package in your project"
+    CIR301 = "CIR301 Isolated package import from any other package in your project."
+    CIR302 = "CIR302 Isolated package `from import` from any other package in your project."
+    CIR303 = "CIR303 Isolated module import from any other package in your project."
+    CIR304 = "CIR304 Isolated module `from import` from any other package in your project."
 
     # Standard library only import in specified packages or modules
-    CIR401 = "CIR401 Non-standard library package import"
-    CIR402 = "CIR402 Non-standard library package `from import`"
-    CIR403 = "CIR403 Non-standard library module import"
-    CIR404 = "CIR404 Non-standard library module `from import`"
+    CIR401 = "CIR401 Non-standard library package import."
+    CIR402 = "CIR402 Non-standard library package `from import`."
+    CIR403 = "CIR403 Non-standard library module import."
+    CIR404 = "CIR404 Non-standard library module `from import`."
 
     # Third party only imports:
-    CIR501 = "CIR501 Non-third party package import"
-    CIR502 = "CIR502 Non-third party package `from import`"
+    CIR501 = "CIR501 Non-third party package import."
+    CIR502 = "CIR502 Non-third party package `from import`."
 
     # Project Level Import Rules and Restrictions
     PIR101 = "PIR101 Only top level imports are permitted in the project."

@@ -90,7 +90,7 @@ library modules.
 [flake8]
 # Define the base packages for your project
 base_packages = ["my_base_package", "my_other_base_package"]
-restricted_imports = [
+import_restrictions = [
     "my_base_package.package_A:my_base_package.package_B",  # Restrict `package_A` from importing `package_B`
     "my_base_package.module_X.py:my_base_package.module_Y.py",  # Restrict `module_X.py` from importing `module_Y.py`
 ]
@@ -110,7 +110,7 @@ project_only = ["my_base_package.package_G"]
 ```ini
 [flake8]
 base-packages = my_base_package,my_other_base_package
-restricted-imports =
+import-restrictions =
     my_base_package.package_A:my_base_package.package_B
     my_base_package.module_X.py:my_base_package.module_Y.py
 restricted-packages = my_base_package.package_B

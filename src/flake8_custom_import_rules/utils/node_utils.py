@@ -30,11 +30,7 @@ def get_package_names(module_name: str) -> list[str] | None:
         return []
 
     package_names = [parts.pop()]
-
-    for part in reversed(parts):
-        last_package_name = f"{package_names[-1]}.{part}"
-        package_names.append(last_package_name)
-
+    package_names.extend(f"{package_names[-1]}.{part}" for part in reversed(parts))
     return package_names
 
 
@@ -94,7 +90,7 @@ def check_private_module_import(module: str) -> bool:
 
 def get_module_info_from_import_node(node: ast.Import) -> dict:
     """
-    Get the names of the import from the node.
+    Get import node information.
 
     Parameters
     ----------
@@ -133,7 +129,19 @@ def get_module_info_from_import_node(node: ast.Import) -> dict:
 
 
 def get_name_info_from_import_node(node: ast.ImportFrom) -> dict:
-    """Get the names of the import."""
+    """
+    Get from import node information.
+
+    Parameters
+    ----------
+    node : ast.ImportFrom
+        The node to get the names from.
+
+    Returns
+    -------
+    dict
+        The names of the import.
+    """
     name_info: defaultdict[str, dict] = defaultdict(lambda: defaultdict(str))
 
     module = node.module or ""

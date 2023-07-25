@@ -10,6 +10,8 @@ from flake8_custom_import_rules.defaults import Settings
 
 LOCAL_IMPORT_CODE = dedent(
     """
+    import os
+
     def func():
         import os
 
@@ -28,9 +30,9 @@ LOCAL_IMPORT_CODE = dedent(
         (
             LOCAL_IMPORT_CODE,
             {
-                "3:4: PIR103 Local imports are disabled for this project.",
-                "6:4: PIR103 Local imports are disabled for this project.",
-                "9:4: PIR103 Local imports are disabled for this project.",
+                "5:4: PIR103 Local imports are disabled for this project.",
+                "8:4: PIR103 Local imports are disabled for this project.",
+                "11:4: PIR103 Local imports are disabled for this project.",
             },
             True,
         ),

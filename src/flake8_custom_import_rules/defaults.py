@@ -28,7 +28,7 @@ STANDARD_PROJECT_LEVEL_RESTRICTION_KEYS = [
 
 CUSTOM_IMPORT_RULES = [
     # "BASE_PACKAGES",
-    "RESTRICTED_IMPORTS",
+    "IMPORT_RESTRICTIONS",
     "RESTRICTED_PACKAGES",
     "ISOLATED_PACKAGES",
     "STD_LIB_ONLY",
@@ -70,7 +70,7 @@ class Settings:
     """The default settings for the flake8_custom_import_rules plugin."""
 
     BASE_PACKAGES: str | list[str] | None = None
-    RESTRICTED_IMPORTS: str | list[str] | None = None
+    IMPORT_RESTRICTIONS: str | list[str] | None = None
     RESTRICTED_PACKAGES: str | list[str] | None = None
     ISOLATED_PACKAGES: str | list[str] | None = None
     STD_LIB_ONLY: str | list[str] | None = None
@@ -100,7 +100,7 @@ class Settings:
         """Post init."""
         self._dict = asdict(self)
         self.BASE_PACKAGES = convert_to_list(self.BASE_PACKAGES)
-        self.RESTRICTED_IMPORTS = convert_to_list(self.RESTRICTED_IMPORTS)
+        self.IMPORT_RESTRICTIONS = convert_to_list(self.IMPORT_RESTRICTIONS)
         self.RESTRICTED_PACKAGES = convert_to_list(self.RESTRICTED_PACKAGES)
         self.ISOLATED_PACKAGES = convert_to_list(self.ISOLATED_PACKAGES)
         self.STD_LIB_ONLY = convert_to_list(self.STD_LIB_ONLY)
@@ -204,9 +204,9 @@ def register_options(
         setting_key = f"{item.replace('_', '-').lower()}"
         help_string = f"{setting_key}. (default: {option_default_value})"
 
-    if not isinstance(option_default_value, (str, bool)):
+    if not isinstance(option_default_value, bool if is_restriction else str):
         raise TypeError(
-            f"Default value for {setting_key} must be a {str if is_restriction else bool} "
+            f"Default value for {setting_key} must be a {bool if is_restriction else str} "
             f"if registering as a {'restriction' if is_restriction else 'rule'}."
         )
 
