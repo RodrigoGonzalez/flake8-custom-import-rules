@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "flake8_custom_import_rules"
-version = "0.7.0"
+version = "0.7.1"
 description = "A Flake8 plugin that enforces custom import rules, allowing users to define and maintain clean and consistent import organization across their Python projects."
 authors = ["Rodrigo Gonzalez <r@rodrigo-gonzalez.com>"]
 license = "MIT"
@@ -35,7 +35,7 @@ mypy = "^1.2.0"
 
 [tool.commitizen]
 name = "cz_conventional_commits"
-version = "0.7.0"
+version = "0.7.1"
 tag_format = "v$version"
 version_type = "semver"
 update_changelog_on_bump = true
@@ -125,7 +125,7 @@ omit = ["flake8_custom_import_rules/example_repos/*"]
 #flake8_custom_import.std_lib_only = ["my_base_package.module_D"]
 
 [tool.poetry.scripts]
-YTT = "flake8_custom_import_rules:Plugin"
+CIR = "flake8_custom_import_rules.flake8_linter:Linter"
 
 [build-system]
 #requires = ["poetry-core"]

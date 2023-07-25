@@ -121,7 +121,7 @@ def get_module_info_from_import_node(node: ast.Import) -> dict:
                 "package_names": package_names,
                 "private_identifier_import": False,
                 "private_module_import": check_private_module_import(module),
-                "import_node": ast.unparse(node),
+                "import_statement": ast.unparse(node),
             }
         )
 
@@ -164,7 +164,7 @@ def get_name_info_from_import_node(node: ast.ImportFrom) -> dict:
                 "level": node.level,
                 "private_identifier_import": check_private_module_import(alias.name),
                 "private_module_import": check_private_module_import(module),
-                "import_node": ast.unparse(node),
+                "import_statement": ast.unparse(node),
             }
         )
 
