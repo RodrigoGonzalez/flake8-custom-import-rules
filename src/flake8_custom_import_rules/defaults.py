@@ -58,6 +58,7 @@ CUSTOM_IMPORT_RULES = [
     "THIRD_PARTY_ONLY",
     "FIRST_PARTY_ONLY",
     "PROJECT_ONLY",
+    "BASE_PACKAGE_ONLY",
 ]
 
 
@@ -80,6 +81,7 @@ class Settings:
     THIRD_PARTY_ONLY: str | list[str] | None = None
     FIRST_PARTY_ONLY: str | list[str] | None = None
     PROJECT_ONLY: str | list[str] | None = None
+    BASE_PACKAGE_ONLY: str | list[str] | None = None
 
     # Set Defaults for Project Import Restrictions
     TOP_LEVEL_ONLY_IMPORTS: bool = True
@@ -112,6 +114,7 @@ class Settings:
         self.THIRD_PARTY_ONLY = convert_to_list(self.THIRD_PARTY_ONLY)
         self.FIRST_PARTY_ONLY = convert_to_list(self.FIRST_PARTY_ONLY)
         self.PROJECT_ONLY = convert_to_list(self.PROJECT_ONLY)
+        self.BASE_PACKAGE_ONLY = convert_to_list(self.BASE_PACKAGE_ONLY)
 
     @property
     def dict(self) -> dict:

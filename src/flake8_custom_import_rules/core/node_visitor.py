@@ -26,6 +26,7 @@ from flake8_custom_import_rules.defaults import STDIN_IDENTIFIERS
 from flake8_custom_import_rules.utils.node_utils import generate_identifier_path
 from flake8_custom_import_rules.utils.node_utils import get_module_info_from_import_node
 from flake8_custom_import_rules.utils.node_utils import get_name_info_from_import_node
+from flake8_custom_import_rules.utils.node_utils import root_package_name
 from flake8_custom_import_rules.utils.parse_utils import check_string
 from flake8_custom_import_rules.utils.parse_utils import get_module_name_from_filename
 
@@ -78,6 +79,7 @@ class CustomImportRulesVisitor(ast.NodeVisitor):
     python_version: str = field(init=False)
     stdlib_names: set | frozenset = field(init=False)
     file_identifier: str | None = field(init=False)
+    file_root_package_name: str | None = field(init=False)
 
     def __attrs_post_init__(self) -> None:
         """Initialize the attributes after object creation.
@@ -95,6 +97,9 @@ class CustomImportRulesVisitor(ast.NodeVisitor):
         logger.info(f"Visitor filename: {self.filename}")
         self.file_identifier = (
             get_module_name_from_filename(self.filename) if self.resolve_local_imports else None
+        )
+        self.file_root_package_name = (
+            root_package_name(self.file_identifier) if self.resolve_local_imports else None
         )
 
         self.python_version = f"{sys.version_info.major}.{sys.version_info.minor}"
