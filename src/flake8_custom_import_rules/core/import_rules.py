@@ -1,7 +1,10 @@
 """ Custom Import Rules for Flake8 & Python Projects. """
+from __future__ import annotations
+
 import logging
 from collections import defaultdict
 from typing import Any
+from typing import Callable
 from typing import Generator
 
 from attrs import define
@@ -27,9 +30,47 @@ from flake8_custom_import_rules.defaults import STDIN_IDENTIFIERS
 from flake8_custom_import_rules.defaults import Settings
 from flake8_custom_import_rules.utils.parse_utils import check_string
 from flake8_custom_import_rules.utils.parse_utils import does_file_match_custom_rule
-from flake8_custom_import_rules.utils.parse_utils import parse_custom_rule
 
 logger = logging.getLogger(f"flake8_custom_import_rules.{__name__}")
+
+
+def filename_not_in_stdin_identifiers(
+    filename: str,
+) -> bool:
+    """Check if filename is not in STDIN_IDENTIFIERS."""
+    return filename not in STDIN_IDENTIFIERS
+
+
+def get_rule(option_key: str) -> Callable[[CustomImportRules], bool]:
+    """Get rule."""
+    option_key = option_key.upper()  # ensure option_key is upper case
+
+    def match_custom_rule(instance: CustomImportRules) -> bool:
+        """Match custom rule."""
+        custom_rule = getattr(instance.checker_settings, option_key, None)
+        if custom_rule is None:
+            logger.error(f"Option key '{option_key}' not found in checker settings")
+            return False
+
+        return does_file_match_custom_rule(instance.file_identifier, custom_rule)
+
+    return match_custom_rule
+
+
+def get_isolated_package_rule(option_key: str) -> Callable[[CustomImportRules], bool]:
+    """Get isolated package rule."""
+    option_key = option_key.upper()  # ensure option_key is upper case
+
+    def isolated_package(instance: CustomImportRules) -> bool:
+        """Match custom rule."""
+        custom_rule = getattr(instance.checker_settings, option_key, None)
+        if custom_rule is None:
+            logger.error(f"Option key '{option_key}' not found in checker settings")
+            return False
+
+        return instance.isolated_module and instance.file_identifier not in custom_rule
+
+    return isolated_package
 
 
 @define(slots=True)
@@ -38,7 +79,6 @@ class CustomImportRules:
 
     nodes: list[ParsedNode] = field(factory=list)
     dynamic_nodes: defaultdict[str, list] = defaultdict(list)
-    options: dict = field(factory=dict)
     identifiers: defaultdict[str, dict] = defaultdict(lambda: defaultdict(str))
     identifiers_by_lineno: defaultdict[str, list] = defaultdict(list)
     checker_settings: Settings = field(factory=Settings)
@@ -48,7 +88,8 @@ class CustomImportRules:
     filename: str = field(default=None)
     file_identifier: str = field(default=None)
     file_root_package_name: str = field(default=None)
-    check_custom_import_rules: bool = field(default=False)
+    check_custom_import_rules: bool = field(default=filename_not_in_stdin_identifiers(filename))
+
     project_only: bool = field(default=False)
     base_package_only: bool = field(default=False)
     first_party_only: bool = field(default=False)
@@ -64,61 +105,16 @@ class CustomImportRules:
 
     def __attrs_post_init__(self) -> None:
         """Post init."""
-        self.nodes = sorted(
-            self.nodes,
-            key=lambda element: element.lineno,
-        )
-        self.check_custom_import_rules = self.filename not in STDIN_IDENTIFIERS
         logging.debug(f"file_identifier: {self.file_identifier}")
+        self.nodes = sorted(self.nodes, key=lambda element: element.lineno)
 
-        options = self.options
-
-        self.import_restrictions = parse_custom_rule(
-            options.get("import_restrictions", []),
-        )
-
-        self.project_only = does_file_match_custom_rule(
-            self.file_identifier,
-            self.checker_settings.PROJECT_ONLY,
-        )
-        # logging.debug(f"PROJECT_ONLY: {self.project_only}")
-
-        self.base_package_only = does_file_match_custom_rule(
-            self.file_identifier,
-            self.checker_settings.BASE_PACKAGE_ONLY,
-        )
-        # logging.debug(f"BASE_PACKAGE_ONLY: {self.base_package_only}")
-
-        self.first_party_only = does_file_match_custom_rule(
-            self.file_identifier,
-            self.checker_settings.FIRST_PARTY_ONLY,
-        )
-        # logging.debug(f"FIRST_PARTY_ONLY: {self.first_party_only}")
-
-        self.isolated_module = does_file_match_custom_rule(
-            self.file_identifier,
-            self.checker_settings.ISOLATED_MODULES,
-        )
-        logging.debug(f"ISOLATED_MODULES: {self.isolated_module}")
-        if self.isolated_module:
-            # if self.file_identifier not in self.checker_settings.ISOLATED_MODULES
-            # then the package is isolated
-            self.isolated_package = (
-                self.file_identifier not in self.checker_settings.ISOLATED_MODULES
-            )
-            logging.debug(f"ISOLATED PACKAGE: {self.isolated_package}")
-
-        self.std_lib_only = does_file_match_custom_rule(
-            self.file_identifier,
-            self.checker_settings.STD_LIB_ONLY,
-        )
-        # logging.debug(f"STD LIB ONLY: {self.std_lib_only}")
-
-        self.third_party_only = does_file_match_custom_rule(
-            self.file_identifier,
-            self.checker_settings.THIRD_PARTY_ONLY,
-        )
-        # logging.debug(f"THIRD PARTY ONLY: {self.third_party_only}")
+        self.project_only = get_rule("PROJECT_ONLY")(self)
+        self.base_package_only = get_rule("BASE_PACKAGE_ONLY")(self)
+        self.first_party_only = get_rule("FIRST_PARTY_ONLY")(self)
+        self.isolated_module = get_rule("ISOLATED_MODULES")(self)
+        self.isolated_package = get_isolated_package_rule("ISOLATED_MODULES")(self)
+        self.std_lib_only = get_rule("STD_LIB_ONLY")(self)
+        self.third_party_only = get_rule("THIRD_PARTY_ONLY")(self)
 
     def check_import_rules(self) -> Generator[ErrorMessage, None, None]:
         """Check imports"""
@@ -151,7 +147,7 @@ class CustomImportRules:
         #     if self.check_top_level_only and node.level != 0:
         #         break
 
-        # Custom Import Rules can only be checked for when
+        # Custom Import Rules can only be checked when
         # filename is provided
         if self.check_custom_import_rules:
             yield from self._check_custom_import_rules(node)

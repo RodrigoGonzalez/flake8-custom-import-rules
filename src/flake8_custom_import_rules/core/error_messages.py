@@ -1,3 +1,4 @@
+""" Error messages for custom import rules. """
 from attr import define
 
 from flake8_custom_import_rules.codes.error_codes import ErrorCode

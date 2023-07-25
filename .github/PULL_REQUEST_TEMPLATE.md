@@ -1,7 +1,7 @@
 ## RATIONALE
 
-A short description about the changes in this pull request.
-If the pull request is related to some issue, mention it here.
+A short description of the changes in this pull request. If the pull request is
+related to an open issue, mention it here.
 
 ## CHANGES
 
