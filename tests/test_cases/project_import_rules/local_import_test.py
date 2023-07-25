@@ -1,6 +1,9 @@
 """ Test local import restrictions.
 
 PIR103 = "PIR103 Local imports are disabled for this project."
+
+To run this test file only:
+poetry run python -m pytest -vvvrca tests/test_cases/project_import_rules/local_import_test.py
 """
 from textwrap import dedent
 

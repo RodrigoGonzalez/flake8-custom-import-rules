@@ -1,4 +1,8 @@
-""" Tests for parse_utils.py """
+""" Tests for parse_utils.py
+
+To run this test file only:
+poetry run python -m pytest -vvvrca tests/test_cases/parse_utils_test.py
+"""
 import pytest
 
 from flake8_custom_import_rules.utils.parse_utils import parse_module_string

@@ -1,6 +1,9 @@
 """ Test conditional import restrictions.
 
 PIR104 = "PIR104 Conditional imports are disabled for this project."
+
+To run this test file only:
+poetry run python -m pytest -vvvrca tests/test_cases/project_import_rules/conditional_import_test.py
 """
 from textwrap import dedent
 

@@ -1,6 +1,9 @@
 """ Test wildcard/star imports restriction.
 
 PIR107 = "PIR107 Wildcard imports are disabled for this project."
+
+To run this test file only:
+poetry run python -m pytest -vvvrca tests/test_cases/project_import_rules/wildcard_imports_test.py
 """
 import pytest
 
