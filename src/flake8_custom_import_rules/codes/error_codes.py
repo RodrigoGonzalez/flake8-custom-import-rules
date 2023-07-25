@@ -45,28 +45,22 @@ class ErrorCode(Enum, metaclass=ErrorCodeMeta):
     CIR104 = "CIR104 Restrict module import for specific package or module."
     CIR105 = "CIR105 Restrict module `from import` for specific package or module."
     # Restricted package: For example the high level package can `app` is restricted
-    CIR106 = "CIR106 Restricted package import, no one can import from this package."
-    CIR107 = "CIR107 Restricted package `from import`, no one can import from this package."
+    CIR106 = "CIR106 Restricted package import."
+    CIR107 = "CIR107 Restricted module import."
 
     # Project only imports. No packages and modules from outside your project
     # (i.e. No Third Party Imports)
     CIR201 = "CIR201 Non-project package import."
-    CIR202 = "CIR202 Non-project module `from ... import`."
-    CIR203 = "CIR203 Non-project module import."
-    CIR204 = "CIR204 Non-project module `from import`."
+    CIR202 = "CIR202 Non-project module import."
 
     # Isolated package: Package/module that can not import from any other package in your project.
     # Standalone package.
-    CIR301 = "CIR301 Isolated package import from any other package in your project."
-    CIR302 = "CIR302 Isolated package `from import` from any other package in your project."
-    CIR303 = "CIR303 Isolated module import from any other package in your project."
-    CIR304 = "CIR304 Isolated module `from import` from any other package in your project."
+    CIR301 = "CIR301 Isolated package import."
+    CIR302 = "CIR302 Isolated module import."
 
     # Standard library only import in specified packages or modules
     CIR401 = "CIR401 Non-standard library package import."
     CIR402 = "CIR402 Non-standard library module import."
-    CIR403 = "CIR403 Non-standard library package `from import`."
-    CIR404 = "CIR404 Non-standard library module `from import`."
 
     # Third party only imports:
     CIR501 = "CIR501 Non-third party package import."
