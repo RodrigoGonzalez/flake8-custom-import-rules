@@ -12,14 +12,14 @@ from flake8_custom_import_rules.core.error_messages import ErrorMessage
 from flake8_custom_import_rules.core.error_messages import standard_error_message
 from flake8_custom_import_rules.core.error_messages import std_lib_only_error
 from flake8_custom_import_rules.core.nodes import DynamicStringFromImport
-from flake8_custom_import_rules.core.nodes import DynamicStringImport
+from flake8_custom_import_rules.core.nodes import DynamicStringStraightImport
 from flake8_custom_import_rules.core.nodes import ImportType
 from flake8_custom_import_rules.core.nodes import ParsedDynamicImport
 from flake8_custom_import_rules.core.nodes import ParsedFromImport
 from flake8_custom_import_rules.core.nodes import ParsedIfImport
-from flake8_custom_import_rules.core.nodes import ParsedImport
 from flake8_custom_import_rules.core.nodes import ParsedLocalImport
 from flake8_custom_import_rules.core.nodes import ParsedNode
+from flake8_custom_import_rules.core.nodes import ParsedStraightImport
 from flake8_custom_import_rules.defaults import Settings
 from flake8_custom_import_rules.utils.parse_utils import check_string
 from flake8_custom_import_rules.utils.parse_utils import does_file_match_custom_rule
@@ -127,7 +127,7 @@ class CustomImportRules:
     ) -> Generator[ErrorMessage, None, None]:
         """Check standard library only imports"""
         if self.std_lib_only:
-            if isinstance(node, ParsedImport):
+            if isinstance(node, ParsedStraightImport):
                 yield from self._check_for_cir401(node)
 
             elif isinstance(node, ParsedFromImport):
@@ -147,7 +147,7 @@ class CustomImportRules:
         restrictions = [
             # (
             #     self.checker_settings.TOP_LEVEL_ONLY_IMPORTS,
-            #     [ParsedImport, ParsedFromImport],
+            #     [ParsedStraightImport, ParsedFromImport],
             #     self._check_for_pir101,
             # ),
             (
@@ -172,17 +172,17 @@ class CustomImportRules:
             ),
             (
                 self.checker_settings.RESTRICT_PRIVATE_IMPORTS,
-                [ParsedImport, ParsedFromImport],
+                [ParsedStraightImport, ParsedFromImport],
                 self._check_for_pir106,
             ),
             (
                 self.checker_settings.RESTRICT_WILDCARD_IMPORTS,
-                [ParsedImport, ParsedFromImport],
+                [ParsedStraightImport, ParsedFromImport],
                 self._check_for_pir107,
             ),
             (
                 self.checker_settings.RESTRICT_ALIASED_IMPORTS,
-                [ParsedImport, ParsedFromImport],
+                [ParsedStraightImport, ParsedFromImport],
                 self._check_for_pir108,
             ),
         ]
@@ -197,13 +197,13 @@ class CustomImportRules:
         """Check special cases import restrictions"""
 
         if self.checker_settings.RESTRICT_INIT_IMPORTS:
-            if isinstance(node, ParsedImport):
+            if isinstance(node, ParsedStraightImport):
                 yield from self._check_for_pir207(node)
             elif isinstance(node, ParsedFromImport):
                 yield from self._check_for_pir208(node)
 
         if self.checker_settings.RESTRICT_MAIN_IMPORTS:
-            if isinstance(node, ParsedImport):
+            if isinstance(node, ParsedStraightImport):
                 yield from self._check_for_pir209(node)
             elif isinstance(node, ParsedFromImport):
                 yield from self._check_for_pir210(node)
@@ -215,7 +215,7 @@ class CustomImportRules:
         self, node: ParsedNode
     ) -> Generator[ErrorMessage, None, None]:
         """Check test import restrictions"""
-        if isinstance(node, ParsedImport):
+        if isinstance(node, ParsedStraightImport):
             yield from self._check_for_pir201(node)
             yield from self._check_for_pir203(node)
             yield from self._check_for_pir205(node)
@@ -352,7 +352,7 @@ class CustomImportRules:
         if ErrorCode.CIR304.code in self.codes_to_check:
             yield standard_error_message(node, ErrorCode.CIR304)
 
-    def _check_for_cir401(self, node: ParsedImport) -> Generator[ErrorMessage, None, None]:
+    def _check_for_cir401(self, node: ParsedStraightImport) -> Generator[ErrorMessage, None, None]:
         """Check for CIR401."""
         condition = node.import_type not in {ImportType.FUTURE, ImportType.STDLIB}
         if ErrorCode.CIR401.code in self.codes_to_check and condition:
@@ -401,7 +401,7 @@ class CustomImportRules:
         return [
             dynamic_node
             for dynamic_node in self.dynamic_nodes[str(node.lineno)]
-            if isinstance(dynamic_node, (DynamicStringImport, DynamicStringFromImport))
+            if isinstance(dynamic_node, (DynamicStringStraightImport, DynamicStringFromImport))
         ]
 
     def _dynamic_import_check(self, node: ParsedDynamicImport) -> bool:
@@ -428,7 +428,7 @@ class CustomImportRules:
         #     yield standard_error_message(node, ErrorCode.PIR301)
 
     def _check_for_pir106(
-        self, node: ParsedImport | ParsedFromImport
+        self, node: ParsedStraightImport | ParsedFromImport
     ) -> Generator[ErrorMessage, None, None]:
         """Check for PIR106, private import restrictions."""
         condition = node.private_identifier_import or node.private_module_import
@@ -436,7 +436,7 @@ class CustomImportRules:
             yield standard_error_message(node, ErrorCode.PIR106)
 
     def _check_for_pir107(
-        self, node: ParsedImport | ParsedFromImport
+        self, node: ParsedStraightImport | ParsedFromImport
     ) -> Generator[ErrorMessage, None, None]:
         """Check for PIR107, wildcard or star import restrictions (i.e., from * imports)."""
         condition = check_string(node.identifier, substring_match="*")
@@ -444,14 +444,14 @@ class CustomImportRules:
             yield standard_error_message(node, ErrorCode.PIR107)
 
     def _check_for_pir108(
-        self, node: ParsedImport | ParsedFromImport
+        self, node: ParsedStraightImport | ParsedFromImport
     ) -> Generator[ErrorMessage, None, None]:
         """Check for PIR108, aliased import restrictions."""
         condition = hasattr(node, "asname") and node.asname is not None
         if ErrorCode.PIR108.code in self.codes_to_check and condition:
             yield standard_error_message(node, ErrorCode.PIR108)
 
-    def _check_for_pir201(self, node: ParsedImport) -> Generator[ErrorMessage, None, None]:
+    def _check_for_pir201(self, node: ParsedStraightImport) -> Generator[ErrorMessage, None, None]:
         """Check for PIR201, import test_*/*_test modules is restricted."""
         condition = check_string(node.identifier, prefix="test_", suffix="_test")
         if ErrorCode.PIR201.code in self.codes_to_check and condition:
@@ -463,7 +463,7 @@ class CustomImportRules:
         if ErrorCode.PIR202.code in self.codes_to_check and condition:
             yield standard_error_message(node, ErrorCode.PIR202)
 
-    def _check_for_pir203(self, node: ParsedImport) -> Generator[ErrorMessage, None, None]:
+    def _check_for_pir203(self, node: ParsedStraightImport) -> Generator[ErrorMessage, None, None]:
         """Check for PIR203, import conftest is restricted."""
         condition = check_string(node.identifier, substring_match="conftest")
         if ErrorCode.PIR203.code in self.codes_to_check and condition:
@@ -475,7 +475,7 @@ class CustomImportRules:
         if ErrorCode.PIR204.code in self.codes_to_check and condition:
             yield standard_error_message(node, ErrorCode.PIR204)
 
-    def _check_for_pir205(self, node: ParsedImport) -> Generator[ErrorMessage, None, None]:
+    def _check_for_pir205(self, node: ParsedStraightImport) -> Generator[ErrorMessage, None, None]:
         """Check for PIR205 import tests directory is restricted."""
         condition = check_string(node.identifier, substring_match="tests")
         if ErrorCode.PIR205.code in self.codes_to_check and condition:
@@ -487,7 +487,7 @@ class CustomImportRules:
         if ErrorCode.PIR206.code in self.codes_to_check and condition:
             yield standard_error_message(node, ErrorCode.PIR206)
 
-    def _check_for_pir207(self, node: ParsedImport) -> Generator[ErrorMessage, None, None]:
+    def _check_for_pir207(self, node: ParsedStraightImport) -> Generator[ErrorMessage, None, None]:
         """Check for PIR207, import __init__."""
         condition = check_string(node.identifier, substring_match="__init__")
         if ErrorCode.PIR207.code in self.codes_to_check and condition:
@@ -499,7 +499,7 @@ class CustomImportRules:
         if ErrorCode.PIR208.code in self.codes_to_check and condition:
             yield standard_error_message(node, ErrorCode.PIR208)
 
-    def _check_for_pir209(self, node: ParsedImport) -> Generator[ErrorMessage, None, None]:
+    def _check_for_pir209(self, node: ParsedStraightImport) -> Generator[ErrorMessage, None, None]:
         """Check for PIR209 import __main__."""
         condition = check_string(node.identifier, substring_match="__main__")
         if ErrorCode.PIR209.code in self.codes_to_check and condition:

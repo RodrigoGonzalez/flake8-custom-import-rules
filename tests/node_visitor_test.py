@@ -7,7 +7,7 @@ from flake8_custom_import_rules.core.nodes import ImportType
 from flake8_custom_import_rules.core.nodes import ParsedClassDef
 from flake8_custom_import_rules.core.nodes import ParsedFromImport
 from flake8_custom_import_rules.core.nodes import ParsedFunctionDef
-from flake8_custom_import_rules.core.nodes import ParsedImport
+from flake8_custom_import_rules.core.nodes import ParsedStraightImport
 
 
 @pytest.fixture(scope="function")
@@ -53,7 +53,7 @@ def parsed_import():
                 private_module_import=False,
                 import_node=import_node,
             )
-        return ParsedImport(
+        return ParsedStraightImport(
             import_type=import_type,
             module=module,
             asname=asname,
@@ -220,7 +220,7 @@ def test_visit_import_multiple(import_visitor):
     visitor = import_visitor
     visitor.visit(tree)
     assert len(visitor.nodes) == 2
-    assert visitor.nodes[0] == ParsedImport(
+    assert visitor.nodes[0] == ParsedStraightImport(
         import_type=ImportType.STDLIB,
         module="os",
         asname=None,
@@ -234,7 +234,7 @@ def test_visit_import_multiple(import_visitor):
         private_module_import=False,
         import_node="import os, sys",
     )
-    assert visitor.nodes[1] == ParsedImport(
+    assert visitor.nodes[1] == ParsedStraightImport(
         import_type=ImportType.STDLIB,
         module="sys",
         asname=None,
