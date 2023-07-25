@@ -59,10 +59,10 @@ class ErrorCode(Enum, metaclass=ErrorCodeMeta):
 
     # Isolated package: Package/module that can not import from any other package in your project.
     # Standalone package.
-    CIR301 = "CIR301 Isolated package, project imports disabled."
-    CIR302 = "CIR302 Isolated package, project from imports disabled."
-    CIR303 = "CIR303 Isolated module, project imports disabled."
-    CIR304 = "CIR304 Isolated module, project from imports disabled."
+    CIR301 = "CIR301 Isolated package, imports from project disabled."
+    CIR302 = "CIR302 Isolated package, from imports from project disabled."
+    CIR303 = "CIR303 Isolated module, imports from project disabled."
+    CIR304 = "CIR304 Isolated module, from imports from project disabled."
 
     # Standard library only import in specified packages or modules
     CIR401 = "CIR401 Non-standard library package import."
