@@ -10,17 +10,17 @@ from attrs import field
 from stdlib_list import stdlib_list
 
 from flake8_custom_import_rules.core.nodes import DynamicStringFromImport
-from flake8_custom_import_rules.core.nodes import DynamicStringImport
 from flake8_custom_import_rules.core.nodes import DynamicStringParseSyntaxFailure
+from flake8_custom_import_rules.core.nodes import DynamicStringStraightImport
 from flake8_custom_import_rules.core.nodes import ImportType
 from flake8_custom_import_rules.core.nodes import ParsedClassDef
 from flake8_custom_import_rules.core.nodes import ParsedDynamicImport
 from flake8_custom_import_rules.core.nodes import ParsedFromImport
 from flake8_custom_import_rules.core.nodes import ParsedFunctionDef
 from flake8_custom_import_rules.core.nodes import ParsedIfImport
-from flake8_custom_import_rules.core.nodes import ParsedImport
 from flake8_custom_import_rules.core.nodes import ParsedLocalImport
 from flake8_custom_import_rules.core.nodes import ParsedNode
+from flake8_custom_import_rules.core.nodes import ParsedStraightImport
 from flake8_custom_import_rules.defaults import POTENTIAL_DYNAMIC_IMPORTS
 from flake8_custom_import_rules.defaults import STDIN_IDENTIFIERS
 from flake8_custom_import_rules.utils.node_utils import generate_identifier_path
@@ -122,7 +122,7 @@ class CustomImportRulesVisitor(ast.NodeVisitor):
         raise NotImplementedError("This method is not implemented yet.")
 
     @staticmethod
-    def _get_import_node(module_info: dict) -> ParsedImport:
+    def _get_import_node(module_info: dict) -> ParsedStraightImport:
         """
         Get a parsed import node.
 
@@ -133,9 +133,9 @@ class CustomImportRulesVisitor(ast.NodeVisitor):
 
         Returns
         -------
-        ParsedImport
+        ParsedStraightImport
         """
-        return ParsedImport(
+        return ParsedStraightImport(
             import_type=module_info["import_type"],
             module=module_info["module"],
             asname=module_info["asname"],
@@ -505,7 +505,7 @@ class DynamicStringVisitor(ast.NodeVisitor):
             module_info = parsed_imports_dict[alias.name]
             module_info["import_type"] = ImportType.DYNAMIC
 
-            dynamic_string_import = DynamicStringImport(
+            dynamic_string_import = DynamicStringStraightImport(
                 import_type=module_info["import_type"],
                 module=module_info["module"],
                 asname=module_info["asname"],

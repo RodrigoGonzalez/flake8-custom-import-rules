@@ -17,7 +17,7 @@ class ImportType(IntEnum):
 
 
 @define(slots=True)
-class ParsedImport:
+class ParsedStraightImport:
     """Parsed import statement"""
 
     import_type: ImportType
@@ -132,7 +132,7 @@ class DynamicStringFromImport(ParsedFromImport):
 
 
 @define(slots=True)
-class DynamicStringImport(ParsedImport):
+class DynamicStringStraightImport(ParsedStraightImport):
     """Dynamic string import."""
 
 
@@ -146,7 +146,7 @@ class DynamicStringParseSyntaxFailure:
 
 
 ParsedNode = (
-    ParsedImport
+    ParsedStraightImport
     | ParsedFromImport
     | ParsedLocalImport
     | ParsedClassDef
@@ -154,6 +154,6 @@ ParsedNode = (
     | ParsedCall
     | ParsedDynamicImport
     | ParsedIfImport
-    | DynamicStringImport
+    | DynamicStringStraightImport
     | DynamicStringFromImport
 )
