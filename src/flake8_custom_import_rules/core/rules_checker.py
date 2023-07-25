@@ -8,8 +8,8 @@ import pycodestyle
 from attrs import define
 from attrs import field
 
+from flake8_custom_import_rules.core.error_messages import ErrorMessage
 from flake8_custom_import_rules.core.import_rules import CustomImportRules
-from flake8_custom_import_rules.core.import_rules import ErrorMessage
 from flake8_custom_import_rules.core.node_visitor import CustomImportRulesVisitor
 from flake8_custom_import_rules.core.nodes import ParsedFromImport
 from flake8_custom_import_rules.core.nodes import ParsedImport
@@ -91,7 +91,7 @@ class CustomImportRulesChecker:
 
     def get_visitor(self) -> CustomImportRulesVisitor:
         """Return the visitor to use for this plugin."""
-        # print(f"Options: {self.options}")
+        # print(f"\\nOptions: {self.options}\n\n")
         visitor = CustomImportRulesVisitor(
             base_packages=self.options.get("base_packages", []),
             filename=self.filename,
@@ -121,6 +121,8 @@ class CustomImportRulesChecker:
             identifiers=self.identifiers,
             identifiers_by_lineno=self.identifiers_by_lineno,
             dynamic_nodes=self.visitor.dynamic_nodes,
+            filename=self.filename,
+            file_identifier=self.visitor.file_identifier,
         )
 
     def check_custom_import_rules(self) -> Generator[Any, None, None]:

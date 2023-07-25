@@ -22,10 +22,12 @@ from flake8_custom_import_rules.core.nodes import ParsedImport
 from flake8_custom_import_rules.core.nodes import ParsedLocalImport
 from flake8_custom_import_rules.core.nodes import ParsedNode
 from flake8_custom_import_rules.defaults import POTENTIAL_DYNAMIC_IMPORTS
+from flake8_custom_import_rules.defaults import STDIN_IDENTIFIERS
 from flake8_custom_import_rules.utils.node_utils import generate_identifier_path
 from flake8_custom_import_rules.utils.node_utils import get_module_info_from_import_node
 from flake8_custom_import_rules.utils.node_utils import get_name_info_from_import_node
 from flake8_custom_import_rules.utils.parse_utils import check_string
+from flake8_custom_import_rules.utils.parse_utils import get_module_name_from_filename
 
 logger = logging.getLogger(f"flake8_custom_import_rules.{__name__}")
 
@@ -75,6 +77,7 @@ class CustomImportRulesVisitor(ast.NodeVisitor):
     identifiers_by_lineno: defaultdict[str, list] = defaultdict(list)
     python_version: str = field(init=False)
     stdlib_names: set | frozenset = field(init=False)
+    file_identifier: str | None = field(init=False)
 
     def __attrs_post_init__(self) -> None:
         """Initialize the attributes after object creation.
@@ -84,11 +87,15 @@ class CustomImportRulesVisitor(ast.NodeVisitor):
         self.stdlib_names using stdlib_list. Otherwise, it assigns
         sys.stdlib_module_names to self.stdlib_names.
         """
-        filename = self.filename
-        self.file_path = Path(filename) if filename else None
-        logger.info(f"Visitor filename: {self.filename}")
-        self.resolve_local_imports = filename not in {"stdin", "-", "/dev/stdin", "", None}
+        self.resolve_local_imports = self.filename not in STDIN_IDENTIFIERS
         logger.info(f"Resolve local imports: {self.resolve_local_imports}")
+        self.file_path = (
+            Path(self.filename) if (self.resolve_local_imports and self.filename) else None
+        )
+        logger.info(f"Visitor filename: {self.filename}")
+        self.file_identifier = (
+            get_module_name_from_filename(self.filename) if self.resolve_local_imports else None
+        )
 
         self.python_version = f"{sys.version_info.major}.{sys.version_info.minor}"
         if sys.version_info < (3, 10):

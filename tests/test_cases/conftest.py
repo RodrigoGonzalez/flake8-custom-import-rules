@@ -1,9 +1,12 @@
 """ Pytest configuration file for error code test cases. """
 import ast
+import os
 from functools import partial
 from textwrap import dedent
 
+import pycodestyle
 import pytest
+from flake8.utils import normalize_path
 
 from flake8_custom_import_rules.flake8_linter import Linter
 
@@ -25,6 +28,24 @@ def get_flake8_linter_results() -> partial:
         linter = Linter(ast.parse(s), lines=s.split(delimiter), filename=filename)
         linter.update_checker_settings(options)
         return {"{}:{}: {}".format(*r) for r in linter.run()}
+
+    return partial(results)
+
+
+@pytest.fixture(scope="function", autouse=True)
+def generate_ast_from_file() -> partial:
+    """Generate an AST from a file."""
+
+    def results(filename: str) -> tuple[ast.AST, list[str]]:
+        """Generate an AST from a file name."""
+        filename = normalize_path(filename)
+        if not os.path.isfile(filename):
+            raise FileNotFoundError(filename)
+
+        lines = pycodestyle.readlines(filename)
+        tree = ast.parse("".join(lines))
+
+        return tree, lines
 
     return partial(results)
 

@@ -5,7 +5,7 @@ from typing import Any
 
 from pylama.lint import Linter as BaseLinter
 
-from flake8_custom_import_rules.core.import_rules import ErrorMessage
+from flake8_custom_import_rules.core.error_messages import ErrorMessage
 from flake8_custom_import_rules.core.rules_checker import CustomImportRulesChecker
 
 if sys.version_info < (3, 8):
