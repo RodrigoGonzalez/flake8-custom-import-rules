@@ -52,6 +52,10 @@ class ErrorCode(Enum, metaclass=ErrorCodeMeta):
     # (i.e. No Third Party Imports)
     CIR201 = "CIR201 Non-project package import."
     CIR202 = "CIR202 Non-project module import."
+    CIR203 = "CIR203 Non-base package package import."
+    CIR204 = "CIR204 Non-base package module import."
+    CIR205 = "CIR205 Non-first party package import."
+    CIR206 = "CIR206 Non-first party module import."
 
     # Isolated package: Package/module that can not import from any other package in your project.
     # Standalone package.
