@@ -336,16 +336,6 @@ class CustomImportRules:
         if ErrorCode.CIR202.code in self.codes_to_check:
             yield standard_error_message(node, ErrorCode.CIR202)
 
-    def _check_for_cir203(self, node: ParsedNode) -> Generator[ErrorMessage, None, None]:
-        """Check for CIR203."""
-        if ErrorCode.CIR203.code in self.codes_to_check:
-            yield standard_error_message(node, ErrorCode.CIR203)
-
-    def _check_for_cir204(self, node: ParsedNode) -> Generator[ErrorMessage, None, None]:
-        """Check for CIR204."""
-        if ErrorCode.CIR204.code in self.codes_to_check:
-            yield standard_error_message(node, ErrorCode.CIR204)
-
     def _check_for_cir301(self, node: ParsedNode) -> Generator[ErrorMessage, None, None]:
         """Check for CIR301."""
         if ErrorCode.CIR301.code in self.codes_to_check:
@@ -355,16 +345,6 @@ class CustomImportRules:
         """Check for CIR302."""
         if ErrorCode.CIR302.code in self.codes_to_check:
             yield standard_error_message(node, ErrorCode.CIR302)
-
-    def _check_for_cir303(self, node: ParsedNode) -> Generator[ErrorMessage, None, None]:
-        """Check for CIR303."""
-        if ErrorCode.CIR303.code in self.codes_to_check:
-            yield standard_error_message(node, ErrorCode.CIR303)
-
-    def _check_for_cir304(self, node: ParsedNode) -> Generator[ErrorMessage, None, None]:
-        """Check for CIR304."""
-        if ErrorCode.CIR304.code in self.codes_to_check:
-            yield standard_error_message(node, ErrorCode.CIR304)
 
     def _check_for_cir401(self, node: ParsedStraightImport) -> Generator[ErrorMessage, None, None]:
         """Check for CIR401."""
