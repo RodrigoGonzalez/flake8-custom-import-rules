@@ -2,6 +2,9 @@
 
 PIR207 = "PIR207 Importing `__init__` is restricted."
 PIR208 = "PIR208 Importing from `__init__.py` files is restricted."
+
+To run this test file only:
+poetry run python -m pytest -vvvrca tests/test_cases/project_import_rules/init_imports_test.py
 """
 import pytest
 

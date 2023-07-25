@@ -1,0 +1,103 @@
+name: Bug Report
+description: Create a report to help us reproduce and correct the bug
+labels: ['Bug', 'Needs Triage']
+
+body:
+- type: markdown
+  attributes:
+    value: >
+      #### Before submitting a bug, please make sure the issue hasn't been already
+      addressed by searching through [the past issues](https://github.com/RodrigoGonzalez/flake8-custom-import-rules/issues).
+- type: textarea
+  attributes:
+    label: Describe the bug
+    description: >
+      A clear and concise description of what the bug is.
+  validations:
+    required: true
+- type: textarea
+  attributes:
+    label: Steps/Code to Reproduce
+    description: |
+      Please add a minimal code example that can reproduce the error when running it.
+      Be as succinct as possible.
+
+      ```shell
+      flake8 test_file.py --base-package my_package
+      ```
+
+      If the code is too long, feel free to put it in a public gist and link it in the issue: https://gist.github.com.
+
+      In short, **we are going to copy-paste your code** to run it and we expect to get the same result as you.
+    placeholder: |
+      ```
+      Sample code to reproduce the problem
+      ```
+  validations:
+    required: true
+- type: textarea
+  attributes:
+    label: Expected Results
+    description: >
+      Please paste or describe the expected results.
+    placeholder: >
+      Example: No error is thrown.
+  validations:
+    required: true
+- type: textarea
+  attributes:
+    label: Actual Results
+    description: |
+      Please paste or describe the results you observe instead of the expected results. If you observe an error, please paste the error message including the **full traceback** of the exception. For instance the code above raises the following exception:
+
+      ```python-traceback
+        Traceback (most recent call last):
+          File "/opt/homebrew/Cellar/python@3.10/3.10.12_1/Frameworks/Python.framework/Versions/3.10/lib/python3.10/multiprocessing/pool.py", line 125, in worker
+            result = (True, func(*args, **kwds))
+          File "/Users/rodrigogonzalez/workspace/flake8-custom-import-rules/.venv/lib/python3.10/site-packages/flake8/checker.py", line 81, in _mp_run
+            ).run_checks()
+          File "/Users/rodrigogonzalez/workspace/flake8-custom-import-rules/.venv/lib/python3.10/site-packages/flake8/checker.py", line 524, in run_checks
+            self.run_ast_checks()
+          File "/Users/rodrigogonzalez/workspace/flake8-custom-import-rules/.venv/lib/python3.10/site-packages/flake8/checker.py", line 426, in run_ast_checks
+            for (line_number, offset, text, _) in runner:
+          File "/Users/rodrigogonzalez/workspace/flake8-custom-import-rules/src/flake8_custom_import_rules/flake8_linter.py", line 148, in run
+            yield from self.check_custom_import_rules()
+          File "/Users/rodrigogonzalez/workspace/flake8-custom-import-rules/src/flake8_custom_import_rules/core/rules_checker.py", line 136, in check_custom_import_rules
+            for error in import_rules.check_import_rules():
+          File "/Users/rodrigogonzalez/workspace/flake8-custom-import-rules/src/flake8_custom_import_rules/core/import_rules.py", line 127, in check_import_rules
+            yield from self._check_import_rules(node)
+          File "/Users/rodrigogonzalez/workspace/flake8-custom-import-rules/src/flake8_custom_import_rules/core/import_rules.py", line 159, in _check_import_rules
+            yield from self._check_project_level_restrictions(node)
+          File "/Users/rodrigogonzalez/workspace/flake8-custom-import-rules/src/flake8_custom_import_rules/core/import_rules.py", line 241, in _check_project_level_restrictions
+            yield from self._check_standard_import_restrictions(node)
+          File "/Users/rodrigogonzalez/workspace/flake8-custom-import-rules/src/flake8_custom_import_rules/core/import_rules.py", line 298, in _check_standard_import_restrictions
+            yield from check_func(node)
+          File "/Users/rodrigogonzalez/workspace/flake8-custom-import-rules/src/flake8_custom_import_rules/core/import_rules.py", line 552, in _check_for_pir103
+            if ErrorCode.PIR103.code in self.codes_to_check and condition:
+          File "/opt/homebrew/Cellar/python@3.10/3.10.12_1/Frameworks/Python.framework/Versions/3.10/lib/python3.10/enum.py", line 437, in __getattr__
+            raise AttributeError(name) from None
+        AttributeError: PIR103
+      ```
+    placeholder: >
+      Please paste or specifically describe the actual output or traceback.
+  validations:
+    required: true
+- type: textarea
+  attributes:
+    label: Versions
+    render: shell
+    description: |
+      Please run the following and paste the output below.
+      ```python
+      import flake8_custom_import_rules; flake8_custom_import_rules.show_versions()
+      ```
+      And also paste the output of:
+      ```shell
+      flake8 --bug-report
+      ```
+  validations:
+    required: true
+- type: markdown
+  attributes:
+    value: >
+      Thanks for contributing 🎉!

@@ -2,6 +2,9 @@
 Test top level only import restrictions.
 
 PIR101 = "PIR101 Only top level imports are permitted in the project."
+
+To run this test file only:
+poetry run python -m pytest -vvvrca tests/test_cases/project_import_rules/top_level_only_test.py
 """
 from textwrap import dedent
 

@@ -1,1 +1,6 @@
-__version__ = "0.6.0"
+__version__ = "0.7.0"
+
+
+def show_versions() -> None:
+    """Show the version of flake8-custom-import-rules."""
+    print(__version__)

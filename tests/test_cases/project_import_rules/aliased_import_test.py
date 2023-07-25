@@ -1,6 +1,9 @@
 """Test aliased import restrictions.
 
 PIR108 = "PIR108 Aliased imports are disabled for this project."
+
+To run this test file only:
+poetry run python -m pytest -vvvrca tests/test_cases/project_import_rules/aliased_import_test.py
 """
 import pytest
 

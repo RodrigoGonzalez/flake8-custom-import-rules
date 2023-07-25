@@ -1,3 +1,30 @@
+## v0.7.0 (2023-07-25)
+
+### Feat
+
+- **isolated-modules**: add test cases (#62)
+- **parse-utils**: add module to filename helpers (#61)
+- **project-imports**: added support for non-base and non-first party (#60)
+- **first-party**: updated first party to include base package (#59)
+- **future**: add support for restricting __future__ imports (#58)
+- **error-codes**: updated error code messages (#57)
+- **third-party**: added support for third party only imports (#56)
+- update imports to straight imports (#55)
+- **import-rules**: implement std lib import restrictions (#54)
+- **parse-utils**: add file conversion utils (#53)
+- update checkers and parsers (#52)
+- remove old registry options (#50)
+- **flake8-linter**: add register options (#49)
+- **import-rules**: add custom import rules to default settings (#48)
+- add handling for dynamic string syntax errors (#47)
+- added support for standard lib packages (#45)
+- **dynamic**: added dynamic string visitor to capture dynamic string… (#44)
+
+### Refactor
+
+- update support for #noqa (#51)
+- **error-codes**: update error code messages (#46)
+
 ## v0.6.0 (2023-07-22)
 
 ### Feat
