@@ -1,6 +1,7 @@
 """ Parse utils. """
 import os
 import re
+import sys
 
 NOQA_INLINE_REGEXP = re.compile(
     # We're looking for items that look like this:
@@ -135,17 +136,93 @@ def parse_custom_rule(rules: list[str]) -> dict[str, list[str]]:
     return {src.strip(): dest.split(",") for rule in rules for src, dest in (rule.split(":"),)}
 
 
-def get_module_name(base_module: str, file_path: str) -> str | None:
-    """Get the module name for a given file path based on a base module."""
+def get_module_name_from_file(base_module: str, filename: str) -> str | None:
+    """
+    Get the module name for a given file path based on a base module.
+
+    Parameters
+    ----------
+    base_module : str
+        The base module to use as a reference.
+    filename : str
+        The file path to get the module name for.
+
+    Returns
+    -------
+    str | None
+    """
 
     # Check if the base module is in the file path
-    if base_module not in file_path:
-        raise ValueError(f"The base module {base_module} is not in the file path {file_path}")
+    if base_module not in filename:
+        raise ValueError(f"The base module {base_module} is not in the file path {filename}")
 
     # Get the part of the file path that is relative to the base module
-    relative_path = file_path.partition(base_module)[2].strip("/")
+    relative_path = filename.partition(base_module)[2].strip("/")
 
     # Remove the .py extension and replace / with . to get the module name
-    module_name = os.path.splitext(relative_path)[0].replace("/", ".")
+    return os.path.splitext(relative_path)[0].replace("/", ".")
 
-    return module_name
+
+def find_prefix(filename: str) -> str:
+    """
+    Find the appropriate module prefix string for the filename.
+
+    Parameters
+    ----------
+    filename : str
+        The filename to find the prefix for.
+
+    Returns
+    -------
+    str
+    """
+    filename = os.path.abspath(filename)
+
+    # Find the deepest path
+    matches = (path for path in sys.path if filename.startswith(path))
+
+    return max(matches, key=len)
+
+
+def convert_name(filename: str, prefix: str | None = None) -> str:
+    """
+    Convert filename to a module name by removing prefix and .py extension,
+    and replacing / with .
+
+    Parameters
+    ----------
+    filename : str
+        The filename to convert.
+    prefix : str | None
+        The prefix to remove from the filename.
+
+    Returns
+    -------
+    str
+    """
+    filename = os.path.abspath(filename)
+
+    if prefix and filename.startswith(prefix):
+        filename = filename[len(prefix) :]
+
+    if filename.endswith(".py"):
+        filename = filename[:-3]
+
+    return filename.lstrip("/").replace("/", ".")
+
+
+def normalize_path(path: str, parent: str = os.curdir) -> str:
+    """Normalize a single-path.
+
+    :returns:
+        The normalized path.
+    """
+    # NOTE(sigmavirus24): Using os.path.sep and os.path.altsep allow for
+    # Windows compatibility with both Windows-style paths (c:\foo\bar) and
+    # Unix style paths (/foo/bar).
+    separator = os.path.sep
+    # NOTE(sigmavirus24): os.path.altsep may be None
+    alternate_separator = os.path.altsep or ""
+    if path == "." or separator in path or (alternate_separator and alternate_separator in path):
+        path = os.path.abspath(os.path.join(parent, path))
+    return path.rstrip(separator + alternate_separator)

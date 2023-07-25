@@ -1,6 +1,5 @@
 """The default settings for the flake8_custom_import_rules plugin."""
 import optparse
-import os
 from typing import Any
 
 from attrs import asdict
@@ -11,6 +10,27 @@ from flake8.options.manager import OptionManager
 # import argparse
 # argparse.ArgumentParser.add_argument
 
+
+POTENTIAL_DYNAMIC_IMPORTS = {
+    "__import__",
+    "importlib",
+    "importlib.import_module",
+    "import_module",
+    "importlib.util",
+    # "pkgutil",
+    "pkgutil.get_loader",
+    "get_loader",
+    "pkgutil.iter_modules",
+    "iter_modules",
+    "sys.modules",
+    "modules",
+    "zipimport",
+    "zipimport.zipimporter",
+    "zipimporter",
+    "zipimporter.load_module",
+    "eval",
+    "exec",
+}
 
 STANDARD_PROJECT_LEVEL_RESTRICTION_KEYS = [
     "relative",
@@ -36,26 +56,6 @@ CUSTOM_IMPORT_RULES = [
     "FIRST_PARTY_ONLY",
     "PROJECT_ONLY",
 ]
-
-POTENTIAL_DYNAMIC_IMPORTS = {
-    "__import__",
-    "importlib",
-    "importlib.import_module",
-    "import_module",
-    # "pkgutil",
-    "pkgutil.get_loader",
-    "get_loader",
-    "pkgutil.iter_modules",
-    "iter_modules",
-    "sys.modules",
-    "modules",
-    "zipimport",
-    "zipimport.zipimporter",
-    "zipimporter",
-    "zipimporter.load_module",
-    "eval",
-    "exec",
-}
 
 
 def convert_to_list(value: str | list[str] | None) -> list:
@@ -236,20 +236,3 @@ def register_opt(self: OptionManager, *args: Any, **kwargs: Any) -> None:
         self.add_option(*args, **kwargs)
         if parse_from_config:
             self.config_options.append(args[-1].lstrip("-"))
-
-
-def normalize_path(path: str, parent: str = os.curdir) -> str:
-    """Normalize a single-path.
-
-    :returns:
-        The normalized path.
-    """
-    # NOTE(sigmavirus24): Using os.path.sep and os.path.altsep allow for
-    # Windows compatibility with both Windows-style paths (c:\foo\bar) and
-    # Unix style paths (/foo/bar).
-    separator = os.path.sep
-    # NOTE(sigmavirus24): os.path.altsep may be None
-    alternate_separator = os.path.altsep or ""
-    if path == "." or separator in path or (alternate_separator and alternate_separator in path):
-        path = os.path.abspath(os.path.join(parent, path))
-    return path.rstrip(separator + alternate_separator)

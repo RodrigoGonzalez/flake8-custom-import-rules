@@ -38,7 +38,7 @@ class Linter(CustomImportRulesChecker):
     ) -> None:
         """Initialize flake8-custom-import-rules."""
         # print(f"\n\nTree: {tree}\n\n")
-        # from flake8_custom_import_rules.defaults import normalize_path
+        # from flake8_custom_import_rules.utils.parse_utils import normalize_path
         # print(f"\n\nFile Name: {normalize_path(filename)}\n\n")
         print(f"\n\nFile Name: {filename}\n\n")
         # print(f"\n\nLines: {lines}\n\n")
