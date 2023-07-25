@@ -42,7 +42,8 @@ def isolated_imports_error(
 ) -> ErrorMessage:
     """Generate error message for isolated imports."""
     custom_explanation = (
-        f"Using '{node.import_node}' in module '{file_identifier}' " f"cannot import from project."
+        f"Using '{node.import_node}'. Isolated module '{file_identifier}' "
+        f"cannot import from project packages."
     )
     return standard_error_message(node, error_code, custom_explanation)
 
