@@ -8,7 +8,7 @@ from typing import Any
 
 from flake8.options.manager import OptionManager
 
-from flake8_custom_import_rules.core.import_rules import ErrorMessage
+from flake8_custom_import_rules.core.error_messages import ErrorMessage
 from flake8_custom_import_rules.core.rules_checker import CustomImportRulesChecker
 from flake8_custom_import_rules.defaults import CUSTOM_IMPORT_RULES
 from flake8_custom_import_rules.defaults import DEFAULT_CHECKER_SETTINGS
@@ -102,9 +102,9 @@ class Linter(CustomImportRulesChecker):
         logger.debug(f"Option Manager: {option_manager}")
         logger.debug(f"Options: {parse_options}")
         logger.debug(f"Args: {args}")
-        print("\nOptions:")
-        print(parse_options)
-        print(f"\nArgs: {args}")
+        # print("\nOptions:")
+        # print(parse_options)
+        # print(f"\nArgs: {args}")
 
         # Parse options for CustomImportRulesChecker
         base_packages: str | list = parse_options.base_packages
@@ -144,4 +144,5 @@ class Linter(CustomImportRulesChecker):
     def run(self) -> Generator[tuple[int, int, str, type[Any]], None, None]:
         """Run flake8-custom-import-rules."""
         # Run CustomImportRulesChecker
+        print(f"\n\nRun Options: {self.options}")
         yield from self.check_custom_import_rules()

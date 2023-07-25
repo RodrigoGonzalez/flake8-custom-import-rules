@@ -36,8 +36,8 @@ def parse_comma_separated_list(value: list | str) -> set[str]:
 def parse_module_string(
     value: str,
     substring_match: list | str | None = None,
-    prefix: str | None = None,
-    suffix: str | None = None,
+    prefix: tuple | str | None = None,
+    suffix: tuple | str | None = None,
     delimiter: str = ".",
 ) -> list:
     """Parse a module and return substrings that match certain criteria.
@@ -93,8 +93,8 @@ def parse_module_string(
 def check_string(
     strings_to_check: list | str,
     substring_match: list | str | None = None,
-    prefix: str | None = None,
-    suffix: str | None = None,
+    prefix: tuple | str | None = None,
+    suffix: tuple | str | None = None,
     delimiter: str = ".",
 ) -> bool:
     """Check a string or list of strings for matches against certain criteria.
@@ -131,12 +131,20 @@ def check_string(
         return False
 
 
+def does_file_match_custom_rule(file_identifier: str, custom_rules: list[str] | str | None) -> bool:
+    """Check if a file identifier is in a custom rule."""
+    if custom_rules is None:
+        return False
+    custom_rules = [custom_rules] if isinstance(custom_rules, str) else custom_rules
+    return check_string(file_identifier, prefix=tuple(custom_rules), delimiter=" ")
+
+
 def parse_custom_rule(rules: list[str]) -> dict[str, list[str]]:
     """Parse custom rules."""
     return {src.strip(): dest.split(",") for rule in rules for src, dest in (rule.split(":"),)}
 
 
-def get_module_name_from_file(base_module: str, filename: str) -> str | None:
+def check_module_in_package(base_module: str, filename: str) -> str | None:
     """
     Get the module name for a given file path based on a base module.
 
@@ -161,6 +169,31 @@ def get_module_name_from_file(base_module: str, filename: str) -> str | None:
 
     # Remove the .py extension and replace / with . to get the module name
     return os.path.splitext(relative_path)[0].replace("/", ".")
+
+
+def get_module_name_from_filename(filename: str) -> str | None:
+    """
+    Get the module name for a given file path based on a base module.
+
+    Parameters
+    ----------
+    filename : str
+        The file path to get the module name for.
+
+    Returns
+    -------
+    str | None
+    """
+    # Normalize the file path
+    filename = normalize_path(filename)
+
+    # Check if the file exists
+    if not os.path.isfile(filename):
+        raise FileNotFoundError(filename)
+
+    module_prefix = find_prefix(filename)
+
+    return convert_name(filename, prefix=module_prefix)
 
 
 def find_prefix(filename: str) -> str:
@@ -212,10 +245,19 @@ def convert_name(filename: str, prefix: str | None = None) -> str:
 
 
 def normalize_path(path: str, parent: str = os.curdir) -> str:
-    """Normalize a single-path.
+    """
+    Normalize a single-path.
 
-    :returns:
-        The normalized path.
+    Parameters
+    ----------
+    path : str
+        The path to normalize.
+    parent : str, optional
+        The parent path, by default os.curdir
+
+    Returns
+    -------
+    str
     """
     # NOTE(sigmavirus24): Using os.path.sep and os.path.altsep allow for
     # Windows compatibility with both Windows-style paths (c:\foo\bar) and

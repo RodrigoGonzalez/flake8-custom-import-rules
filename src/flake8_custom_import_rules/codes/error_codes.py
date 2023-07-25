@@ -64,8 +64,8 @@ class ErrorCode(Enum, metaclass=ErrorCodeMeta):
 
     # Standard library only import in specified packages or modules
     CIR401 = "CIR401 Non-standard library package import."
-    CIR402 = "CIR402 Non-standard library package `from import`."
-    CIR403 = "CIR403 Non-standard library module import."
+    CIR402 = "CIR402 Non-standard library module import."
+    CIR403 = "CIR403 Non-standard library package `from import`."
     CIR404 = "CIR404 Non-standard library module `from import`."
 
     # Third party only imports:

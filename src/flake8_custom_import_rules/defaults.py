@@ -32,6 +32,8 @@ POTENTIAL_DYNAMIC_IMPORTS = {
     "exec",
 }
 
+STDIN_IDENTIFIERS = {"stdin", "-", "/dev/stdin", "", None}
+
 STANDARD_PROJECT_LEVEL_RESTRICTION_KEYS = [
     "relative",
     "local",
@@ -94,6 +96,7 @@ class Settings:
     RESTRICT_CONFTEST_IMPORTS: bool = True
 
     import_rules: dict = field(factory=dict)
+    stdin_identifiers: set = STDIN_IDENTIFIERS
     _dict: dict | None = None
 
     def __attrs_post_init__(self) -> None:
@@ -129,44 +132,6 @@ class Settings:
 DEFAULT_CHECKER_SETTINGS = Settings()
 
 
-def register_custom_import_rules(
-    option_manager: OptionManager, custom_import_rule: list | str, **kwargs: Any
-) -> None:
-    """Register custom import rules.
-
-    If using short options, set both the following options:
-        short_option_name: str | _ARG = _ARG.NO
-        long_option_name: str | _ARG = _ARG.NO
-
-    If using long options, just pass a single string into register_opt.
-    """
-    if isinstance(custom_import_rule, list):
-        for rule in custom_import_rule:
-            register_custom_import_rules(option_manager, rule, **kwargs)
-        return
-
-    assert isinstance(custom_import_rule, str), (
-        f"Project restrictions must be a str. "
-        f"Got {type(custom_import_rule).__name__} for {custom_import_rule}."
-    )
-
-    setting_key = f"{custom_import_rule.replace('_', '-').lower()}"
-
-    help_string = f"{setting_key}. (default: '')"
-
-    register_opt(
-        option_manager,
-        f"--{custom_import_rule.replace('_', '-').lower()}",
-        default="",
-        action="store",
-        type=str,
-        help=help_string,
-        parse_from_config=True,
-        comma_separated_list=True,
-        normalize_paths=False,
-    )
-
-
 def register_options(
     option_manager: OptionManager,
     item: list | str,
@@ -182,6 +147,22 @@ def register_options(
         long_option_name: str | _ARG = _ARG.NO
 
     If using long options, just pass a single string into register_opt.
+
+    Parameters
+    ----------
+    option_manager : OptionManager
+        The option manager.
+    item : list | str
+        The item or list of items to register.
+    is_restriction : bool, optional
+        Whether the item is a restriction, meaning the option is either True
+        or False, by default True (i.e., we are registering a restriction).
+    option_default_value : str | bool, optional
+        The default value for the option, by default "".
+    help_string : str | None, optional
+        The help string for the option, by default None.
+    kwargs : Any
+        Additional keyword arguments to pass to register_opt.
     """
     if isinstance(item, list):
         for single_item in item:

@@ -158,3 +158,15 @@ class A:
         pkgutil.get_loader('typing').load_module()
         for module_info in pkgutil.iter_modules(['calendar']):
             print(module_info)
+
+    @staticmethod
+    def get_absolute_path(filename: str) -> str:
+        """Get the absolute path of a file."""
+        return os.path.abspath(filename)
+
+    @staticmethod
+    def get_a_comma_separated_list(value: str) -> list[str]:
+        """Get a comma separated list of strings."""
+        value = re.compile(r"[,\s]").split(value)
+        item_gen = (item.strip() for item in value)
+        return [item for item in item_gen if item]

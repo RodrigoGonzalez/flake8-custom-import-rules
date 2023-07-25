@@ -97,7 +97,7 @@ import_restrictions = [
 # Make `package_C` an isolated package
 isolated_packages = ["my_base_package.package_C"]
 # Allow `package_D` to import only from the standard library
-standard_library_only = ["my_base_package.package_D"]
+std_lib_only = ["my_base_package.package_D"]
 # Allow `package_E` to import only from third-party libraries
 third_party_only = ["my_base_package.package_E"]
 # Allow `package_F` to import only from the local packages and the project's
@@ -115,7 +115,7 @@ import-restrictions =
     my_base_package.module_X.py:my_base_package.module_Y.py
 restricted-packages = my_base_package.package_B
 isolated-imports = my_base_package.package_C
-standard-library-only = my_base_package.package_D
+std-lib-only = my_base_package.package_D
 third-party-only = my_base_package.package_E
 first-party-only = my_base_package.package_F
 project-only = my_base_package.package_G
