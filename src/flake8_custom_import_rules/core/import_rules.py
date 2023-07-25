@@ -199,6 +199,11 @@ class CustomImportRules:
                 [ParsedStraightImport, ParsedFromImport],
                 self._check_for_pir108,
             ),
+            (
+                self.checker_settings.RESTRICT_FUTURE_IMPORTS,
+                [ParsedStraightImport, ParsedFromImport],
+                self._check_for_pir109,
+            ),
         ]
 
         for is_restriction_active, node_types, check_func in restrictions:
@@ -454,6 +459,14 @@ class CustomImportRules:
         condition = hasattr(node, "asname") and node.asname is not None
         if ErrorCode.PIR108.code in self.codes_to_check and condition:
             yield standard_error_message(node, ErrorCode.PIR108)
+
+    def _check_for_pir109(
+        self, node: ParsedStraightImport | ParsedFromImport
+    ) -> Generator[ErrorMessage, None, None]:
+        """Check for PIR109, __future__ import restrictions."""
+        condition = node.import_type == ImportType.FUTURE
+        if ErrorCode.PIR109.code in self.codes_to_check and condition:
+            yield standard_error_message(node, ErrorCode.PIR109)
 
     def _check_for_pir201(self, node: ParsedStraightImport) -> Generator[ErrorMessage, None, None]:
         """Check for PIR201, import test_*/*_test modules is restricted."""

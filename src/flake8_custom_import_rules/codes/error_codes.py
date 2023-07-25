@@ -75,6 +75,7 @@ class ErrorCode(Enum, metaclass=ErrorCodeMeta):
     PIR106 = "PIR106 Private imports are disabled for this project."
     PIR107 = "PIR107 Wildcard imports are disabled for this project."
     PIR108 = "PIR108 Aliased imports are disabled for this project."
+    PIR109 = "PIR109 Future imports are disabled for this project."
 
     # Project Level Import Rules for Special Cases
     PIR201 = "PIR201 Importing test_*/*_test modules is restricted."

@@ -32,7 +32,7 @@ we can significantly mitigate these issues, streamlining the process of
 integrating new team members and maintaining the high quality and readability
 of our codebase.
 
-<Rewrite this paragraph>
+### Rewrite this paragraph
 Developers will find this Flake8 plugin extremely useful for enforcing custom
 import rules and maintaining a consistent import organization across their
 Python projects. By allowing users to define specific restrictions, isolated
@@ -83,6 +83,30 @@ lightweight and free from third-party dependencies.
 
 Example: Allow 'lightweight_package' to import only from Python standard
 library modules.
+
+
+## Custom Import Rules
+
+| Rule             | Description                                                                                        |
+|------------------|----------------------------------------------------------------------------------------------------|
+| std_lib_only     | Allow a package to import only from the Python standard library.                                   |
+| project_only     | Allow a package to import only from the local package.                                             |
+| first_party_only | Allow a package to import only from the local package and the project's top-level package.         |
+| third_party_only | Allow a package to import only from third-party libraries.                                         |
+| isolated         | Make a package isolated, so it cannot import from any other packages within the base package.      |
+| restricted       | Restrict a package from importing another package, or subpackages or modules from another package. |
+
+
+| RULE             | STD LIB | PROJECT | FIRST PARTY | THIRD PARTY | FUTURE |
+|------------------|---------|---------|-------------|-------------|--------|
+| std_lib_only     | X       |         |             |             | X      |
+| project_only     | X       | X       |             |             | X      |
+| first_party_only | X       | X       | X           |             | X      |
+| third_party_only | X       |         |             | X           | X      |
+| isolated         | X       |         |             | X           | X      |
+
+
+
 
 # Example Configuration
 
