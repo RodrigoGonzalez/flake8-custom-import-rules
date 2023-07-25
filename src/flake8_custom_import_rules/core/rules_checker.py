@@ -123,6 +123,7 @@ class CustomImportRulesChecker:
             dynamic_nodes=self.visitor.dynamic_nodes,
             filename=self.filename,
             file_identifier=self.visitor.file_identifier,
+            file_root_package_name=self.visitor.file_root_package_name,
         )
 
     def check_custom_import_rules(self) -> Generator[Any, None, None]:

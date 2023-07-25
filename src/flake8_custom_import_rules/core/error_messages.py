@@ -57,3 +57,15 @@ def third_party_only_error(
         # f"which is not a third-party library."
     )
     return standard_error_message(node, error_code, custom_explanation)
+
+
+def first_party_only_error(
+    node: ParsedNode,
+    error_code: ErrorCode,
+) -> ErrorMessage:
+    """Generate error message for third-party only."""
+    custom_explanation = (
+        f"Using '{node.import_node}'."
+        # f"which is not a first-party library."
+    )
+    return standard_error_message(node, error_code, custom_explanation)
