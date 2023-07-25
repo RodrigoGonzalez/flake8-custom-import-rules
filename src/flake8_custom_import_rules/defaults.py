@@ -42,6 +42,7 @@ STANDARD_PROJECT_LEVEL_RESTRICTION_KEYS = [
     "private",
     "wildcard",
     "aliased",
+    "future",
     "init",
     "main",
     "test",
@@ -89,6 +90,7 @@ class Settings:
     RESTRICT_PRIVATE_IMPORTS: bool = True
     RESTRICT_WILDCARD_IMPORTS: bool = True
     RESTRICT_ALIASED_IMPORTS: bool = False
+    RESTRICT_FUTURE_IMPORTS: bool = False
 
     RESTRICT_INIT_IMPORTS: bool = True
     RESTRICT_MAIN_IMPORTS: bool = True

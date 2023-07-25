@@ -1,4 +1,4 @@
-""" Test aliased import restrictions.
+"""Test aliased import restrictions.
 
 PIR108 = "PIR108 Aliased imports are disabled for this project."
 """
