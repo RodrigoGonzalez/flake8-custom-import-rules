@@ -11,6 +11,7 @@ from flake8_custom_import_rules.codes.error_codes import ErrorCode
 from flake8_custom_import_rules.core.error_messages import ErrorMessage
 from flake8_custom_import_rules.core.error_messages import standard_error_message
 from flake8_custom_import_rules.core.error_messages import std_lib_only_error
+from flake8_custom_import_rules.core.error_messages import third_party_only_error
 from flake8_custom_import_rules.core.nodes import DynamicStringFromImport
 from flake8_custom_import_rules.core.nodes import DynamicStringStraightImport
 from flake8_custom_import_rules.core.nodes import ImportType
@@ -45,6 +46,7 @@ class CustomImportRules:
     file_identifier: str = field(default=None)
     check_custom_import_rules: bool = field(default=False)
     std_lib_only: bool = field(default=False)
+    third_party_only: bool = field(default=False)
 
     import_restrictions: dict = field(factory=dict)
     isolated_modules: list[str] = field(factory=list)
@@ -75,6 +77,11 @@ class CustomImportRules:
             self.checker_settings.STD_LIB_ONLY,
         )
         logging.debug(f"STD LIB ONLY: {self.std_lib_only}")
+        self.third_party_only = does_file_match_custom_rule(
+            self.file_identifier,
+            self.checker_settings.THIRD_PARTY_ONLY,
+        )
+        logging.debug(f"THIRD PARTY ONLY: {self.third_party_only}")
 
     def check_import_rules(self) -> Generator[ErrorMessage, None, None]:
         """Check imports"""
@@ -132,6 +139,13 @@ class CustomImportRules:
 
             elif isinstance(node, ParsedFromImport):
                 yield from self._check_for_cir402(node)
+
+        if self.third_party_only:
+            if isinstance(node, ParsedStraightImport):
+                yield from self._check_for_cir501(node)
+
+            elif isinstance(node, ParsedFromImport):
+                yield from self._check_for_cir502(node)
 
     def _check_project_level_restrictions(
         self, node: ParsedNode
@@ -366,13 +380,23 @@ class CustomImportRules:
 
     def _check_for_cir501(self, node: ParsedNode) -> Generator[ErrorMessage, None, None]:
         """Check for CIR501."""
-        if ErrorCode.CIR501.code in self.codes_to_check:
-            yield standard_error_message(node, ErrorCode.CIR501)
+        condition = node.import_type not in {
+            ImportType.FUTURE,
+            ImportType.STDLIB,
+            ImportType.THIRD_PARTY,
+        }
+        if ErrorCode.CIR501.code in self.codes_to_check and condition:
+            yield third_party_only_error(node, ErrorCode.CIR501)
 
     def _check_for_cir502(self, node: ParsedNode) -> Generator[ErrorMessage, None, None]:
         """Check for CIR502."""
-        if ErrorCode.CIR502.code in self.codes_to_check:
-            yield standard_error_message(node, ErrorCode.CIR502)
+        condition = node.import_type not in {
+            ImportType.FUTURE,
+            ImportType.STDLIB,
+            ImportType.THIRD_PARTY,
+        }
+        if ErrorCode.CIR502.code in self.codes_to_check and condition:
+            yield third_party_only_error(node, ErrorCode.CIR502)
 
     def _check_for_pir101(self, node: ParsedNode) -> Generator[ErrorMessage, None, None]:
         """Check for PIR101, only top level imports are permitted."""

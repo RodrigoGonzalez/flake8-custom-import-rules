@@ -42,6 +42,18 @@ def std_lib_only_error(
     """Generate error message for std lib only."""
     custom_explanation = (
         f"Using '{node.import_node}'."
-        # f"which is not in the Python standard library."
+        # f"which is not a Python standard library."
+    )
+    return standard_error_message(node, error_code, custom_explanation)
+
+
+def third_party_only_error(
+    node: ParsedNode,
+    error_code: ErrorCode,
+) -> ErrorMessage:
+    """Generate error message for third-party only."""
+    custom_explanation = (
+        f"Using '{node.import_node}'."
+        # f"which is not a third-party library."
     )
     return standard_error_message(node, error_code, custom_explanation)
