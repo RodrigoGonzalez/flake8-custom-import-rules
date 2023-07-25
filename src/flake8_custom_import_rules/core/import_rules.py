@@ -50,11 +50,11 @@ class CustomImportRules:
     project_only: bool = field(default=False)
     base_package_only: bool = field(default=False)
     first_party_only: bool = field(default=False)
+    isolated_module: bool = field(default=False)
     std_lib_only: bool = field(default=False)
     third_party_only: bool = field(default=False)
 
     import_restrictions: dict = field(factory=dict)
-    isolated_modules: list[str] = field(factory=list)
     foundation_modules: list[str] = field(factory=list)
 
     check_top_level_only: bool = field(default=False)
@@ -69,16 +69,13 @@ class CustomImportRules:
             self.filename not in self.checker_settings.stdin_identifiers
         )
         logging.debug(f"file_identifier: {self.file_identifier}")
-        # self.file_root_package_name = root_package_name(self.file_identifier)
+
         options = self.options
 
         self.import_restrictions = parse_custom_rule(
             options.get("import_restrictions", []),
         )
-        self.isolated_modules = options.get(
-            "isolated_modules",
-            [],
-        )
+
         self.project_only = does_file_match_custom_rule(
             self.file_identifier,
             self.checker_settings.PROJECT_ONLY,
@@ -96,6 +93,12 @@ class CustomImportRules:
             self.checker_settings.FIRST_PARTY_ONLY,
         )
         # logging.debug(f"FIRST_PARTY_ONLY: {self.first_party_only}")
+
+        self.isolated_module = does_file_match_custom_rule(
+            self.file_identifier,
+            self.checker_settings.ISOLATED_MODULES,
+        )
+        logging.debug(f"ISOLATED_MODULES: {self.isolated_module}")
 
         self.std_lib_only = does_file_match_custom_rule(
             self.file_identifier,
@@ -135,24 +138,21 @@ class CustomImportRules:
         #         code_offset, file_identifier, import_string, module_name, node
         #     )
         #
-        #     # Check isolated imports
-        #     self._check_isolated_imports(
-        #         code_offset, file_identifier, import_string, module_name, node
-        #     )
-        #
-        #     # Check standard library only imports
-        #     self._check_std_lib_only_imports(
-        #         code_offset, file_identifier, import_string, module_name, node
-        #     )
         # _ = node
         # for node in self.nodes:
         #     if self.check_top_level_only and node.level != 0:
         #         break
-        yield from self._check_custom_import_rules(node)
+
+        # Custom Import Rules can only be checked for files
+        # that we have a filename for
+        if self.check_custom_import_rules:
+            yield from self._check_custom_import_rules(node)
         yield from self._check_project_level_restrictions(node)
 
     def _check_custom_import_rules(self, node: ParsedNode) -> Generator[ErrorMessage, None, None]:
+        """Check custom import rules"""
         yield from self._check_project_imports(node)
+        yield from self._check_if_isolated_module(node)
         yield from self._check_std_lib_only_imports(node)
         yield from self._check_third_party_only_imports(node)
 
@@ -181,6 +181,18 @@ class CustomImportRules:
 
             if isinstance(node, ParsedFromImport):
                 yield from self._check_for_cir206(node)
+
+    def _check_if_isolated_module(
+        self,
+        node: ParsedNode,
+    ) -> Generator[ErrorMessage, None, None]:
+        """Check isolated module"""
+        if self.isolated_module:
+            if isinstance(node, ParsedStraightImport):
+                yield from self._check_for_cir301(node)
+
+            elif isinstance(node, ParsedFromImport):
+                yield from self._check_for_cir302(node)
 
     def _check_std_lib_only_imports(
         self,
@@ -328,22 +340,16 @@ class CustomImportRules:
 
     def _check_isolated_imports(
         self,
-        code_offset: int,
-        file_identifier: str,
-        import_string: str,
-        module_name: str,
         node: ParsedNode,
     ) -> Generator[tuple[int, int, str, type], Any, Any] | None:
         """Check isolated imports"""
-        if file_identifier in self.isolated_modules and any(
-            module_name.startswith(prefix) for prefix in self.isolated_modules
-        ):
+        if self.isolated_module:
             yield self.error(
-                f"CIM{201 + code_offset}",
+                "CIM201",
                 node.lineno,
                 node.col_offset,
                 (
-                    f"Using '{import_string}' in module '{file_identifier}' "
+                    f"Using '{node.import_node}' in module '{self.file_identifier}' "
                     f"cannot import from other modules within the base module."
                 ),
             )
@@ -458,14 +464,28 @@ class CustomImportRules:
             yield first_party_only_error(node, ErrorCode.CIR206)
 
     def _check_for_cir301(self, node: ParsedStraightImport) -> Generator[ErrorMessage, None, None]:
-        """Check for CIR301."""
-        if ErrorCode.CIR301.code in self.codes_to_check:
+        """Check for CIR301, check if isolated module."""
+        condition = node.import_type != ImportType.FIRST_PARTY
+        if ErrorCode.CIR301.code in self.codes_to_check and condition:
             yield standard_error_message(node, ErrorCode.CIR301)
 
     def _check_for_cir302(self, node: ParsedFromImport) -> Generator[ErrorMessage, None, None]:
-        """Check for CIR302."""
-        if ErrorCode.CIR302.code in self.codes_to_check:
+        """Check for CIR302, check if isolated module."""
+        condition = node.import_type != ImportType.FIRST_PARTY
+        if ErrorCode.CIR302.code in self.codes_to_check and condition:
             yield standard_error_message(node, ErrorCode.CIR302)
+
+    def _check_for_cir303(self, node: ParsedStraightImport) -> Generator[ErrorMessage, None, None]:
+        """Check for CIR303, check if isolated module."""
+        condition = node.import_type != ImportType.FIRST_PARTY
+        if ErrorCode.CIR303.code in self.codes_to_check and condition:
+            yield standard_error_message(node, ErrorCode.CIR303)
+
+    def _check_for_cir304(self, node: ParsedFromImport) -> Generator[ErrorMessage, None, None]:
+        """Check for CIR304, check if isolated module."""
+        condition = node.import_type != ImportType.FIRST_PARTY
+        if ErrorCode.CIR304.code in self.codes_to_check and condition:
+            yield standard_error_message(node, ErrorCode.CIR304)
 
     def _check_for_cir401(self, node: ParsedStraightImport) -> Generator[ErrorMessage, None, None]:
         """Check for CIR401."""
