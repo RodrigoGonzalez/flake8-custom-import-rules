@@ -23,6 +23,7 @@ from flake8_custom_import_rules.core.nodes import ParsedIfImport
 from flake8_custom_import_rules.core.nodes import ParsedLocalImport
 from flake8_custom_import_rules.core.nodes import ParsedNode
 from flake8_custom_import_rules.core.nodes import ParsedStraightImport
+from flake8_custom_import_rules.defaults import STDIN_IDENTIFIERS
 from flake8_custom_import_rules.defaults import Settings
 from flake8_custom_import_rules.utils.parse_utils import check_string
 from flake8_custom_import_rules.utils.parse_utils import does_file_match_custom_rule
@@ -67,9 +68,7 @@ class CustomImportRules:
             self.nodes,
             key=lambda element: element.lineno,
         )
-        self.check_custom_import_rules = (
-            self.filename not in self.checker_settings.stdin_identifiers
-        )
+        self.check_custom_import_rules = self.filename not in STDIN_IDENTIFIERS
         logging.debug(f"file_identifier: {self.file_identifier}")
 
         options = self.options
@@ -152,8 +151,8 @@ class CustomImportRules:
         #     if self.check_top_level_only and node.level != 0:
         #         break
 
-        # Custom Import Rules can only be checked for files
-        # that we have a filename for
+        # Custom Import Rules can only be checked for when
+        # filename is provided
         if self.check_custom_import_rules:
             yield from self._check_custom_import_rules(node)
         yield from self._check_project_level_restrictions(node)
@@ -351,22 +350,6 @@ class CustomImportRules:
                 (
                     f"Using '{import_string}' in module '{file_identifier}' "
                     f"is not allowed to import '{module_name}'."
-                ),
-            )
-
-    def _check_isolated_imports(
-        self,
-        node: ParsedNode,
-    ) -> Generator[tuple[int, int, str, type], Any, Any] | None:
-        """Check isolated imports"""
-        if self.isolated_module:
-            yield self.error(
-                "CIM201",
-                node.lineno,
-                node.col_offset,
-                (
-                    f"Using '{node.import_node}' in module '{self.file_identifier}' "
-                    f"cannot import from other modules within the base module."
                 ),
             )
 

@@ -31,7 +31,7 @@ class ParsedStraightImport:
     package_names: list[str]
     private_identifier_import: bool
     private_module_import: bool
-    import_node: str
+    import_statement: str
     identifier: str = field(init=False)
 
     def __attrs_post_init__(self) -> None:
@@ -56,7 +56,7 @@ class ParsedFromImport:
     package_names: list[str]
     private_identifier_import: bool
     private_module_import: bool
-    import_node: str
+    import_statement: str
     identifier: str = field(init=False)
 
     def __attrs_post_init__(self) -> None:
@@ -71,7 +71,7 @@ class ParsedLocalImport:
     lineno: int
     col_offset: int
     local_node_type: str
-    import_node: str
+    import_statement: str
 
 
 @define(slots=True)

@@ -1,7 +1,7 @@
 """ Flake8 linter for flake8-custom-import-rules. """
 import ast
+import importlib.metadata
 import logging
-import sys
 from argparse import Namespace
 from collections.abc import Generator
 from typing import Any
@@ -17,17 +17,24 @@ from flake8_custom_import_rules.defaults import Settings
 from flake8_custom_import_rules.defaults import register_opt
 from flake8_custom_import_rules.defaults import register_options
 
-if sys.version_info < (3, 8):
-    import importlib_metadata
-else:
-    import importlib.metadata as importlib_metadata
-
 logger = logging.getLogger(f"flake8_custom_import_rules.{__name__}")
 
 
 class Linter(CustomImportRulesChecker):
+    """Flake8 linter for flake8-custom-import-rules.
+
+    Attributes
+    ----------
+    name : str
+        The name of the plugin.
+    version : str
+        The version of the plugin.
+    _options : dict[str, list[str] | str]
+        The options for the plugin.
+    """
+
     name = "flake8-custom-import-rules"
-    version = importlib_metadata.version(name)
+    version = importlib.metadata.version(name)
     _options: dict[str, list[str] | str] = {}
 
     def __init__(
@@ -37,11 +44,6 @@ class Linter(CustomImportRulesChecker):
         lines: list | None = None,
     ) -> None:
         """Initialize flake8-custom-import-rules."""
-        # print(f"\n\nTree: {tree}\n\n")
-        # from flake8_custom_import_rules.utils.parse_utils import normalize_path
-        # print(f"\n\nFile Name: {normalize_path(filename)}\n\n")
-        print(f"\n\nFile Name: {filename}\n\n")
-        # print(f"\n\nLines: {lines}\n\n")
         super().__init__(tree=tree, filename=filename, lines=lines)
         logger.info(f"filename: {filename}")
         logger.debug(f"lines: {lines}")
@@ -51,7 +53,7 @@ class Linter(CustomImportRulesChecker):
     def add_options(cls, option_manager: OptionManager) -> None:
         """Add options for flake8-custom-import-rules.
 
-        For full customization of options added, see
+        For full customization of options that can be added, see
         https://github.com/PyCQA/flake8/blob/main/src/flake8/options/manager.py
         """
         # Add options for CustomImportRulesChecker
@@ -102,9 +104,8 @@ class Linter(CustomImportRulesChecker):
         logger.debug(f"Option Manager: {option_manager}")
         logger.debug(f"Options: {parse_options}")
         logger.debug(f"Args: {args}")
-        # print("\nOptions:")
-        # print(parse_options)
-        # print(f"\nArgs: {args}")
+        print(f"\n\nOptions: {parse_options}")
+        print(f"\n\nArgs: {args}")
 
         # Parse options for CustomImportRulesChecker
         base_packages: str | list = parse_options.base_packages
@@ -117,7 +118,6 @@ class Linter(CustomImportRulesChecker):
 
         # Update options with the options set in the config or on the command line
         for option_key in DEFAULT_CHECKER_SETTINGS.get_option_keys():
-            # print(f"\n\nOption Key: {option_key}")
             option_value = getattr(parse_options, option_key.lower())
             if option_value is not None:
                 options[option_key] = option_value
@@ -129,7 +129,6 @@ class Linter(CustomImportRulesChecker):
         }
 
         logger.debug(f"Parsed Options: {parsed_options}")
-        # print(f"\n\nParsed Options: {parsed_options}")
         cls._options = parsed_options
 
     def error(self, error: ErrorMessage) -> tuple:
@@ -144,5 +143,5 @@ class Linter(CustomImportRulesChecker):
     def run(self) -> Generator[tuple[int, int, str, type[Any]], None, None]:
         """Run flake8-custom-import-rules."""
         # Run CustomImportRulesChecker
-        print(f"\n\nRun Options: {self.options}")
+        logger.debug(f"Run Options: {self.options}")
         yield from self.check_custom_import_rules()

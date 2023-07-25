@@ -61,10 +61,12 @@ class CustomImportRulesVisitor(ast.NodeVisitor):
         you're importing.
     identifiers_by_lineno : defaultdict[str, list]
         Identifiers by line number
-    python_version : str
-        The current python version
     stdlib_names : set | frozenset
         Standard library names for the current Python version
+    file_identifier : str | None
+        The file identifier (i.e., the module name)
+    file_root_package_name : str | None
+        The file root package name
     """
 
     base_packages: list[str] = field(factory=list)
@@ -76,7 +78,6 @@ class CustomImportRulesVisitor(ast.NodeVisitor):
     resolve_local_imports: bool | None = field(default=False)
     identifiers: defaultdict[str, dict] = defaultdict(lambda: defaultdict(str))
     identifiers_by_lineno: defaultdict[str, list] = defaultdict(list)
-    python_version: str = field(init=False)
     stdlib_names: set | frozenset = field(init=False)
     file_identifier: str | None = field(init=False)
     file_root_package_name: str | None = field(init=False)
@@ -90,7 +91,7 @@ class CustomImportRulesVisitor(ast.NodeVisitor):
         sys.stdlib_module_names to self.stdlib_names.
         """
         self.resolve_local_imports = self.filename not in STDIN_IDENTIFIERS
-        logger.info(f"Resolve local imports: {self.resolve_local_imports}")
+        logger.debug(f"Resolve local imports: {self.resolve_local_imports}")
         self.file_path = (
             Path(self.filename) if (self.resolve_local_imports and self.filename) else None
         )
@@ -102,10 +103,11 @@ class CustomImportRulesVisitor(ast.NodeVisitor):
             root_package_name(self.file_identifier) if self.resolve_local_imports else None
         )
 
-        self.python_version = f"{sys.version_info.major}.{sys.version_info.minor}"
         if sys.version_info < (3, 10):
             # stdlib_list only supports up to Python 3.9
-            self.stdlib_names = set(stdlib_list(self.python_version))
+            self.stdlib_names = set(
+                stdlib_list(f"{sys.version_info.major}.{sys.version_info.minor}")
+            )
         else:
             self.stdlib_names = sys.stdlib_module_names
 
@@ -127,7 +129,7 @@ class CustomImportRulesVisitor(ast.NodeVisitor):
         raise NotImplementedError("This method is not implemented yet.")
 
     @staticmethod
-    def _get_import_node(module_info: dict) -> ParsedStraightImport:
+    def _get_straight_import_node(module_info: dict) -> ParsedStraightImport:
         """
         Get a parsed import node.
 
@@ -152,7 +154,7 @@ class CustomImportRulesVisitor(ast.NodeVisitor):
             package_names=module_info["package_names"],
             private_identifier_import=module_info["private_identifier_import"],
             private_module_import=module_info["private_module_import"],
-            import_node=module_info["import_node"],
+            import_statement=module_info["import_statement"],
         )
 
     def visit_Import(self, node: ast.Import) -> None:
@@ -165,7 +167,7 @@ class CustomImportRulesVisitor(ast.NodeVisitor):
         for alias in node.names:
             module_info = parsed_imports_dict[alias.name]
             module_info["import_type"] = self._classify_type(module_info["package_names"])
-            parsed_import = self._get_import_node(module_info)
+            parsed_import = self._get_straight_import_node(module_info)
 
             self.nodes.append(parsed_import)
             self.identifiers_by_lineno[str(node.lineno)].append(module_info)
@@ -220,7 +222,7 @@ class CustomImportRulesVisitor(ast.NodeVisitor):
             package_names=name_info["package_names"],
             private_identifier_import=name_info["private_identifier_import"],
             private_module_import=name_info["private_module_import"],
-            import_node=name_info["import_node"],
+            import_statement=name_info["import_statement"],
         )
 
     def visit_ImportFrom(self, node: ast.ImportFrom) -> None:
@@ -257,7 +259,7 @@ class CustomImportRulesVisitor(ast.NodeVisitor):
                         lineno=stmt.lineno,
                         col_offset=stmt.col_offset,
                         local_node_type=str(type(node)),
-                        import_node=ast.unparse(stmt),
+                        import_statement=ast.unparse(stmt),
                     )
                 )
 
@@ -311,8 +313,8 @@ class CustomImportRulesVisitor(ast.NodeVisitor):
         try:
             node = ast.parse(value)
 
-        except SyntaxError:
-            logger.warning(f"Syntax error in string {value} at line {lineno}, column {col_offset}")
+        except (SyntaxError, TypeError, ValueError):
+            logger.warning(f"Parsing error in string {value} at line {lineno}, column {col_offset}")
             dynamic_node_failure = DynamicStringParseSyntaxFailure(
                 lineno=lineno, col_offset=col_offset, value=value
             )
@@ -522,7 +524,7 @@ class DynamicStringVisitor(ast.NodeVisitor):
                 package_names=module_info["package_names"],
                 private_identifier_import=module_info["private_identifier_import"],
                 private_module_import=module_info["private_module_import"],
-                import_node=module_info["import_node"],
+                import_statement=module_info["import_statement"],
             )
             self.nodes.append(dynamic_string_import)
 
@@ -550,7 +552,7 @@ class DynamicStringVisitor(ast.NodeVisitor):
                 package_names=name_info["package_names"],
                 private_identifier_import=name_info["private_identifier_import"],
                 private_module_import=name_info["private_module_import"],
-                import_node=name_info["import_node"],
+                import_statement=name_info["import_statement"],
             )
             self.nodes.append(dynamic_string_from_import)
 

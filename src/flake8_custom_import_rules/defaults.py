@@ -13,7 +13,7 @@ from flake8.options.manager import OptionManager
 
 POTENTIAL_DYNAMIC_IMPORTS = {
     "__import__",
-    "importlib",
+    # "importlib",
     "importlib.import_module",
     "import_module",
     "importlib.util",
@@ -35,18 +35,18 @@ POTENTIAL_DYNAMIC_IMPORTS = {
 STDIN_IDENTIFIERS = {"stdin", "-", "/dev/stdin", "", None}
 
 STANDARD_PROJECT_LEVEL_RESTRICTION_KEYS = [
-    "relative",
-    "local",
-    "conditional",
-    "dynamic",
-    "private",
-    "wildcard",
-    "aliased",
-    "future",
-    "init",
-    "main",
-    "test",
-    "conftest",
+    "RESTRICT_RELATIVE_IMPORTS",
+    "RESTRICT_LOCAL_IMPORTS",
+    "RESTRICT_CONDITIONAL_IMPORTS",
+    "RESTRICT_DYNAMIC_IMPORTS",
+    "RESTRICT_PRIVATE_IMPORTS",
+    "RESTRICT_WILDCARD_IMPORTS",
+    "RESTRICT_ALIASED_IMPORTS",
+    "RESTRICT_FUTURE_IMPORTS",
+    "RESTRICT_INIT_IMPORTS",
+    "RESTRICT_MAIN_IMPORTS",
+    "RESTRICT_TEST_IMPORTS",
+    "RESTRICT_CONFTEST_IMPORTS",
 ]
 
 CUSTOM_IMPORT_RULES = [
@@ -73,16 +73,6 @@ def convert_to_list(value: str | list[str] | None) -> list:
 class Settings:
     """The default settings for the flake8_custom_import_rules plugin."""
 
-    BASE_PACKAGES: str | list[str] | None = None
-    IMPORT_RESTRICTIONS: str | list[str] | None = None
-    RESTRICTED_PACKAGES: str | list[str] | None = None
-    ISOLATED_MODULES: str | list[str] | None = None
-    STD_LIB_ONLY: str | list[str] | None = None
-    THIRD_PARTY_ONLY: str | list[str] | None = None
-    FIRST_PARTY_ONLY: str | list[str] | None = None
-    PROJECT_ONLY: str | list[str] | None = None
-    BASE_PACKAGE_ONLY: str | list[str] | None = None
-
     # Set Defaults for Project Import Restrictions
     TOP_LEVEL_ONLY_IMPORTS: bool = True
     RESTRICT_RELATIVE_IMPORTS: bool = True
@@ -99,29 +89,34 @@ class Settings:
     RESTRICT_TEST_IMPORTS: bool = True
     RESTRICT_CONFTEST_IMPORTS: bool = True
 
-    import_rules: dict = field(factory=dict)
-    stdin_identifiers: set = STDIN_IDENTIFIERS
-    _dict: dict | None = None
+    # Set Defaults for Custom Import Rules
 
-    def __attrs_post_init__(self) -> None:
-        """Post init."""
-        self._dict = asdict(self)
-        self.BASE_PACKAGES = convert_to_list(self.BASE_PACKAGES)
-        self.IMPORT_RESTRICTIONS = convert_to_list(self.IMPORT_RESTRICTIONS)
-        self.RESTRICTED_PACKAGES = convert_to_list(self.RESTRICTED_PACKAGES)
-        self.ISOLATED_MODULES = convert_to_list(self.ISOLATED_MODULES)
-        self.STD_LIB_ONLY = convert_to_list(self.STD_LIB_ONLY)
-        self.THIRD_PARTY_ONLY = convert_to_list(self.THIRD_PARTY_ONLY)
-        self.FIRST_PARTY_ONLY = convert_to_list(self.FIRST_PARTY_ONLY)
-        self.PROJECT_ONLY = convert_to_list(self.PROJECT_ONLY)
-        self.BASE_PACKAGE_ONLY = convert_to_list(self.BASE_PACKAGE_ONLY)
+    BASE_PACKAGES: list = field(factory=list, converter=convert_to_list)
+    IMPORT_RESTRICTIONS: list = field(factory=list, converter=convert_to_list)
+    RESTRICTED_PACKAGES: list = field(factory=list, converter=convert_to_list)
+    ISOLATED_MODULES: list = field(factory=list, converter=convert_to_list)
+    STD_LIB_ONLY: list = field(factory=list, converter=convert_to_list)
+    THIRD_PARTY_ONLY: list = field(factory=list, converter=convert_to_list)
+    FIRST_PARTY_ONLY: list = field(factory=list, converter=convert_to_list)
+    PROJECT_ONLY: list = field(factory=list, converter=convert_to_list)
+    BASE_PACKAGE_ONLY: list = field(factory=list, converter=convert_to_list)
+
+    _import_rules: dict = field(factory=dict)
+
+    # def __attrs_post_init__(self) -> None:
+    #     """Post init."""
+
+    @property
+    def import_rules(self) -> dict:
+        """Return the settings as a dictionary."""
+        if not self._import_rules:
+            self._import_rules = asdict(self)
+        return self._import_rules
 
     @property
     def dict(self) -> dict:
         """Return the settings as a dictionary."""
-        if not self._dict:
-            self._dict = asdict(self)
-        return self._dict
+        return asdict(self)
 
     def get_option_keys(self) -> list:
         """Return the options as a dictionary."""
@@ -179,7 +174,7 @@ def register_options(
     assert isinstance(item, str), f"Item must be a str. Got {type(item).__name__} for {item}."
 
     if is_restriction:
-        setting_key = f"RESTRICT_{item.upper()}_IMPORTS"
+        setting_key = item.upper()
         option_default_value = DEFAULT_CHECKER_SETTINGS.get_settings_value(setting_key)
         if not help_string:
             help_string = (

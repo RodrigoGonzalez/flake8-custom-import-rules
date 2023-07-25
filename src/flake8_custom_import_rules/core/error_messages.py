@@ -42,7 +42,7 @@ def isolated_imports_error(
 ) -> ErrorMessage:
     """Generate error message for isolated imports."""
     custom_explanation = (
-        f"Using '{node.import_node}'. Isolated module '{file_identifier}' "
+        f"Using '{node.import_statement}'. Isolated module '{file_identifier}' "
         f"cannot import from project packages."
     )
     return standard_error_message(node, error_code, custom_explanation)
@@ -54,7 +54,7 @@ def std_lib_only_error(
 ) -> ErrorMessage:
     """Generate error message for std lib only."""
     custom_explanation = (
-        f"Using '{node.import_node}'."
+        f"Using '{node.import_statement}'."
         # f"which is not a Python standard library."
     )
     return standard_error_message(node, error_code, custom_explanation)
@@ -66,7 +66,7 @@ def third_party_only_error(
 ) -> ErrorMessage:
     """Generate error message for third-party only."""
     custom_explanation = (
-        f"Using '{node.import_node}'."
+        f"Using '{node.import_statement}'."
         # f"which is not a third-party library."
     )
     return standard_error_message(node, error_code, custom_explanation)
@@ -78,7 +78,7 @@ def first_party_only_error(
 ) -> ErrorMessage:
     """Generate error message for third-party only."""
     custom_explanation = (
-        f"Using '{node.import_node}'."
+        f"Using '{node.import_statement}'."
         # f"which is not a first-party library."
     )
     return standard_error_message(node, error_code, custom_explanation)
