@@ -35,7 +35,7 @@ class Plugin(CustomImportRulesChecker):
 
     name = "flake8-custom-import-rules"
     version = importlib.metadata.version(name)
-    _options: dict[str, list[str] | str] = {}
+    _options: dict[str, Settings | list[str] | str] = {}
 
     def __init__(
         self,

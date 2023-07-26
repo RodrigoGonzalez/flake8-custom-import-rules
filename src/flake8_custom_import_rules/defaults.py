@@ -1,5 +1,6 @@
 """The default settings for the flake8_custom_import_rules plugin."""
 import optparse
+from collections import defaultdict
 from typing import Any
 
 from attrs import asdict
@@ -65,6 +66,16 @@ def convert_to_list(value: str | list[str] | None) -> list:
     return [] if value is None else value
 
 
+def convert_to_dict(value: str | list[str] | None, delimiter: str = ":") -> dict:
+    """Convert a string to a list and strip leading and trailing whitespace."""
+    modules: defaultdict[str, list] = defaultdict(list)
+    module_list = convert_to_list(value)
+    for module in module_list:
+        module, *submodules = module.split(delimiter)
+        modules[module].extend(submodules)
+    return modules
+
+
 @define(slots=True)
 class Settings:
     """The default settings for the flake8_custom_import_rules plugin."""
@@ -88,7 +99,7 @@ class Settings:
     # Set Defaults for Custom Import Rules
 
     BASE_PACKAGES: list = field(factory=list, converter=convert_to_list)
-    IMPORT_RESTRICTIONS: list = field(factory=list, converter=convert_to_list)
+    IMPORT_RESTRICTIONS: defaultdict[str, list] = field(factory=dict, converter=convert_to_dict)
     RESTRICTED_PACKAGES: list = field(factory=list, converter=convert_to_list)
     ISOLATED_MODULES: list = field(factory=list, converter=convert_to_list)
     STD_LIB_ONLY: list = field(factory=list, converter=convert_to_list)
