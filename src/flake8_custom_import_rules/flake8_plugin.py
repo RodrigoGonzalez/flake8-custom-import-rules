@@ -20,7 +20,7 @@ from flake8_custom_import_rules.defaults import register_options
 logger = logging.getLogger(f"flake8_custom_import_rules.{__name__}")
 
 
-class Linter(CustomImportRulesChecker):
+class Plugin(CustomImportRulesChecker):
     """Flake8 linter for flake8-custom-import-rules.
 
     Attributes
@@ -108,13 +108,7 @@ class Linter(CustomImportRulesChecker):
         print(f"\n\nArgs: {args}")
 
         # Parse options for CustomImportRulesChecker
-        base_packages: str | list = parse_options.base_packages
-        if not isinstance(base_packages, list):
-            base_packages = [
-                pkg.strip() for pkg in parse_options.application_import_names.split(",")
-            ]
-
-        options: dict = {"BASE_PACKAGES": base_packages}
+        options: dict = {}
 
         # Update options with the options set in the config or on the command line
         for option_key in DEFAULT_CHECKER_SETTINGS.get_option_keys():
@@ -123,7 +117,7 @@ class Linter(CustomImportRulesChecker):
                 options[option_key] = option_value
 
         parsed_options: dict = {
-            "base_packages": base_packages,
+            "base_packages": options["BASE_PACKAGES"],
             "checker_settings": Settings(**options),
             "test_env": False,
         }
@@ -137,11 +131,12 @@ class Linter(CustomImportRulesChecker):
             error.lineno,
             error.col_offset,
             f"{error.code} {error.message}",
-            Linter,
+            Plugin,
         )
 
     def run(self) -> Generator[tuple[int, int, str, type[Any]], None, None]:
         """Run flake8-custom-import-rules."""
         # Run CustomImportRulesChecker
+        print(f"Run Options: {self.options}")
         logger.debug(f"Run Options: {self.options}")
         yield from self.check_custom_import_rules()

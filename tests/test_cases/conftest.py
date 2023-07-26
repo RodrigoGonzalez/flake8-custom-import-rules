@@ -8,10 +8,10 @@ import pycodestyle
 import pytest
 from flake8.utils import normalize_path
 
-from flake8_custom_import_rules.flake8_linter import Linter
+from flake8_custom_import_rules.flake8_plugin import Plugin
 
 
-@pytest.fixture(scope="function", autouse=True)
+@pytest.fixture(scope="function")
 def get_flake8_linter_results() -> partial:
     """Return a set of results."""
 
@@ -25,7 +25,7 @@ def get_flake8_linter_results() -> partial:
         if options is None:
             options = {}
 
-        linter = Linter(ast.parse(s), lines=s.split(delimiter), filename=filename)
+        linter = Plugin(ast.parse(s), lines=s.split(delimiter), filename=filename)
         linter.update_checker_settings(options)
         return {"{}:{}: {}".format(*r) for r in linter.run()}
 

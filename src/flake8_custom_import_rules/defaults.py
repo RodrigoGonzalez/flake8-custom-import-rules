@@ -7,10 +7,6 @@ from attrs import define
 from attrs import field
 from flake8.options.manager import OptionManager
 
-# import argparse
-# argparse.ArgumentParser.add_argument
-
-
 POTENTIAL_DYNAMIC_IMPORTS = {
     "__import__",
     # "importlib",

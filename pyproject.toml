@@ -125,7 +125,7 @@ omit = ["flake8_custom_import_rules/example_repos/*"]
 #flake8_custom_import.std_lib_only = ["my_base_package.module_D"]
 
 [tool.poetry.scripts]
-CIR = "flake8_custom_import_rules.flake8_linter:Linter"
+CIR = "flake8_custom_import_rules.flake8_linter:Plugin"
 
 [build-system]
 #requires = ["poetry-core"]
