@@ -139,6 +139,35 @@ def does_file_match_custom_rule(file_identifier: str, custom_rules: list[str] | 
     return check_string(file_identifier, prefix=tuple(custom_rules), delimiter=" ")
 
 
+def does_import_match_restricted_imports(
+    node_identifier: str, restricted_imports: list[str] | str | None
+) -> bool:
+    """Check if an import identifier is in a restricted import."""
+    if restricted_imports is None:
+        return False
+    restricted_imports = (
+        [restricted_imports] if isinstance(restricted_imports, str) else restricted_imports
+    )
+    return check_string(node_identifier, prefix=tuple(restricted_imports), delimiter=" ")
+
+
+def get_common_ancestors(current_packages: str, import_packages: str) -> list[str]:
+    """Get the common ancestors of two modules."""
+    return [ancestor for ancestor in import_packages if ancestor in current_packages]
+
+
+def retrieve_custom_rule_matches(identifier: str, custom_rules: list[str] | str) -> list[str]:
+    """Retrieve custom rule matches."""
+    if isinstance(custom_rules, str):
+        custom_rules = [custom_rules]
+    matches: list[str] = [
+        custom_rule_match
+        for custom_rule_match in custom_rules
+        if check_string(identifier, prefix=custom_rule_match, delimiter=" ")
+    ]
+    return matches  # max(matches, key=len)
+
+
 def parse_custom_rule(rules: list[str]) -> dict[str, list[str]]:
     """Parse custom rules."""
     return {src.strip(): dest.split(",") for rule in rules for src, dest in (rule.split(":"),)}
