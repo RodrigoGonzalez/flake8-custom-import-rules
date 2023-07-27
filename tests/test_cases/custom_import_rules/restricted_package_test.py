@@ -41,6 +41,11 @@ MODULE_A_ERRORS = set()
         # ),
         # (
         #     "example_repos/my_base_module/my_second_base_package/module_three.py",
+        #     ["my_second_base_package.module_one", "my_second_base_package"],
+        #     set(),
+        # ),
+        # (
+        #     "example_repos/my_base_module/my_second_base_package/module_three.py",
         #     ["my_base_module"],
         #     set(),
         # ),

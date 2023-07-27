@@ -1,5 +1,6 @@
 """Checker for dependency rules checker."""
 import ast
+import logging
 from collections import defaultdict
 from typing import Any
 from typing import Generator
@@ -14,9 +15,12 @@ from flake8_custom_import_rules.core.node_visitor import CustomImportRulesVisito
 from flake8_custom_import_rules.core.nodes import ParsedFromImport
 from flake8_custom_import_rules.core.nodes import ParsedNode
 from flake8_custom_import_rules.core.nodes import ParsedStraightImport
+from flake8_custom_import_rules.core.restricted_import_visitor import get_restricted_identifiers
 from flake8_custom_import_rules.defaults import DEFAULT_CHECKER_SETTINGS
 from flake8_custom_import_rules.utils.parse_utils import NOQA_INLINE_REGEXP
 from flake8_custom_import_rules.utils.parse_utils import parse_comma_separated_list
+
+logger = logging.getLogger(f"flake8_custom_import_rules.{__name__}")
 
 
 @define(slots=True, hash=False)
@@ -26,10 +30,12 @@ class CustomImportRulesChecker:
     _tree: ast.AST | None = None
     _filename: str | None = None
     _lines: list[str] | None = None
-    _nodes: list[ParsedNode] | None = None
     _visitor: CustomImportRulesVisitor | None = None
+
+    _nodes: list[ParsedNode] | None = None
     _identifiers: defaultdict[str, dict] | None = None
     _identifiers_by_lineno: defaultdict[str, list] | None = None
+
     _options: dict[str, list[str] | str] = field(init=False)
 
     @property
@@ -49,6 +55,8 @@ class CustomImportRulesChecker:
     @property
     def lines(self) -> list[str]:
         """Return the lines."""
+        # if self._lines is None and self._tree is not None:
+        #     self._lines = ast.unparse(self._tree).splitlines(keepends=True)
         if self._lines is None:
             self._lines = (
                 pycodestyle.stdin_get_value().splitlines(True)
@@ -67,6 +75,16 @@ class CustomImportRulesChecker:
             else:
                 self._nodes = self.visitor.nodes
         return self._nodes
+
+    def get_visitor(self) -> CustomImportRulesVisitor:
+        """Return the visitor to use for this plugin."""
+        # print(f"\\nOptions: {self.options}\n\n")
+        visitor = CustomImportRulesVisitor(
+            base_packages=self.options.get("base_packages", []),
+            filename=self.filename,
+        )
+        visitor.visit(self.tree)
+        return visitor
 
     @property
     def visitor(self) -> CustomImportRulesVisitor:
@@ -89,15 +107,13 @@ class CustomImportRulesChecker:
             self._identifiers_by_lineno = self.visitor.identifiers_by_lineno
         return self._identifiers_by_lineno
 
-    def get_visitor(self) -> CustomImportRulesVisitor:
-        """Return the visitor to use for this plugin."""
-        # print(f"\\nOptions: {self.options}\n\n")
-        visitor = CustomImportRulesVisitor(
-            base_packages=self.options.get("base_packages", []),
-            filename=self.filename,
+    @property
+    def restricted_identifiers(self) -> dict:
+        """Return the restricted identifiers."""
+        return get_restricted_identifiers(
+            restricted_imports=self.options.get("restricted_imports", []),
+            check_module_exists=True,
         )
-        visitor.visit(self.tree)
-        return visitor
 
     @property
     def options(self) -> dict:
@@ -123,7 +139,9 @@ class CustomImportRulesChecker:
             dynamic_nodes=self.visitor.dynamic_nodes,
             filename=self.filename,
             file_identifier=self.visitor.file_identifier,
+            # file_identifier=self._file_identifier,
             file_root_package_name=self.visitor.file_root_package_name,
+            # file_root_package_name=self._file_root_package_name,
         )
 
     def check_custom_import_rules(self) -> Generator[Any, None, None]:
