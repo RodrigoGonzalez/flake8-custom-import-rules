@@ -97,17 +97,17 @@ library modules.
 | restricted       | Restrict a package from importing another package, or subpackages or modules from another package. |
 
 
-| RULE              | STD LIB | PROJECT | FIRST PARTY | THIRD PARTY | FUTURE |
-|-------------------|---------|---------|-------------|-------------|--------|
-| std_lib_only      | X       |         |             |             | X      |
-| project_only      | X       | X       | X           |             | X      |
-| base_package_only | X       | X       |             |             | X      |
-| first_party_only  | X       |         | X           |             | X      |
-| third_party_only  | X       |         |             | X           | X      |
-| isolated          | X       |         |             | X           | X      |
+| RULE              | STD LIB | PROJECT* | FIRST PARTY | THIRD PARTY | FUTURE |
+|-------------------|---------|----------|-------------|-------------|--------|
+| std_lib_only      | X       |          |             |             | X      |
+| project_only      | X       | X        | X           |             | X      |
+| base_package_only | X       | X        |             |             | X      |
+| first_party_only  | X       |          | X           |             | X      |
+| third_party_only  | X       |          |             | X           | X      |
+| isolated          | X       |          |             | X           | X      |
 
 
-
+*Technically project imports are "First Party" imports, but in this case we want to make a distinction between the top-level package and the rest of the project.
 
 # Example Configuration
 

@@ -3,7 +3,6 @@ from __future__ import annotations
 
 import logging
 from collections import defaultdict
-from typing import Any
 from typing import Callable
 from typing import Generator
 
@@ -14,6 +13,7 @@ from flake8_custom_import_rules.codes.error_codes import ErrorCode
 from flake8_custom_import_rules.core.error_messages import ErrorMessage
 from flake8_custom_import_rules.core.error_messages import first_party_only_error
 from flake8_custom_import_rules.core.error_messages import isolated_imports_error
+from flake8_custom_import_rules.core.error_messages import restricted_imports_error
 from flake8_custom_import_rules.core.error_messages import standard_error_message
 from flake8_custom_import_rules.core.error_messages import std_lib_only_error
 from flake8_custom_import_rules.core.error_messages import third_party_only_error
@@ -30,6 +30,7 @@ from flake8_custom_import_rules.defaults import STDIN_IDENTIFIERS
 from flake8_custom_import_rules.defaults import Settings
 from flake8_custom_import_rules.utils.parse_utils import check_string
 from flake8_custom_import_rules.utils.parse_utils import does_file_match_custom_rule
+from flake8_custom_import_rules.utils.parse_utils import does_import_match_restricted_imports
 
 logger = logging.getLogger(f"flake8_custom_import_rules.{__name__}")
 
@@ -41,9 +42,9 @@ def filename_not_in_stdin_identifiers(
     return filename not in STDIN_IDENTIFIERS
 
 
-def get_rule(option_key: str) -> Callable[[CustomImportRules], bool]:
+def get_file_matches_custom_rule(option_key: str) -> Callable[[CustomImportRules], bool]:
     """Get rule."""
-    option_key = option_key.upper()  # ensure option_key is upper case
+    option_key = option_key.upper()
 
     def match_custom_rule(instance: CustomImportRules) -> bool:
         """Match custom rule."""
@@ -59,7 +60,7 @@ def get_rule(option_key: str) -> Callable[[CustomImportRules], bool]:
 
 def get_isolated_package_rule(option_key: str) -> Callable[[CustomImportRules], bool]:
     """Get isolated package rule."""
-    option_key = option_key.upper()  # ensure option_key is upper case
+    option_key = option_key.upper()
 
     def isolated_package(instance: CustomImportRules) -> bool:
         """Match custom rule."""
@@ -99,6 +100,8 @@ class CustomImportRules:
     third_party_only: bool = field(default=False)
 
     import_restrictions: dict = field(factory=dict)
+    restricted_packages: list[str] = field(factory=list)
+    file_in_restricted_packages: bool = field(default=False)
     foundation_modules: list[str] = field(factory=list)
 
     check_top_level_only: bool = field(default=False)
@@ -108,13 +111,20 @@ class CustomImportRules:
         logging.debug(f"file_identifier: {self.file_identifier}")
         self.nodes = sorted(self.nodes, key=lambda element: element.lineno)
 
-        self.project_only = get_rule("PROJECT_ONLY")(self)
-        self.base_package_only = get_rule("BASE_PACKAGE_ONLY")(self)
-        self.first_party_only = get_rule("FIRST_PARTY_ONLY")(self)
-        self.isolated_module = get_rule("ISOLATED_MODULES")(self)
+        # for these restrictions we want to match a file identifier
+        # because the import rules correspond to an ImportType
+        self.project_only = get_file_matches_custom_rule("PROJECT_ONLY")(self)
+        self.base_package_only = get_file_matches_custom_rule("BASE_PACKAGE_ONLY")(self)
+        self.first_party_only = get_file_matches_custom_rule("FIRST_PARTY_ONLY")(self)
+        self.isolated_module = get_file_matches_custom_rule("ISOLATED_MODULES")(self)
         self.isolated_package = get_isolated_package_rule("ISOLATED_MODULES")(self)
-        self.std_lib_only = get_rule("STD_LIB_ONLY")(self)
-        self.third_party_only = get_rule("THIRD_PARTY_ONLY")(self)
+        self.std_lib_only = get_file_matches_custom_rule("STD_LIB_ONLY")(self)
+        self.third_party_only = get_file_matches_custom_rule("THIRD_PARTY_ONLY")(self)
+
+        self.restricted_packages = self.checker_settings.RESTRICTED_PACKAGES
+        self.file_in_restricted_packages = get_file_matches_custom_rule("RESTRICTED_PACKAGES")(self)
+        print(f"Restricted packages: {self.restricted_packages}")
+        logger.info(f"Restricted packages: {self.restricted_packages}")
 
     def check_import_rules(self) -> Generator[ErrorMessage, None, None]:
         """Check imports"""
@@ -123,35 +133,12 @@ class CustomImportRules:
 
     def _check_import_rules(self, node: ParsedNode) -> Generator[ErrorMessage, None, None]:
         """Check import rules"""
-        # file_identifier = os.path.split(self.filename)[-1].split(".")[0]
-        # is_from_import = isinstance(node, ast.ImportFrom)
-        # code_offset = 1 if is_from_import else 0
-        #
-        # # Adjust the message based on the import type
-        # import_string = "from ... import" if is_from_import else "import"
-        #
-        # for alias in node.names:
-        #     module_name = alias.name.split(".")[0]
-        #
-        #     if is_from_import and isinstance(node, ast.ImportFrom):
-        #         # TODO: Remove this ignore when I figure out how to fix it
-        #         module_name = node.module.split(".")[0]  # type: ignore
-        #
-        #     # Check restricted imports
-        #     self._check_restricted_imports(
-        #         code_offset, file_identifier, import_string, module_name, node
-        #     )
-        #
-        # _ = node
-        # for node in self.nodes:
-        #     if self.check_top_level_only and node.level != 0:
-        #         break
+        yield from self._check_project_level_restrictions(node)
 
         # Custom Import Rules can only be checked when
         # filename is provided
         if self.check_custom_import_rules:
             yield from self._check_custom_import_rules(node)
-        yield from self._check_project_level_restrictions(node)
 
     def _check_custom_import_rules(self, node: ParsedNode) -> Generator[ErrorMessage, None, None]:
         """Check custom import rules"""
@@ -159,6 +146,19 @@ class CustomImportRules:
         yield from self._check_if_isolated_module(node)
         yield from self._check_std_lib_only_imports(node)
         yield from self._check_third_party_only_imports(node)
+        yield from self._check_restricted_imports(node)
+
+    def _check_restricted_imports(
+        self,
+        node: ParsedNode,
+    ) -> Generator[ErrorMessage, None, None]:
+        """Check restricted imports"""
+        if self.restricted_packages:
+            if isinstance(node, ParsedStraightImport):
+                yield from self._check_for_cir106(node)
+
+            elif isinstance(node, ParsedFromImport):
+                yield from self._check_for_cir107(node)
 
     def _check_project_imports(
         self,
@@ -326,29 +326,6 @@ class CustomImportRules:
             yield from self._check_for_pir204(node)
             yield from self._check_for_pir206(node)
 
-    def _check_restricted_imports(
-        self,
-        code_offset: int,
-        file_identifier: str,
-        import_string: str,
-        module_name: str,
-        node: ParsedNode,
-    ) -> Generator[tuple[int, int, str, type], Any, Any] | None:
-        """Check restricted imports"""
-        if (
-            file_identifier in self.import_restrictions
-            and module_name in self.import_restrictions[file_identifier]
-        ):
-            yield self.error(
-                f"CIM{101 + code_offset}",
-                node.lineno,
-                node.col_offset,
-                (
-                    f"Using '{import_string}' in module '{file_identifier}' "
-                    f"is not allowed to import '{module_name}'."
-                ),
-            )
-
     def error(
         self, code: str, lineno: int, col_offset: int, message: str
     ) -> tuple[int, int, str, type]:
@@ -381,15 +358,34 @@ class CustomImportRules:
         if ErrorCode.CIR105.code in self.codes_to_check:
             yield standard_error_message(node, ErrorCode.CIR105)
 
+    def _check_if_restricted_package(self, node: ParsedNode) -> bool:
+        """Check if restricted package."""
+        logging.info(
+            f"Node import_statement: {node.import_statement}, "
+            f"import_type: {node.import_type}, "
+            f"module: {node.module},"
+        )
+        # if node.import_type != ImportType.FIRST_PARTY:
+        #     return False
+        if node.module in self.restricted_packages:
+            return True
+        return bool(does_import_match_restricted_imports(node.identifier, self.restricted_packages))
+
+    def _check_if_file_in_restricted_packages(self, node: ParsedNode) -> bool:
+        """Check if file in restricted packages."""
+        return does_file_match_custom_rule(self.file_identifier, self.restricted_packages)
+
     def _check_for_cir106(self, node: ParsedNode) -> Generator[ErrorMessage, None, None]:
         """Check for CIR106."""
-        if ErrorCode.CIR106.code in self.codes_to_check:
-            yield standard_error_message(node, ErrorCode.CIR106)
+        condition = self._check_if_restricted_package(node)
+        if ErrorCode.CIR106.code in self.codes_to_check and condition:
+            yield restricted_imports_error(node, ErrorCode.CIR106)
 
     def _check_for_cir107(self, node: ParsedNode) -> Generator[ErrorMessage, None, None]:
         """Check for CIR107."""
-        if ErrorCode.CIR107.code in self.codes_to_check:
-            yield standard_error_message(node, ErrorCode.CIR107)
+        condition = self._check_if_restricted_package(node)
+        if ErrorCode.CIR107.code in self.codes_to_check and condition:
+            yield restricted_imports_error(node, ErrorCode.CIR107)
 
     @staticmethod
     def _check_if_project_imports(node: ParsedNode) -> bool:

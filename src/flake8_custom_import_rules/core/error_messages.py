@@ -83,3 +83,15 @@ def first_party_only_error(
         # f"which is not a first-party library."
     )
     return standard_error_message(node, error_code, custom_explanation)
+
+
+def restricted_imports_error(
+    node: ParsedNode,
+    error_code: ErrorCode,
+) -> ErrorMessage:
+    """Generate error message for restricted imports."""
+    custom_explanation = (
+        f"Using '{node.import_statement}'. Restricted package/module "
+        f"cannot be imported outside package/module."
+    )
+    return standard_error_message(node, error_code, custom_explanation)

@@ -91,13 +91,13 @@ class Settings:
     RESTRICT_ALIASED_IMPORTS: bool = False
     RESTRICT_FUTURE_IMPORTS: bool = False
 
+    # Set Defaults for Project Import Restriction Special Cases
     RESTRICT_INIT_IMPORTS: bool = True
     RESTRICT_MAIN_IMPORTS: bool = True
     RESTRICT_TEST_IMPORTS: bool = True
     RESTRICT_CONFTEST_IMPORTS: bool = True
 
     # Set Defaults for Custom Import Rules
-
     BASE_PACKAGES: list = field(factory=list, converter=convert_to_list)
     IMPORT_RESTRICTIONS: defaultdict[str, list] = field(factory=dict, converter=convert_to_dict)
     RESTRICTED_PACKAGES: list = field(factory=list, converter=convert_to_list)
@@ -107,18 +107,6 @@ class Settings:
     FIRST_PARTY_ONLY: list = field(factory=list, converter=convert_to_list)
     PROJECT_ONLY: list = field(factory=list, converter=convert_to_list)
     BASE_PACKAGE_ONLY: list = field(factory=list, converter=convert_to_list)
-
-    _import_rules: dict = field(factory=dict)
-
-    # def __attrs_post_init__(self) -> None:
-    #     """Post init."""
-
-    @property
-    def import_rules(self) -> dict:
-        """Return the settings as a dictionary."""
-        if not self._import_rules:
-            self._import_rules = asdict(self)
-        return self._import_rules
 
     @property
     def dict(self) -> dict:

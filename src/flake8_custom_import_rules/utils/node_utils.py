@@ -3,7 +3,11 @@ import ast
 from collections import defaultdict
 from typing import Generator
 
+from flake8_custom_import_rules.core.nodes import ParsedFromImport
+from flake8_custom_import_rules.core.nodes import ParsedStraightImport
+from flake8_custom_import_rules.utils.parse_utils import get_common_ancestors
 from flake8_custom_import_rules.utils.parse_utils import parse_module_string
+from flake8_custom_import_rules.utils.parse_utils import retrieve_custom_rule_matches
 
 
 def get_package_names(module_name: str) -> list[str] | None:
@@ -169,3 +173,59 @@ def get_name_info_from_import_node(node: ast.ImportFrom) -> dict:
         )
 
     return name_info
+
+
+def is_import_restricted(
+    parsed_import: ParsedStraightImport | ParsedFromImport,
+    current_module: str,
+    restricted_imports: list[str],
+) -> bool:
+    """
+    Check whether a given import is allowed or not.
+
+    Parameters
+    ----------
+    parsed_import : ParsedStraightImport or ParsedFromImport
+        The parsed import statement.
+    current_module : str
+        The module where the import statement is.
+    restricted_imports : list[str]
+        The list of restricted imports.
+
+    Returns
+    -------
+    bool
+        True if the import is allowed, False otherwise.
+    """
+    # Get the module identifier from the parsed import
+    import_module = parsed_import.module
+    import_packages = parsed_import.package_names
+    current_packages = get_package_names(current_module)
+    common_ancestors = get_common_ancestors(current_packages, import_packages)
+
+    # restricted_identifiers = get_restricted_identifiers(
+    #     restricted_imports, check_module_exists=True
+    # )
+
+    matches = retrieve_custom_rule_matches(import_module, restricted_imports)
+
+    # Check if the import is from a restricted module
+    for match in matches:
+        if match not in common_ancestors:
+            return True
+        # restricted_identifier = restricted_identifiers[match]
+        # matches =
+        # if module == restricted_import:
+        #     return False
+        # if import_identifier.startswith(restricted_import):
+        #     # If the current module is a child of the restricted module,
+        #     # the import is allowed
+        #     if current_module.startswith(restricted_import):
+        #         return True
+        #     # If the current module is not a child of the restricted module,
+        #     # the import is not allowed
+        #     else:
+        #         return False
+
+    # If the import is not from a restricted module, it's allowed
+    return False
