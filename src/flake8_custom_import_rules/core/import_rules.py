@@ -123,6 +123,7 @@ class CustomImportRules:
 
         self.restricted_packages = self.checker_settings.RESTRICTED_PACKAGES
         self.file_in_restricted_packages = get_file_matches_custom_rule("RESTRICTED_PACKAGES")(self)
+
         print(f"Restricted packages: {self.restricted_packages}")
         logger.info(f"Restricted packages: {self.restricted_packages}")
 

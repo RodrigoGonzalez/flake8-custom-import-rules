@@ -47,8 +47,6 @@ class CustomImportRulesVisitor(ast.NodeVisitor):
         The resulting nodes from the visitor
     dynamic_nodes : defaultdict[str, list]
         The resulting nodes from the visitor that parses dynamic strings
-    package_root : list[str]
-        The absolute path to the package root
     file_path : Path | None
         File path equal to Path(filename) if filename is not empty or None,
         otherwise None
@@ -73,7 +71,6 @@ class CustomImportRulesVisitor(ast.NodeVisitor):
     filename: str | None = None
     nodes: list = field(factory=list)
     dynamic_nodes: defaultdict[str, list] = defaultdict(list)
-    package_root: list[str] = field(factory=list)
     file_path: Path | None = None
     resolve_local_imports: bool | None = field(default=False)
     identifiers: defaultdict[str, dict] = defaultdict(lambda: defaultdict(str))
@@ -117,8 +114,9 @@ class CustomImportRulesVisitor(ast.NodeVisitor):
 
     def _resolve_local_import(self, module: str, node_level: int) -> Path | None:
         """Resolve a local import."""
-        parent = self.file_path.parents[node_level - 1] if self.file_path else None
-        return parent / f"{module}.py" if parent else None
+        # parent = self.file_path.parents[node_level - 1] if self.file_path else None
+        # return parent / f"{module}.py" if parent else None
+        raise NotImplementedError("This method is not implemented yet.")
 
     def resolve_relative_import(self, relative_import: str) -> str:
         """Resolve a relative import to its absolute form."""
