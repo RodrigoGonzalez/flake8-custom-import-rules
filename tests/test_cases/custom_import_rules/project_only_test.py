@@ -8,8 +8,8 @@ import pytest
 from flake8.utils import normalize_path
 
 from flake8_custom_import_rules.defaults import Settings
+from flake8_custom_import_rules.utils.file_utils import get_module_name_from_filename
 from flake8_custom_import_rules.utils.node_utils import root_package_name
-from flake8_custom_import_rules.utils.parse_utils import get_module_name_from_filename
 
 CIR201 = "CIR201 Non-project package import."
 CIR202 = "CIR202 Non-project module import."

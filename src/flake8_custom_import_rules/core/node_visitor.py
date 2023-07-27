@@ -23,12 +23,12 @@ from flake8_custom_import_rules.core.nodes import ParsedNode
 from flake8_custom_import_rules.core.nodes import ParsedStraightImport
 from flake8_custom_import_rules.defaults import POTENTIAL_DYNAMIC_IMPORTS
 from flake8_custom_import_rules.defaults import STDIN_IDENTIFIERS
+from flake8_custom_import_rules.utils.file_utils import get_module_name_from_filename
 from flake8_custom_import_rules.utils.node_utils import generate_identifier_path
 from flake8_custom_import_rules.utils.node_utils import get_module_info_from_import_node
 from flake8_custom_import_rules.utils.node_utils import get_name_info_from_import_node
 from flake8_custom_import_rules.utils.node_utils import root_package_name
 from flake8_custom_import_rules.utils.parse_utils import check_string
-from flake8_custom_import_rules.utils.parse_utils import get_module_name_from_filename
 
 logger = logging.getLogger(f"flake8_custom_import_rules.{__name__}")
 
