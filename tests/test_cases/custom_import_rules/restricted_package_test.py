@@ -8,8 +8,8 @@ import pytest
 from flake8.utils import normalize_path
 
 from flake8_custom_import_rules.defaults import Settings
+from flake8_custom_import_rules.utils.file_utils import get_module_name_from_filename
 from flake8_custom_import_rules.utils.node_utils import root_package_name
-from flake8_custom_import_rules.utils.parse_utils import get_module_name_from_filename
 
 CIR106 = "CIR106 Restricted package import."
 CIR107 = "CIR107 Restricted module import."
@@ -32,6 +32,15 @@ MODULE_A_ERRORS = set()
         # (
         #     "example_repos/my_base_module/my_second_base_package/module_three.py",
         #     ["my_second_base_package.module_one", "my_second_base_package.module_two"],
+        #     set(),
+        # ),
+        # (
+        #     "example_repos/my_base_module/my_second_base_package/module_three.py",
+        #     [
+        #         "my_second_base_package.module_one",
+        #         "my_second_base_package.module_two",
+        #         "my_base_module",
+        #     ],
         #     set(),
         # ),
         # (

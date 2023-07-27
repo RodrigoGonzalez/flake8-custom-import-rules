@@ -5,9 +5,9 @@ from collections import defaultdict
 from attr import define
 from attr import field
 
+from flake8_custom_import_rules.utils.file_utils import get_file_path_from_module_name
 from flake8_custom_import_rules.utils.node_utils import get_package_names
 from flake8_custom_import_rules.utils.node_utils import root_package_name
-from flake8_custom_import_rules.utils.parse_utils import get_file_path_from_module_name
 
 
 @define(slots=True)
