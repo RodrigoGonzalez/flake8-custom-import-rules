@@ -8,9 +8,9 @@ from attrs import define
 from attrs import field
 
 import my_base_module.module_y
-import my_second_base_package.module_one
+import my_second_base_package.module_one.file_one
 from my_base_module.module_x import X
-from my_second_base_package.module_two import ModuleTwo
+from my_second_base_package.module_one.file_two import ModuleTwo
 
 
 @define(slots=True)
@@ -53,9 +53,9 @@ class ModuleThree:
             description=f"{self._description}: Y",
         )
 
-    def initialize_class_one(self) -> my_second_base_package.module_one.ModuleOne:
+    def initialize_class_one(self) -> my_second_base_package.module_one.file_one.ModuleOne:
         """Initialize class one."""
-        return my_second_base_package.module_one.ModuleOne(
+        return my_second_base_package.module_one.file_one.ModuleOne(
             name=f"{self._name}: ModuleOne",
             description=f"{self._description}: ModuleOne",
         )

@@ -14,11 +14,11 @@ from flake8_custom_import_rules.utils.file_utils import get_relative_path_from_a
     [
         (
             "my_second_base_package.module_one",
-            "example_repos/my_base_module/my_second_base_package/module_one.py",
+            "example_repos/my_base_module/my_second_base_package/module_one/__init__.py",
         ),
         (
             "my_second_base_package.module_two",
-            "example_repos/my_base_module/my_second_base_package/module_two.py",
+            "example_repos/my_base_module/my_second_base_package/module_two/__init__.py",
         ),
         (
             "my_second_base_package.module_three",
@@ -33,19 +33,19 @@ from flake8_custom_import_rules.utils.file_utils import get_relative_path_from_a
         # )
         (
             "my_second_base_package.module_one.file_one",
-            None,
+            "example_repos/my_base_module/my_second_base_package/module_one/file_one.py",
         ),
         (
             "my_second_base_package.module_one.file_two",
-            None,
+            "example_repos/my_base_module/my_second_base_package/module_one/file_two.py",
         ),
         (
             "my_second_base_package.module_two.file_two",
-            None,
+            "example_repos/my_base_module/my_second_base_package/module_two/file_two.py",
         ),
         (
             "my_second_base_package.file",
-            None,
+            "example_repos/my_base_module/my_second_base_package/file.py",
         ),
         (
             "base_package.file",

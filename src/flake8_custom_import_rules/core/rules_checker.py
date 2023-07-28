@@ -35,6 +35,7 @@ class CustomImportRulesChecker:
     _nodes: list[ParsedNode] | None = None
     _identifiers: defaultdict[str, dict] | None = None
     _identifiers_by_lineno: defaultdict[str, list] | None = None
+    _restricted_identifiers: defaultdict[str, dict] | None = None
 
     _options: dict[str, list[str] | str] = field(init=False)
 
@@ -107,12 +108,19 @@ class CustomImportRulesChecker:
             self._identifiers_by_lineno = self.visitor.identifiers_by_lineno
         return self._identifiers_by_lineno
 
-    def get_restricted_identifiers(self) -> dict:
+    def get_restricted_identifiers(self) -> defaultdict[str, dict[Any, Any]] | None:
         """Return the restricted identifiers."""
         return get_restricted_identifiers(
             restricted_imports=self.options.get("restricted_imports", []),
             check_module_exists=True,
         )
+
+    @property
+    def restricted_identifiers(self) -> defaultdict[str, dict[Any, Any]] | None:
+        """Return the restricted identifiers."""
+        if self._restricted_identifiers is None:
+            self._restricted_identifiers = self.get_restricted_identifiers()
+        return self._restricted_identifiers
 
     @property
     def options(self) -> dict:
@@ -135,7 +143,7 @@ class CustomImportRulesChecker:
             checker_settings=self.options.get("checker_settings", DEFAULT_CHECKER_SETTINGS),
             identifiers=self.identifiers,
             identifiers_by_lineno=self.identifiers_by_lineno,
-            restricted_identifiers=self.get_restricted_identifiers(),
+            restricted_identifiers=self.restricted_identifiers,
             dynamic_nodes=self.visitor.dynamic_nodes,
             filename=self.filename,
             file_identifier=self.visitor.file_identifier,

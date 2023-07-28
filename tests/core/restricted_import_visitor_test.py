@@ -23,7 +23,7 @@ PACKAGE_6 = [
 
 @pytest.mark.parametrize(
     ("restricted_imports", "check_module_exists", "expected"),
-    [(PACKAGE_6, True, {}), (PACKAGE_6, False, {})],
+    [(PACKAGE_6, True, {}), (PACKAGE_6, False, {}), ([], True, {})],
 )
 def test_get_restricted_identifiers(
     restricted_imports: list[str] | str,
