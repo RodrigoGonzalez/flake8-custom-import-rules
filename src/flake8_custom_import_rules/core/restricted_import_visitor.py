@@ -15,12 +15,13 @@ from flake8_custom_import_rules.utils.node_utils import root_package_name
 logger = logging.getLogger(__name__)
 
 
-@define(slots=True)
+@define(slots=True, kw_only=True, hash=False)
 class RestrictedImportVisitor(ast.NodeVisitor):
     """Visitor for dynamic strings."""
 
     _restricted_imports: list[str]
     _check_module_exists: bool = field(default=True)
+    _file_packages: list[str] = field(default=list)
     _lines: list[str] = field(init=False)
     _tree: ast.AST = field(init=False)
     _package_names: list = field(factory=list)
@@ -80,6 +81,7 @@ class RestrictedImportVisitor(ast.NodeVisitor):
 def get_restricted_identifiers(
     restricted_imports: list[str] | str,
     check_module_exists: bool = True,
+    file_packages: list | None = None,
 ) -> defaultdict[str, dict]:
     """
     Get restricted identifiers.
@@ -96,8 +98,14 @@ def get_restricted_identifiers(
     defaultdict[str, dict]
         The restricted import node.
     """
+    if not file_packages:
+        file_packages = []
     if isinstance(restricted_imports, str):
         restricted_imports = [restricted_imports]
 
-    visitor = RestrictedImportVisitor(restricted_imports, check_module_exists)
+    visitor = RestrictedImportVisitor(
+        restricted_imports=restricted_imports,
+        check_module_exists=check_module_exists,
+        file_packages=file_packages,
+    )
     return visitor.get_restricted_identifiers()
