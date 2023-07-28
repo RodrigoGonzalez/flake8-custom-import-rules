@@ -21,16 +21,22 @@ CUSTOM_MSG = (
 
 MODULE_THREE_PACKAGE_ERRORS = {
     f"12:0: {CIR302} Using 'from my_base_module.module_x import X'{CUSTOM_MSG}",
-    f"13:0: {CIR302} Using 'from my_second_base_package.module_two import ModuleTwo'{CUSTOM_MSG}",
-    f"11:0: {CIR301} Using 'import my_second_base_package.module_one'{CUSTOM_MSG}",
+    (
+        f"13:0: {CIR302} Using 'from my_second_base_package.module_one.file_two import "
+        f"ModuleTwo'{CUSTOM_MSG}"
+    ),
+    f"11:0: {CIR301} Using 'import my_second_base_package.module_one.file_one'{CUSTOM_MSG}",
     f"10:0: {CIR301} Using 'import my_base_module.module_y'{CUSTOM_MSG}",
 }
 
 MODULE_THREE_MODULE_ERRORS = {
     f"10:0: {CIR303} Using 'import my_base_module.module_y'{CUSTOM_MSG}",
     f"12:0: {CIR304} Using 'from my_base_module.module_x import X'{CUSTOM_MSG}",
-    f"11:0: {CIR303} Using 'import my_second_base_package.module_one'{CUSTOM_MSG}",
-    f"13:0: {CIR304} Using 'from my_second_base_package.module_two import ModuleTwo'{CUSTOM_MSG}",
+    f"11:0: {CIR303} Using 'import my_second_base_package.module_one.file_one'{CUSTOM_MSG}",
+    (
+        f"13:0: {CIR304} Using 'from my_second_base_package.module_one.file_two import "
+        f"ModuleTwo'{CUSTOM_MSG}"
+    ),
 }
 
 

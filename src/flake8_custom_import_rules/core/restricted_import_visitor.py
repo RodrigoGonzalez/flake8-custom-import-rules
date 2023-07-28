@@ -25,7 +25,9 @@ class RestrictedImportVisitor(ast.NodeVisitor):
     _tree: ast.AST = field(init=False)
     _package_names: list = field(factory=list)
 
-    restricted_identifiers: defaultdict[str, dict] = defaultdict(lambda: defaultdict(str))
+    restricted_identifiers: defaultdict[str, dict] = field(
+        default=defaultdict(lambda: defaultdict(str))
+    )
 
     def __attrs_post_init__(self) -> None:
         """Initialize."""
@@ -81,7 +83,7 @@ def get_restricted_identifiers(
     check_module_exists: bool = True,
 ) -> defaultdict[str, dict]:
     """
-    Get restricted import node.
+    Get restricted identifiers.
 
     Parameters
     ----------
@@ -92,7 +94,7 @@ def get_restricted_identifiers(
 
     Returns
     -------
-    dict
+    defaultdict[str, dict]
         The restricted import node.
     """
     if isinstance(restricted_imports, str):
