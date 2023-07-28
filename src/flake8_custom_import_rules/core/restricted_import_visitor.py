@@ -25,9 +25,7 @@ class RestrictedImportVisitor(ast.NodeVisitor):
     _tree: ast.AST = field(init=False)
     _package_names: list = field(factory=list)
 
-    restricted_identifiers: defaultdict[str, dict] = field(
-        default=defaultdict(lambda: defaultdict(str))
-    )
+    restricted_identifiers: defaultdict[str, dict] = field(init=False)
 
     def __attrs_post_init__(self) -> None:
         """Initialize."""
@@ -35,6 +33,7 @@ class RestrictedImportVisitor(ast.NodeVisitor):
             f"import {restricted_import}\n" for restricted_import in self._restricted_imports
         ]
         self._tree = ast.parse("".join(self._lines))
+        self.restricted_identifiers = defaultdict(lambda: defaultdict(str))
 
     def visit_Import(self, node: ast.Import) -> None:
         """Visit an Dynamic String Import node."""

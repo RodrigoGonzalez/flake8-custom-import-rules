@@ -173,7 +173,7 @@ def get_file_path_from_module_name(module_name: str) -> str | None:
     if not (existing_paths := list(filter(os.path.isfile, possible_paths))):
         # raise FileNotFoundError(module_name)
         return None
-    logger.info(f"existing_paths: {existing_paths}")
+    logger.debug(f"existing_paths: {existing_paths}")
     assert isinstance(existing_paths, list)
     # return max(existing_paths, key=len) if existing_paths else None
     return existing_paths[0]
@@ -196,7 +196,7 @@ def get_relative_path_from_absolute_path(
     -------
     str
     """
-    logger.info(f"absolute_path type: {type(absolute_path)}")
+    logger.debug(f"absolute_path type: {type(absolute_path)}")
     if not absolute_path:
         return None
     if isinstance(absolute_path, list):
