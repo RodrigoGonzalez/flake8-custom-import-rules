@@ -2,7 +2,7 @@
 Node visitor tests.
 
 To run this test file only:
-poetry run python -m pytest -vvvrca tests/test_cases/node_visitor_test.py
+poetry run python -m pytest -vvvrca tests/core/node_visitor_test.py
 """
 import ast
 

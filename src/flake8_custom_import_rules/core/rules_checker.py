@@ -20,7 +20,7 @@ from flake8_custom_import_rules.defaults import DEFAULT_CHECKER_SETTINGS
 from flake8_custom_import_rules.utils.parse_utils import NOQA_INLINE_REGEXP
 from flake8_custom_import_rules.utils.parse_utils import parse_comma_separated_list
 
-logger = logging.getLogger(f"flake8_custom_import_rules.{__name__}")
+logger = logging.getLogger(__name__)
 
 
 @define(slots=True, hash=False)
@@ -107,8 +107,7 @@ class CustomImportRulesChecker:
             self._identifiers_by_lineno = self.visitor.identifiers_by_lineno
         return self._identifiers_by_lineno
 
-    @property
-    def restricted_identifiers(self) -> dict:
+    def get_restricted_identifiers(self) -> dict:
         """Return the restricted identifiers."""
         return get_restricted_identifiers(
             restricted_imports=self.options.get("restricted_imports", []),
@@ -136,12 +135,14 @@ class CustomImportRulesChecker:
             checker_settings=self.options.get("checker_settings", DEFAULT_CHECKER_SETTINGS),
             identifiers=self.identifiers,
             identifiers_by_lineno=self.identifiers_by_lineno,
+            restricted_identifiers=self.get_restricted_identifiers(),
             dynamic_nodes=self.visitor.dynamic_nodes,
             filename=self.filename,
             file_identifier=self.visitor.file_identifier,
             # file_identifier=self._file_identifier,
             file_root_package_name=self.visitor.file_root_package_name,
             # file_root_package_name=self._file_root_package_name,
+            file_packages=self.visitor.file_packages,
         )
 
     def check_custom_import_rules(self) -> Generator[Any, None, None]:

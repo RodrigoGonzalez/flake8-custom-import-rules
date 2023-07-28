@@ -1,6 +1,9 @@
 """ Functions for working with files and paths. """
+import logging
 import os
 import sys
+
+logger = logging.getLogger(__name__)
 
 
 def check_module_in_package(base_module: str, filename: str) -> str | None:
@@ -129,6 +132,23 @@ def normalize_path(path: str, parent: str = os.curdir) -> str:
     return path.rstrip(separator + alternate_separator)
 
 
+def convert_module_to_file_paths(module_name: str) -> list[str]:
+    """
+    Convert module name to a relative file path by replacing . with /
+    and adding .py and /__init__.py extensions.
+
+    Parameters
+    ----------
+    module_name : str
+        The module name to convert.
+
+    Returns
+    -------
+    str
+    """
+    return [module_name.replace(".", "/") + ext for ext in [".py", "/__init__.py"]]
+
+
 def get_file_path_from_module_name(module_name: str) -> str | None:
     """
     Get the file path for a given module name. If the module is a package,
@@ -150,26 +170,37 @@ def get_file_path_from_module_name(module_name: str) -> str | None:
         for file_path in convert_module_to_file_paths(module_name)
     ]
 
-    if existing_paths := list(filter(os.path.isfile, possible_paths)):
-        return max(existing_paths, key=len) if existing_paths else None
-
-    else:
+    if not (existing_paths := list(filter(os.path.isfile, possible_paths))):
         # raise FileNotFoundError(module_name)
         return None
+    logger.info(f"existing_paths: {existing_paths}")
+    assert isinstance(existing_paths, list)
+    # return max(existing_paths, key=len) if existing_paths else None
+    return existing_paths[0]
 
 
-def convert_module_to_file_paths(module_name: str) -> list[str]:
+def get_relative_path_from_absolute_path(
+    absolute_path: list | str, cwd: str | None = os.getcwd()
+) -> str | None:
     """
-    Convert module name to a relative file path by replacing . with /
-    and adding .py and /__init__.py extensions.
+    Get the relative path for a given absolute path.
 
     Parameters
     ----------
-    module_name : str
-        The module name to convert.
+    absolute_path : str
+        The absolute path to get the relative path for.
+    cwd : str, optional
+        The current working directory, by default os.getcwd()
 
     Returns
     -------
     str
     """
-    return [module_name.replace(".", "/") + ext for ext in [".py", "/__init__.py"]]
+    logger.info(f"absolute_path type: {type(absolute_path)}")
+    if not absolute_path:
+        return None
+    if isinstance(absolute_path, list):
+        return absolute_path[0]
+    if not isinstance(absolute_path, str):
+        raise TypeError(f"Absolute path expected, got {type(absolute_path)}: {absolute_path}")
+    return os.path.relpath(absolute_path, start=cwd)

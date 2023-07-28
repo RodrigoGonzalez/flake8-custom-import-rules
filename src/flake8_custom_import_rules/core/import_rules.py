@@ -32,7 +32,7 @@ from flake8_custom_import_rules.utils.parse_utils import check_string
 from flake8_custom_import_rules.utils.parse_utils import does_file_match_custom_rule
 from flake8_custom_import_rules.utils.parse_utils import does_import_match_restricted_imports
 
-logger = logging.getLogger(f"flake8_custom_import_rules.{__name__}")
+logger = logging.getLogger(__name__)
 
 
 def filename_not_in_stdin_identifiers(
@@ -83,12 +83,12 @@ class CustomImportRules:
     identifiers: defaultdict[str, dict] = defaultdict(lambda: defaultdict(str))
     identifiers_by_lineno: defaultdict[str, list] = defaultdict(list)
     checker_settings: Settings = field(factory=Settings)
-    errors: list[ErrorMessage] = field(factory=list)
     codes_to_check: list[ErrorCode] = ErrorCode.get_all_error_codes()
 
     filename: str = field(default=None)
     file_identifier: str = field(default=None)
     file_root_package_name: str = field(default=None)
+    file_packages: list = field(default=None)
     check_custom_import_rules: bool = field(default=filename_not_in_stdin_identifiers(filename))
 
     project_only: bool = field(default=False)
@@ -102,7 +102,7 @@ class CustomImportRules:
     import_restrictions: dict = field(factory=dict)
     restricted_packages: list[str] = field(factory=list)
     file_in_restricted_packages: bool = field(default=False)
-    foundation_modules: list[str] = field(factory=list)
+    restricted_identifiers: dict = field(factory=dict)
 
     check_top_level_only: bool = field(default=False)
 
@@ -125,7 +125,10 @@ class CustomImportRules:
         self.file_in_restricted_packages = get_file_matches_custom_rule("RESTRICTED_PACKAGES")(self)
 
         print(f"Restricted packages: {self.restricted_packages}")
+        logger.info(f"File packages: {self.file_packages}")
         logger.info(f"Restricted packages: {self.restricted_packages}")
+        logger.info(f"Restricted identifiers: {self.restricted_identifiers}")
+        logger.info(f"Restricted identifiers keys: {list(self.restricted_identifiers.keys())}")
 
     def check_import_rules(self) -> Generator[ErrorMessage, None, None]:
         """Check imports"""
@@ -327,13 +330,6 @@ class CustomImportRules:
             yield from self._check_for_pir204(node)
             yield from self._check_for_pir206(node)
 
-    def error(
-        self, code: str, lineno: int, col_offset: int, message: str
-    ) -> tuple[int, int, str, type]:
-        """Report errors."""
-        return lineno, col_offset, f"{code} {message}", type(self)
-        # self.error(*error)
-
     def _check_for_cir101(self, node: ParsedNode) -> Generator[ErrorMessage, None, None]:
         """Check for CIR101."""
         if ErrorCode.CIR101.code in self.codes_to_check:
@@ -362,9 +358,9 @@ class CustomImportRules:
     def _check_if_restricted_package(self, node: ParsedNode) -> bool:
         """Check if restricted package."""
         logging.info(
-            f"Node import_statement: {node.import_statement}, "
+            f"Node import_statement: `{node.import_statement}`, "
             f"import_type: {node.import_type}, "
-            f"module: {node.module},"
+            f"module: `{node.module}`,"
         )
         # if node.import_type != ImportType.FIRST_PARTY:
         #     return False
