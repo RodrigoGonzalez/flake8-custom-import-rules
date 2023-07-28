@@ -92,11 +92,15 @@ class CustomImportRulesVisitor(ast.NodeVisitor):
         self.resolve_local_imports = self.filename not in STDIN_IDENTIFIERS
         logger.debug(f"Resolve local imports: {self.resolve_local_imports}")
         self.file_path = (
-            Path(self.filename) if (self.resolve_local_imports and self.filename) else None
+            Path(self.filename).resolve()
+            if (self.resolve_local_imports and self.filename)
+            else None
         )
         logger.info(f"Visitor filename: {self.filename}")
         self.file_identifier = (
-            get_module_name_from_filename(self.filename) if self.resolve_local_imports else None
+            get_module_name_from_filename(str(self.file_path))
+            if self.resolve_local_imports
+            else None
         )
         self.file_root_package_name = (
             root_package_name(self.file_identifier) if self.resolve_local_imports else None

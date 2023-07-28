@@ -1,7 +1,14 @@
 """ Pytest configuration file. """
 import configparser
+from pathlib import Path
 
 import pytest
+
+
+@pytest.fixture(scope="session")
+def main_directory() -> Path:
+    """Return the main directory of the project."""
+    return Path(__file__).parent.parent
 
 
 def load_config(path: str) -> configparser.RawConfigParser:

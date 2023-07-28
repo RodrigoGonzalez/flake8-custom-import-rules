@@ -6,12 +6,17 @@ poetry run python -m pytest -vvvrca tests/test_cases/custom_import_rules/restric
 import ast
 import logging
 import os
+from collections import defaultdict
 from textwrap import dedent
 
+import pycodestyle
 import pytest
 from flake8.utils import normalize_path
 
+from flake8_custom_import_rules.core.import_rules import CustomImportRules
 from flake8_custom_import_rules.defaults import Settings
+from flake8_custom_import_rules.utils.file_utils import get_module_name_from_filename
+from flake8_custom_import_rules.utils.node_utils import root_package_name
 
 logger = logging.Logger(__name__)
 
@@ -60,39 +65,39 @@ RESTRICTED_PACKAGES = [
 
 
 @pytest.mark.parametrize(
-    ("test_case", "expected_current_module", "expected"),
+    ("filename", "expected_current_module", "expected"),
     [
         (
             "example_repos/my_base_module/my_second_base_package/module_one/file_one.py",
             "my_second_base_package.module_one.file_one",
-            list,
+            2,
         ),
-        # (
-        #     "example_repos/my_base_module/my_second_base_package/module_one/file_two.py",
-        #     "my_second_base_package.module_one.file_two",
-        #     list,
-        # ),
-        # (
-        #     "example_repos/my_base_module/my_second_base_package/module_two/file_one.py",
-        #     "my_second_base_package.module_two.file_one",
-        #     list,
-        # ),
-        # (
-        #     "example_repos/my_base_module/my_second_base_package/module_two/file_two.py",
-        #     "my_second_base_package.module_two.file_two",
-        #     list,
-        # ),
-        # (
-        #     "example_repos/my_base_module/my_second_base_package/file.py",
-        #     "my_second_base_package.file",
-        #     list
-        # ),
+        (
+            "example_repos/my_base_module/my_second_base_package/module_one/file_two.py",
+            "my_second_base_package.module_one.file_two",
+            4,
+        ),
+        (
+            "example_repos/my_base_module/my_second_base_package/module_two/file_one.py",
+            "my_second_base_package.module_two.file_one",
+            8,
+        ),
+        (
+            "example_repos/my_base_module/my_second_base_package/module_two/file_two.py",
+            "my_second_base_package.module_two.file_two",
+            8,
+        ),
+        (
+            "example_repos/my_base_module/my_second_base_package/file.py",
+            "my_second_base_package.file",
+            8,
+        ),
     ],
 )
 def test_complex_imports(
-    test_case: str,
+    filename: str,
     expected_current_module: str,
-    expected: type,
+    expected: int,
     get_base_plugin: callable,
     capsys: pytest.CaptureFixture,
 ) -> None:
@@ -104,6 +109,7 @@ def test_complex_imports(
     # root_package_name(identifier)
     options = {
         "base_packages": ["base_package", "my_second_base_package"],
+        "restricted_packages": RESTRICTED_PACKAGES,
         "checker_settings": Settings(
             **{
                 "RESTRICTED_PACKAGES": RESTRICTED_PACKAGES,
@@ -114,62 +120,71 @@ def test_complex_imports(
         ),
     }
     logger.info("Call get_base_plugin.")
-    plugin = get_base_plugin(tree=tree, filename=test_case, lines=lines, options=options)
+    plugin = get_base_plugin(tree=tree, filename=filename, lines=lines, options=options)
     logger.info("Call get_run_list.")
     # capsys
+
+    import_rules = plugin.import_rules
+    assert isinstance(import_rules, CustomImportRules)
     plugin.get_run_list()
     logger.info("Call get_import_nodes.")
-    parsed_imports = [parsed_import for _, _, parsed_import, _ in plugin.get_import_nodes()]
+    errors = plugin.errors
+    assert isinstance(errors, list)
+    assert len(errors) == expected
+    restricted_identifiers = plugin.restricted_identifiers
+    logger.info(restricted_identifiers)
+    assert isinstance(restricted_identifiers, defaultdict)
+    [parsed_import for _, _, parsed_import, _ in plugin.get_import_nodes()]
     # for parsed_import in parsed_imports:
     #     print(
     #         f"Is '{parsed_import.import_statement}' allowed in '{current_module}'? "
     #         f"{is_import_restricted(parsed_import, current_module, restricted_imports)}"
     #     )
-    assert isinstance(parsed_imports, expected)
+    # assert isinstance(parsed_imports, expected)
 
 
 @pytest.mark.parametrize(
     ("test_case", "restricted_packages", "expected"),
     [
-        # (
-        #     "example_repos/my_base_module/my_second_base_package/module_three.py",
-        #     ["my_second_base_package"],
-        #     set(),
-        # ),
+        (
+            "example_repos/my_base_module/my_second_base_package/module_three.py",
+            ["my_second_base_package"],
+            set(),
+        ),
         (
             "example_repos/my_base_module/my_second_base_package/module_three.py",
             ["my_second_base_package.module_three"],
             set(),
         ),
-        # (
-        #     "example_repos/my_base_module/my_second_base_package/module_three.py",
-        #     ["my_second_base_package.module_one", "my_second_base_package.module_two"],
-        #     set(),
-        # ),
-        # (
-        #     "example_repos/my_base_module/my_second_base_package/module_three.py",
-        #     [
-        #         "my_second_base_package.module_one",
-        #         "my_second_base_package.module_two",
-        #         "my_base_module",
-        #     ],
-        #     set(),
-        # ),
-        # (
-        #     "example_repos/my_base_module/my_second_base_package/module_three.py",
-        #     ["my_second_base_package.module_one"],
-        #     set(),
-        # ),
-        # (
-        #     "example_repos/my_base_module/my_second_base_package/module_three.py",
-        #     ["my_second_base_package.module_one", "my_second_base_package"],
-        #     set(),
-        # ),
-        # (
-        #     "example_repos/my_base_module/my_second_base_package/module_three.py",
-        #     ["my_base_module"],
-        #     set(),
-        # ),
+        (
+            "example_repos/my_base_module/my_second_base_package/module_three.py",
+            ["my_second_base_package.module_one", "my_second_base_package.module_two"],
+            set(),
+        ),
+        (
+            "example_repos/my_base_module/my_second_base_package/module_three.py",
+            [
+                "my_second_base_package.module_one",
+                "my_second_base_package.module_two",
+                "my_base_module",
+            ],
+            set(),
+        ),
+        (
+            "example_repos/my_base_module/my_second_base_package/module_three.py",
+            ["my_second_base_package.module_one"],
+            set(),
+        ),
+        (
+            "example_repos/my_base_module/my_second_base_package/module_three.py",
+            ["my_second_base_package.module_one", "my_second_base_package"],
+            set(),
+        ),
+        (
+            "example_repos/my_base_module/my_second_base_package/module_three.py",
+            ["my_base_module"],
+            set(),
+        ),
         # (
         #     "example_repos/my_base_module/my_second_base_package/module_three.py",
         #     ["my_base_module.module_x"],
@@ -186,33 +201,34 @@ def test_restricted_packages(
     """Test restricted imports."""
     filename = normalize_path(test_case)
     assert os.path.exists(filename)
-    # lines = pycodestyle.readlines(filename)
-    # identifier = get_module_name_from_filename(filename)
-    # root_package_name(identifier)
-    # options = {
-    #     "base_packages": ["my_second_base_package"],
-    #     "checker_settings": Settings(
-    #         **{
-    #             "RESTRICTED_PACKAGES": restricted_packages,
-    #             "RESTRICT_DYNAMIC_IMPORTS": False,
-    #             "RESTRICT_LOCAL_IMPORTS": False,
-    #             "RESTRICT_RELATIVE_IMPORTS": False,
-    #         }
-    #     ),
-    # }
-    # actual = get_flake8_linter_results(
-    #     s="".join(lines), options=options, delimiter="\n", filename=filename
-    # )
-    # assert actual == expected, sorted(actual)
+    lines = pycodestyle.readlines(filename)
+    identifier = get_module_name_from_filename(filename)
+    root_package_name(identifier)
+    options = {
+        "base_packages": ["base_package", "my_second_base_package"],
+        "restricted_packages": restricted_packages,
+        "checker_settings": Settings(
+            **{
+                "RESTRICTED_PACKAGES": restricted_packages,
+                "RESTRICT_DYNAMIC_IMPORTS": False,
+                "RESTRICT_LOCAL_IMPORTS": False,
+                "RESTRICT_RELATIVE_IMPORTS": False,
+            }
+        ),
+    }
+    actual = get_flake8_linter_results(
+        s="".join(lines), options=options, delimiter="\n", filename=filename
+    )
+    assert actual == expected, sorted(actual)
 
 
-# def test_restricted_import_settings_do_not_error(
-#     valid_custom_import_rules_imports: str,
-#     get_flake8_linter_results: callable,
-# ) -> None:
-#     """Test restricted imports do not have an effect on regular import methods."""
-#     options = {"checker_settings": Settings(**{"RESTRICTED_PACKAGES": []})}
-#     actual = get_flake8_linter_results(
-#         s=valid_custom_import_rules_imports, options=options, delimiter="\n"
-#     )
-#     assert actual == set()
+def test_restricted_import_settings_do_not_error(
+    valid_custom_import_rules_imports: str,
+    get_flake8_linter_results: callable,
+) -> None:
+    """Test restricted imports do not have an effect on regular import methods."""
+    options = {"checker_settings": Settings(**{"RESTRICTED_PACKAGES": []})}
+    actual = get_flake8_linter_results(
+        s=valid_custom_import_rules_imports, options=options, delimiter="\n"
+    )
+    assert actual == set()

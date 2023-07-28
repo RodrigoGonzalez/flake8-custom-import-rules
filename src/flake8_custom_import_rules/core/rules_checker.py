@@ -74,13 +74,13 @@ class CustomImportRulesChecker:
     @property
     def lines(self) -> list[str]:
         """Return the lines."""
-        logger.info(f"Lines: {self._lines}")
+        # logger.info(f"Lines: {self._lines}")
         return self._lines
 
     @property
     def nodes(self) -> list[ParsedNode]:
         """Return the nodes."""
-        logger.info(f"Nodes: {self._nodes}")
+        # logger.info(f"Nodes: {self._nodes}")
         logger.info(f"Options: {self._options}")
         if self._nodes is None:
             self._nodes = self.visitor.nodes
@@ -117,12 +117,17 @@ class CustomImportRulesChecker:
     @property
     def restricted_identifiers(self) -> defaultdict[str, dict[Any, Any]] | None:
         """Return the restricted identifiers."""
+        logger.info(f"file_packages: {self.visitor.file_packages}")
+        restricted_packages = self.options.get("restricted_packages", [])
+        logger.info(f"restricted_packages: {restricted_packages}")
         if self._restricted_identifiers is None:
             self._restricted_identifiers = get_restricted_identifiers(
-                restricted_imports=self.options.get("restricted_imports", []),
+                restricted_packages=self.options.get("restricted_packages", []),
                 check_module_exists=True,
                 file_packages=self.visitor.file_packages,
             )
+        logger.info(f"Restricted Identifiers: {self._restricted_identifiers}")
+        logger.info(f"Restricted Identifiers Keys: {self._restricted_identifiers.keys()}")
         return self._restricted_identifiers
 
     @property
@@ -157,6 +162,7 @@ class CustomImportRulesChecker:
             # file_root_package_name=self._file_root_package_name,
             file_packages=visitor.file_packages,
         )
+        # logger.info(f"Restricted Identifiers: {self.restricted_identifiers}")
         return self._import_rules
 
     def check_custom_import_rules(self) -> Generator[Any, None, None]:

@@ -30,7 +30,6 @@ from flake8_custom_import_rules.defaults import STDIN_IDENTIFIERS
 from flake8_custom_import_rules.defaults import Settings
 from flake8_custom_import_rules.utils.parse_utils import check_string
 from flake8_custom_import_rules.utils.parse_utils import does_file_match_custom_rule
-from flake8_custom_import_rules.utils.parse_utils import does_import_match_restricted_imports
 
 logger = logging.getLogger(__name__)
 
@@ -362,15 +361,7 @@ class CustomImportRules:
             f"import_type: {node.import_type}, "
             f"module: `{node.module}`,"
         )
-        # if node.import_type != ImportType.FIRST_PARTY:
-        #     return False
-        if node.module in self.restricted_packages:
-            return True
-        return bool(does_import_match_restricted_imports(node.identifier, self.restricted_packages))
-
-    def _check_if_file_in_restricted_packages(self, node: ParsedNode) -> bool:
-        """Check if file in restricted packages."""
-        return does_file_match_custom_rule(self.file_identifier, self.restricted_packages)
+        return node.module in self.restricted_identifiers
 
     def _check_for_cir106(self, node: ParsedNode) -> Generator[ErrorMessage, None, None]:
         """Check for CIR106."""
