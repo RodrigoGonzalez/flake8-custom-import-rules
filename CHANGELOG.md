@@ -1,3 +1,10 @@
+## v0.8.1 (2023-07-28)
+
+### Refactor
+
+- **import-rules**: update import rules to implement restricted identifiers
+- **restricted-imports**: passing file packages to restricted imp… (#75)
+
 ## v0.8.0 (2023-07-28)
 
 ### Feat
