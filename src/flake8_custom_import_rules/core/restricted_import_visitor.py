@@ -19,7 +19,7 @@ logger = logging.getLogger(__name__)
 class RestrictedImportVisitor(ast.NodeVisitor):
     """Visitor for dynamic strings."""
 
-    _restricted_imports: list[str]
+    _restricted_packages: list[str]
     _check_module_exists: bool = field(default=True)
     _file_packages: list[str] = field(default=list)
     _lines: list[str] = field(init=False)
@@ -31,7 +31,9 @@ class RestrictedImportVisitor(ast.NodeVisitor):
     def __attrs_post_init__(self) -> None:
         """Initialize."""
         self._lines = [
-            f"import {restricted_import}\n" for restricted_import in self._restricted_imports
+            f"import {restricted_import}\n"
+            for restricted_import in self._restricted_packages
+            if restricted_import not in self._file_packages
         ]
         self._tree = ast.parse("".join(self._lines))
         self.restricted_identifiers = defaultdict(lambda: defaultdict(str))
@@ -44,19 +46,19 @@ class RestrictedImportVisitor(ast.NodeVisitor):
             package = root_package_name(module)
             package_names = get_package_names(module)
 
-            absolute_path = get_file_path_from_module_name(module)
-            relative_path = (
-                get_relative_path_from_absolute_path(absolute_path, os.getcwd())
-                if absolute_path
-                else None
-            )
+            if self._check_module_exists:
+                absolute_path = get_file_path_from_module_name(module)
+                relative_path = (
+                    get_relative_path_from_absolute_path(absolute_path, os.getcwd())
+                    if absolute_path
+                    else None
+                )
 
-            logging.info(f"Module: {module}")
-            logging.info(f"Absolute path: {absolute_path}")
-            logging.info(f"Current working directory: {os.getcwd()}")
+                logging.info(f"Module: {module}")
+                logging.info(f"Absolute path: {absolute_path}")
+                logging.info(f"Current working directory: {os.getcwd()}")
 
-            self.restricted_identifiers[module].update(
-                {
+                identifier_dict = {
                     "module": module,
                     "package": package,
                     "package_names": package_names,
@@ -64,7 +66,16 @@ class RestrictedImportVisitor(ast.NodeVisitor):
                     "absolute_path": absolute_path,
                     "relative_path": relative_path,
                 }
-            )
+
+            else:
+                identifier_dict = {
+                    "module": module,
+                    "package": package,
+                    "package_names": package_names,
+                    "import_statement": ast.unparse(node),
+                }
+
+            self.restricted_identifiers[module].update(identifier_dict)
             self._package_names.extend(package_names[:-1])
 
     # def _process_package_names(self) -> None:
@@ -79,7 +90,7 @@ class RestrictedImportVisitor(ast.NodeVisitor):
 
 
 def get_restricted_identifiers(
-    restricted_imports: list[str] | str,
+    restricted_packages: list[str] | str,
     check_module_exists: bool = True,
     file_packages: list | None = None,
 ) -> defaultdict[str, dict]:
@@ -88,10 +99,12 @@ def get_restricted_identifiers(
 
     Parameters
     ----------
-    restricted_imports : list[str]
+    restricted_packages : list[str]
         The list of restricted imports.
     check_module_exists : bool, optional
         Whether to check if the module exists, by default True
+    file_packages : list[str], optional
+        The list of parent packages of the file, by default None
 
     Returns
     -------
@@ -100,11 +113,11 @@ def get_restricted_identifiers(
     """
     if not file_packages:
         file_packages = []
-    if isinstance(restricted_imports, str):
-        restricted_imports = [restricted_imports]
+    if isinstance(restricted_packages, str):
+        restricted_packages = [restricted_packages]
 
     visitor = RestrictedImportVisitor(
-        restricted_imports=restricted_imports,
+        restricted_packages=restricted_packages,
         check_module_exists=check_module_exists,
         file_packages=file_packages,
     )

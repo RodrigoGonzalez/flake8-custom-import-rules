@@ -32,6 +32,6 @@ def test_get_restricted_identifiers(
 ) -> None:
     """Test get_restricted_identifiers."""
     restricted_identifiers = get_restricted_identifiers(
-        restricted_imports=restricted_imports, check_module_exists=check_module_exists
+        restricted_packages=restricted_imports, check_module_exists=check_module_exists
     )
     assert isinstance(restricted_identifiers, defaultdict)

@@ -33,7 +33,7 @@ def check_module_in_package(base_module: str, filename: str) -> str | None:
     return os.path.splitext(relative_path)[0].replace("/", ".")
 
 
-def get_module_name_from_filename(filename: str) -> str | None:
+def get_module_name_from_filename(filename: str, parent: str = os.curdir) -> str | None:
     """
     Get the module name for a given file path based on a base module.
 
@@ -41,13 +41,16 @@ def get_module_name_from_filename(filename: str) -> str | None:
     ----------
     filename : str
         The file path to get the module name for.
+    parent : str, optional
+        The parent path, by default os.curdir
 
     Returns
     -------
     str | None
     """
+
     # Normalize the file path
-    filename = normalize_path(filename)
+    filename = normalize_path(filename, parent=parent)
 
     # Check if the file exists
     if not os.path.isfile(filename):

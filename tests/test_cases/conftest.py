@@ -92,8 +92,9 @@ def valid_custom_import_rules_imports() -> str:
 
 
 class BaseCustomImportRulePlugin(CustomImportRulesChecker):
+    _node_list: list
     _run_list: list
-    _options = {}
+    _options: dict = {}
 
     def __init__(
         self,
@@ -107,6 +108,7 @@ class BaseCustomImportRulePlugin(CustomImportRulesChecker):
         self._tree = tree
         self._lines = lines
         self._filename = filename
+        self._errors: list = []
 
         super().__init__(tree=tree, filename=filename, lines=lines)
         logger.info(f"Init options BaseCustomImportRulePlugin: {options}")
@@ -114,17 +116,24 @@ class BaseCustomImportRulePlugin(CustomImportRulesChecker):
         self._options["test_env"] = True
         logger.info(f"Init options after setting: {options}")
 
+    @property
+    def errors(self):
+        """Return the errors."""
+        logger.info("Getting the errors")
+        return self._errors
+
     def run(self) -> Generator[Any, None, None]:
         """Run the plugin."""
         logger.info("Running the plugin")
-        self.import_rules
+        self._errors = list(self.check_custom_import_rules())
         for node in self.nodes:
             yield node.lineno, node.col_offset, node, type(self)
 
     def get_run_list(self, sort: bool = True) -> list:
         """Return the run list."""
         logger.info("Getting the run list")
-        self._run_list = list(self.nodes) if self._nodes else list(self.run())
+        self._node_list = list(self.nodes) if self._nodes else []
+        self._run_list = list(self.run())
         if sort:
             self._run_list.sort(key=lambda x: x[0])
         return self._run_list
