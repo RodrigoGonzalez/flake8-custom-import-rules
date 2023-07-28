@@ -1,3 +1,26 @@
+## v0.8.0 (2023-07-28)
+
+### Feat
+
+- **checker**: added support for restricted imports (#69)
+- **restricted-imports**: added restricted import visitor and utility functions (#68)
+
+### Fix
+
+- **rules-checker**: fix typing in restricted identifiers (#72)
+- **file-utils**: return none if file does not exist (#71)
+- add parsing for import restrictions (#67)
+
+### Refactor
+
+- **restricted-imports**: passing file packages to restricted import visitor
+- **rules-checker**: remove extraneous code to make more efficient (#74)
+- **rules-checker**: refactoring to minimize the number of calls (#73)
+- **file-utils**: move file util functions to own module (#70)
+- update parsing tests and plugin (#66)
+- **import-rules**: update custom import rules to use closure (#65)
+- cleaned up functions and improved method names (#64)
+
 ## v0.7.1 (2023-07-25)
 
 ### Refactor

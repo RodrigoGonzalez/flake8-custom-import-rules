@@ -35,6 +35,7 @@ class CustomImportRulesChecker:
     _identifiers: defaultdict[str, dict] | None = None
     _identifiers_by_lineno: defaultdict[str, list] | None = None
     _restricted_identifiers: defaultdict[str, dict] | None = None
+    _import_rules: CustomImportRules = field(init=False)
 
     _options: dict[str, list[str] | str | bool] = field(init=False)
 
@@ -120,6 +121,7 @@ class CustomImportRulesChecker:
             self._restricted_identifiers = get_restricted_identifiers(
                 restricted_imports=self.options.get("restricted_imports", []),
                 check_module_exists=True,
+                file_packages=self.visitor.file_packages,
             )
         return self._restricted_identifiers
 
@@ -137,11 +139,11 @@ class CustomImportRulesChecker:
         for key, value in updated_options.items():
             self._options[key] = value
 
-    def get_custom_import_rules(self) -> CustomImportRules:
-        """Return the custom import rules class."""
+    @property
+    def import_rules(self) -> CustomImportRules:
+        """Return the import rules."""
         visitor = self.visitor
-
-        return CustomImportRules(
+        self._import_rules = CustomImportRules(
             nodes=self.nodes,
             checker_settings=self.options.get("checker_settings", DEFAULT_CHECKER_SETTINGS),
             identifiers=self.identifiers,
@@ -155,11 +157,11 @@ class CustomImportRulesChecker:
             # file_root_package_name=self._file_root_package_name,
             file_packages=visitor.file_packages,
         )
+        return self._import_rules
 
     def check_custom_import_rules(self) -> Generator[Any, None, None]:
         """Run the plugin."""
-        # print(f"Nodes: {self.nodes}")
-        import_rules = self.get_custom_import_rules()
+        import_rules = self.import_rules
 
         for error in import_rules.check_import_rules():
             if not self.error_is_ignored(error):

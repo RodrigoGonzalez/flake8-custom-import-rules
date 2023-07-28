@@ -117,7 +117,7 @@ class BaseCustomImportRulePlugin(CustomImportRulesChecker):
     def run(self) -> Generator[Any, None, None]:
         """Run the plugin."""
         logger.info("Running the plugin")
-        # self.get_custom_import_rules()
+        self.import_rules
         for node in self.nodes:
             yield node.lineno, node.col_offset, node, type(self)
 
