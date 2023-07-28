@@ -128,7 +128,7 @@ class CustomImportRules:
         logger.info(f"File packages: {self.file_packages}")
         logger.info(f"Restricted packages: {self.restricted_packages}")
         logger.info(f"Restricted identifiers: {self.restricted_identifiers}")
-        logger.info(f"Restricted identifiers keys: {list(self.restricted_identifiers.keys())}")
+        logger.debug(f"Restricted identifiers keys: {list(self.restricted_identifiers.keys())}")
 
     def check_import_rules(self) -> Generator[ErrorMessage, None, None]:
         """Check imports"""

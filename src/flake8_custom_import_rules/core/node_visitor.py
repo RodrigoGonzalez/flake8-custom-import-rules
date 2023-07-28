@@ -104,7 +104,7 @@ class CustomImportRulesVisitor(ast.NodeVisitor):
         self.file_packages = (
             get_package_names(self.file_identifier) if self.resolve_local_imports else None
         )
-        logger.info(f"Filename packages: {self.file_packages}")
+        logger.debug(f"File packages: {self.file_packages}")
 
         if sys.version_info < (3, 10):
             # stdlib_list only supports up to Python 3.9

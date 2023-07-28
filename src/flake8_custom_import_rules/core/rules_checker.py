@@ -12,9 +12,7 @@ from attrs import field
 from flake8_custom_import_rules.core.error_messages import ErrorMessage
 from flake8_custom_import_rules.core.import_rules import CustomImportRules
 from flake8_custom_import_rules.core.node_visitor import CustomImportRulesVisitor
-from flake8_custom_import_rules.core.nodes import ParsedFromImport
 from flake8_custom_import_rules.core.nodes import ParsedNode
-from flake8_custom_import_rules.core.nodes import ParsedStraightImport
 from flake8_custom_import_rules.core.restricted_import_visitor import get_restricted_identifiers
 from flake8_custom_import_rules.defaults import DEFAULT_CHECKER_SETTINGS
 from flake8_custom_import_rules.utils.parse_utils import NOQA_INLINE_REGEXP
@@ -37,20 +35,25 @@ class CustomImportRulesChecker:
     _identifiers_by_lineno: defaultdict[str, list] | None = None
     _restricted_identifiers: defaultdict[str, dict] | None = None
 
-    _options: dict[str, list[str] | str] = field(init=False)
+    _options: dict[str, list[str] | str | bool] = field(init=False)
 
     @property
     def tree(self) -> ast.AST:
         """Return the tree."""
+        logger.info(f"Tree before: {self._tree}")
         if not self._tree:
+            logger.info("Tree from lines")
             self._tree = ast.parse("".join(self.lines))
+        logger.info(f"Tree after: {self._tree}")
         return self._tree
 
     @property
     def filename(self) -> str:
         """Return the filename."""
+        logger.info(f"Filename: {self._filename}")
         if self._filename is None or self._filename in {"-", "/dev/stdin"}:
             return "stdin"
+        logger.info(f"Filename: {self._filename}")
         return self._filename
 
     @property
@@ -58,38 +61,54 @@ class CustomImportRulesChecker:
         """Return the lines."""
         # if self._lines is None and self._tree is not None:
         #     self._lines = ast.unparse(self._tree).splitlines(keepends=True)
+        logger.info(f"Lines: {self._lines}")
         if self._lines is None:
             self._lines = (
                 pycodestyle.stdin_get_value().splitlines(True)
                 if self.filename == "stdin"
                 else pycodestyle.readlines(self.filename)
             )
+        logger.info(f"Lines after pycodestyle: {self._lines}")
         return self._lines
 
     @property
     def nodes(self) -> list[ParsedNode]:
         """Return the nodes."""
+        logger.info(f"Nodes Visitor: {self._visitor}")
+        logger.info(f"Nodes: {self._nodes}")
+        logger.info(f"Options: {self._options}")
         if self._nodes is None:
             if self._visitor is None:
-                visitor = self.visitor
-                self._nodes = visitor.nodes
-            else:
-                self._nodes = self.visitor.nodes
+                self._visitor = self.visitor
+            self._nodes = self._visitor.nodes
+        # logger.info(f"Nodes after setting visitor: {self._nodes}")
         return self._nodes
 
     def get_visitor(self) -> CustomImportRulesVisitor:
         """Return the visitor to use for this plugin."""
         # print(f"\\nOptions: {self.options}\n\n")
+        logger.info(f"Tree before lines: {self._tree}")
+        logger.info(f"Lines: {self._lines}")
+        logger.info(f"Tree after lines: {self._tree}")
+        logger.info(f"Options: {self._options}")
         visitor = CustomImportRulesVisitor(
-            base_packages=self.options.get("base_packages", []),
-            filename=self.filename,
+            base_packages=self._options.get("base_packages", []),
+            filename=self._filename,
         )
-        visitor.visit(self.tree)
+        if self._tree:
+            visitor.visit(self._tree)
+        if self._lines:
+            visitor.visit(self.tree)
+        if self._filename:
+            visitor.visit(self.tree)
+        self._visitor = visitor
         return visitor
 
     @property
     def visitor(self) -> CustomImportRulesVisitor:
         """Return the visitor to use for this plugin."""
+        logger.info(f"Options: {self._options}")
+        # logger.info(f"Visitor: {self._visitor}")
         if self._visitor is None:
             self._visitor = self.get_visitor()
         return self._visitor
@@ -194,35 +213,3 @@ class CustomImportRulesChecker:
 
         codes = parse_comma_separated_list(codes_str)
         return error.code in codes
-
-
-class BaseCustomImportRulePlugin(CustomImportRulesChecker):
-    _run_list: list
-
-    def __init__(
-        self, tree: ast.AST | None = None, filename: str | None = None, lines: list | None = None
-    ) -> None:
-        """Initialize the checker."""
-        super().__init__(tree=tree, filename=filename, lines=lines)
-        self._options = {}
-
-    def run(self) -> Generator[Any, None, None]:
-        """Run the plugin."""
-        self._options["base_packages"] = ["my_base_module"]
-        for node in self.nodes:
-            yield node.lineno, node.col_offset, node, type(self)
-
-    def get_run_list(self, sort: bool = True) -> list:
-        """Return the run list."""
-        self._run_list = list(self.run())
-        if sort:
-            self._run_list.sort(key=lambda x: x[0])
-        return self._run_list
-
-    def get_import_nodes(self) -> list[ParsedNode]:
-        """Return the import nodes."""
-        return [
-            node
-            for node in self._run_list
-            if isinstance(node[2], (ParsedStraightImport, ParsedFromImport))
-        ]
