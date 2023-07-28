@@ -27,10 +27,11 @@ from flake8_custom_import_rules.utils.file_utils import get_module_name_from_fil
 from flake8_custom_import_rules.utils.node_utils import generate_identifier_path
 from flake8_custom_import_rules.utils.node_utils import get_module_info_from_import_node
 from flake8_custom_import_rules.utils.node_utils import get_name_info_from_import_node
+from flake8_custom_import_rules.utils.node_utils import get_package_names
 from flake8_custom_import_rules.utils.node_utils import root_package_name
 from flake8_custom_import_rules.utils.parse_utils import check_string
 
-logger = logging.getLogger(f"flake8_custom_import_rules.{__name__}")
+logger = logging.getLogger(__name__)
 
 
 @define(slots=True)
@@ -78,6 +79,7 @@ class CustomImportRulesVisitor(ast.NodeVisitor):
     stdlib_names: set | frozenset = field(init=False)
     file_identifier: str | None = field(init=False)
     file_root_package_name: str | None = field(init=False)
+    file_packages: list | None = field(init=False)
 
     def __attrs_post_init__(self) -> None:
         """Initialize the attributes after object creation.
@@ -99,6 +101,10 @@ class CustomImportRulesVisitor(ast.NodeVisitor):
         self.file_root_package_name = (
             root_package_name(self.file_identifier) if self.resolve_local_imports else None
         )
+        self.file_packages = (
+            get_package_names(self.file_identifier) if self.resolve_local_imports else None
+        )
+        logger.info(f"Filename packages: {self.file_packages}")
 
         if sys.version_info < (3, 10):
             # stdlib_list only supports up to Python 3.9

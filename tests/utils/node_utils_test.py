@@ -1,7 +1,7 @@
 """ Tests for node_utils.py
 
 To run this test file only:
-poetry run python -m pytest -vvvrca tests/node_utils_test.py
+poetry run python -m pytest -vvvrca tests/utils/node_utils_test.py
 """
 import ast
 from collections import defaultdict

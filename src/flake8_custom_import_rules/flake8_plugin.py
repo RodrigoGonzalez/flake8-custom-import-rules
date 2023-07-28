@@ -17,7 +17,7 @@ from flake8_custom_import_rules.defaults import Settings
 from flake8_custom_import_rules.defaults import register_opt
 from flake8_custom_import_rules.defaults import register_options
 
-logger = logging.getLogger(f"flake8_custom_import_rules.{__name__}")
+logger = logging.getLogger(__name__)
 
 
 class Plugin(CustomImportRulesChecker):
