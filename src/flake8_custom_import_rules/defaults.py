@@ -168,16 +168,17 @@ def register_options(
 
     assert isinstance(item, str), f"Item must be a str. Got {type(item).__name__} for {item}."
 
+    setting_key = f"{item.replace('_', '-').lower()}"
+
     if is_restriction:
-        setting_key = item.upper()
-        option_default_value = DEFAULT_CHECKER_SETTINGS.get_settings_value(setting_key)
+        option_default_value = DEFAULT_CHECKER_SETTINGS.get_settings_value(item.upper())
+        import_type = item.split("_")[1]
         if not help_string:
             help_string = (
-                f"Disables {item.title()} Imports for this project. "
+                f"Disables {import_type.title()} Imports for this project. "
                 f"(default: {option_default_value})"
             )
     else:
-        setting_key = f"{item.replace('_', '-').lower()}"
         help_string = f"{setting_key}. (default: {option_default_value})"
 
     if not isinstance(option_default_value, bool if is_restriction else str):
