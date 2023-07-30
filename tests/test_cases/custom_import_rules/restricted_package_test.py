@@ -4,7 +4,6 @@ To run this test file only:
 poetry run python -m pytest -vvvrca tests/test_cases/custom_import_rules/restricted_package_test.py
 """
 import ast
-import logging
 import os
 from collections import defaultdict
 from textwrap import dedent
@@ -17,8 +16,6 @@ from flake8_custom_import_rules.core.import_rules import CustomImportRules
 from flake8_custom_import_rules.defaults import Settings
 from flake8_custom_import_rules.utils.file_utils import get_module_name_from_filename
 from flake8_custom_import_rules.utils.node_utils import root_package_name
-
-logger = logging.Logger(__name__)
 
 CIR106 = "CIR106 Restricted package import."
 CIR107 = "CIR107 Restricted module import."
@@ -119,28 +116,16 @@ def test_complex_imports(
             }
         ),
     }
-    logger.info("Call get_base_plugin.")
     plugin = get_base_plugin(tree=tree, filename=filename, lines=lines, options=options)
-    logger.info("Call get_run_list.")
-    # capsys
 
     import_rules = plugin.import_rules
     assert isinstance(import_rules, CustomImportRules)
     plugin.get_run_list()
-    logger.info("Call get_import_nodes.")
     errors = plugin.errors
     assert isinstance(errors, list)
     assert len(errors) == expected
     restricted_identifiers = plugin.restricted_identifiers
-    logger.info(restricted_identifiers)
     assert isinstance(restricted_identifiers, defaultdict)
-    [parsed_import for _, _, parsed_import, _ in plugin.get_import_nodes()]
-    # for parsed_import in parsed_imports:
-    #     print(
-    #         f"Is '{parsed_import.import_statement}' allowed in '{current_module}'? "
-    #         f"{is_import_restricted(parsed_import, current_module, restricted_imports)}"
-    #     )
-    # assert isinstance(parsed_imports, expected)
 
 
 @pytest.mark.parametrize(
@@ -185,11 +170,17 @@ def test_complex_imports(
             ["my_base_module"],
             set(),
         ),
-        # (
-        #     "example_repos/my_base_module/my_second_base_package/module_three.py",
-        #     ["my_base_module.module_x"],
-        #     set(),
-        # ),
+        (
+            "example_repos/my_base_module/my_second_base_package/module_three.py",
+            ["my_base_module.module_x"],
+            {
+                (
+                    "12:0: CIR107 Restricted module import. Using "
+                    "'from my_base_module.module_x import X'. "
+                    "Restricted package/module cannot be imported outside package/module."
+                )
+            },
+        ),
     ],
 )
 def test_restricted_packages(
@@ -219,7 +210,7 @@ def test_restricted_packages(
     actual = get_flake8_linter_results(
         s="".join(lines), options=options, delimiter="\n", filename=filename
     )
-    assert actual == expected, sorted(actual)
+    assert set(actual) == expected, sorted(actual)
 
 
 def test_restricted_import_settings_do_not_error(
