@@ -1,19 +1,19 @@
 """Parsed Nodes for custom import rules."""
-from enum import IntEnum
+from enum import Enum
 
 from attr import define
 from attr import field
 
 
-class ImportType(IntEnum):
+class ImportType(Enum):
     """Import type enum."""
 
-    FUTURE = 0
-    STDLIB = 10
-    THIRD_PARTY = 20
-    FIRST_PARTY = 30
-    RELATIVE = 40
-    DYNAMIC = 100
+    FUTURE = "FUTURE"
+    STDLIB = "STDLIB"
+    THIRD_PARTY = "THIRD_PARTY"
+    FIRST_PARTY = "FIRST_PARTY"
+    RELATIVE = "RELATIVE"
+    DYNAMIC = "DYNAMIC"
 
 
 @define(slots=True)

@@ -60,20 +60,77 @@ CUSTOM_IMPORT_RULES = [
 
 
 def convert_to_list(value: str | list[str] | None) -> list:
-    """Convert a string to a list and strip leading and trailing whitespace."""
+    """
+    Convert a string to a list and strip leading and trailing whitespace.
+
+    Parameters
+    ----------
+    value : str | list[str] | None
+        The value to convert to a list.
+
+    Returns
+    -------
+    list[str]
+        The converted list.
+    """
+    if value is None:
+        return []
     if isinstance(value, str):
-        return [item.strip() for item in value.split(",")]
-    return [] if value is None else value
+        return [item.strip() for item in value.split(",") if item != ""]
+    return convert_to_list(",".join(value)) if isinstance(value, list) else []
 
 
-def convert_to_dict(value: str | list[str] | None, delimiter: str = ":") -> dict:
-    """Convert a string to a list and strip leading and trailing whitespace."""
-    modules: defaultdict[str, list] = defaultdict(list)
-    module_list = convert_to_list(value)
-    for module in module_list:
-        module, *submodules = module.split(delimiter)
-        modules[module].extend(submodules)
-    return modules
+def convert_to_dict(value: str | list[str] | None, delimiter: str | None = ":") -> dict:
+    """
+    Convert a string to a dict and strip leading and trailing whitespace.
+
+    Parameters
+    ----------
+    value : str | list[str] | None
+        The value to convert to a dict.
+    delimiter : str, default=":"
+        The delimiter to use to split the string.
+
+    Returns
+    -------
+    dict[str, list]
+        The converted dict.
+    """
+    # if delimiter is None:
+    #     delimiter = ":"
+    #
+    # if isinstance(value, str) or value is None:
+    #     value = [value]
+    #
+    # # module_list = convert_to_list(value)
+    # module_dict: defaultdict[str, list] = defaultdict(list)
+    # for modules in value:
+    #     if modules is None:
+    #         continue
+    #     if isinstance(modules, str):
+    #         modules = modules.strip()
+    #     if modules is None or modules in {"", ":", ";"}:
+    #         continue
+    #     print(modules)
+    #     assert isinstance(modules, str)
+    #     assert delimiter in modules, f"Delimiter {delimiter} not found in {modules}"
+    #     module, *submodules = modules.split(delimiter)
+    #     module_dict[module].extend(convert_to_list(submodules))
+    # return module_dict
+    if value is None:
+        return defaultdict(list)
+    elif isinstance(value, str):
+        value = [value]
+
+    module_dict: defaultdict[str, list] = defaultdict(list)
+    for modules in value:
+        if not modules.strip():
+            continue
+        if modules in {"", ":", ";"}:
+            continue
+        module, *submodules = modules.split(delimiter)
+        module_dict[module.strip()].extend(convert_to_list(submodules))
+    return module_dict
 
 
 @define(slots=True)
