@@ -1,3 +1,13 @@
+## v0.8.4 (2023-07-31)
+
+### Fix
+
+- **visitor**: get_module_name_from_filename uses filename not file_path
+
+### Refactor
+
+- **help-strings**: add error codes to flake8 help strings (#82)
+
 ## v0.8.3 (2023-07-31)
 
 ### Refactor
