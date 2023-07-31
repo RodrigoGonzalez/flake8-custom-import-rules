@@ -14,11 +14,17 @@ define isolated packages, and establish import rules, the plugin aids in
 mitigating unwanted dependencies and maintaining clear separations between
 packages. Specifically, it facilitates the management of lightweight packages
 by limiting their imports to the Python standard library or third-party
-libraries, thus preventing unnecessary dependencies. Beyond enhancing
-readability and maintainability, the plugin promotes a modular architecture
+libraries, thus preventing unnecessary dependencies.
+
+Beyond enhancing readability and maintainability, the plugin promotes a modular architecture
 that is easier to comprehend, test, and debug. Consequently, developers can
 smoothly adhere to best practices, maintaining their projects in a clean,
 organized, and collaborative-friendly state.
+
+This is not a
+
+.. contents:: Sections
+   :depth: 2
 
 Installation
 ------------
@@ -59,7 +65,6 @@ rules and maintaining a consistent import organization across Python projects,
 we can significantly mitigate these issues, streamlining the process of
 integrating new team members and maintaining the high quality and readability
 of our codebase.
-
 
 A ``flake8`` plugin that enforces custom import rules, allowing users to define
 and maintain clean and consistent import organization across their Python
@@ -102,8 +107,8 @@ Example: Allow 'lightweight_package' to import only from Python standard
 library modules.
 
 
-Custom Import Rules
--------------------
+Custom Import Rules (CIR)
+-------------------------
 
 +----------------------+-----------------------------------------------------------------------------------------------+
 | Option               | Description                                                                                   |
@@ -141,7 +146,6 @@ Custom Import Rules allowed import types
 +-------------------+---------+--------------+-------------+-------------+--------+
 | isolated          | X       |              |             | X           | X      |
 +-------------------+---------+--------------+-------------+-------------+--------+
-
 
 
 .. [#] Technically project imports are "First Party" imports, but in this case we want to make a distinction between the top-level package and the rest of the project.
@@ -190,8 +194,8 @@ Example Configurations
     project-only = my_base_package.package_g
 
 
-Rule Violations
----------------
+Custom Import Rule Violations
+-----------------------------
 
 =====================  ============================================================
  Rule Violation Code        Description
@@ -276,10 +280,19 @@ Rule Violations
   **CIR502**            This error signifies an import from a non-third
                         party module, which is not allowed when the
                         **--third-party-only** rule is enabled.
+=====================  ============================================================
 
+
+Project Import Rule Violations
+------------------------------
+
+=====================  ============================================================
+ Rule Violation Code        Description
+=====================  ============================================================
   **PIR101**            This error is thrown when an import is not at the
                         top level of a file. This occurs when the
                         **--top-level-only-imports** option is enabled.
+                        **NOT IMPLEMENTED**
 
   **PIR102**            This error is thrown when a relative import is
                         detected. This occurs when the
@@ -362,22 +375,28 @@ Rule Violations
   **PIR301**            This error is thrown when a potential dynamic
                         import failed confirmation checks. This occurs
                         when the **--restrict-dynamic-imports** option
-                        is enabled.
+                        is enabled. **NOT IMPLEMENTED**
 
   **PIR302**            This error is thrown when an attempt to parse a
                         dynamic value string failed. This occurs when the
                         **--restrict-dynamic-imports** option is enabled.
+                        **NOT IMPLEMENTED**
 =====================  ============================================================
-
 
 Plugin Limitations
 ------------------
-- This plugin is currently only compatible with Python 3.10+ (support for 3.8 and 3.9 in the works).
-- Option import-restrictions only supports restricting imports by package or module, not by class
-  or function. (i.e., module_a.ClassA or module_a.function)
-- Files are not supported yet.
-- Option top-level-only-imports has not been implemented yet.
-- Dynamic string checks are not fully implemented yet. Currently they
+-   This plugin is currently only compatible with Python 3.10+ (support
+    for 3.8 and 3.9 in the works).
+-   Option import-restrictions only supports restricting imports by
+    package or module, not by class or function
+    (i.e., module_a.ClassA or module_a.function). However, if you
+    are trying to set import restrictions for a class or function,
+    you should probably move that class or function to a separate
+    module.
+-   Files are not supported yet, use modules to set restrictions
+    (e.g., package/module/file.py -> package.module.file).
+-   Option top-level-only-imports has not been implemented yet.
+-   Dynamic string checks are not fully implemented yet. Currently they
 
 License
 -------
@@ -386,10 +405,10 @@ This project is licensed under the terms of the MIT license.
 Acknowledgements
 ----------------
 
-- `flake8 <https://github.com/PyCQA/flake8>`_ - A wrapper around PyFlakes, pycodestyle and McCabe.
-- `flake8-import-order <https://github.com/PyCQA/flake8-import-order>`_ - ``flake8`` plugin that
-checks import order against various Python Style Guides. Used as a reference for this plugin.
-- `Writing Plugins for flake8 <https://flake8.pycqa.org/en/latest/plugin-development/index.html>`_ -
-``flake8`` documentation on writing plugins.
-- `A flake8 plugin from scratch <https://www.youtube.com/watch?v=ot5Z4KQPBL8>`_ - YouTube video on
-writing a custom ``flake8`` plugin.
+-   `flake8 <https://github.com/PyCQA/flake8>`_ - A wrapper around PyFlakes, pycodestyle and McCabe.
+-   `flake8-import-order <https://github.com/PyCQA/flake8-import-order>`_ - ``flake8`` plugin that
+    checks import order against various Python Style Guides. Used as a reference for this plugin.
+-   `Writing Plugins for flake8 <https://flake8.pycqa.org/en/latest/plugin-development/index.html>`_ -
+    ``flake8`` documentation on writing plugins.
+-   `A flake8 plugin from scratch <https://www.youtube.com/watch?v=ot5Z4KQPBL8>`_ - YouTube video on
+    writing a custom ``flake8`` plugin.
