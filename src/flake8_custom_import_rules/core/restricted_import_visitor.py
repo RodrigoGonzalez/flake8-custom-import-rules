@@ -15,15 +15,88 @@ from flake8_custom_import_rules.utils.node_utils import root_package_name
 logger = logging.getLogger(__name__)
 
 
+def get_restricted_package_strings(
+    restricted_packages: list[str],
+    file_packages: list[str],
+) -> list[str]:
+    """Get restricted package strings."""
+    return [
+        restricted_import
+        for restricted_import in restricted_packages
+        if restricted_import not in file_packages
+    ]
+
+
+def get_import_restriction_strings(
+    import_restrictions: defaultdict[str, list[str]],
+    file_packages: list[str],
+) -> list[str]:
+    """Get import restriction strings."""
+    import_restriction_keys = list(import_restrictions.keys())
+    parsed_import_restriction_keys: list = [
+        import_restriction_key
+        for import_restriction_key in import_restriction_keys
+        if import_restriction_key in file_packages
+    ]
+    import_restrictions_from_keys = {
+        restrictions
+        for key in parsed_import_restriction_keys
+        for restrictions in import_restrictions[key]
+    }
+    parsed_import_restrictions = list(import_restrictions_from_keys)
+
+    return get_restricted_package_strings(parsed_import_restrictions, file_packages)
+
+
+def get_import_strings(
+    restrictions: list[str],
+) -> list[str]:
+    """Get import strings."""
+    return [f"import {restriction}\n" for restriction in sorted(restrictions)]
+
+
+def subdict_from_keys(
+    import_restrictions: defaultdict[str, list[str]],
+    keys: list[str],
+) -> dict[str, list[str]]:
+    """
+    Function to create a subset of a dictionary given a list of keys.
+
+    Args:
+    d (dict): The original dictionary.
+    keys (list): The keys for the sub-dictionary.
+
+    Returns:
+    dict: A sub-dictionary with the given keys.
+    """
+    return {k: import_restrictions[k] for k in keys if k in import_restrictions}
+
+
+def find_keys_with_string(
+    import_restrictions: defaultdict[str, list[str]], target_string: str
+) -> list[str]:
+    """
+    Function to find keys with the target string in their lists.
+
+    Args:
+    dd (collections.defaultdict): The defaultdict(list) to search.
+    target_string (str): The string to search for.
+
+    Returns:
+    list: A list of keys where the string is found in their lists.
+    """
+    return [k for k, v in import_restrictions.items() if target_string in v]
+
+
 @define(slots=True, kw_only=True, hash=False)
 class RestrictedImportVisitor(ast.NodeVisitor):
     """Visitor for dynamic strings."""
 
     _restricted_packages: list[str]
     _import_restrictions: defaultdict[str, list[str]]
-    _import_restriction_keys: list[str] = field(default=list)
     _check_module_exists: bool = field(default=True)
     _file_packages: list[str] = field(default=list)
+    _restrictions: list[str] = field(init=False)
     _lines: list[str] = field(init=False)
     _tree: ast.AST = field(init=False)
     _package_names: list = field(factory=list)
@@ -32,34 +105,21 @@ class RestrictedImportVisitor(ast.NodeVisitor):
 
     def __attrs_post_init__(self) -> None:
         """Initialize."""
-        self._import_restriction_keys = list(self._import_restrictions.keys())
-        self._lines = self._get_restricted_package_strings()
-        self._lines.extend(self._get_import_restriction_strings())
-        self._lines = list(set(self._lines))
+        self._restrictions = self._get_restricted_package_strings()
+        self._restrictions.extend(self._get_import_restriction_strings())
+        self._restrictions = sorted(list(set(self._restrictions)))
+
+        self._lines = get_import_strings(self._restrictions)
         self._tree = ast.parse("".join(self._lines))
         self.restricted_identifiers = defaultdict(lambda: defaultdict(str))
 
     def _get_restricted_package_strings(self) -> list[str]:
         """Get restricted package strings."""
-        return [
-            f"import {restricted_import}\n"
-            for restricted_import in self._restricted_packages
-            if restricted_import not in self._file_packages
-        ]
+        return get_restricted_package_strings(self._restricted_packages, self._file_packages)
 
     def _get_import_restriction_strings(self) -> list[str]:
         """Get restricted package strings."""
-        parsed_import_restriction_keys: list = [
-            import_restriction_key
-            for import_restriction_key in self._import_restriction_keys
-            if import_restriction_key not in self._file_packages
-        ]
-        return [
-            f"import {import_restriction}\n"
-            for packages in parsed_import_restriction_keys
-            for import_restriction in get_package_names(packages)
-            if import_restriction not in self._file_packages
-        ]
+        return get_import_restriction_strings(self._import_restrictions, self._file_packages)
 
     def visit_Import(self, node: ast.Import) -> None:
         """Visit a String Import node."""
