@@ -15,19 +15,19 @@ CIR501 = "CIR501 Non-third party package import."
 CIR502 = "CIR502 Non-third party module import."
 MODULE_A_ERRORS = {
     (
-        f"24:4: {CIR502} Using 'from my_base_module.package_c.package_e.module_e "
+        f"22:4: {CIR502} Using 'from my_base_module.package_c.package_e.module_e "
         f"import OldE as VersionedE'."
     ),
-    f"87:8: {CIR502} Using 'from my_base_module.module_x import print_x'.",
-    f"17:0: {CIR502} Using 'from my_base_module.package_b.module_b import B'.",
-    f"86:8: {CIR502} Using 'from my_base_module.module_x import X'.",
-    f"19:0: {CIR502} Using 'from my_base_module.package_c.package_d.module_d import D as DEE'.",
-    f"21:0: {CIR502} Using 'from .module_a_relative import ARelative'.",
-    f"16:0: {CIR502} Using 'from my_base_module import module_z'.",
-    f"18:0: {CIR502} Using 'from my_base_module.package_c.module_c import C'.",
-    f"15:0: {CIR501} Using 'import my_base_module.module_y'.",
+    f"85:8: {CIR502} Using 'from my_base_module.module_x import print_x'.",
+    f"15:0: {CIR502} Using 'from my_base_module.package_b.module_b import B'.",
+    f"84:8: {CIR502} Using 'from my_base_module.module_x import X'.",
+    f"17:0: {CIR502} Using 'from my_base_module.package_c.package_d.module_d import D as DEE'.",
+    f"19:0: {CIR502} Using 'from .module_a_relative import ARelative'.",
+    f"14:0: {CIR502} Using 'from my_base_module import module_z'.",
+    f"16:0: {CIR502} Using 'from my_base_module.package_c.module_c import C'.",
+    f"13:0: {CIR501} Using 'import my_base_module.module_y'.",
     (
-        f"26:4: {CIR502} Using 'from my_base_module.package_c.package_e.module_e import "
+        f"24:4: {CIR502} Using 'from my_base_module.package_c.package_e.module_e import "
         f"EUpdated as VersionedE'."
     ),
 }

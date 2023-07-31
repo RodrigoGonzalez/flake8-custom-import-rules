@@ -11,7 +11,7 @@ license = "MIT"
 #]
 
 [tool.poetry.dependencies]
-python = ">=3.9,<3.12"
+python = ">=3.9,<=3.12"
 flake8 = "^6.0.0"
 importlib-metadata = { version = "^4.0", python = "<3.8" }
 pylama = "^8.4.1"
@@ -32,6 +32,16 @@ autoflake = "^2.1.1"
 prettier = "^0.0.7"
 mypy = "^1.2.0"
 tox = "^4.6.4"
+coverage = { version = "^7.2.7",  extras = ["toml"] }
+covdefaults = "^2.3.0"
+toml = "^0.10.2"
+hypothesis = "^6.82.0"
+hypothesmith = "^0.2.3"
+pytest-cov = "^4.1.0"
+pandas = "*"
+numpy = "*"
+pendulum = "*"
+tox-gh-actions = "^3.1.3"
 
 
 

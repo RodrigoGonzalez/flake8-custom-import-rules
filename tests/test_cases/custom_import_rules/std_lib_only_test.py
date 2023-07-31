@@ -14,25 +14,24 @@ from flake8_custom_import_rules.utils.node_utils import root_package_name
 CIR401 = "CIR401 Non-standard library package import."
 CIR402 = "CIR402 Non-standard library module import."
 MODULE_A_ERRORS = {
-    f"21:0: {CIR402} Using 'from .module_a_relative import ARelative'.",
-    f"19:0: {CIR402} Using 'from my_base_module.package_c.package_d.module_d import D as DEE'.",
     (
-        f"26:4: {CIR402} Using 'from my_base_module.package_c.package_e.module_e import "
-        f"EUpdated as VersionedE'."
+        f"22:4: {CIR402} Using 'from my_base_module.package_c.package_e.module_e "
+        f"import OldE as VersionedE'."
     ),
-    f"11:0: {CIR401} Using 'import pendulum'.",
-    f"12:0: {CIR402} Using 'from attrs import define'.",
-    f"17:0: {CIR402} Using 'from my_base_module.package_b.module_b import B'.",
-    f"18:0: {CIR402} Using 'from my_base_module.package_c.module_c import C'.",
-    f"15:0: {CIR401} Using 'import my_base_module.module_y'.",
+    f"16:0: {CIR402} Using 'from my_base_module.package_c.module_c import C'.",
     (
-        f"24:4: {CIR402} Using 'from my_base_module.package_c.package_e.module_e import "
-        f"OldE as VersionedE'."
+        f"24:4: {CIR402} Using 'from my_base_module.package_c.package_e.module_e "
+        f"import EUpdated as VersionedE'."
     ),
-    f"87:8: {CIR402} Using 'from my_base_module.module_x import print_x'.",
-    f"86:8: {CIR402} Using 'from my_base_module.module_x import X'.",
-    f"16:0: {CIR402} Using 'from my_base_module import module_z'.",
-    f"13:0: {CIR402} Using 'from attrs import field'.",
+    f"19:0: {CIR402} Using 'from .module_a_relative import ARelative'.",
+    f"11:0: {CIR402} Using 'from attrs import field'.",
+    f"84:8: {CIR402} Using 'from my_base_module.module_x import X'.",
+    f"10:0: {CIR402} Using 'from attrs import define'.",
+    f"15:0: {CIR402} Using 'from my_base_module.package_b.module_b import B'.",
+    f"17:0: {CIR402} Using 'from my_base_module.package_c.package_d.module_d import D as DEE'.",
+    f"85:8: {CIR402} Using 'from my_base_module.module_x import print_x'.",
+    f"13:0: {CIR401} Using 'import my_base_module.module_y'.",
+    f"14:0: {CIR402} Using 'from my_base_module import module_z'.",
 }
 
 

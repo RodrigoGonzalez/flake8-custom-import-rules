@@ -15,9 +15,8 @@ CIR201 = "CIR201 Non-project package import."
 CIR202 = "CIR202 Non-project module import."
 
 MODULE_THREE_ERRORS = {
-    f"6:0: {CIR201} Using 'import pendulum'.",
-    f"7:0: {CIR202} Using 'from attrs import define'.",
-    f"8:0: {CIR202} Using 'from attrs import field'.",
+    f"6:0: {CIR202} Using 'from attrs import define'.",
+    f"7:0: {CIR202} Using 'from attrs import field'.",
 }
 
 

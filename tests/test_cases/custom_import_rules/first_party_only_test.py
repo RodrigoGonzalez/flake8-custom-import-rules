@@ -15,11 +15,10 @@ CIR205 = "CIR205 Non-first party package import."
 CIR206 = "CIR206 Non-first party module import."
 
 MODULE_THREE_ERRORS = {
-    f"6:0: {CIR205} Using 'import pendulum'.",
-    f"7:0: {CIR206} Using 'from attrs import define'.",
-    f"8:0: {CIR206} Using 'from attrs import field'.",
-    f"11:0: {CIR205} Using 'import my_second_base_package.module_one.file_one'.",
-    f"13:0: {CIR206} Using 'from my_second_base_package.module_one.file_two import ModuleTwo'.",
+    f"6:0: {CIR206} Using 'from attrs import define'.",
+    f"7:0: {CIR206} Using 'from attrs import field'.",
+    f"10:0: {CIR205} Using 'import my_second_base_package.module_one.file_one'.",
+    f"12:0: {CIR206} Using 'from my_second_base_package.module_one.file_two import ModuleTwo'.",
 }
 
 
