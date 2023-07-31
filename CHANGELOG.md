@@ -1,3 +1,12 @@
+## v0.8.3 (2023-07-31)
+
+### Refactor
+
+- **help-strings**: add error codes to flake8 help strings
+- **defaults**: update help strings (#81)
+- **main**: update readme, change log to debug (#80)
+- **restricted-imports**: add support for import restrictions (#79)
+
 ## v0.8.2 (2023-07-30)
 
 ### Fix
