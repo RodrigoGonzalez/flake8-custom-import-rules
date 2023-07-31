@@ -117,14 +117,6 @@ exclude = [
 plugins = ["covdefaults"]
 omit = ["flake8_custom_import_rules/example_repos/*"]
 
-# Custom plugin settings (use your plugin's name as the prefix)
-#flake8_custom_import.import_restrictions = [
-#    "my_base_package.module_A:my_base_package.module_B",
-#    "my_base_package.module_X.py:my_base_package.module_Y.py",
-#]
-#flake8_custom_import.isolated_modules = ["my_base_package.module_C"]
-#flake8_custom_import.std_lib_only = ["my_base_package.module_D"]
-
 [tool.poetry.scripts]
 CIR = "flake8_custom_import_rules.flake8_linter:Plugin"
 
