@@ -97,8 +97,9 @@ class CustomImportRulesVisitor(ast.NodeVisitor):
             else None
         )
         logger.info(f"Visitor filename: {self.filename}")
+        # print("Visitor filename: ", self.filename)
         self.file_identifier = (
-            get_module_name_from_filename(str(self.file_path))
+            get_module_name_from_filename(str(self.filename))
             if self.resolve_local_imports
             else None
         )

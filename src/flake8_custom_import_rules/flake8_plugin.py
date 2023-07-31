@@ -90,8 +90,8 @@ class Plugin(CustomImportRulesChecker):
         logger.debug(f"Option Manager: {option_manager}")
         logger.debug(f"Options: {parse_options}")
         logger.debug(f"Args: {args}")
-        print(f"\n\nOptions: {parse_options}")
-        print(f"\n\nArgs: {args}")
+        # print(f"\n\nOptions: {parse_options}")
+        # print(f"\n\nArgs: {args}")
 
         # Parse options for CustomImportRulesChecker
         options: dict = {}
@@ -124,6 +124,6 @@ class Plugin(CustomImportRulesChecker):
     def run(self) -> Generator[tuple[int, int, str, type[Any]], None, None]:
         """Run flake8-custom-import-rules."""
         # Run CustomImportRulesChecker
-        print(f"Run Options: {self.options}")
+        # print(f"Run Options: {self.options}")
         logger.debug(f"Run Options: {self.options}")
         yield from self.check_custom_import_rules()
