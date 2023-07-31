@@ -124,27 +124,27 @@ Custom Import Rules
 +----------------------+-----------------------------------------------------------------------------------------------+
 
 Custom Import Rules allowed import types
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-+-------------------+---------+----------+-------------+-------------+--------+
-| RULE              | STD LIB | PROJECT* | FIRST PARTY | THIRD PARTY | FUTURE |
-+===================+=========+==========+=============+=============+========+
-| std_lib_only      | X       |          |             |             | X      |
-+-------------------+---------+----------+-------------+-------------+--------+
-| project_only      | X       | X        | X           |             | X      |
-+-------------------+---------+----------+-------------+-------------+--------+
-| base_package_only | X       | X        |             |             | X      |
-+-------------------+---------+----------+-------------+-------------+--------+
-| first_party_only  | X       |          | X           |             | X      |
-+-------------------+---------+----------+-------------+-------------+--------+
-| third_party_only  | X       |          |             | X           | X      |
-+-------------------+---------+----------+-------------+-------------+--------+
-| isolated          | X       |          |             | X           | X      |
-+-------------------+---------+----------+-------------+-------------+--------+
++-------------------+---------+--------------+-------------+-------------+--------+
+| RULE              | STD LIB | PROJECT [#]_ | FIRST PARTY | THIRD PARTY | FUTURE |
++===================+=========+==============+=============+=============+========+
+| std_lib_only      | X       |              |             |             | X      |
++-------------------+---------+--------------+-------------+-------------+--------+
+| project_only      | X       | X            | X           |             | X      |
++-------------------+---------+--------------+-------------+-------------+--------+
+| base_package_only | X       | X            |             |             | X      |
++-------------------+---------+--------------+-------------+-------------+--------+
+| first_party_only  | X       |              | X           |             | X      |
++-------------------+---------+--------------+-------------+-------------+--------+
+| third_party_only  | X       |              |             | X           | X      |
++-------------------+---------+--------------+-------------+-------------+--------+
+| isolated          | X       |              |             | X           | X      |
++-------------------+---------+--------------+-------------+-------------+--------+
 
 
 
-*Technically project imports are "First Party" imports, but in this case we want to make a distinction between the top-level package and the rest of the project.
+.. [#] Technically project imports are "First Party" imports, but in this case we want to make a distinction between the top-level package and the rest of the project.
 
 Example Configurations
 ----------------------
@@ -190,55 +190,184 @@ Example Configurations
     project-only = my_base_package.package_g
 
 
-Error Codes
------------
+Rule Violations
+---------------
 
-================  ============================================================
- Error Code        Description
-================  ============================================================
-  **CIR101**         This error signifies a conflict with a custom import rule. It is thrown when an import violates a custom rule defined in your configuration.
-  **CIR102**         This error is thrown when a specific package or module is imported against the defined import restrictions.
-  **CIR103**         This error is thrown when a from import statement for a specific package or module violates the defined import restrictions.
-  **CIR104**         This error is thrown when a module import for a specific package or module goes against the defined import restrictions.
-  **CIR105**         This error is thrown when a from import statement for a specific module violates the defined import restrictions.
-  **CIR106**         This error is thrown when an import from a restricted package is detected.
-  **CIR107**         This error is thrown when an import from a restricted module is detected.
-  **CIR201**         This error signifies an import from a non-project package, which is not allowed when the project_only rule is enabled.
-  **CIR202**         This error signifies an import from a non-project module, which is not allowed when the project_only rule is enabled.
-  **CIR203**         This error signifies an import from a non-base package, which is not allowed when the base_package_only rule is enabled.
-  **CIR204**         This error signifies an import from a non-base package module, which is not allowed when the base_package_only rule is enabled.
-  **CIR205**         This error signifies an import from a non-first party package, which is not allowed when the first_party_only rule is enabled.
-  **CIR206**         This error signifies an import from a non-first party module, which is not allowed when the first_party_only rule is enabled.
-  **CIR301**         This error signifies an import from an isolated package, which is not allowed when the isolated rule is enabled.
-  **CIR302**         This error signifies a from import from an isolated package, which is not allowed when the isolated rule is enabled.
-  **CIR303**         This error signifies an import from an isolated module, which is not allowed when the isolated rule is enabled.
-  **CIR304**         This error signifies a from import from an isolated module, which is not allowed when the isolated rule is enabled.
-  **CIR401**         This error signifies an import from a non-standard library package, which is not allowed when the std_lib_only rule is enabled.
-  **CIR402**         This error signifies an import from a non-standard library module, which is not allowed when the std_lib_only rule is enabled.
-  **CIR501**         This error signifies an import from a non-third party package, which is not allowed when the third_party_only rule is enabled.
-  **CIR502**         This error signifies an import from a non-third party module, which is not allowed when the third_party_only rule is enabled.
-  **PIR101**         This error is thrown when an import is not at the top level of a file. This occurs when the top_level_only_imports option is enabled.
-  **PIR102**         This error is thrown when a relative import is detected. This occurs when the restrict_relative_imports option is enabled.
-  **PIR103**         This error is thrown when a local import is detected. This occurs when the restrict_local_imports option is enabled.
-  **PIR104**         This error is thrown when a conditional import is detected. This occurs when the restrict_conditional_imports option is enabled.
-  **PIR105**         This error is thrown when a dynamic import is detected. This occurs when the restrict_dynamic_imports option is enabled.
-  **PIR106**         This error is thrown when a private import is detected. This occurs when the restrict_private_imports option is enabled.
-  **PIR107**         This error is thrown when a wildcard import is detected. This occurs when the restrict_wildcard_imports option is enabled.
-  **PIR108**         This error is thrown when an aliased import is detected. This occurs when the restrict_aliased_imports option is enabled.
-  **PIR109**         This error is thrown when a future import is detected. This occurs when the restrict_future_imports option is enabled.
-  **PIR201**         This error is thrown when importing test modules (test_*/ *_test.py) is detected. This occurs when the restrict_test_imports option is enabled.
-  **PIR202**         This error is thrown when importing from test_.py/_test.py modules is detected. This occurs when the restrict_test_imports option is enabled.
-  **PIR203**         This error is thrown when importing 'conftest' is detected. This occurs when the restrict_conftest_imports option is enabled.
-  **PIR204**         This error is thrown when importing from conftest.py files is detected. This occurs when the restrict_conftest_imports option is enabled.
-  **PIR205**         This error is thrown when importing tests directory or tests subdirectories is detected. This occurs when the restrict_test_imports option is enabled.
-  **PIR206**         This error is thrown when importing from tests directory or its subdirectories is detected. This occurs when the restrict_test_imports option is enabled.
-  **PIR207**         This error is thrown when importing __init__ is detected. This occurs when the restrict_init_imports option is enabled.
-  **PIR208**         This error is thrown when importing from __init__.py files is detected. This occurs when the restrict_init_imports option is enabled.
-  **PIR209**         This error is thrown when importing __main__ is detected. This occurs when the restrict_main_imports option is enabled.
-  **PIR210**         This error is thrown when importing from __main__.py files is detected. This occurs when the restrict_main_imports option is enabled.
-  **PIR301**         This error is thrown when a potential dynamic import failed confirmation checks. This occurs when the restrict_dynamic_imports option is enabled.
-  **PIR302**         This error is thrown when an attempt to parse a dynamic value string failed. This occurs when the restrict_dynamic_imports option is enabled.
-================  ============================================================
+=====================  ============================================================
+ Rule Violation Code        Description
+=====================  ============================================================
+  **CIR101**            This error signifies a conflict with a custom import
+                        rule. It is thrown when an import violates a custom
+                        rule defined in your configuration.
+
+  **CIR102**            This error is thrown when a specific package or
+                        module is imported against the defined import restrictions.
+
+  **CIR103**            This error is thrown when a from import statement
+                        for a specific package or module violates the
+                        defined import restrictions.
+
+  **CIR104**            This error is thrown when a module import for a
+                        specific package or module goes against the
+                        defined import restrictions.
+
+  **CIR105**            This error is thrown when a from import statement
+                        for a specific module violates the defined import
+                        restrictions.
+
+  **CIR106**            This error is thrown when an import from a
+                        restricted package is detected.
+
+  **CIR107**            This error is thrown when an import from a
+                        restricted module is detected.
+
+  **CIR201**            This error signifies an import from a non-project
+                        package, which is not allowed when the project_only
+                        rule is enabled.
+
+  **CIR202**            This error signifies an import from a non-project
+                        module, which is not allowed when the project_only
+                        rule is enabled.
+
+  **CIR203**            This error signifies an import from a non-base
+                        package, which is not allowed when the
+                        **--base-package-only** rule is enabled.
+
+  **CIR204**            This error signifies an import from a non-base
+                        package module, which is not allowed when the
+                        **--base-package-only** rule is enabled.
+
+  **CIR205**            This error signifies an import from a non-first
+                        party package, which is not allowed when the
+                        **--first-party-only** rule is enabled.
+
+  **CIR206**            This error signifies an import from a non-first
+                        party module, which is not allowed when the
+                        **--first-party-only** rule is enabled.
+
+  **CIR301**            This error signifies an import from an isolated
+                        package, which is not allowed when the isolated
+                        rule is enabled.
+
+  **CIR302**            This error signifies a from import from an
+                        isolated package, which is not allowed when the
+                        isolated rule is enabled.
+
+  **CIR303**            This error signifies an import from an isolated
+                        module, which is not allowed when the isolated
+                        rule is enabled.
+
+  **CIR304**            This error signifies a from import from an
+                        isolated module, which is not allowed when the
+                        isolated rule is enabled.
+
+  **CIR401**            This error signifies an import from a non-standard
+                        library package, which is not allowed when the
+                        **--std-lib-only** rule is enabled.
+
+  **CIR402**            This error signifies an import from a non-standard
+                        library module, which is not allowed when the
+                        **--std-lib-only** rule is enabled.
+
+  **CIR501**            This error signifies an import from a non-third
+                        party package, which is not allowed when the
+                        **--third-party-only** rule is enabled.
+
+  **CIR502**            This error signifies an import from a non-third
+                        party module, which is not allowed when the
+                        **--third-party-only** rule is enabled.
+
+  **PIR101**            This error is thrown when an import is not at the
+                        top level of a file. This occurs when the
+                        **--top-level-only-imports** option is enabled.
+
+  **PIR102**            This error is thrown when a relative import is
+                        detected. This occurs when the
+                        **--restrict-relative-imports** option is enabled.
+
+  **PIR103**            This error is thrown when a local import is
+                        detected. This occurs when the
+                        **--restrict-local-imports** option is enabled.
+
+  **PIR104**            This error is thrown when a conditional import is
+                        detected. This occurs when the
+                        **--restrict-conditional-imports** option is enabled.
+
+  **PIR105**            This error is thrown when a dynamic import is
+                        detected. This occurs when the
+                        **--restrict-dynamic-imports** option is enabled.
+
+  **PIR106**            This error is thrown when a private import is
+                        detected. This occurs when the
+                        **--restrict-private-imports** option is enabled.
+
+  **PIR107**            This error is thrown when a wildcard import is
+                        detected. This occurs when the
+                        **--restrict-wildcard-imports** option is enabled.
+
+  **PIR108**            This error is thrown when an aliased import is
+                        detected. This occurs when the
+                        **--restrict-aliased-imports** option is enabled.
+
+  **PIR109**            This error is thrown when a **__future__** import
+                        is detected. This occurs when the
+                        **--restrict-future-imports** option is enabled.
+
+  **PIR201**            This error is thrown when importing test modules
+                        (**import test_<all>** or **import <all>_test**)
+                        is detected. This occurs when the
+                        **--restrict-test-imports** option is enabled.
+
+  **PIR202**            This error is thrown when importing from
+                        (**test_<all>.py** or **<all>_test.py**) modules
+                        is detected. This occurs when the
+                        **--restrict-test-imports** option is enabled.
+
+  **PIR203**            This error is thrown when **import conftest**
+                        is detected. This occurs when the
+                        **--restrict-conftest-imports** option is enabled.
+
+  **PIR204**            This error is thrown when importing from
+                        **conftest.py** files is detected. This occurs when
+                        the **--restrict-conftest-imports** option is
+                        enabled.
+
+  **PIR205**            This error is thrown when **import tests**
+                        or **import tests.subdirectories** are detected.
+                        This occurs when the
+                        **--restrict-test-imports** option is enabled.
+
+  **PIR206**            This error is thrown when importing from the
+                        **tests** directory or its subdirectories is
+                        detected. This occurs when the
+                        **--restrict-test-imports** option is enabled.
+
+  **PIR207**            This error is thrown when **import __init__**
+                        is detected. This occurs when the
+                        **--restrict-init-imports** option is enabled.
+
+  **PIR208**            This error is thrown when importing from
+                        **__init__.py** files is detected. This occurs when
+                        the **--restrict-init-imports** option is enabled.
+
+  **PIR209**            This error is thrown when **import __main__** is
+                        detected. This occurs when the
+
+                        **--restrict-main-imports** option is enabled.
+  **PIR210**            This error is thrown when importing from
+                        **__main__.py** files is detected. This occurs
+                        when the **--restrict-main-imports** option is
+                        enabled.
+
+  **PIR301**            This error is thrown when a potential dynamic
+                        import failed confirmation checks. This occurs
+                        when the **--restrict-dynamic-imports** option
+                        is enabled.
+
+  **PIR302**            This error is thrown when an attempt to parse a
+                        dynamic value string failed. This occurs when the
+                        **--restrict-dynamic-imports** option is enabled.
+=====================  ============================================================
 
 
 Plugin Limitations
@@ -248,6 +377,7 @@ Plugin Limitations
   or function. (i.e., module_a.ClassA or module_a.function)
 - Files are not supported yet.
 - Option top-level-only-imports has not been implemented yet.
+- Dynamic string checks are not fully implemented yet. Currently they
 
 License
 -------
