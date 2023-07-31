@@ -1,3 +1,11 @@
+## v0.8.6 (2023-07-31)
+
+### Refactor
+
+- **readme**: update intro paragraph, remove unnecessary comments (#88)
+- **error-codes**: make error code checks using set instead of list (#86)
+- **core**: refactor to make code easier to follow (#85)
+
 ## v0.8.5 (2023-07-31)
 
 ### Fix
