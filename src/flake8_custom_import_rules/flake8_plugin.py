@@ -60,18 +60,20 @@ class Plugin(CustomImportRulesChecker):
 
         register_options(option_manager, CUSTOM_IMPORT_RULES, is_restriction=False)
 
+        # Not Implemented Yet
         register_opt(
             option_manager,
             "--top-level-only-imports",
             default=DEFAULT_CHECKER_SETTINGS.TOP_LEVEL_ONLY_IMPORTS,
             action="store",
             type=bool,
-            help=(
-                f"This option allows you to enforce that only top-level "
-                f"imports are permitted in the project. If violated, could "
-                f"lead to error codes PIR101. "
-                f"(default: {DEFAULT_CHECKER_SETTINGS.TOP_LEVEL_ONLY_IMPORTS})"
-            ),
+            help="Not Implemented Yet",
+            # help=(
+            #     f"This option allows you to enforce that only top-level "
+            #     f"imports are permitted in the project. If violated, could "
+            #     f"lead to error codes PIR101. "
+            #     f"(default: {DEFAULT_CHECKER_SETTINGS.TOP_LEVEL_ONLY_IMPORTS})"
+            # ),
             parse_from_config=True,
             comma_separated_list=False,
             normalize_paths=False,

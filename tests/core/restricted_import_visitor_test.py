@@ -4,7 +4,6 @@ Restricted import visitor tests.
 To run this test file only:
 poetry run python -m pytest -vvvrca tests/core/restricted_import_visitor_test.py
 """
-import itertools
 from collections import defaultdict
 
 import pytest
@@ -14,7 +13,7 @@ from flake8_custom_import_rules.core.restricted_import_visitor import get_restri
 from flake8_custom_import_rules.defaults import convert_to_dict
 from flake8_custom_import_rules.utils.node_utils import get_package_names
 
-PACKAGE_6 = [
+RESTRICTED_IMPORTS = [
     "my_second_base_package",
     "my_second_base_package.module_one",
     "my_second_base_package.module_one.file_one",
@@ -27,7 +26,7 @@ PACKAGE_6 = [
 
 @pytest.mark.parametrize(
     ("restricted_imports", "check_module_exists", "expected"),
-    [(PACKAGE_6, True, {}), (PACKAGE_6, False, {}), ([], True, {})],
+    [(RESTRICTED_IMPORTS, True, {}), (RESTRICTED_IMPORTS, False, {}), ([], True, {})],
 )
 def test_get_restricted_identifiers(
     restricted_imports: list[str] | str,
@@ -121,7 +120,7 @@ def test_restricted_import_visitor(
 ) -> None:
     """Test get_restricted_identifiers."""
     restricted_import_visitor = RestrictedImportVisitor(
-        restricted_packages=PACKAGE_6,
+        restricted_packages=RESTRICTED_IMPORTS,
         check_module_exists=True,
         import_restrictions=defaultdict(list),
         file_packages=get_package_names(file_package),
@@ -134,7 +133,7 @@ def test_restricted_import_visitor(
         assert restricted_import_visitor.restricted_identifiers[key]
 
 
-PACKAGE_7 = [
+IMPORT_RESTRICTIONS = [
     "my_second_base_package:my_third_base_package,my_base_module",
     (
         "my_second_base_package.module_one:my_second_base_package,my_third_base_package,"
@@ -233,7 +232,7 @@ def test_get_restricted_identifiers__import_restrictions(
     restricted_identifiers = get_restricted_identifiers(
         restricted_packages=[],
         check_module_exists=False,
-        import_restrictions=convert_to_dict(PACKAGE_7),
+        import_restrictions=convert_to_dict(IMPORT_RESTRICTIONS),
         file_packages=get_package_names(file_package),
     )
     assert isinstance(restricted_identifiers, defaultdict)
@@ -241,42 +240,6 @@ def test_get_restricted_identifiers__import_restrictions(
     for key in restricted_identifiers.keys():
         assert restricted_identifiers[key], defaultdict
         assert restricted_identifiers[key]
-
-
-@pytest.fixture(scope="module")
-def package_7() -> list:
-    """Test get_restricted_identifiers."""
-    package_7 = []
-    first_list = [
-        "my_second_base_package",
-        "my_base_module",
-        "my_third_base_package",
-    ]
-    second_list = ["", "module_one", "module_two", "file"]
-    third_list = ["", "file_one", "file_two"]
-    for first, second in itertools.product(first_list, second_list):
-        if second in [""]:
-            package_7.append(first)
-            continue
-        if f"{second}" in ["file"]:
-            package_7.append(f"{first}.{second}")
-            continue
-        for third in third_list:
-            if f"{second}.{third}" in [".", "file.file_one", "file.file_two"]:
-                package_7.append(f"{first}.{second}")
-                continue
-            package_7.append(f"{first}.{second}.{third}".strip("."))
-    return package_7
-
-
-@pytest.fixture(scope="module")
-def package_8(package_7) -> list:
-    """Test get_restricted_identifiers."""
-    package_8 = []
-    for restricted_package in package_7:
-        temp = [package for package in package_7 if not package.startswith(restricted_package)]
-        package_8.append(f"{restricted_package}:{','.join(temp)}")
-    return package_8
 
 
 @pytest.mark.parametrize(
