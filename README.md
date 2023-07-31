@@ -62,13 +62,13 @@ Restricted imports can be configured in two ways:
   Example: Prevent 'package_A' from importing 'package_B' or any of its
   subpackages or modules.
 - By module: Restrict a module from importing specific modules.
-  Example: Prevent 'module_A' from importing 'module_B'.
+  Example: Prevent 'package_A.module_A' from importing 'package_B.module_B'.
 
 Restricted packages: Specify a list of packages that are not permitted to be
 imported or used by other packages or modules within your base package. This
 helps maintain a clear separation between high-level and low-level packages.
 
-Example: Disallow importing 'low_level_package' into 'high_level_package'.
+Example: Restrict importing 'lower_level_package' into 'higher_level_package'.
 
 Isolated packages: Define a list of packages that cannot import from any other
 packages within your base package. This ensures that certain packages remain
@@ -87,14 +87,15 @@ library modules.
 
 ## Custom Import Rules
 
-| Rule             | Description                                                                                   |
-|------------------|-----------------------------------------------------------------------------------------------|
-| std_lib_only     | Allow a package to import only from the Python standard library.                              |
-| project_only     | Allow a package to import only from the local package.                                        |
-| first_party_only | Allow a package to import only from the local package and the project's top-level package.    |
-| third_party_only | Allow a package to import only from third-party libraries.                                    |
-| isolated         | Make a package isolated, so it cannot import from any other packages within the base package. |
-| restricted       | Restrict a package from importing another package, or modules from another package.           |
+| Rule              | Description                                                                                   |
+|-------------------|-----------------------------------------------------------------------------------------------|
+| std_lib_only      | Restrict package to import only from the Python standard library.                             |
+| project_only      | Restrict package to import only from the local package and the project's top-level package.   |
+| base_package_only | Restrict package to import only from the project's top-level package only.                    |
+| first_party_only  | Restrict package to import only from the local packages only.                                 |
+| third_party_only  | Restrict package to import only from third-party libraries.                                   |
+| isolated          | Make a package isolated, so it cannot import from any other packages within the base package. |
+| restricted        | Restrict a package from importing another package, or modules from another package.           |
 
 
 | RULE              | STD LIB | PROJECT* | FIRST PARTY | THIRD PARTY | FUTURE |
