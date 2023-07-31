@@ -20,6 +20,15 @@ that is easier to comprehend, test, and debug. Consequently, developers can
 smoothly adhere to best practices, maintaining their projects in a clean,
 organized, and collaborative-friendly state.
 
+Installation
+------------
+
+Install from ``pip`` with:
+
+.. code-block:: sh
+
+     pip install flake8-custom-import-rules
+
 Motivation
 ----------
 
@@ -62,10 +71,13 @@ modules within your base package. For example, you might want to prevent
 package A from importing package B or any of its subpackages.
 
 Restricted imports can be configured in two ways:
+
 - By package: Restrict a package from importing another package, or subpackages
   or modules from another package.
+
   Example: Prevent 'package_a' from importing 'package_b' or any of its
   subpackages or modules.
+
 - By module: Restrict a module from importing specific modules.
   Example: Prevent 'package_a.module_a' from importing 'package_b.module_b'.
 
@@ -93,25 +105,26 @@ library modules.
 Custom Import Rules
 -------------------
 
-+-------------------+-----------------------------------------------------------------------------------------------+
-| Rule              | Description                                                                                   |
-+===================+===============================================================================================+
-| std_lib_only      | Restrict package to import only from the Python standard library.                             |
-+-------------------+-----------------------------------------------------------------------------------------------+
-| project_only      | Restrict package to import only from the local package and the project's top-level package.   |
-+-------------------+-----------------------------------------------------------------------------------------------+
-| base_package_only | Restrict package to import only from the project's top-level package only.                    |
-+-------------------+-----------------------------------------------------------------------------------------------+
-| first_party_only  | Restrict package to import only from the local packages only.                                 |
-+-------------------+-----------------------------------------------------------------------------------------------+
-| third_party_only  | Restrict package to import only from third-party libraries.                                   |
-+-------------------+-----------------------------------------------------------------------------------------------+
-| isolated          | Make a package isolated, so it cannot import from any other packages within the base package. |
-+-------------------+-----------------------------------------------------------------------------------------------+
-| restricted        | Restrict a package from importing another package, or modules from another package.           |
-+-------------------+-----------------------------------------------------------------------------------------------+
++----------------------+-----------------------------------------------------------------------------------------------+
+| Option               | Description                                                                                   |
++======================+===============================================================================================+
+| --std-lib-only       | Restrict package to import only from the Python standard library.                             |
++----------------------+-----------------------------------------------------------------------------------------------+
+| --project-only       | Restrict package to import only from the local package and the project's top-level package.   |
++----------------------+-----------------------------------------------------------------------------------------------+
+| --base-package-only  | Restrict package to import only from the project's top-level package only.                    |
++----------------------+-----------------------------------------------------------------------------------------------+
+| --first-party-only   | Restrict package to import only from the local packages only.                                 |
++----------------------+-----------------------------------------------------------------------------------------------+
+| --third-party-only   | Restrict package to import only from third-party libraries.                                   |
++----------------------+-----------------------------------------------------------------------------------------------+
+| --isolated           | Make a package isolated, so it cannot import from any other packages within the base package. |
++----------------------+-----------------------------------------------------------------------------------------------+
+| --restricted         | Restrict a package from importing another package, or modules from another package.           |
++----------------------+-----------------------------------------------------------------------------------------------+
 
-
+Custom Import Rules allowed import types
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 +-------------------+---------+----------+-------------+-------------+--------+
 | RULE              | STD LIB | PROJECT* | FIRST PARTY | THIRD PARTY | FUTURE |
@@ -136,7 +149,10 @@ Custom Import Rules
 Example Configurations
 ----------------------
 
-```toml
+**.toml file**
+
+.. code-block:: toml
+
     [flake8]
     # Define the base packages for your project
     base_packages = ["my_base_package", "my_other_base_package"]
@@ -155,9 +171,12 @@ Example Configurations
     first_party_only = ["my_base_package.package_f"]
     # Allow `package_g` to import only from the local package
     project_only = ["my_base_package.package_g"]
-```
 
-```ini
+
+**.ini file**
+
+.. code-block:: ini
+
     [flake8]
     base-packages = my_base_package,my_other_base_package
     import-restrictions =
@@ -169,16 +188,61 @@ Example Configurations
     third-party-only = my_base_package.package_b
     first-party-only = my_base_package.package_f
     project-only = my_base_package.package_g
-```
+
 
 Error Codes
 -----------
-| Error Code | Description |
-| ---------- | ----------- |
+
+================  ============================================================
+ Error Code        Description
+================  ============================================================
+  **CIR101**         This error signifies a conflict with a custom import rule. It is thrown when an import violates a custom rule defined in your configuration.
+  **CIR102**         This error is thrown when a specific package or module is imported against the defined import restrictions.
+  **CIR103**         This error is thrown when a from import statement for a specific package or module violates the defined import restrictions.
+  **CIR104**         This error is thrown when a module import for a specific package or module goes against the defined import restrictions.
+  **CIR105**         This error is thrown when a from import statement for a specific module violates the defined import restrictions.
+  **CIR106**         This error is thrown when an import from a restricted package is detected.
+  **CIR107**         This error is thrown when an import from a restricted module is detected.
+  **CIR201**         This error signifies an import from a non-project package, which is not allowed when the project_only rule is enabled.
+  **CIR202**         This error signifies an import from a non-project module, which is not allowed when the project_only rule is enabled.
+  **CIR203**         This error signifies an import from a non-base package, which is not allowed when the base_package_only rule is enabled.
+  **CIR204**         This error signifies an import from a non-base package module, which is not allowed when the base_package_only rule is enabled.
+  **CIR205**         This error signifies an import from a non-first party package, which is not allowed when the first_party_only rule is enabled.
+  **CIR206**         This error signifies an import from a non-first party module, which is not allowed when the first_party_only rule is enabled.
+  **CIR301**         This error signifies an import from an isolated package, which is not allowed when the isolated rule is enabled.
+  **CIR302**         This error signifies a from import from an isolated package, which is not allowed when the isolated rule is enabled.
+  **CIR303**         This error signifies an import from an isolated module, which is not allowed when the isolated rule is enabled.
+  **CIR304**         This error signifies a from import from an isolated module, which is not allowed when the isolated rule is enabled.
+  **CIR401**         This error signifies an import from a non-standard library package, which is not allowed when the std_lib_only rule is enabled.
+  **CIR402**         This error signifies an import from a non-standard library module, which is not allowed when the std_lib_only rule is enabled.
+  **CIR501**         This error signifies an import from a non-third party package, which is not allowed when the third_party_only rule is enabled.
+  **CIR502**         This error signifies an import from a non-third party module, which is not allowed when the third_party_only rule is enabled.
+  **PIR101**         This error is thrown when an import is not at the top level of a file. This occurs when the top_level_only_imports option is enabled.
+  **PIR102**         This error is thrown when a relative import is detected. This occurs when the restrict_relative_imports option is enabled.
+  **PIR103**         This error is thrown when a local import is detected. This occurs when the restrict_local_imports option is enabled.
+  **PIR104**         This error is thrown when a conditional import is detected. This occurs when the restrict_conditional_imports option is enabled.
+  **PIR105**         This error is thrown when a dynamic import is detected. This occurs when the restrict_dynamic_imports option is enabled.
+  **PIR106**         This error is thrown when a private import is detected. This occurs when the restrict_private_imports option is enabled.
+  **PIR107**         This error is thrown when a wildcard import is detected. This occurs when the restrict_wildcard_imports option is enabled.
+  **PIR108**         This error is thrown when an aliased import is detected. This occurs when the restrict_aliased_imports option is enabled.
+  **PIR109**         This error is thrown when a future import is detected. This occurs when the restrict_future_imports option is enabled.
+  **PIR201**         This error is thrown when importing test modules (test_*/ *_test.py) is detected. This occurs when the restrict_test_imports option is enabled.
+  **PIR202**         This error is thrown when importing from test_.py/_test.py modules is detected. This occurs when the restrict_test_imports option is enabled.
+  **PIR203**         This error is thrown when importing 'conftest' is detected. This occurs when the restrict_conftest_imports option is enabled.
+  **PIR204**         This error is thrown when importing from conftest.py files is detected. This occurs when the restrict_conftest_imports option is enabled.
+  **PIR205**         This error is thrown when importing tests directory or tests subdirectories is detected. This occurs when the restrict_test_imports option is enabled.
+  **PIR206**         This error is thrown when importing from tests directory or its subdirectories is detected. This occurs when the restrict_test_imports option is enabled.
+  **PIR207**         This error is thrown when importing __init__ is detected. This occurs when the restrict_init_imports option is enabled.
+  **PIR208**         This error is thrown when importing from __init__.py files is detected. This occurs when the restrict_init_imports option is enabled.
+  **PIR209**         This error is thrown when importing __main__ is detected. This occurs when the restrict_main_imports option is enabled.
+  **PIR210**         This error is thrown when importing from __main__.py files is detected. This occurs when the restrict_main_imports option is enabled.
+  **PIR301**         This error is thrown when a potential dynamic import failed confirmation checks. This occurs when the restrict_dynamic_imports option is enabled.
+  **PIR302**         This error is thrown when an attempt to parse a dynamic value string failed. This occurs when the restrict_dynamic_imports option is enabled.
+================  ============================================================
 
 
-Limitations
------------
+Plugin Limitations
+------------------
 - This plugin is currently only compatible with Python 3.10+ (support for 3.8 and 3.9 in the works).
 - Option import-restrictions only supports restricting imports by package or module, not by class
   or function. (i.e., module_a.ClassA or module_a.function)
@@ -192,12 +256,10 @@ This project is licensed under the terms of the MIT license.
 Acknowledgements
 ----------------
 
-[``flake8``](https://github.com/PyCQA/`flake8`) - A wrapper around PyFlakes,
-pycodestyle and McCabe.
-[``flake8-import-order``](https://github.com/PyCQA/`flake8`-import-order) - ``flake8``
-plugin that checks import order against various Python Style Guides. Used as
-a reference for this plugin.
-[Writing Plugins for ``flake8``](https://`flake8`.pycqa.org/en/latest/plugin-development/index.html) - ``flake8``
-documentation on writing plugins.
-[A `flake8` plugin from scratch](https://www.youtube.com/watch?v=ot5Z4KQPBL8) - YouTube
-video on writing a custom ``flake8`` plugin.
+- `flake8 <https://github.com/PyCQA/flake8>`_ - A wrapper around PyFlakes, pycodestyle and McCabe.
+- `flake8-import-order <https://github.com/PyCQA/flake8-import-order>`_ - ``flake8`` plugin that
+checks import order against various Python Style Guides. Used as a reference for this plugin.
+- `Writing Plugins for flake8 <https://flake8.pycqa.org/en/latest/plugin-development/index.html>`_ -
+``flake8`` documentation on writing plugins.
+- `A flake8 plugin from scratch <https://www.youtube.com/watch?v=ot5Z4KQPBL8>`_ - YouTube video on
+writing a custom ``flake8`` plugin.
