@@ -59,10 +59,10 @@ package A from importing package B or any of its subpackages.
 Restricted imports can be configured in two ways:
 - By package: Restrict a package from importing another package, or subpackages
   or modules from another package.
-  Example: Prevent 'package_A' from importing 'package_B' or any of its
+  Example: Prevent 'package_a' from importing 'package_b' or any of its
   subpackages or modules.
 - By module: Restrict a module from importing specific modules.
-  Example: Prevent 'package_A.module_A' from importing 'package_B.module_B'.
+  Example: Prevent 'package_a.module_A' from importing 'package_b.module_B'.
 
 Restricted packages: Specify a list of packages that are not permitted to be
 imported or used by other packages or modules within your base package. This
@@ -117,34 +117,34 @@ library modules.
 # Define the base packages for your project
 base_packages = ["my_base_package", "my_other_base_package"]
 import_restrictions = [
-    "my_base_package.package_A:my_base_package.package_B",  # Restrict `package_A` from importing `package_B`
-    "my_base_package.module_X.py:my_base_package.module_Y.py",  # Restrict `module_X.py` from importing `module_Y.py`
+    "my_base_package.package_a:my_base_package.package_b",  # Restrict `package_a` from importing `package_b`
+    "my_base_package.module_x.py:my_base_package.module_y.py",  # Restrict `module_x.py` from importing `module_y.py`
 ]
-# Make `package_C` an isolated package
-isolated_modules = ["my_base_package.package_C"]
-# Allow `package_D` to import only from the standard library
-std_lib_only = ["my_base_package.package_D"]
-# Allow `package_E` to import only from third-party libraries
-third_party_only = ["my_base_package.package_E"]
-# Allow `package_F` to import only from the local packages and the project's
+# Make `package_c` an isolated package
+isolated_modules = ["my_base_package.package_c"]
+# Allow `package_d` to import only from the standard library
+std_lib_only = ["my_base_package.package_d"]
+# Allow `package_b` to import only from third-party libraries
+third_party_only = ["my_base_package.package_b"]
+# Allow `package_f` to import only from the local packages and the project's
 # top-level package. This will treat the first package defined in `base_packages` as the top-level package.
-first_party_only = ["my_base_package.package_F"]
-# Allow `package_G` to import only from the local package
-project_only = ["my_base_package.package_G"]
+first_party_only = ["my_base_package.package_f"]
+# Allow `package_g` to import only from the local package
+project_only = ["my_base_package.package_g"]
 ```
 
 ```ini
 [flake8]
 base-packages = my_base_package,my_other_base_package
 import-restrictions =
-    my_base_package.package_A:my_base_package.package_B
-    my_base_package.module_X.py:my_base_package.module_Y.py
-restricted-packages = my_base_package.package_B
-isolated-modules = my_base_package.package_C
-std-lib-only = my_base_package.package_D
-third-party-only = my_base_package.package_E
-first-party-only = my_base_package.package_F
-project-only = my_base_package.package_G
+    my_base_package.package_a:my_base_package.package_b
+    my_base_package.module_x.py:my_base_package.module_y.py
+restricted-packages = my_base_package.package_b
+isolated-modules = my_base_package.package_c
+std-lib-only = my_base_package.package_d
+third-party-only = my_base_package.package_b
+first-party-only = my_base_package.package_f
+project-only = my_base_package.package_g
 ```
 
 ## Error Codes
