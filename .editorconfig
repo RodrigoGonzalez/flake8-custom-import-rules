@@ -18,4 +18,4 @@ indent_style = tab
 trim_trailing_whitespace = false
 
 [*.{yaml,yml}]
-indent_size = 4
+indent_size = 2

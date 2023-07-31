@@ -1,4 +1,4 @@
-""" Flake8 linter for flake8-custom-import-rules. """
+""" flake8 linter for flake8-custom-import-rules. """
 import ast
 import importlib.metadata
 import logging
@@ -21,7 +21,7 @@ logger = logging.getLogger(__name__)
 
 
 class Plugin(CustomImportRulesChecker):
-    """Flake8 linter for flake8-custom-import-rules.
+    """flake8 linter for flake8-custom-import-rules.
 
     Attributes
     ----------

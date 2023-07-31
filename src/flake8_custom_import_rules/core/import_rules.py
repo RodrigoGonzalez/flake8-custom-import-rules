@@ -1,4 +1,4 @@
-""" Custom Import Rules for Flake8 & Python Projects. """
+""" Custom Import Rules for flake8 & Python Projects. """
 from __future__ import annotations
 
 import logging
@@ -75,7 +75,7 @@ def get_isolated_package_rule(option_key: str) -> Callable[[CustomImportRules], 
 
 @define(slots=True)
 class CustomImportRules:
-    """Custom Import Rules for Flake8 & Python Projects"""
+    """Custom Import Rules for flake8 & Python Projects"""
 
     nodes: list[ParsedNode] = field(factory=list)
     dynamic_nodes: defaultdict[str, list] = defaultdict(list)
