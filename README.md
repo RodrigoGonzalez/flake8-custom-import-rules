@@ -87,14 +87,14 @@ library modules.
 
 ## Custom Import Rules
 
-| Rule             | Description                                                                                        |
-|------------------|----------------------------------------------------------------------------------------------------|
-| std_lib_only     | Allow a package to import only from the Python standard library.                                   |
-| project_only     | Allow a package to import only from the local package.                                             |
-| first_party_only | Allow a package to import only from the local package and the project's top-level package.         |
-| third_party_only | Allow a package to import only from third-party libraries.                                         |
-| isolated         | Make a package isolated, so it cannot import from any other packages within the base package.      |
-| restricted       | Restrict a package from importing another package, or subpackages or modules from another package. |
+| Rule             | Description                                                                                   |
+|------------------|-----------------------------------------------------------------------------------------------|
+| std_lib_only     | Allow a package to import only from the Python standard library.                              |
+| project_only     | Allow a package to import only from the local package.                                        |
+| first_party_only | Allow a package to import only from the local package and the project's top-level package.    |
+| third_party_only | Allow a package to import only from third-party libraries.                                    |
+| isolated         | Make a package isolated, so it cannot import from any other packages within the base package. |
+| restricted       | Restrict a package from importing another package, or modules from another package.           |
 
 
 | RULE              | STD LIB | PROJECT* | FIRST PARTY | THIRD PARTY | FUTURE |

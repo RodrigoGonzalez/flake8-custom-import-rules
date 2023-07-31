@@ -168,7 +168,7 @@ def register_options(
     option_manager: OptionManager,
     item: list | str,
     is_restriction: bool = True,
-    option_default_value: str | bool = "",
+    option_default_value: str | bool | None = "",
     help_string: str | None = None,
     **kwargs: Any,
 ) -> None:
@@ -212,7 +212,7 @@ def register_options(
         import_type = item.split("_")[1]
         if not help_string:
             help_string = (
-                f"Disables {import_type.title()} Imports for this project. "
+                f"Disables {import_type.title()} Imports for project. "
                 f"(default: {option_default_value})"
             )
     else:
