@@ -38,9 +38,6 @@ toml = "^0.10.2"
 hypothesis = "^6.82.0"
 hypothesmith = "^0.2.3"
 pytest-cov = "^4.1.0"
-pandas = "*"
-numpy = "*"
-pendulum = "*"
 tox-gh-actions = "^3.1.3"
 
 

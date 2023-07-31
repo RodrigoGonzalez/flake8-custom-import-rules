@@ -86,7 +86,7 @@ pre-commit-tool:  ## Manually run a single pre-commit hook (e.g. `make pre-commi
 	#poetry run pre-commit run $(TOOL) --all-files -c .pre-commit-config.yaml
 
 # https://commitizen-tools.github.io/commitizen/bump/
-commit: pre-commit tests  ## Commit changes
+commit: pre-commit tests clean  ## Commit changes
 	./scripts/commit.sh
 
 bump:  ## Bump version and update changelog
