@@ -1,4 +1,6 @@
 """Custom import rules node visitor."""
+from __future__ import annotations
+
 import ast
 import logging
 import sys
@@ -305,7 +307,7 @@ class CustomImportRulesVisitor(ast.NodeVisitor):
         self._check_local_import(node)
         self.generic_visit(node)
 
-    def _get_dynamic_string_visitor(self, lineno: int, col_offset: int) -> "DynamicStringVisitor":
+    def _get_dynamic_string_visitor(self, lineno: int, col_offset: int) -> DynamicStringVisitor:
         """Get the dynamic string visitor."""
         return DynamicStringVisitor(
             base_packages=self.base_packages,
