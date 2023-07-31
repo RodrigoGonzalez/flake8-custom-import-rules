@@ -183,7 +183,7 @@ class RestrictedImportVisitor(ast.NodeVisitor):
             package = root_package_name(module)
             package_names = get_package_names(module)
 
-            if self._check_module_exists:
+            if self._check_module_exists:  # Not Implemented
                 absolute_path = get_file_path_from_module_name(module)
                 relative_path = (
                     get_relative_path_from_absolute_path(absolute_path, os.getcwd())
