@@ -45,9 +45,7 @@ def test_convert_to_list(test_case, expected):
         (";", defaultdict(list)),
         (" ", defaultdict(list)),
         (None, defaultdict(list)),
-        # ("test:example", get_default_dict(("test",))),
     ],
-    # ids=["empty list", "empty dict"],
 )
 def test_convert_to_dict__return_empty_dict(test_case, delimiter, expected):
     actual = convert_to_dict(test_case, delimiter)
@@ -100,7 +98,6 @@ def get_default_dict(test_cases: list[tuple] | tuple) -> defaultdict[str, list]:
         ("test;a,b,c", ";", get_default_dict(("test", "a", "b", "c"))),
         ("test; a , b , c ", ";", get_default_dict(("test", "a", "b", "c"))),
     ],
-    # ids=["empty list", "empty dict"],
 )
 def test_convert_to_dict(test_case, delimiter, expected):
     actual = convert_to_dict(test_case, delimiter)
