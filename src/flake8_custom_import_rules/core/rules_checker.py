@@ -151,11 +151,11 @@ class CustomImportRulesChecker:
         visitor = self.visitor
         self._import_rules = CustomImportRules(
             nodes=self.nodes,
-            checker_settings=self.options.get("checker_settings", DEFAULT_CHECKER_SETTINGS),
+            dynamic_nodes=visitor.dynamic_nodes,
             identifiers=self.identifiers,
             identifiers_by_lineno=self.identifiers_by_lineno,
             restricted_identifiers=self.restricted_identifiers,
-            dynamic_nodes=visitor.dynamic_nodes,
+            checker_settings=self.options.get("checker_settings", DEFAULT_CHECKER_SETTINGS),
             filename=self.filename,
             file_identifier=visitor.file_identifier,
             file_root_package_name=visitor.file_root_package_name,

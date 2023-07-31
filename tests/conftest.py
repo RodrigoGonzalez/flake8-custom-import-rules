@@ -1,5 +1,6 @@
 """ Pytest configuration file. """
 import configparser
+import itertools
 from pathlib import Path
 
 import pytest
@@ -52,3 +53,39 @@ def pytest_configure(config):
     """Register markers for pytest."""
     config.addinivalue_line("markers", "flake8: mark test to run flake8 checks.")
     config.addinivalue_line("markers", "pylama: mark test to run pylama checks.")
+
+
+@pytest.fixture(scope="module")
+def package_7() -> list:
+    """Test get_restricted_identifiers."""
+    package_7 = []
+    first_list = [
+        "my_second_base_package",
+        "my_base_module",
+        "my_third_base_package",
+    ]
+    second_list = ["", "module_one", "module_two", "file"]
+    third_list = ["", "file_one", "file_two"]
+    for first, second in itertools.product(first_list, second_list):
+        if second in [""]:
+            package_7.append(first)
+            continue
+        if f"{second}" in ["file"]:
+            package_7.append(f"{first}.{second}")
+            continue
+        for third in third_list:
+            if f"{second}.{third}" in [".", "file.file_one", "file.file_two"]:
+                package_7.append(f"{first}.{second}")
+                continue
+            package_7.append(f"{first}.{second}.{third}".strip("."))
+    return package_7
+
+
+@pytest.fixture(scope="module")
+def package_8(package_7) -> list:
+    """Test get_restricted_identifiers."""
+    package_8 = []
+    for restricted_package in package_7:
+        temp = [package for package in package_7 if not package.startswith(restricted_package)]
+        package_8.append(f"{restricted_package}:{','.join(temp)}")
+    return package_8

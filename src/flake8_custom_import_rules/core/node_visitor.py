@@ -274,37 +274,34 @@ class CustomImportRulesVisitor(ast.NodeVisitor):
 
     def visit_ClassDef(self, node: ast.ClassDef) -> None:
         """Visit a ClassDef node."""
-        self.nodes.append(
-            ParsedClassDef(
-                name=node.name,
-                lineno=node.lineno,
-                col_offset=node.col_offset,
-            )
+        parsed_class = ParsedClassDef(
+            name=node.name,
+            lineno=node.lineno,
+            col_offset=node.col_offset,
         )
+        self.nodes.append(parsed_class)
         self._check_local_import(node)
         self.generic_visit(node)
 
     def visit_FunctionDef(self, node: ast.FunctionDef) -> None:
         """Visit a FunctionDef node."""
-        self.nodes.append(
-            ParsedFunctionDef(
-                name=node.name,
-                lineno=node.lineno,
-                col_offset=node.col_offset,
-            )
+        parsed_function = ParsedFunctionDef(
+            name=node.name,
+            lineno=node.lineno,
+            col_offset=node.col_offset,
         )
+        self.nodes.append(parsed_function)
         self._check_local_import(node)
         self.generic_visit(node)
 
     def visit_AsyncFunctionDef(self, node: ast.AsyncFunctionDef) -> None:
         """Visit a AsyncFunctionDef node."""
-        self.nodes.append(
-            ParsedFunctionDef(
-                name=node.name,
-                lineno=node.lineno,
-                col_offset=node.col_offset,
-            )
+        parsed_async_function = ParsedFunctionDef(
+            name=node.name,
+            lineno=node.lineno,
+            col_offset=node.col_offset,
         )
+        self.nodes.append(parsed_async_function)
         self._check_local_import(node)
         self.generic_visit(node)
 
