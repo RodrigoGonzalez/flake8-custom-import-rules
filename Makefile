@@ -154,6 +154,10 @@ lint-mypy-changed:  ## Run mypy on changed Python files & create report
 
 ##@ Testing
 
+tox: ## run tox tests
+	poetry run tox
+	make clean
+
 tests: unit-tests  ## run all tests
 
 unit-tests: ## run unit-tests with pytest
@@ -173,7 +177,7 @@ clean-cov: ## remove output files from pytest & coverage
 	@rm -rf pytest-coverage.txt
 	@rm -rf dist
 
-.PHONY: tests unit-tests unit-tests-cov unit-tests-cov-fail clean-cov
+.PHONY: tox tests unit-tests unit-tests-cov unit-tests-cov-fail clean-cov
 
 # =============================================================================
 # DOCUMENTATION
