@@ -1,3 +1,14 @@
+## v0.8.5 (2023-07-31)
+
+### Fix
+
+- **restricted-visitor**: refactor get strings functions (#84)
+- **visitor**: get_module_name_from_filename uses filename not file_path (#83)
+
+### Refactor
+
+- **core**: refactor to make code easier to follow
+
 ## v0.8.4 (2023-07-31)
 
 ### Fix
