@@ -355,10 +355,10 @@ def register_options(
 def register_opt(self: OptionManager, *args: Any, **kwargs: Any) -> None:
     """Register options for flake8-custom-import-rules."""
     try:
-        # Flake8 3.x registration
+        # flake8 3.x registration
         self.add_option(*args, **kwargs)
     except (optparse.OptionError, TypeError):
-        # Flake8 2.x registration
+        # flake8 2.x registration
         parse_from_config = kwargs.pop("parse_from_config", False)
         kwargs.pop("comma_separated_list", False)
         kwargs.pop("normalize_paths", False)

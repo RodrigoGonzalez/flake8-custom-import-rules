@@ -1,11 +1,11 @@
 # flake8-custom-import-rules
-A Flake8 plugin that enforces custom import rules, allowing users to define and
+A ``flake8`` plugin that enforces custom import rules, allowing users to define and
 maintain clean and consistent import organization across their Python projects.
 
 
 ## Introduction
 
-This Flake8 plugin significantly enhances the organization and consistency of
+This ``flake8`` plugin significantly enhances the organization and consistency of
 imports in Python projects. By enabling developers to set custom restrictions,
 define isolated packages, and establish import rules, the plugin aids in
 mitigating unwanted dependencies and maintaining clear separations between
@@ -18,7 +18,7 @@ smoothly adhere to best practices, maintaining their projects in a clean,
 organized, and collaborative-friendly state.
 
 ## Motivation
-This Flake8 plugin is extremely useful for enforcing custom import rules and
+This ``flake8`` plugin is extremely useful for enforcing custom import rules and
 maintaining a consistent import organization across Python projects. By
 allowing users to define specific restrictions, isolated packages, and import
 rules, this plugin helps to prevent unwanted dependencies and ensures a clear
@@ -47,7 +47,7 @@ integrating new team members and maintaining the high quality and readability
 of our codebase.
 
 
-A Flake8 plugin that enforces custom import rules, allowing users to define
+A ``flake8`` plugin that enforces custom import rules, allowing users to define
 and maintain clean and consistent import organization across their Python
 projects.
 
@@ -62,7 +62,7 @@ Restricted imports can be configured in two ways:
   Example: Prevent 'package_a' from importing 'package_b' or any of its
   subpackages or modules.
 - By module: Restrict a module from importing specific modules.
-  Example: Prevent 'package_a.module_A' from importing 'package_b.module_B'.
+  Example: Prevent 'package_a.module_a' from importing 'package_b.module_b'.
 
 Restricted packages: Specify a list of packages that are not permitted to be
 imported or used by other packages or modules within your base package. This
@@ -118,7 +118,7 @@ library modules.
 base_packages = ["my_base_package", "my_other_base_package"]
 import_restrictions = [
     "my_base_package.package_a:my_base_package.package_b",  # Restrict `package_a` from importing `package_b`
-    "my_base_package.module_x.py:my_base_package.module_y.py",  # Restrict `module_x.py` from importing `module_y.py`
+    "my_base_package.module_x:my_base_package.module_y",  # Restrict `module_x` from importing `module_y`
 ]
 # Make `package_c` an isolated package
 isolated_modules = ["my_base_package.package_c"]
@@ -134,11 +134,11 @@ project_only = ["my_base_package.package_g"]
 ```
 
 ```ini
-[flake8]
+[`flake8`]
 base-packages = my_base_package,my_other_base_package
 import-restrictions =
     my_base_package.package_a:my_base_package.package_b
-    my_base_package.module_x.py:my_base_package.module_y.py
+    my_base_package.module_x:my_base_package.module_y
 restricted-packages = my_base_package.package_b
 isolated-modules = my_base_package.package_c
 std-lib-only = my_base_package.package_d
@@ -153,18 +153,22 @@ project-only = my_base_package.package_g
 
 
 ## Limitations
-This plugin is currently only compatible with Python 3.8+.
+- This plugin is currently only compatible with Python 3.10+ (support for 3.8 and 3.9 in the works).
+- Option import-restrictions only supports restricting imports by package or module, not by class
+  or function. (i.e., module_a.ClassA or module_a.function)
+- Files are not supported yet.
+- Option top-level-only-imports has not been implemented yet.
 
 ## License
 This project is licensed under the terms of the MIT license.
 
 ## Acknowledgements
-[Flake8](https://github.com/PyCQA/flake8) - A wrapper around PyFlakes,
+[``flake8``](https://github.com/PyCQA/`flake8`) - A wrapper around PyFlakes,
 pycodestyle and McCabe.
-[flake8-import-order](https://github.com/PyCQA/flake8-import-order) - Flake8
+[`flake8`-import-order](https://github.com/PyCQA/`flake8`-import-order) - ``flake8``
 plugin that checks import order against various Python Style Guides. Used as
 a reference for this plugin.
-[Writing Plugins for Flake8](https://flake8.pycqa.org/en/latest/plugin-development/index.html) - Flake8
+[Writing Plugins for ``flake8``](https://`flake8`.pycqa.org/en/latest/plugin-development/index.html) - ``flake8``
 documentation on writing plugins.
-[A flake8 plugin from scratch](https://www.youtube.com/watch?v=ot5Z4KQPBL8) - YouTube
-video on writing a custom Flake8 plugin.
+[A `flake8` plugin from scratch](https://www.youtube.com/watch?v=ot5Z4KQPBL8) - YouTube
+video on writing a custom ``flake8`` plugin.
