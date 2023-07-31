@@ -1,3 +1,15 @@
+## v0.8.2 (2023-07-30)
+
+### Fix
+
+- **default**: fix default settings (#77)
+
+### Refactor
+
+- **restricted-imports**: add support for import restrictions
+- **defaults**: update converters and add test cases (#78)
+- **import-rules**: update import rules to implement restricted i… (#76)
+
 ## v0.8.1 (2023-07-28)
 
 ### Refactor

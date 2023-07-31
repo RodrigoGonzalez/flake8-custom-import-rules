@@ -58,16 +58,16 @@ class CustomImportRulesChecker:
     @property
     def tree(self) -> ast.AST:
         """Return the tree."""
-        logger.info(f"Tree: {self._tree}")
+        logger.debug(f"Tree: {self._tree}")
         return self._tree
 
     @property
     def filename(self) -> str:
         """Return the filename."""
-        logger.info(f"Filename: {self._filename}")
+        logger.debug(f"Filename: {self._filename}")
         if self._filename in STDIN_IDENTIFIERS:
             self._filename = "stdin"
-        logger.info(f"Filename: {self._filename}")
+        logger.debug(f"Filename: {self._filename}")
         assert self._filename is not None
         return self._filename
 
@@ -81,7 +81,7 @@ class CustomImportRulesChecker:
     def nodes(self) -> list[ParsedNode]:
         """Return the nodes."""
         # logger.info(f"Nodes: {self._nodes}")
-        logger.info(f"Options: {self._options}")
+        logger.debug(f"Options: {self._options}")
         if self._nodes is None:
             self._nodes = self.visitor.nodes
         # logger.info(f"Nodes after setting visitor: {self._nodes}")
@@ -117,17 +117,18 @@ class CustomImportRulesChecker:
     @property
     def restricted_identifiers(self) -> defaultdict[str, dict[Any, Any]] | None:
         """Return the restricted identifiers."""
-        logger.info(f"file_packages: {self.visitor.file_packages}")
-        restricted_packages = self.options.get("restricted_packages", [])
-        logger.info(f"restricted_packages: {restricted_packages}")
+        logger.debug(f"file_packages: {self.visitor.file_packages}")
+        # restricted_packages = self.options.get("restricted_packages", [])
+        # logger.debug(f"restricted_packages: {restricted_packages}")
         if self._restricted_identifiers is None:
             self._restricted_identifiers = get_restricted_identifiers(
                 restricted_packages=self.options.get("restricted_packages", []),
+                import_restrictions=self.options.get("import_restrictions", defaultdict(list)),
                 check_module_exists=True,
                 file_packages=self.visitor.file_packages,
             )
-        logger.info(f"Restricted Identifiers: {self._restricted_identifiers}")
-        logger.info(f"Restricted Identifiers Keys: {self._restricted_identifiers.keys()}")
+        logger.debug(f"Restricted Identifiers: {self._restricted_identifiers}")
+        logger.debug(f"Restricted Identifiers Keys: {self._restricted_identifiers.keys()}")
         return self._restricted_identifiers
 
     @property
@@ -140,7 +141,7 @@ class CustomImportRulesChecker:
         test_env = self.options.get("test_env", True)
         if not test_env:
             raise ValueError("Cannot update options in a non-test environment.")
-        logger.info(f"Updated Options: {updated_options}")
+        logger.debug(f"Updated Options: {updated_options}")
         for key, value in updated_options.items():
             self._options[key] = value
 
@@ -157,12 +158,10 @@ class CustomImportRulesChecker:
             dynamic_nodes=visitor.dynamic_nodes,
             filename=self.filename,
             file_identifier=visitor.file_identifier,
-            # file_identifier=self._file_identifier,
             file_root_package_name=visitor.file_root_package_name,
-            # file_root_package_name=self._file_root_package_name,
             file_packages=visitor.file_packages,
         )
-        # logger.info(f"Restricted Identifiers: {self.restricted_identifiers}")
+        logger.debug(f"Restricted Identifiers: {self.restricted_identifiers}")
         return self._import_rules
 
     def check_custom_import_rules(self) -> Generator[Any, None, None]:
