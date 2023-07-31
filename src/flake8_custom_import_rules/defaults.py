@@ -47,7 +47,7 @@ STANDARD_PROJECT_LEVEL_RESTRICTION_KEYS = [
 ]
 
 CUSTOM_IMPORT_RULES = [
-    # "BASE_PACKAGES",
+    "BASE_PACKAGES",
     "IMPORT_RESTRICTIONS",
     "RESTRICTED_PACKAGES",
     "ISOLATED_MODULES",
@@ -164,6 +164,88 @@ class Settings:
 DEFAULT_CHECKER_SETTINGS = Settings()
 
 
+HELP_STRINGS = {
+    "base-packages": (
+        "This option allows you to define the main packages in your project. "
+        "These packages are considered first-party and are generally the ones "
+        "you are developing in your project. Import names to consider as "
+        "first party modules (i.e., the name of your package or library). "
+        "For example, if you're building a library named 'my_library', you "
+        "would include 'my_library' as a base package. If this option is not "
+        "set, some functionality will be disabled."
+    ),
+    "import-restrictions": (
+        "This option allows you to restrict specific import capabilities for "
+        "packages. You can define a list of packages that are restricted from "
+        "importing certain packages or modules within your base package. "
+        "This option allows you to define the main packages in your project."
+    ),
+    "restricted-packages": (
+        "This option lets you specify a list of packages that are not "
+        "permitted to be imported or used by other packages or modules within "
+        "your base package. This helps maintain a clear separation between "
+        "high-level and low-level packages."
+    ),
+    "std-lib-only": (
+        "This option allows you to specify a set of packages that can only "
+        "import from third-party libraries. This can be useful to limit the "
+        "dependencies of a package to external libraries only."
+    ),
+    "project-only": (
+        "This option allows you to restrict a package to import only from the "
+        "local package and the project's top-level package. This will treat "
+        "the packages defined in `--base-packages` as the top-level package."
+    ),
+    "base-package-only": (
+        "This option lets you restrict a package to import only from the "
+        "project's top-level package. This will treat the first package "
+        "defined in base_packages as the top-level package."
+    ),
+    "first-party-only": (
+        "This option enables you to specify a set of packages that can only "
+        "import from the local packages (i.e., the packages defined in your "
+        "base packages)."
+    ),
+    "third-party-only": (
+        "Define packages that should only import from third-party libraries. "
+        "This rule helps maintain a clear dependency scope for the specified "
+        "packages."
+    ),
+    "isolated-modules": (
+        "This option allows you to define a list of modules that cannot import "
+        "from any other modules within your base package. This ensures that "
+        "certain modules remain standalone and do not introduce unwanted "
+        "dependencies."
+    ),
+    # "top-level-only-imports": If set to True, only top-level imports are
+    # permitted in the project. (default: True)
+    # "restrict-relative-imports": If set to True, relative imports for the
+    # project are disabled. (default: True)
+    # restrict-local-imports RESTRICT_LOCAL_IMPORTS: If set to True, local
+    # imports for the project are disabled. (default: True)
+    # restrict-conditional-imports RESTRICT_CONDITIONAL_IMPORTS: If set to
+    # True, conditional imports for the project are disabled. (default: False)
+    # restrict-dynamic-imports RESTRICT_DYNAMIC_IMPORTS: If set to True,
+    # dynamic imports for the project are disabled. (default: True)
+    # restrict-private-imports RESTRICT_PRIVATE_IMPORTS: If set to True,
+    # private imports for the project are disabled. (default: True)
+    # restrict-wildcard-imports RESTRICT_WILDCARD_IMPORTS: If set to True,
+    # wildcard imports for the project are disabled. (default: True)
+    # restrict-aliased-imports RESTRICT_ALIASED_IMPORTS: If set to True,
+    # aliased imports for the project are disabled. (default: False)
+    # restrict-future-imports RESTRICT_FUTURE_IMPORTS: If set to True,
+    # future imports for the project are disabled. (default: False)
+    # restrict-init-imports RESTRICT_INIT_IMPORTS: If set to True, importing
+    # __init__ files is restricted for the project. (default: True)
+    # restrict-main-imports RESTRICT_MAIN_IMPORTS: If set to True, importing
+    # __main__ files is restricted for the project. (default: True)
+    # restrict-test-imports RESTRICT_TEST_IMPORTS: If set to True, importing
+    # test modules (test_*/ *_test.py) is restricted for the project. (default: True)
+    # restrict-conftest-imports RESTRICT_CONFTEST_IMPORTS: If set to True,
+    # importing from conftest.py files is restricted for the project. (default: True)
+}
+
+
 def register_options(
     option_manager: OptionManager,
     item: list | str,
@@ -212,11 +294,14 @@ def register_options(
         import_type = item.split("_")[1]
         if not help_string:
             help_string = (
-                f"Disables {import_type.title()} Imports for project. "
+                f"This option allows you to disable {import_type.lower()} "
+                f"imports for project. "
                 f"(default: {option_default_value})"
             )
-    else:
-        help_string = f"{setting_key}. (default: {option_default_value})"
+
+    # defaults for is_restriction is False
+    if option_default_value == "":
+        help_string = f"{HELP_STRINGS[setting_key]}"
 
     if not isinstance(option_default_value, bool if is_restriction else str):
         raise TypeError(

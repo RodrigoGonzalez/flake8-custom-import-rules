@@ -58,22 +58,6 @@ class Plugin(CustomImportRulesChecker):
         """
         # Add options for CustomImportRulesChecker
 
-        register_opt(
-            option_manager,
-            "--base-packages",
-            default="",
-            action="store",
-            type=str,
-            help=(
-                "Import names to consider as first party modules (i.e., the name of "
-                "your package or library). If not set, some functionality will be "
-                "disabled. (default: '')"
-            ),
-            parse_from_config=True,
-            comma_separated_list=True,
-            normalize_paths=False,
-        )
-
         register_options(option_manager, CUSTOM_IMPORT_RULES, is_restriction=False)
 
         register_opt(
@@ -83,7 +67,8 @@ class Plugin(CustomImportRulesChecker):
             action="store",
             type=bool,
             help=(
-                f"Only top level imports are permitted in the project. "
+                f"This option allows you to enforce that only top-level "
+                f"imports are permitted in the project. "
                 f"(default: {DEFAULT_CHECKER_SETTINGS.TOP_LEVEL_ONLY_IMPORTS})"
             ),
             parse_from_config=True,
