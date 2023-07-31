@@ -1,3 +1,10 @@
+## v0.8.7 (2023-07-31)
+
+### Refactor
+
+- **dependencies**: remove pandas and numpy dependencies
+- **example_repos**: remove pendulum dependency (#95)
+
 ## v0.8.6 (2023-07-31)
 
 ### Refactor

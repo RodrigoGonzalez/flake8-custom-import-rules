@@ -5,8 +5,8 @@ from setuptools import setup
 setup(
     name="my_base_module",
     description="An example base module",
-    version="0.1.1",
+    version="0.1.2",
     packages=find_packages(),
-    install_requires=["attrs", "numpy", "pandas"],
+    install_requires=["attrs"],
     extras_require={"dev": ["pytest"]},
 )
