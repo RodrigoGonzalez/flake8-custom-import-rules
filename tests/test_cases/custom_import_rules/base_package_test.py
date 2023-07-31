@@ -17,11 +17,10 @@ CIR204 = "CIR204 Non-base package module import."
 
 # my_second_base_package is main base package
 MODULE_THREE_ERRORS = {
-    f"6:0: {CIR203} Using 'import pendulum'.",
-    f"7:0: {CIR204} Using 'from attrs import define'.",
-    f"8:0: {CIR204} Using 'from attrs import field'.",
-    f"10:0: {CIR203} Using 'import my_base_module.module_y'.",
-    f"12:0: {CIR204} Using 'from my_base_module.module_x import X'.",
+    f"6:0: {CIR204} Using 'from attrs import define'.",
+    f"7:0: {CIR204} Using 'from attrs import field'.",
+    f"9:0: {CIR203} Using 'import my_base_module.module_y'.",
+    f"11:0: {CIR204} Using 'from my_base_module.module_x import X'.",
 }
 
 

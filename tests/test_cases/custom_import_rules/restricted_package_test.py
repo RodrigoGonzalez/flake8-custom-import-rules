@@ -190,7 +190,7 @@ def test_complex_imports(
             ["my_base_module.module_x"],
             {
                 (
-                    "12:0: CIR107 Restricted module import. Using "
+                    "11:0: CIR107 Restricted module import. Using "
                     "'from my_base_module.module_x import X'. "
                     "Restricted package/module cannot be imported outside package/module."
                 )

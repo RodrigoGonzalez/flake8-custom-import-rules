@@ -3,7 +3,6 @@ from datetime import datetime
 from uuid import UUID
 from uuid import uuid4
 
-import pendulum
 from attrs import define
 from attrs import field
 
@@ -15,7 +14,7 @@ class OldE:
     _id: UUID | None = field(factory=uuid4)
     _name: str | None = field(default="name")
     _description: str | None = field(default="description")
-    _created_at: datetime | None = field(factory=pendulum.now)
+    _created_at: datetime | None = field(factory=datetime.now)
 
     def id(self):
         """Get the id."""
@@ -41,11 +40,11 @@ class EUpdated:
     _id: UUID | None = field(factory=uuid4)
     _name: str | None = field(default="name")
     _description: str | None = field(default="description")
-    _created_at: datetime | None = field(factory=pendulum.now)
+    _created_at: datetime | None = field(factory=datetime.now)
 
     def __attrs_post_init__(self):
         """Post init hook."""
-        self._updated_at = pendulum.now()
+        self._updated_at = datetime.now()
 
     def id(self):
         """Get the id."""

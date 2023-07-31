@@ -3,7 +3,7 @@ from datetime import datetime
 from uuid import UUID
 from uuid import uuid4
 
-import pendulum, my_base_module.package_c.module_f
+import my_base_module.package_c.module_f
 from attrs import define
 from attrs import field
 
@@ -15,7 +15,7 @@ class C:
     _id: UUID | None = field(factory=uuid4)
     _name: str | None = field(default="name")
     _description: str | None = field(default="description")
-    _created_at: datetime | None = field(factory=pendulum.now)
+    _created_at: datetime | None = field(factory=datetime.now)
 
     def id(self):
         """Get the id."""
