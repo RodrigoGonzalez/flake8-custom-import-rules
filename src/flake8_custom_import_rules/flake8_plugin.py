@@ -68,7 +68,8 @@ class Plugin(CustomImportRulesChecker):
             type=bool,
             help=(
                 f"This option allows you to enforce that only top-level "
-                f"imports are permitted in the project. "
+                f"imports are permitted in the project. If violated, could "
+                f"lead to error codes PIR101. "
                 f"(default: {DEFAULT_CHECKER_SETTINGS.TOP_LEVEL_ONLY_IMPORTS})"
             ),
             parse_from_config=True,

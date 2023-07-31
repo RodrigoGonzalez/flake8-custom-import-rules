@@ -245,6 +245,31 @@ HELP_STRINGS = {
     # importing from conftest.py files is restricted for the project. (default: True)
 }
 
+ERROR_CODES = {
+    "base-packages": "",
+    "import-restrictions": "CIR102 to CIR105",
+    "restricted-packages": "CIR106 and CIR107",
+    "std-lib-only": "CIR401 and CIR402",
+    "project-only": "CIR201 and CIR202",
+    "base-package-only": "CIR203 and CIR204",
+    "first-party-only": "CIR205 and CIR206",
+    "third-party-only": "CIR501 and CIR502",
+    "isolated-modules": "CIR301 to CIR304",
+    "top-level-only-imports": "PIR101",
+    "restrict-relative-imports": "PIR102",
+    "restrict-local-imports": "PIR103",
+    "restrict-conditional-imports": "PIR104",
+    "restrict-dynamic-imports": "PIR105",
+    "restrict-private-imports": "PIR106",
+    "restrict-wildcard-imports": "PIR107",
+    "restrict-aliased-imports": "PIR108",
+    "restrict-future-imports": "PIR109",
+    "restrict-init-imports": "PIR207 and PIR208",
+    "restrict-main-imports": "PIR209 and PIR210",
+    "restrict-test-imports": "PIR201, PIR202, PIR205, and PIR206",
+    "restrict-conftest-imports": "PIR203 and PIR204",
+}
+
 
 def register_options(
     option_manager: OptionManager,
@@ -289,19 +314,24 @@ def register_options(
 
     setting_key = f"{item.replace('_', '-').lower()}"
 
+    if setting_key == "base-packages":
+        error_codes = ""
+    else:
+        error_codes = f"If violated, could lead to error codes {ERROR_CODES[setting_key]}."
+
     if is_restriction:
         option_default_value = DEFAULT_CHECKER_SETTINGS.get_settings_value(item.upper())
         import_type = item.split("_")[1]
         if not help_string:
             help_string = (
                 f"This option allows you to disable {import_type.lower()} "
-                f"imports for project. "
+                f"imports for project. {error_codes} "
                 f"(default: {option_default_value})"
             )
 
     # defaults for is_restriction is False
     if option_default_value == "":
-        help_string = f"{HELP_STRINGS[setting_key]}"
+        help_string = f"{HELP_STRINGS[setting_key]} {error_codes}"
 
     if not isinstance(option_default_value, bool if is_restriction else str):
         raise TypeError(
