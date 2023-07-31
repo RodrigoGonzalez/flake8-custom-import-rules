@@ -80,7 +80,7 @@ def convert_to_list(value: str | list[str] | None) -> list:
     return convert_to_list(",".join(value)) if isinstance(value, list) else []
 
 
-def convert_to_dict(value: str | list[str] | None, delimiter: str | None = ":") -> dict:
+def convert_to_dict(value: str | list[str] | None, delimiter: str | None = ":") -> defaultdict:
     """
     Convert a string to a dict and strip leading and trailing whitespace.
 
@@ -93,35 +93,15 @@ def convert_to_dict(value: str | list[str] | None, delimiter: str | None = ":") 
 
     Returns
     -------
-    dict[str, list]
+    defaultdict[str, list]
         The converted dict.
     """
-    # if delimiter is None:
-    #     delimiter = ":"
-    #
-    # if isinstance(value, str) or value is None:
-    #     value = [value]
-    #
-    # # module_list = convert_to_list(value)
-    # module_dict: defaultdict[str, list] = defaultdict(list)
-    # for modules in value:
-    #     if modules is None:
-    #         continue
-    #     if isinstance(modules, str):
-    #         modules = modules.strip()
-    #     if modules is None or modules in {"", ":", ";"}:
-    #         continue
-    #     print(modules)
-    #     assert isinstance(modules, str)
-    #     assert delimiter in modules, f"Delimiter {delimiter} not found in {modules}"
-    #     module, *submodules = modules.split(delimiter)
-    #     module_dict[module].extend(convert_to_list(submodules))
-    # return module_dict
     if value is None:
         return defaultdict(list)
     elif isinstance(value, str):
         value = [value]
 
+    # Using defaultdict so that we can handle empty dicts
     module_dict: defaultdict[str, list] = defaultdict(list)
     for modules in value:
         if not modules.strip():

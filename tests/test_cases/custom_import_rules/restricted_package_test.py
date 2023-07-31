@@ -62,31 +62,48 @@ RESTRICTED_PACKAGES = [
 
 
 @pytest.mark.parametrize(
-    ("filename", "expected_current_module", "expected"),
+    ("filename", "expected_current_module", "expected_restricted_identifiers", "expected"),
     [
         (
             "example_repos/my_base_module/my_second_base_package/module_one/file_one.py",
             "my_second_base_package.module_one.file_one",
+            {"my_third_base_package"},
             2,
         ),
         (
             "example_repos/my_base_module/my_second_base_package/module_one/file_two.py",
             "my_second_base_package.module_one.file_two",
+            {"my_second_base_package.module_one.file_one", "my_third_base_package"},
             4,
         ),
         (
             "example_repos/my_base_module/my_second_base_package/module_two/file_one.py",
             "my_second_base_package.module_two.file_one",
+            {
+                "my_second_base_package.module_one.file_one",
+                "my_second_base_package.module_one",
+                "my_third_base_package",
+            },
             8,
         ),
         (
             "example_repos/my_base_module/my_second_base_package/module_two/file_two.py",
             "my_second_base_package.module_two.file_two",
+            {
+                "my_second_base_package.module_one.file_one",
+                "my_second_base_package.module_one",
+                "my_third_base_package",
+            },
             8,
         ),
         (
             "example_repos/my_base_module/my_second_base_package/file.py",
             "my_second_base_package.file",
+            {
+                "my_second_base_package.module_one.file_one",
+                "my_second_base_package.module_one",
+                "my_third_base_package",
+            },
             8,
         ),
     ],
@@ -94,16 +111,13 @@ RESTRICTED_PACKAGES = [
 def test_complex_imports(
     filename: str,
     expected_current_module: str,
+    expected_restricted_identifiers: set,
     expected: int,
     get_base_plugin: callable,
-    capsys: pytest.CaptureFixture,
 ) -> None:
     """Test restricted imports."""
-    # filename = normalize_path(test_case)
     lines = COMPLEX_IMPORTS.split("\n")
     tree = ast.parse(COMPLEX_IMPORTS)
-    # identifier = get_module_name_from_filename(filename)
-    # root_package_name(identifier)
     options = {
         "base_packages": ["base_package", "my_second_base_package"],
         "restricted_packages": RESTRICTED_PACKAGES,
@@ -126,6 +140,7 @@ def test_complex_imports(
     assert len(errors) == expected
     restricted_identifiers = plugin.restricted_identifiers
     assert isinstance(restricted_identifiers, defaultdict)
+    assert set(restricted_identifiers.keys()) == expected_restricted_identifiers
 
 
 @pytest.mark.parametrize(
