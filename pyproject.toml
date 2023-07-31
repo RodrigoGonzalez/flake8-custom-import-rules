@@ -2,7 +2,7 @@
 name = "flake8_custom_import_rules"
 version = "0.8.7"
 description = "A Flake8 plugin that enforces custom import rules, allowing users to define and maintain clean and consistent import organization across their Python projects."
-readme = "README.md"
+readme = "README.rst"
 authors = ["Rodrigo Gonzalez <flake8.custom.import.rules@gmail.com>"]
 license = "MIT"
 

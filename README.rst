@@ -1,9 +1,12 @@
-# flake8-custom-import-rules
+==========================
+flake8-custom-import-rules
+==========================
 A ``flake8`` plugin that enforces custom import rules, allowing users to define and
 maintain clean and consistent import organization across their Python projects.
 
 
-## Introduction
+Introduction
+------------
 
 This ``flake8`` plugin significantly enhances the organization and consistency of
 imports in Python projects. By enabling developers to set custom restrictions,
@@ -17,7 +20,9 @@ that is easier to comprehend, test, and debug. Consequently, developers can
 smoothly adhere to best practices, maintaining their projects in a clean,
 organized, and collaborative-friendly state.
 
-## Motivation
+Motivation
+----------
+
 This ``flake8`` plugin is extremely useful for enforcing custom import rules and
 maintaining a consistent import organization across Python projects. By
 allowing users to define specific restrictions, isolated packages, and import
@@ -85,87 +90,111 @@ Example: Allow 'lightweight_package' to import only from Python standard
 library modules.
 
 
-## Custom Import Rules
+Custom Import Rules
+-------------------
 
++-------------------+-----------------------------------------------------------------------------------------------+
 | Rule              | Description                                                                                   |
-|-------------------|-----------------------------------------------------------------------------------------------|
++===================+===============================================================================================+
 | std_lib_only      | Restrict package to import only from the Python standard library.                             |
++-------------------+-----------------------------------------------------------------------------------------------+
 | project_only      | Restrict package to import only from the local package and the project's top-level package.   |
++-------------------+-----------------------------------------------------------------------------------------------+
 | base_package_only | Restrict package to import only from the project's top-level package only.                    |
++-------------------+-----------------------------------------------------------------------------------------------+
 | first_party_only  | Restrict package to import only from the local packages only.                                 |
++-------------------+-----------------------------------------------------------------------------------------------+
 | third_party_only  | Restrict package to import only from third-party libraries.                                   |
++-------------------+-----------------------------------------------------------------------------------------------+
 | isolated          | Make a package isolated, so it cannot import from any other packages within the base package. |
++-------------------+-----------------------------------------------------------------------------------------------+
 | restricted        | Restrict a package from importing another package, or modules from another package.           |
++-------------------+-----------------------------------------------------------------------------------------------+
 
 
+
++-------------------+---------+----------+-------------+-------------+--------+
 | RULE              | STD LIB | PROJECT* | FIRST PARTY | THIRD PARTY | FUTURE |
-|-------------------|---------|----------|-------------|-------------|--------|
++===================+=========+==========+=============+=============+========+
 | std_lib_only      | X       |          |             |             | X      |
++-------------------+---------+----------+-------------+-------------+--------+
 | project_only      | X       | X        | X           |             | X      |
++-------------------+---------+----------+-------------+-------------+--------+
 | base_package_only | X       | X        |             |             | X      |
++-------------------+---------+----------+-------------+-------------+--------+
 | first_party_only  | X       |          | X           |             | X      |
++-------------------+---------+----------+-------------+-------------+--------+
 | third_party_only  | X       |          |             | X           | X      |
++-------------------+---------+----------+-------------+-------------+--------+
 | isolated          | X       |          |             | X           | X      |
++-------------------+---------+----------+-------------+-------------+--------+
+
 
 
 *Technically project imports are "First Party" imports, but in this case we want to make a distinction between the top-level package and the rest of the project.
 
-# Example Configuration
+Example Configurations
+----------------------
 
 ```toml
-[flake8]
-# Define the base packages for your project
-base_packages = ["my_base_package", "my_other_base_package"]
-import_restrictions = [
-    "my_base_package.package_a:my_base_package.package_b",  # Restrict `package_a` from importing `package_b`
-    "my_base_package.module_x:my_base_package.module_y",  # Restrict `module_x` from importing `module_y`
-]
-# Make `package_c` an isolated package
-isolated_modules = ["my_base_package.package_c"]
-# Allow `package_d` to import only from the standard library
-std_lib_only = ["my_base_package.package_d"]
-# Allow `package_b` to import only from third-party libraries
-third_party_only = ["my_base_package.package_b"]
-# Allow `package_f` to import only from the local packages and the project's
-# top-level package. This will treat the first package defined in `base_packages` as the top-level package.
-first_party_only = ["my_base_package.package_f"]
-# Allow `package_g` to import only from the local package
-project_only = ["my_base_package.package_g"]
+    [flake8]
+    # Define the base packages for your project
+    base_packages = ["my_base_package", "my_other_base_package"]
+    import_restrictions = [
+        "my_base_package.package_a:my_base_package.package_b",  # Restrict `package_a` from importing `package_b`
+        "my_base_package.module_x:my_base_package.module_y",  # Restrict `module_x` from importing `module_y`
+    ]
+    # Make `package_c` an isolated package
+    isolated_modules = ["my_base_package.package_c"]
+    # Allow `package_d` to import only from the standard library
+    std_lib_only = ["my_base_package.package_d"]
+    # Allow `package_b` to import only from third-party libraries
+    third_party_only = ["my_base_package.package_b"]
+    # Allow `package_f` to import only from the local packages and the project's
+    # top-level package. This will treat the first package defined in `base_packages` as the top-level package.
+    first_party_only = ["my_base_package.package_f"]
+    # Allow `package_g` to import only from the local package
+    project_only = ["my_base_package.package_g"]
 ```
 
 ```ini
-[`flake8`]
-base-packages = my_base_package,my_other_base_package
-import-restrictions =
-    my_base_package.package_a:my_base_package.package_b
-    my_base_package.module_x:my_base_package.module_y
-restricted-packages = my_base_package.package_b
-isolated-modules = my_base_package.package_c
-std-lib-only = my_base_package.package_d
-third-party-only = my_base_package.package_b
-first-party-only = my_base_package.package_f
-project-only = my_base_package.package_g
+    [flake8]
+    base-packages = my_base_package,my_other_base_package
+    import-restrictions =
+        my_base_package.package_a:my_base_package.package_b
+        my_base_package.module_x:my_base_package.module_y
+    restricted-packages = my_base_package.package_b
+    isolated-modules = my_base_package.package_c
+    std-lib-only = my_base_package.package_d
+    third-party-only = my_base_package.package_b
+    first-party-only = my_base_package.package_f
+    project-only = my_base_package.package_g
 ```
 
-## Error Codes
+Error Codes
+-----------
 | Error Code | Description |
 | ---------- | ----------- |
 
 
-## Limitations
+Limitations
+-----------
 - This plugin is currently only compatible with Python 3.10+ (support for 3.8 and 3.9 in the works).
 - Option import-restrictions only supports restricting imports by package or module, not by class
   or function. (i.e., module_a.ClassA or module_a.function)
 - Files are not supported yet.
 - Option top-level-only-imports has not been implemented yet.
 
-## License
+License
+-------
 This project is licensed under the terms of the MIT license.
 
-## Acknowledgements
+Acknowledgements
+----------------
+
 [``flake8``](https://github.com/PyCQA/`flake8`) - A wrapper around PyFlakes,
 pycodestyle and McCabe.
-[`flake8`-import-order](https://github.com/PyCQA/`flake8`-import-order) - ``flake8``
+[``flake8-import-order``](https://github.com/PyCQA/`flake8`-import-order) - ``flake8``
 plugin that checks import order against various Python Style Guides. Used as
 a reference for this plugin.
 [Writing Plugins for ``flake8``](https://`flake8`.pycqa.org/en/latest/plugin-development/index.html) - ``flake8``
