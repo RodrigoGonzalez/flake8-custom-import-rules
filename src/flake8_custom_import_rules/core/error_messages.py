@@ -1,5 +1,5 @@
 """ Error messages for custom import rules. """
-from attr import define
+from attrs import define
 
 from flake8_custom_import_rules.codes.error_codes import ErrorCode
 from flake8_custom_import_rules.core.nodes import ParsedNode
