@@ -1,8 +1,8 @@
 """Parsed Nodes for custom import rules."""
 from enum import Enum
 
-from attr import define
-from attr import field
+from attrs import define
+from attrs import field
 
 
 class ImportType(Enum):

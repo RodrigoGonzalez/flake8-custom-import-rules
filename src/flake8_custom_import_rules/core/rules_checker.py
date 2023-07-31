@@ -118,13 +118,11 @@ class CustomImportRulesChecker:
     def restricted_identifiers(self) -> defaultdict[str, dict[Any, Any]] | None:
         """Return the restricted identifiers."""
         logger.debug(f"file_packages: {self.visitor.file_packages}")
-        # restricted_packages = self.options.get("restricted_packages", [])
-        # logger.debug(f"restricted_packages: {restricted_packages}")
         if self._restricted_identifiers is None:
             self._restricted_identifiers = get_restricted_identifiers(
                 restricted_packages=self.options.get("restricted_packages", []),
                 import_restrictions=self.options.get("import_restrictions", defaultdict(list)),
-                check_module_exists=True,
+                check_module_exists=False,  # Not Implemented
                 file_packages=self.visitor.file_packages,
             )
         logger.debug(f"Restricted Identifiers: {self._restricted_identifiers}")
@@ -137,7 +135,14 @@ class CustomImportRulesChecker:
         return self._options
 
     def update_checker_settings(self, updated_options: dict) -> None:
-        """Update the checker settings."""
+        """
+        Update the checker settings. Helper method for testing.
+
+        Parameters
+        ----------
+        updated_options : dict
+            The updated options to use.
+        """
         test_env = self.options.get("test_env", True)
         if not test_env:
             raise ValueError("Cannot update options in a non-test environment.")
@@ -149,6 +154,7 @@ class CustomImportRulesChecker:
     def import_rules(self) -> CustomImportRules:
         """Return the import rules."""
         visitor = self.visitor
+
         self._import_rules = CustomImportRules(
             nodes=self.nodes,
             dynamic_nodes=visitor.dynamic_nodes,

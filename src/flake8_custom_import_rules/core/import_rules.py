@@ -89,10 +89,11 @@ class CustomImportRules:
     file_root_package_name: str = field(default=None)
     file_packages: list = field(default=None)
 
-    codes_to_check: list[ErrorCode] = ErrorCode.get_all_error_codes()
+    codes_to_check: set[ErrorCode] = set(ErrorCode.get_all_error_codes())
     # Can only check CIR codes if the file is not stdin
     check_custom_import_rules: bool = field(default=filename_not_in_stdin_identifiers(filename))
 
+    top_level_only_imports: bool = field(default=False)  # Not Implemented
     import_restrictions: dict = field(factory=dict)
     restricted_packages: list[str] = field(factory=list)
     file_in_restricted_packages: bool = field(default=False)
@@ -106,10 +107,9 @@ class CustomImportRules:
     third_party_only: bool = field(default=False, init=False)
 
     def __attrs_post_init__(self) -> None:
-        """Post init."""
+        """Post init CustomImportRules."""
         logging.debug(f"file_identifier: {self.file_identifier}")
         self.nodes = sorted(self.nodes, key=lambda element: element.lineno)
-        # print(f"nodes: {self.nodes}")
 
         # for these restrictions we want to match a file identifier
         # because the import rules correspond to an ImportType
@@ -122,12 +122,13 @@ class CustomImportRules:
         self.third_party_only = get_file_matches_custom_rule("THIRD_PARTY_ONLY")(self)
         self.file_in_restricted_packages = get_file_matches_custom_rule("RESTRICTED_PACKAGES")(self)
 
+        self.top_level_only_imports = self.checker_settings.TOP_LEVEL_ONLY_IMPORTS
         self.import_restrictions = self.checker_settings.IMPORT_RESTRICTIONS
         self.restricted_packages = self.checker_settings.RESTRICTED_PACKAGES
-        # print(f"Restricted packages: {self.restricted_packages}")
 
         logger.info(f"File packages: {self.file_packages}")
         logger.info(f"Restricted packages: {self.restricted_packages}")
+        # print(f"Restricted packages: {self.restricted_packages}")
         logger.info(f"Restricted identifiers: {self.restricted_identifiers}")
         logger.debug(f"Restricted identifiers keys: {list(self.restricted_identifiers.keys())}")
 
