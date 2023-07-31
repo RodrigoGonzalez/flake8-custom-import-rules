@@ -109,6 +109,7 @@ class CustomImportRules:
         """Post init."""
         logging.debug(f"file_identifier: {self.file_identifier}")
         self.nodes = sorted(self.nodes, key=lambda element: element.lineno)
+        # print(f"nodes: {self.nodes}")
 
         # for these restrictions we want to match a file identifier
         # because the import rules correspond to an ImportType
@@ -121,9 +122,10 @@ class CustomImportRules:
         self.third_party_only = get_file_matches_custom_rule("THIRD_PARTY_ONLY")(self)
 
         self.restricted_packages = self.checker_settings.RESTRICTED_PACKAGES
+        self.import_restrictions = self.checker_settings.IMPORT_RESTRICTIONS
         self.file_in_restricted_packages = get_file_matches_custom_rule("RESTRICTED_PACKAGES")(self)
 
-        print(f"Restricted packages: {self.restricted_packages}")
+        # print(f"Restricted packages: {self.restricted_packages}")
         logger.info(f"File packages: {self.file_packages}")
         logger.info(f"Restricted packages: {self.restricted_packages}")
         logger.info(f"Restricted identifiers: {self.restricted_identifiers}")
@@ -356,7 +358,7 @@ class CustomImportRules:
 
     def _check_if_restricted_package(self, node: ParsedNode) -> bool:
         """Check if restricted package."""
-        logging.info(
+        logging.debug(
             f"Node import_statement: `{node.import_statement}`, "
             f"import_type: {node.import_type}, "
             f"module: `{node.module}`,"
