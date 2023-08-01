@@ -150,7 +150,7 @@ omit = ["flake8_custom_import_rules/example_repos/*"]
 # from https://python-poetry.org/docs/pyproject/#plugins
 
 [tool.poetry.plugins."flake8.extension"]
-CIR = "flake8_custom_import_rules.flake8_linter:Plugin"
+CIR = "flake8_custom_import_rules.flake8_plugin:Plugin"
 
 [build-system]
 #requires = ["poetry-core"]
