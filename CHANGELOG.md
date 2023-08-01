@@ -1,3 +1,9 @@
+## v0.8.8 (2023-07-31)
+
+### Refactor
+
+- **dependencies**: remove pandas and numpy dependencies (#96)
+
 ## v0.8.7 (2023-07-31)
 
 ### Refactor

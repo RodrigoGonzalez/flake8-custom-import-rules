@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "flake8_custom_import_rules"
-version = "0.8.7"
+version = "0.8.8"
 description = "A Flake8 plugin that enforces custom import rules, allowing users to define and maintain clean and consistent import organization across their Python projects."
 readme = "README.rst"
 authors = ["Rodrigo Gonzalez <flake8.custom.import.rules@gmail.com>"]
@@ -30,6 +30,7 @@ black = "^23.3.0"
 autoflake = "^2.1.1"
 mypy = "^1.2.0"
 lxml = "^4.9.3"
+cython = "^3.0.0"
 
 
 [tool.poetry.group.test.dependencies]
@@ -45,7 +46,7 @@ covdefaults = "^2.3.0"
 
 [tool.commitizen]
 name = "cz_conventional_commits"
-version = "0.8.7"
+version = "0.8.8"
 tag_format = "v$version"
 version_type = "semver"
 update_changelog_on_bump = true
