@@ -21,9 +21,7 @@ that is easier to comprehend, test, and debug. Consequently, developers can
 smoothly adhere to best practices, maintaining their projects in a clean,
 organized, and collaborative-friendly state.
 
-This is not a
-
-.. contents:: Sections
+.. contents:: README Sections
    :depth: 2
 
 Installation
@@ -69,6 +67,165 @@ of our codebase.
 A ``flake8`` plugin that enforces custom import rules, allowing users to define
 and maintain clean and consistent import organization across their Python
 projects.
+
+Options
+-------
+
+Custom Import Rules (CIR) allow you to define and enforce import rules for
+packages within your project. This plugin provides a set of flags that enable
+you to specify import restrictions, isolated packages, and import rules. These
+flags can be used in conjunction with each other to provide granular control
+over your import rules.
+
+Project Import Rules (PIR) allow you to define and enforce import rules at a project level.
+
+
+Sure, let's rewrite and enhance these sections:
+
+**Restricted Imports**
+
+Use the `--import-restrictions` flag to limit specific import capabilities for packages. This feature allows you to define a list of packages that are restricted from importing certain packages or modules within your base package.
+
+Consider a scenario where you're building a data processing application where 'package_a' handles raw data cleaning and 'package_b' carries out sensitive data processing. To avoid accidentally leaking raw data into 'package_b', you might want to prevent 'package_a' from importing 'package_b' or any of its subpackages.
+
+**Restricted Packages**
+
+The `--restricted-packages` flag allows you to specify a list of packages that are not permitted to be imported or used by other packages or modules within your base package. This helps maintain a clear separation between high-level and low-level packages.
+
+For example, if you have a 'lower_level_package' that contains utility functions and a 'higher_level_package' that handles business logic, you might want to restrict importing 'lower_level_package' into 'higher_level_package' to avoid circular dependencies.
+
+**Isolated Packages**
+
+The `--isolated-modules` flag allows you to define a list of packages that cannot import from any other packages within your base package. This ensures that certain packages remain standalone and do not introduce unwanted dependencies.
+
+For instance, you might have a 'standalone_package' that performs a specific task independently. To ensure it remains decoupled from the rest of the application, you can make this package isolated.
+
+**Standard Library Only Imports**
+
+The `--std-lib-only` flag allows you to specify a set of packages that can only import from the Python standard library. This rule helps to keep specific packages lightweight and free from third-party dependencies.
+
+Suppose you're building a 'lightweight_package' that needs to be easily portable and free from external dependencies. In this case, you might restrict this package to import only from Python standard library modules.
+
+More flags are available to provide granular control over your import rules. For instance, `--third-party-only`, `--first-party-only`, `--project-only`, and `--base-package-only` allow you to restrict imports to third-party libraries, local packages, the local package and the project's top-level package, and the project's top-level package respectively. Additionally, various flags are available to restrict relative, local, conditional, dynamic, private, wildcard, aliased, future, init, main, test, and conftest imports. Review the flake8-custom-import-rules documentation for more details and examples on how to use these flags.
+
+For example, if you want to restrict a package to only import from the local package and the project's top-level package, you can use the `--project-only` flag:
+
+.. code-block:: toml
+
+    [flake8]
+    project_only = ["my_base_package.package_g"]
+
+
+In this example, 'package_g' is only allowed to import from 'my_base_package' and the project's top-level package. Any attempt to import from other packages will be flagged by the linter.
+
+Remember to carefully assess your project's needs and structure when applying these import rules, as they can significantly impact your project's architecture and design.
+
+
+**Base Package Only Imports**
+
+The `--base-package-only` flag allows you to restrict a package to import only from the project's top-level package. This can help maintain a clear hierarchy within your project's package structure.
+
+For example, if you have a package named 'package_h' and you want it to only import from the top-level package of your project, you can specify:
+
+.. code-block:: toml
+
+    [flake8]
+    base_package_only = ["my_base_package.package_h"]
+
+
+In this case, any attempt by 'package_h' to import from other packages will be flagged by the linter.
+
+**Top-level Only Imports**
+
+The `--top-level-only-imports` flag is currently not implemented. Once available, it should allow you to restrict certain packages or modules to only import from the top-level package.
+
+**Import Restriction Flags**
+
+There are also several flags available to restrict specific types of imports. These include `--restrict-relative-imports`, `--restrict-local-imports`, `--restrict-conditional-imports`, `--restrict-dynamic-imports`, `--restrict-private-imports`, `--restrict-wildcard-imports`, `--restrict-aliased-imports`, `--restrict-future-imports`, `--restrict-init-imports`, `--restrict-main-imports`, `--restrict-test-imports`, and `--restrict-conftest-imports`.
+
+These flags help maintain clean and clear import structures by preventing certain types of potentially problematic imports. For example, you may want to prevent relative imports, which can make code harder to understand, or wildcard imports, which can pollute the namespace. Each of these flags can be enabled or disabled independently, allowing for fine-grained control over your project's import structure.
+
+For instance, to disable relative imports for your project, you can set:
+
+.. code-block:: toml
+
+    [flake8]
+    restrict_relative_imports = True
+
+
+With this setting, any relative imports in your project will be flagged by the linter.
+
+These rules and flags allow you to enforce a clean and understandable structure for your project's imports, making your code more maintainable and less prone to bugs or design issues. Remember to review each flag and its implications carefully, and choose the ones that best suit your project's needs and design.
+
+
+Here is a brief outline of how I will respond:
+
+1. I will explain the purpose of the CustomImportRules class.
+2. I will highlight each of the import restriction flags.
+3. I will provide use cases for each flag.
+
+**CustomImportRules class**
+
+The `CustomImportRules` class is designed to enforce custom import rules in a Python project. It is especially useful in large projects where managing the structure and dependencies of the project can become difficult. This class uses `flake8`, a Python tool for enforcing coding style, to enforce these custom rules. It inspects each import statement in the codebase and checks whether it violates any of the defined rules.
+
+**Import Restriction Flags**
+
+The import restriction flags are defined as fields in the `CustomImportRules` class. Each flag corresponds to a specific rule that can be enforced in the codebase. These are the flags and their use cases:
+
+1. `top_level_only_imports` (not implemented): This flag would enforce that all import statements only refer to top-level modules. This could be used in a project where the structure is intended to be flat, with all modules at the top level.
+
+2. `project_only`: This flag enforces that only project-level modules can be imported. This could be used in a project where third-party dependencies are intended to be minimized, and most of the functionality is implemented within the project itself.
+
+3. `base_package_only`: This flag enforces that only the base package of the project can be imported. This could be used in a project with a specific structure where all functionality is accessed through the base package.
+
+4. `first_party_only`: This flag enforces that only first-party modules (i.e., those developed as part of the project) can be imported. This could be used in a project where third-party dependencies are intended to be minimized.
+
+5. `isolated_module`: This flag enforces that only modules that are marked as 'isolated' can be imported. This could be used in a project where certain modules are intended to be used independently of the rest of the project.
+
+6. `isolated_package`: This flag enforces that only packages that are marked as 'isolated' can be imported. This could be used in a project where certain packages are intended to be used independently of the rest of the project.
+
+7. `std_lib_only`: This flag enforces that only standard library modules can be imported. This could be used in a project where it is intended to rely solely on the standard library, without any third-party dependencies.
+
+8. `third_party_only`: This flag enforces that only third-party modules can be imported. This could be used in a project where it is intended to rely heavily on third-party libraries, and not on the standard library or project-specific modules.
+
+9. `restricted_packages`: This flag enforces that certain specified packages cannot be imported. This could be used in a project where certain packages are known to cause issues or are not desired for some other reason.
+
+10. `file_in_restricted_packages`: This flag enforces that files within certain specified packages cannot be imported. This could be used in a project where certain packages are allowed, but specific files within those packages are not.
+
+Each of these flags can be set according to the specific needs and structure of the project, allowing for a high level of customization of the import rules.
+
+
+Project import restriction flags:
+
+--restrict-relative-imports: This flag prevents the usage of relative imports. Relative imports allow for modules to be imported relative to the current module's location. This can sometimes lead to confusion or unintended behavior, especially in larger code bases.
+
+--restrict-local-imports: This flag restricts the import of modules that are local to the project. This could be useful to enforce dependencies only on external libraries and not on project-specific modules.
+
+--restrict-conditional-imports: This flag restricts the use of conditional imports. Conditional imports are imports that occur within an if statement or similar control structure. These can potentially lead to inconsistent behavior, as whether or not a module is imported may depend on runtime conditions.
+
+--restrict-dynamic-imports: This flag restricts the use of dynamic imports, which are imports that occur within a function or method. These can be hard to track and may cause unexpected behavior, as the availability of a module may depend on the specific execution path through the code.
+
+--restrict-private-imports: This flag restricts the import of private modules (those that start with an underscore). Importing these modules can lead to instability, as they're intended for internal use within a package and may change without warning.
+
+--restrict-wildcard-imports: This flag restricts the use of wildcard imports (e.g., from module import *). These imports can lead to confusion, as it's unclear which names are being imported, and they can potentially overwrite existing names without warning.
+
+--restrict-aliased-imports: This flag restricts the import of modules under an alias (e.g., import numpy as np). While convenient, this can sometimes lead to confusion, especially for less common libraries or non-standard aliases.
+
+--restrict-future-imports: This flag restricts the use of from __future__ import. These imports are used to enable features that will be standard in future versions of Python, but their use can potentially cause confusion or compatibility issues.
+
+--restrict-init-imports: This flag restricts imports from __init__.py files. Importing from these files can sometimes lead to confusing circular dependencies or other unexpected behavior.
+
+--restrict-main-imports: This flag restricts imports within the if __name__ == "__main__" block. These imports will only run when the script is run directly, which can sometimes lead to inconsistent behavior.
+
+--restrict-test-imports: This flag restricts imports within test files. This can be used to enforce separation of testing and production code.
+
+--restrict-conftest-imports: This flag restricts imports within pytest's conftest.py files. These files are used to define fixtures and other setup code for tests, and imports within them can potentially lead to unexpected behavior.
+
+The use of these flags is highly dependent on the specific needs and coding standards of your project. They provide a means to enforce certain styles or practices, but may not be necessary or beneficial in all cases. It's important to consider the trade-offs and potential impacts before deciding to use these restrictions.
+
+
+Old Option Section
+------------------
 
 Restricted imports: Limit specific import capabilities for packages. Define a
 list of packages that are restricted from importing certain packages or
