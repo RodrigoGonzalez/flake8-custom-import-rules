@@ -9,7 +9,6 @@ from pathlib import Path
 
 from attrs import define
 from attrs import field
-from stdlib_list import stdlib_list
 
 from flake8_custom_import_rules.core.nodes import DynamicStringFromImport
 from flake8_custom_import_rules.core.nodes import DynamicStringParseSyntaxFailure
@@ -115,6 +114,8 @@ class CustomImportRulesVisitor(ast.NodeVisitor):
 
         if sys.version_info < (3, 10):
             # stdlib_list only supports up to Python 3.9
+            from stdlib_list import stdlib_list
+
             self.stdlib_names = set(
                 stdlib_list(f"{sys.version_info.major}.{sys.version_info.minor}")
             )
