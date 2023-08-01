@@ -41,7 +41,9 @@ jobs:
 
       # install requirements (including dev dependencies)
       - name: Install requirements
-        run: poetry install --only main,test
+        run: |
+          poetry install --only main,test
+          pip install -e example_repos/my_base_module
 
       # run tox
       - name: Run unit-tests

@@ -3,6 +3,8 @@ import logging
 import os
 import sys
 
+from flake8.utils import normalize_path
+
 logger = logging.getLogger(__name__)
 
 
@@ -107,32 +109,6 @@ def convert_name(filename: str, prefix: str | None = None) -> str:
         filename = filename[:-3]
 
     return filename.lstrip("/").replace("/", ".")
-
-
-def normalize_path(path: str, parent: str = os.curdir) -> str:
-    """
-    Normalize a single-path.
-
-    Parameters
-    ----------
-    path : str
-        The path to normalize.
-    parent : str, optional
-        The parent path, by default os.curdir
-
-    Returns
-    -------
-    str
-    """
-    # NOTE(sigmavirus24): Using os.path.sep and os.path.altsep allow for
-    # Windows compatibility with both Windows-style paths (c:\foo\bar) and
-    # Unix style paths (/foo/bar).
-    separator = os.path.sep
-    # NOTE(sigmavirus24): os.path.altsep may be None
-    alternate_separator = os.path.altsep or ""
-    if path == "." or separator in path or (alternate_separator and alternate_separator in path):
-        path = os.path.abspath(os.path.join(parent, path))
-    return path.rstrip(separator + alternate_separator)
 
 
 def convert_module_to_file_paths(module_name: str) -> list[str]:
