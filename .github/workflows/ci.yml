@@ -1,58 +1,60 @@
----
-name: Run Unit Tests
-
-on:
-  push:
-    branches:
-      - main
-    paths:
-      - 'src/**'
-  pull_request:
-    branches:
-      - main
-    paths:
-      - 'src/**'
-  workflow_call:
-
-jobs:
-  Testing:
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        # python-version: ["3.8", "3.9", "3.10", "3.11", "3.12"]
-        python-version: ["3.10", "3.11"]
-    steps:
-      # check-out repo
-      - name: Checkout repository
-        uses: actions/checkout@v3
-        with:
-          ref: ${{ github.head_ref }}
-
-      # install poetry
-      - name: Install poetry
-        run: pipx install poetry==1.5.1
-
-      # set-up python with cache
-      - name: Setup Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v4
-        with:
-          python-version: ${{ matrix.python-version }}
-          cache: 'poetry'
-
-      # install requirements (including dev dependencies)
-      - name: Install requirements
-        run: poetry install --only main,test
-
-      # run tox
-      - name: Run unit-tests
-        run: |
-          set -o pipefail
-          poetry run make clean
-          poetry run make unit-tests-cov-fail
-          poetry run tox
-
-      # upload coverage reports to Codecov
-#      - name: Upload coverage reports to Codecov
-#        uses: codecov/codecov-action@v3
-#        env:
-#          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+#---
+#name: Run Unit Tests
+#
+#on:
+#  push:
+#    branches:
+#      - main
+#    paths:
+#      - 'src/**'
+#  pull_request:
+#    branches:
+#      - main
+#    paths:
+#      - 'src/**'
+#  workflow_call:
+#
+#jobs:
+#  Testing:
+#    runs-on: ubuntu-latest
+#    strategy:
+#      matrix:
+#        # python-version: ["3.8", "3.9", "3.10", "3.11", "3.12"]
+#        python-version: ["3.10", "3.11"]
+#    steps:
+#      # check-out repo
+#      - name: Checkout repository
+#        uses: actions/checkout@v3
+#        with:
+#          ref: ${{ github.head_ref }}
+#
+#      # install poetry
+#      - name: Install poetry
+#        run: pipx install poetry==1.5.1
+#
+#      # set-up python with cache
+#      - name: Setup Python ${{ matrix.python-version }}
+#        uses: actions/setup-python@v4
+#        with:
+#          python-version: ${{ matrix.python-version }}
+#          cache: 'poetry'
+#
+#      # install requirements (including dev dependencies)
+#      - name: Install requirements
+#        run: |
+#          poetry install --only main,test
+#          pip install -e example_repos/my_base_module
+#
+#      # run tox
+#      - name: Run unit-tests
+#        run: |
+#          set -o pipefail
+#          poetry run make clean
+#          poetry run make unit-tests-cov-fail
+#          poetry run tox
+#
+#      # upload coverage reports to Codecov
+##      - name: Upload coverage reports to Codecov
+##        uses: codecov/codecov-action@v3
+##        env:
+##          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}

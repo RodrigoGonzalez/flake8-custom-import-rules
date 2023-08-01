@@ -90,6 +90,16 @@ class CustomImportRulesVisitor(ast.NodeVisitor):
         self.stdlib_names using stdlib_list. Otherwise, it assigns
         sys.stdlib_module_names to self.stdlib_names.
         """
+        if sys.version_info < (3, 10):
+            # stdlib_list only supports up to Python 3.9
+            from stdlib_list import stdlib_list
+
+            self.stdlib_names = set(
+                stdlib_list(f"{sys.version_info.major}.{sys.version_info.minor}")
+            )
+        else:
+            self.stdlib_names = sys.stdlib_module_names
+
         self.resolve_local_imports = self.filename not in STDIN_IDENTIFIERS
         logger.debug(f"Resolve local imports: {self.resolve_local_imports}")
         self.file_path = (
@@ -111,16 +121,6 @@ class CustomImportRulesVisitor(ast.NodeVisitor):
             get_package_names(self.file_identifier) if self.resolve_local_imports else None
         )
         logger.debug(f"File packages: {self.file_packages}")
-
-        if sys.version_info < (3, 10):
-            # stdlib_list only supports up to Python 3.9
-            from stdlib_list import stdlib_list
-
-            self.stdlib_names = set(
-                stdlib_list(f"{sys.version_info.major}.{sys.version_info.minor}")
-            )
-        else:
-            self.stdlib_names = sys.stdlib_module_names
 
     def get_all_nodes(self) -> list[ParsedNode]:
         """Get all nodes."""
