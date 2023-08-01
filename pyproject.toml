@@ -7,11 +7,27 @@ authors = ["Rodrigo Gonzalez <flake8.custom.import.rules@gmail.com>"]
 repository = "https://github.com/RodrigoGonzalez/flake8-custom-import"
 homepage = "https://github.com/RodrigoGonzalez/flake8-custom-import"
 keywords = [
-  "flake8",
-  "plugin",
-  "linting",
-  "code quality",
-  "quality assurance",
+    "flake8",
+    "plugin",
+    "linting",
+    "code quality",
+    "quality assurance",
+    "qa",
+]
+classifiers = [
+    "Framework :: Flake8",
+    "Intended Audience :: Developers",
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Topic :: Software Development :: Quality Assurance",
+    "Typing :: Typed",
 ]
 
 license = "MIT"
@@ -21,6 +37,15 @@ license = "MIT"
 #]
 include = ["pyproject.toml", "LICENSE", "CHANGELOG.md"]
 
+[tool.poetry.scripts]
+custom_import_rules = "flake8_custom_import_rules.__main__:main"
+
+[tool.poetry.urls]
+"GitHub" = "https://github.com/RodrigoGonzalez/flake8-custom-import"
+
+# from https://python-poetry.org/docs/pyproject/#plugins
+[tool.poetry.plugins."flake8.extension"]
+CIR = "flake8_custom_import_rules.flake8_plugin:Plugin"
 
 [tool.poetry.dependencies]
 python = ">=3.9,<=3.12"
@@ -43,7 +68,6 @@ autoflake = "^2.1.1"
 mypy = "^1.2.0"
 lxml = "^4.9.3"
 cython = "^3.0.0"
-#my_base_module = {path="examples_repos/my_base_module", develop=true}
 
 
 [tool.poetry.group.test.dependencies]
@@ -140,21 +164,9 @@ exclude = [
 plugins = ["covdefaults"]
 omit = ["flake8_custom_import_rules/example_repos/*"]
 
-#[tool.poetry.scripts]
-#"flake8.extension" = {CIR = "flake8_custom_import_rules.flake8_linter:Plugin"}
-
-[tool.poetry.urls]
-"GitHub" = "https://github.com/RodrigoGonzalez/flake8-custom-import"
-
-#[tool.poetry.plugins]
-# from https://python-poetry.org/docs/pyproject/#plugins
-
-[tool.poetry.plugins."flake8.extension"]
-CIR = "flake8_custom_import_rules.flake8_plugin:Plugin"
-
 [build-system]
-#requires = ["poetry-core"]
-#build-backend = "poetry.core.masonry.api"
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
 # from https://setuptools.pypa.io/en/latest/userguide/pyproject_config.html
-requires = ["setuptools", "setuptools-scm"]
-build-backend = "setuptools.build_meta"
+#requires = ["setuptools", "setuptools-scm"]
+#build-backend = "setuptools.build_meta"
