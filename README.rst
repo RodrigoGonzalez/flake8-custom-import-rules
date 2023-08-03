@@ -5,6 +5,10 @@ A ``flake8`` plugin that enforces custom import rules, allowing users to define 
 maintain clean and consistent import organization across their Python projects.
 
 
+.. contents:: README Sections
+   :depth: 2
+
+
 Introduction
 ------------
 
@@ -21,8 +25,7 @@ that is easier to comprehend, test, and debug. Consequently, developers can
 smoothly adhere to best practices, maintaining their projects in a clean,
 organized, and collaborative-friendly state.
 
-.. contents:: README Sections
-   :depth: 2
+
 
 Installation
 ------------
@@ -78,9 +81,6 @@ flags can be used in conjunction with each other to provide granular control
 over your import rules.
 
 Project Import Rules (PIR) allow you to define and enforce import rules at a project level.
-
-
-Sure, let's rewrite and enhance these sections:
 
 **Restricted Imports**
 
@@ -355,7 +355,7 @@ Custom Import Rule Violations
 -----------------------------
 
 =====================  ============================================================
- Rule Violation Code        Description
+ Rule Violation Code    Description
 =====================  ============================================================
   **CIR101**            This error signifies a conflict with a custom import
                         rule. It is thrown when an import violates a custom
@@ -552,6 +552,8 @@ Plugin Limitations
     module.
 -   Files are not supported yet, use modules to set restrictions
     (e.g., package/module/file.py -> package.module.file).
+-   Support for project level exceptions is not implemented yet.
+    (e.g., restrict aliased imports but allow import of numpy as np).
 -   Option top-level-only-imports has not been implemented yet.
 -   Dynamic string checks are not fully implemented yet. Currently they
 
