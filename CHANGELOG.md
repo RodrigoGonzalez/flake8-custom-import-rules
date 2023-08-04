@@ -1,3 +1,10 @@
+## v0.9.2 (2023-08-04)
+
+### Refactor
+
+- **docs**: update documentation directory
+- **readme**: update readme section titles (#113)
+
 ## v0.9.1 (2023-08-04)
 
 ### Refactor
