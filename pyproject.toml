@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "flake8_custom_import_rules"
-version = "0.8.8"
+version = "0.8.9"
 description = "A Flake8 plugin that enforces custom import rules, allowing users to define and maintain clean and consistent import organization across their Python projects."
 readme = "README.rst"
 authors = ["Rodrigo Gonzalez <flake8.custom.import.rules@gmail.com>"]
@@ -83,14 +83,13 @@ covdefaults = "^2.3.0"
 
 [tool.commitizen]
 name = "cz_conventional_commits"
-version = "0.8.8"
+version = "0.8.9"
 tag_format = "v$version"
 version_type = "semver"
 update_changelog_on_bump = true
 major_version_zero = true
 version_files = [
     "pyproject.toml:version",
-    "setup.cfg:version",
     "src/flake8_custom_import_rules/__init__.py:__version__",
 ]
 changelog_file = "CHANGELOG.md"

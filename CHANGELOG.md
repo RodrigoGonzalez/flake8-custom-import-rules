@@ -1,3 +1,15 @@
+## v0.8.9 (2023-08-04)
+
+### Fix
+
+- **pyproject**: fix flake8 extension (#108)
+- **node-visitor**: stdlib list should be imported locally where it is used (#106)
+
+### Refactor
+
+- **node-utils**: remove unused function
+- **pyproject**: add project info (#109)
+
 ## v0.8.8 (2023-07-31)
 
 ### Refactor
