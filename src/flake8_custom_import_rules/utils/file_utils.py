@@ -8,33 +8,6 @@ from flake8.utils import normalize_path
 logger = logging.getLogger(__name__)
 
 
-def check_module_in_package(base_module: str, filename: str) -> str | None:
-    """
-    Get the module name for a given file path based on a base module.
-
-    Parameters
-    ----------
-    base_module : str
-        The base module to use as a reference.
-    filename : str
-        The file path to get the module name for.
-
-    Returns
-    -------
-    str | None
-    """
-
-    # Check if the base module is in the file path
-    if base_module not in filename:
-        raise ValueError(f"The base module {base_module} is not in the file path {filename}")
-
-    # Get the part of the file path that is relative to the base module
-    relative_path = filename.partition(base_module)[2].strip("/")
-
-    # Remove the .py extension and replace / with . to get the module name
-    return os.path.splitext(relative_path)[0].replace("/", ".")
-
-
 def get_module_name_from_filename(filename: str, parent: str = os.curdir) -> str | None:
     """
     Get the module name for a given file path based on a base module.
