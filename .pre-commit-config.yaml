@@ -94,7 +94,7 @@ repos:
       args: [--verbose, --options=pylama.ini, --max-complexity=20, --concurrent]
       stages: [commit, manual, push]
 
-  - repo: https://github.com/asottile/setup-cfg-fmt
-    rev: v2.4.0
-    hooks:
-    -   id: setup-cfg-fmt
+#  - repo: https://github.com/asottile/setup-cfg-fmt
+#    rev: v2.4.0
+#    hooks:
+#    -   id: setup-cfg-fmt
