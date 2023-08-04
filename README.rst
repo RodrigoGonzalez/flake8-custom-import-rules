@@ -351,8 +351,8 @@ Example Configurations
     project-only = my_base_package.package_g
 
 
-Custom Import Rule Violations
------------------------------
+Custom Import Rule Violation Codes
+----------------------------------
 
 =====================  ============================================================
  Rule Violation Code    Description
@@ -440,8 +440,8 @@ Custom Import Rule Violations
 =====================  ============================================================
 
 
-Project Import Rule Violations
-------------------------------
+Project Import Rule Violation Codes
+-----------------------------------
 
 =====================  ============================================================
  Rule Violation Code        Description

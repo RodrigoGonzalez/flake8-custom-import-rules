@@ -14,6 +14,14 @@ filename = "example_repos/my_base_module/my_base_module/package_a/module_a.py"
 # filename = "example_repos/my_base_module/my_second_base_package/module_three.py"
 # file_identifier = os.path.split(filename)[-1].split(".")[0]
 def print_import_nodes(filename: str) -> None:
+    """
+    Print the import nodes for a given file.
+
+    Parameters
+    ----------
+    filename : str
+        The filename to print the import nodes for.
+    """
     lines = pycodestyle.readlines(filename)
     tree = ast.parse("".join(lines))
 

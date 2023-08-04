@@ -1,16 +1,20 @@
 [tool.poetry]
 name = "flake8_custom_import_rules"
-version = "0.9.0"
+version = "0.9.1"
 description = "A Flake8 plugin that enforces custom import rules, allowing users to define and maintain clean and consistent import organization across their Python projects."
 readme = "README.rst"
 authors = ["Rodrigo Gonzalez <flake8.custom.import.rules@gmail.com>"]
 repository = "https://github.com/RodrigoGonzalez/flake8-custom-import"
 homepage = "https://github.com/RodrigoGonzalez/flake8-custom-import"
 keywords = [
+    "code quality",
+    "code linting",
+    "code style",
+    "custom import rules",
+    "imports",
     "flake8",
     "plugin",
     "linting",
-    "code quality",
     "quality assurance",
     "qa",
 ]
@@ -52,7 +56,7 @@ python = ">=3.9,<=3.12"
 flake8 = "^6.0.0"
 importlib-metadata = { version = "^4.0", python = "<3.8" }
 pylama = "^8.4.1"
-stdlib-list = { version = "^0.9.0", python = "<3.10" }
+stdlib-list = { version = "^0.9.1", python = "<3.10" }
 pycodestyle = "^2.10.0"
 attrs = "^23.1.0"
 
@@ -83,7 +87,7 @@ covdefaults = "^2.3.0"
 
 [tool.commitizen]
 name = "cz_conventional_commits"
-version = "0.9.0"
+version = "0.9.1"
 tag_format = "v$version"
 version_type = "semver"
 update_changelog_on_bump = true

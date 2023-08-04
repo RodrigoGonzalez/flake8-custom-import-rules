@@ -1,3 +1,10 @@
+## v0.9.1 (2023-08-04)
+
+### Refactor
+
+- **readme**: update readme section titles
+- **file-utils**: remove unused functions (#112)
+
 ## v0.9.0 (2023-08-04)
 
 ### Fix
