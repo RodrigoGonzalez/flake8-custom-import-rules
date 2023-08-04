@@ -81,10 +81,6 @@ pre-commit:  ## Manually run all pre-commit hooks
 	poetry run pre-commit run -c .pre-commit-config.yaml
 	#poetry run pre-commit run --all-files -c .pre-commit-config.yaml
 
-pre-commit-tool:  ## Manually run a single pre-commit hook (e.g. `make pre-commit-tool TOOL=black`)
-	poetry run pre-commit run --hook-stage manual $(TOOL) -c .pre-commit-config.yaml
-	#poetry run pre-commit run $(TOOL) --all-files -c .pre-commit-config.yaml
-
 # https://commitizen-tools.github.io/commitizen/bump/
 commit: pre-commit tests clean  ## Commit changes
 	./scripts/commit.sh
@@ -94,59 +90,6 @@ bump:  ## Bump version and update changelog
 	git push --follow-tags
 
 .PHONY: pre-commit pre-commit-tool commit bump
-
-# =============================================================================
-# FORMATTING
-# =============================================================================
-
-##@ Formatting
-
-format: format-black format-isort format-autoflake format-pyupgrade  ## Run all formatters
-
-format-black: ## Run black (code formatter)
-	$(MAKE) pre-commit-tool TOOL=black
-
-format-isort: ## Run isort (import formatter)
-	$(MAKE) pre-commit-tool TOOL=isort
-
-format-autoflake: ## Run autoflake (remove unused imports)
-	$(MAKE) pre-commit-tool TOOL=autoflake
-
-format-pyupgrade: ## Run pyupgrade (upgrade python syntax)
-	$(MAKE) pre-commit-tool TOOL=pyupgrade
-
-.PHONY: format format-black format-isort format-autoflake format-pyupgrade
-
-# =============================================================================
-# LINTING
-# =============================================================================
-
-##@ Linting
-
-lint: lint-black lint-isort lint-flake8 lint-mypy ## Run all linters
-
-.PHONY: lint lint-black lint-isort lint-flake8 lint-mypy
-
-lint-black: ## Run black in linting mode
-	$(MAKE) pre-commit-tool TOOL=black-check
-
-lint-isort: ## Run isort in linting mode
-	$(MAKE) pre-commit-tool TOOL=isort-check
-
-lint-flake8: ## Run flake8 (linter)
-	$(MAKE) pre-commit-tool TOOL=flake8
-
-lint-mypy: ## Run mypy (static-type checker)
-	$(MAKE) pre-commit-tool TOOL=mypy
-
-lint-mypy-report: ## Run mypy & create report
-	poetry run mypy --install-types --non-interactive --verbose --html-report ./.mypy_html_report src
-	#$(MAKE) pre-commit-tool TOOL=mypy ARGS="--html-report ./mypy_html"
-
-lint-mypy-changed:  ## Run mypy on changed Python files & create report
-	$(if $(changed_py_files), poetry run mypy --install-types --non-interactive --verbose --html-report ./.mypy_html_report $(changed_py_files), echo "No changed Python files to lint.")
-
-.PHONY: lint-mypy-report
 
 # =============================================================================
 # TESTING
@@ -170,12 +113,12 @@ unit-tests-cov-fail: ## run unit tests with pytest and show coverage (terminal +
 	poetry run pytest  -vvvvsra --doctest-modules --cov=src --cov-report term-missing --cov-report=html --cov-fail-under=80 --junitxml=pytest.xml | tee pytest-coverage.txt
 
 clean-cov: ## remove output files from pytest & coverage
-	@rm -rf .coverage
-	@rm -rf coverage.xml
-	@rm -rf htmlcov
-	@rm -rf pytest.xml
-	@rm -rf pytest-coverage.txt
-	@rm -rf dist
+	rm -rf .coverage
+	rm -rf coverage.xml
+	rm -rf htmlcov
+	rm -rf pytest.xml
+	rm -rf pytest-coverage.txt
+	rm -rf dist
 
 .PHONY: tox tests unit-tests unit-tests-cov unit-tests-cov-fail clean-cov
 
@@ -275,4 +218,4 @@ help:  ## Display this help
 	echo
 	echo " The following commands can be run for "$(PROJECTNAME)":"
 	echo
-	@awk 'BEGIN {FS = ":.*##"; printf "\nUsage:\n  make \033[36m<target>\033[0m\n"} /^[a-zA-Z_-]+:.*?##/ { printf "  \033[36m%-20s\033[0m %s\n", $$1, $$2 } /^##@/ { printf "\n\033[1m%s\033[0m\n", substr($$0, 5) } ' $(MAKEFILE_LIST)
+	awk 'BEGIN {FS = ":.*##"; printf "\nUsage:\n  make \033[36m<target>\033[0m\n"} /^[a-zA-Z_-]+:.*?##/ { printf "  \033[36m%-20s\033[0m %s\n", $$1, $$2 } /^##@/ { printf "\n\033[1m%s\033[0m\n", substr($$0, 5) } ' $(MAKEFILE_LIST)
