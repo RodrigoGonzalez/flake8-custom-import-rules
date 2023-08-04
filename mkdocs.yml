@@ -1,0 +1,41 @@
+site_name: Custom Import Rules
+
+docs_dir: docs
+
+theme:
+  name: "material"
+  palette:
+    - scheme: default
+      toggle:
+        icon: material/toggle-switch-off-outline
+        name: Switch to dark mode
+    - scheme: slate
+      toggle:
+        icon: material/toggle-switch
+        name: Switch to light mode
+  features:
+    - navigation.tabs
+    - navigation.indexes
+    - navigation.instant
+
+plugins:
+  - search:
+  - mkdocstrings:
+      handlers:
+        python:
+          paths: [src]
+  - render_swagger:
+      title: API Reference
+
+nav:
+  - Introduction: "index.md"
+  - changelog.md
+
+markdown_extensions:
+  - pymdownx.snippets:
+      check_paths: true
+
+repo_url: https://github.com/RodrigoGonzalez/flake8-custom-import-rules
+
+# to navigate with `/site` content correctly
+use_directory_urls: false

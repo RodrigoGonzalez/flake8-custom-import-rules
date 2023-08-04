@@ -1,17 +1,18 @@
 [tool.poetry]
 name = "flake8_custom_import_rules"
-version = "0.9.1"
+version = "0.9.2"
 description = "A Flake8 plugin that enforces custom import rules, allowing users to define and maintain clean and consistent import organization across their Python projects."
 readme = "README.rst"
 authors = ["Rodrigo Gonzalez <flake8.custom.import.rules@gmail.com>"]
-repository = "https://github.com/RodrigoGonzalez/flake8-custom-import"
-homepage = "https://github.com/RodrigoGonzalez/flake8-custom-import"
+repository = "https://github.com/RodrigoGonzalez/flake8-custom-import-rules"
+homepage = "https://github.com/RodrigoGonzalez/flake8-custom-import-rules"
 keywords = [
     "code quality",
     "code linting",
     "code style",
     "custom import rules",
     "imports",
+    "import rules",
     "flake8",
     "plugin",
     "linting",
@@ -45,7 +46,7 @@ include = ["pyproject.toml", "LICENSE", "CHANGELOG.md"]
 custom_import_rules = "flake8_custom_import_rules.__main__:main"
 
 [tool.poetry.urls]
-"GitHub" = "https://github.com/RodrigoGonzalez/flake8-custom-import"
+"GitHub" = "https://github.com/RodrigoGonzalez/flake8-custom-import-rules"
 
 # from https://python-poetry.org/docs/pyproject/#plugins
 [tool.poetry.plugins."flake8.extension"]
@@ -56,9 +57,10 @@ python = ">=3.9,<=3.12"
 flake8 = "^6.0.0"
 importlib-metadata = { version = "^4.0", python = "<3.8" }
 pylama = "^8.4.1"
-stdlib-list = { version = "^0.9.1", python = "<3.10" }
+stdlib-list = { version = ">=0.9.0", python = "<3.10" }
 pycodestyle = "^2.10.0"
 attrs = "^23.1.0"
+typer = "^0.9.0"
 
 
 [tool.poetry.group.dev.dependencies]
@@ -87,7 +89,7 @@ covdefaults = "^2.3.0"
 
 [tool.commitizen]
 name = "cz_conventional_commits"
-version = "0.9.1"
+version = "0.9.2"
 tag_format = "v$version"
 version_type = "semver"
 update_changelog_on_bump = true
