@@ -7,10 +7,14 @@ authors = ["Rodrigo Gonzalez <flake8.custom.import.rules@gmail.com>"]
 repository = "https://github.com/RodrigoGonzalez/flake8-custom-import"
 homepage = "https://github.com/RodrigoGonzalez/flake8-custom-import"
 keywords = [
+    "code quality",
+    "code linting",
+    "code style",
+    "custom import rules",
+    "imports",
     "flake8",
     "plugin",
     "linting",
-    "code quality",
     "quality assurance",
     "qa",
 ]

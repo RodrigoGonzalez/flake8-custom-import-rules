@@ -33,22 +33,6 @@ def load_config(path: str) -> configparser.RawConfigParser:
 # 				return cfg_path
 
 
-# @pytest.fixture(scope="session")
-# def import_visitor():
-#     """Return an instance of the public import visitor."""
-#     return ImportVisitor(["application_module", "tests"], ["company_module"])
-
-
-@pytest.fixture(scope="session")
-def list_flake8_extensions():
-    """List all installed flake8 extensions."""
-    from pkg_resources import iter_entry_points
-
-    extensions = [entry_point.name for entry_point in iter_entry_points(group="flake8.extension")]
-    print(extensions)
-    return extensions
-
-
 def pytest_configure(config):
     """Register markers for pytest."""
     config.addinivalue_line("markers", "flake8: mark test to run flake8 checks.")
