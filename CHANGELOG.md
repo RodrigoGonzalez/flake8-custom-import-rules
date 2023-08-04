@@ -1,3 +1,37 @@
+## v0.9.0 (2023-08-04)
+
+### Fix
+
+- **pyproject**: fix flake8 extension (#108)
+- **node-visitor**: stdlib_list should be imported locally where it is used (#106)
+- **restricted-visitor**: refactor get strings functions (#84)
+- **visitor**: get_module_name_from_filename uses filename not file_path (#83)
+- **default**: fix default settings (#77)
+
+### Refactor
+
+- **file-utils**: remove unused functions
+- **node-utils**: remove unused function (#111)
+- **pyproject**: add project info (#109)
+- **dependencies**: remove pandas and numpy dependencies (#96)
+- **example_repos**: remove pendulum dependency (#95)
+- **readme**: update intro paragraph, remove unnecessary comments (#88)
+- **error-codes**: make error code checks using set instead of list (#86)
+- **core**: refactor to make code easier to follow (#85)
+- **help-strings**: add error codes to flake8 help strings (#82)
+- **defaults**: update help strings (#81)
+- **main**: update readme, change log to debug (#80)
+- **restricted-imports**: add support for import restrictions (#79)
+- **defaults**: update converters and add test cases (#78)
+- **import-rules**: update import rules to implement restricted i… (#76)
+
+## v0.8.10 (2023-08-04)
+
+### Refactor
+
+- **file-utils**: remove unused functions
+- **node-utils**: remove unused function (#111)
+
 ## v0.8.9 (2023-08-04)
 
 ### Fix
