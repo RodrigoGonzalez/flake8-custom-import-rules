@@ -366,13 +366,13 @@ class CustomImportRules:
         )
         return node.module in self.restricted_identifiers
 
-    def _check_for_cir106(self, node: ParsedNode) -> Generator[ErrorMessage, None, None]:
+    def _check_for_cir106(self, node: ParsedStraightImport) -> Generator[ErrorMessage, None, None]:
         """Check for CIR106."""
         condition = self._check_if_restricted_package(node)
         if ErrorCode.CIR106.code in self.codes_to_check and condition:
             yield restricted_imports_error(node, ErrorCode.CIR106)
 
-    def _check_for_cir107(self, node: ParsedNode) -> Generator[ErrorMessage, None, None]:
+    def _check_for_cir107(self, node: ParsedFromImport) -> Generator[ErrorMessage, None, None]:
         """Check for CIR107."""
         condition = self._check_if_restricted_package(node)
         if ErrorCode.CIR107.code in self.codes_to_check and condition:
