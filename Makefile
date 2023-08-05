@@ -79,7 +79,6 @@ pre-commit:  ## Manually run all pre-commit hooks
 	# not added to `pre-commit-tool` in order to prevent unwanted behavior when running in workflows
 	git add -A
 	poetry run pre-commit run -c .pre-commit-config.yaml
-	#poetry run pre-commit run --all-files -c .pre-commit-config.yaml
 
 # https://commitizen-tools.github.io/commitizen/bump/
 commit: pre-commit tests clean  ## Commit changes
@@ -109,8 +108,9 @@ unit-tests: ## run unit-tests with pytest
 unit-tests-cov: ## run unit-tests with pytest and show coverage (terminal + html)
 	poetry run pytest  -vvvvsra --doctest-modules --cov=src --cov-report term-missing --cov-report=html
 
-unit-tests-cov-fail: ## run unit tests with pytest and show coverage (terminal + html) & fail if coverage too low & create files for CI
-	poetry run pytest  -vvvvsra --doctest-modules --cov=src --cov-report term-missing --cov-report=html --cov-fail-under=80 --junitxml=pytest.xml | tee pytest-coverage.txt
+unit-tests-cov-fail: ## run unit tests w/ pytest and coverage (terminal + html) & create files for CI
+	poetry run pytest  -vvvvsra --doctest-modules --cov=src --cov-report term-missing \
+	--cov-report=html --cov-fail-under=80 --junitxml=pytest.xml | tee pytest-coverage.txt
 
 clean-cov: ## remove output files from pytest & coverage
 	rm -rf .coverage
@@ -203,12 +203,6 @@ new-feat-branch: check-branch-name  ## Create a new feature branch
 .PHONY: check-branch-name new-branch new-feat-branch
 
 # =============================================================================
-# ADDITIONAL
-# =============================================================================
-
-##@ Additional
-
-# =============================================================================
 # SELF DOCUMENTATION
 # =============================================================================
 
@@ -218,4 +212,6 @@ help:  ## Display this help
 	echo
 	echo " The following commands can be run for "$(PROJECTNAME)":"
 	echo
-	awk 'BEGIN {FS = ":.*##"; printf "\nUsage:\n  make \033[36m<target>\033[0m\n"} /^[a-zA-Z_-]+:.*?##/ { printf "  \033[36m%-20s\033[0m %s\n", $$1, $$2 } /^##@/ { printf "\n\033[1m%s\033[0m\n", substr($$0, 5) } ' $(MAKEFILE_LIST)
+	awk 'BEGIN {FS = ":.*##"; printf "\nUsage:\n  make \033[36m<target>\033[0m\n"} /^[a-zA-Z_-]+:.*?##/ \
+	{ printf "  \033[36m%-20s\033[0m %s\n", $$1, $$2 } /^##@/ { printf "\n\033[1m%s\033[0m\n", substr($$0, 5) } ' \
+	$(MAKEFILE_LIST)
