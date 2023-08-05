@@ -64,7 +64,6 @@ class CustomImportRulesChecker:
     @property
     def filename(self) -> str:
         """Return the filename."""
-        logger.debug(f"Filename: {self._filename}")
         if self._filename in STDIN_IDENTIFIERS:
             self._filename = "stdin"
         logger.debug(f"Filename: {self._filename}")
@@ -74,7 +73,7 @@ class CustomImportRulesChecker:
     @property
     def lines(self) -> list[str]:
         """Return the lines."""
-        # logger.info(f"Lines: {self._lines}")
+        logger.debug(f"Lines: {self._lines}")
         return self._lines
 
     @property
