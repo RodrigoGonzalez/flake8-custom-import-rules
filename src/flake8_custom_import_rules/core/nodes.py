@@ -145,19 +145,6 @@ class DynamicStringParseSyntaxFailure:
     value: str
 
 
-@define(slots=True)
-class ParsedRestrictedImport:
-    """Parsed import statement"""
-
-    import_type: ImportType
-    module: str
-    package: str
-    package_names: list[str]
-    identifier: str
-    check_exists: bool = False
-    filename: str | None = None
-
-
 ParsedNode = (
     ParsedStraightImport
     | ParsedFromImport

@@ -9,7 +9,6 @@
 
 ### Refactor
 
-- **readme**: update readme section titles
 - **file-utils**: remove unused functions (#112)
 
 ## v0.9.0 (2023-08-03)
@@ -24,7 +23,6 @@
 
 ### Refactor
 
-- **file-utils**: remove unused functions
 - **node-utils**: remove unused function (#111)
 - **pyproject**: add project info (#109)
 - **dependencies**: remove pandas and numpy dependencies (#96)
@@ -43,7 +41,6 @@
 
 ### Refactor
 
-- **file-utils**: remove unused functions
 - **node-utils**: remove unused function (#111)
 
 ## v0.8.9 (2023-08-01)
@@ -55,7 +52,6 @@
 
 ### Refactor
 
-- **node-utils**: remove unused function
 - **pyproject**: add project info (#109)
 
 ## v0.8.8 (2023-07-31)
@@ -68,7 +64,6 @@
 
 ### Refactor
 
-- **dependencies**: remove pandas and numpy dependencies
 - **example_repos**: remove pendulum dependency (#95)
 
 ## v0.8.6 (2023-07-31)
@@ -84,17 +79,16 @@
 ### Fix
 
 - **restricted-visitor**: refactor get strings functions (#84)
-- **visitor**: get_module_name_from_filename uses filename not file_path (#83)
 
 ### Refactor
 
-- **core**: refactor to make code easier to follow
+- **core**: refactor to make code easier to follow (#85)
 
 ## v0.8.4 (2023-07-31)
 
 ### Fix
 
-- **visitor**: get_module_name_from_filename uses filename not file_path
+- **visitor**: get_module_name_from_filename uses filename not file_path (#83)
 
 ### Refactor
 
@@ -104,7 +98,6 @@
 
 ### Refactor
 
-- **help-strings**: add error codes to flake8 help strings
 - **defaults**: update help strings (#81)
 - **main**: update readme, change log to debug (#80)
 - **restricted-imports**: add support for import restrictions (#79)
@@ -117,7 +110,6 @@
 
 ### Refactor
 
-- **restricted-imports**: add support for import restrictions
 - **defaults**: update converters and add test cases (#78)
 - **import-rules**: update import rules to implement restricted i… (#76)
 
@@ -125,7 +117,6 @@
 
 ### Refactor
 
-- **import-rules**: update import rules to implement restricted identifiers
 - **restricted-imports**: passing file packages to restricted imp… (#75)
 
 ## v0.8.0 (2023-07-28)
@@ -143,7 +134,6 @@
 
 ### Refactor
 
-- **restricted-imports**: passing file packages to restricted import visitor
 - **rules-checker**: remove extraneous code to make more efficient (#74)
 - **rules-checker**: refactoring to minimize the number of calls (#73)
 - **file-utils**: move file util functions to own module (#70)
@@ -168,14 +158,14 @@
 - **future**: add support for restricting __future__ imports (#58)
 - **error-codes**: updated error code messages (#57)
 - **third-party**: added support for third party only imports (#56)
-- update imports to straight imports (#55)
+- **imports**: update imports to straight imports (#55)
 - **import-rules**: implement std lib import restrictions (#54)
 - **parse-utils**: add file conversion utils (#53)
-- update checkers and parsers (#52)
-- remove old registry options (#50)
+- **checker**: update checkers and parsers (#52)
+- **registry**: remove old registry options (#50)
 - **flake8-linter**: add register options (#49)
-- **import-rules**: add custom import rules to default settings (#48)
-- add handling for dynamic string syntax errors (#47)
+- **dynamic**: add custom import rules to default settings (#48)
+- **import-rules**: add handling for dynamic string syntax errors (#47)
 - added support for standard lib packages (#45)
 - **dynamic**: added dynamic string visitor to capture dynamic string… (#44)
 
@@ -188,18 +178,13 @@
 
 ### Feat
 
-- **dynamic**: added dynamic string visitor to capture dynamic string imports
-- added support for dynamic imports and fixed numerous tests (#42)
+- **dynamic**: added support for dynamic imports and fixed numerous tests (#42)
 
 ### Refactor
 
 - **nodes**: moved parsed nodes to their own file (#43)
 
 ## v0.5.0 (2023-07-21)
-
-### Feat
-
-- added support for dynamic imports and fixed numerous tests
 
 ### Refactor
 
@@ -210,7 +195,6 @@
 
 ### Refactor
 
-- **import-rules**: add private import restrictions
 - **import-rules**: implement local import restrictions (#37)
 - **import-rules**: add aliased import restrictions (#36)
 - **import-rules**: add conditional import restrictions (#35)
@@ -219,7 +203,6 @@
 
 ### Refactor
 
-- **import-rules**: add conditional import restrictions
 - **import-rules**: add relative import restrictions (#34)
 - **test-cases**: updated wildcard import checks (#33)
 
@@ -227,7 +210,6 @@
 
 ### Refactor
 
-- **test-cases**: updated wildcard import checks
 - **tests**: update tests to use linter fixture (#32)
 - implement and connect import rules (#31)
 - **import-rules**: remove option arguments, use option dict directly (#30)
@@ -239,14 +221,12 @@
 
 ### Refactor
 
-- **error-codes**: add properties for code and message
 - updated linter, checker, and visitor classes and tests (#26)
 
 ## v0.4.1 (2023-07-19)
 
 ### Refactor
 
-- updated linter, checker, and visitor classes and tests
 - **error-codes**: update error code stem (#25)
 
 ## v0.4.0 (2023-07-19)
@@ -257,25 +237,23 @@
 
 ### Refactor
 
-- **error-codes**: update error code stem
-- **checker**: use attrs define and fied with slots (#24)
+- **checker**: use attrs define and field with slots (#24)
 
 ## v0.3.0 (2023-07-17)
 
 ### Feat
 
-- **main-package**: updated node visitor and added tests
-- **makin**: Added linter files (#15)
-- defined error codes for what linter will cover (#10)
+- **makefile**: Added linter files (#15)
+- **error-codes**: defined error codes for what linter will cover (#10)
 
 ### Fix
 
-- added methods to error codes enum (#12)
+- **error-codes**: added methods to error codes enum (#12)
 
 ### Refactor
 
 - **import-rules**: move files into directories (#21)
-- **main-package**: continuuing to implement checker (#20)
+- **main-package**: continuing to implement checker (#20)
 - **example-package**: updating imports and docstrings (#19)
 - **example-package**: rename package and updating imports (#18)
 - **custom-import-rules**: update parameters (#17)
@@ -285,7 +263,6 @@
 
 ### Feat
 
-- defined error codes for what linter will cover
 - added import rules module and parse utils and error codes (#9)
 - added rules checker class to process the results of parsing through file (#8)
 - add custom import rules visitor class for traversing imports (#6)

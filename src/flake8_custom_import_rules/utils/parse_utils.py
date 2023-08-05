@@ -16,7 +16,6 @@ NOQA_INLINE_REGEXP = re.compile(
     re.IGNORECASE,
 )
 
-BLANK_LINE_RE = re.compile(r"\s*\n")
 COMMA_SEPARATED_LIST_RE = re.compile(r"[,\s]")
 
 
@@ -147,11 +146,6 @@ def does_import_match_restricted_imports(
         [restricted_imports] if isinstance(restricted_imports, str) else restricted_imports
     )
     return check_string(node_identifier, prefix=tuple(restricted_imports), delimiter=" ")
-
-
-def get_common_ancestors(current_packages: str, import_packages: str) -> list[str]:
-    """Get the common ancestors of two modules."""
-    return [ancestor for ancestor in import_packages if ancestor in current_packages]
 
 
 def retrieve_custom_rule_matches(identifier: str, custom_rules: list[str] | str) -> list[str]:
