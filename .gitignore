@@ -200,3 +200,7 @@ Thumbs.db
 # temp files
 temp/*
 !temp/.gitkeep
+
+# pytest
+pytest-coverage.txt
+pytest.xml
