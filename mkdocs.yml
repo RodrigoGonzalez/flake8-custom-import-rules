@@ -21,15 +21,20 @@ theme:
 plugins:
   - search:
   - mkdocstrings:
+      default_handler: python
       handlers:
         python:
-          paths: [src]
-  - render_swagger:
-      title: API Reference
+          rendering:
+            show_signature_annotations: true
+            show_source: true
+
+watch:
+  - src/flake8_custom_import_rules
 
 nav:
   - Introduction: "index.md"
   - changelog.md
+#  - api_docs.md
 
 markdown_extensions:
   - pymdownx.snippets:

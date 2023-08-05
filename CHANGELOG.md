@@ -12,7 +12,7 @@
 - **readme**: update readme section titles
 - **file-utils**: remove unused functions (#112)
 
-## v0.9.0 (2023-08-04)
+## v0.9.0 (2023-08-03)
 
 ### Fix
 
@@ -39,14 +39,14 @@
 - **defaults**: update converters and add test cases (#78)
 - **import-rules**: update import rules to implement restricted i… (#76)
 
-## v0.8.10 (2023-08-04)
+## v0.8.10 (2023-08-02)
 
 ### Refactor
 
 - **file-utils**: remove unused functions
 - **node-utils**: remove unused function (#111)
 
-## v0.8.9 (2023-08-04)
+## v0.8.9 (2023-08-01)
 
 ### Fix
 
