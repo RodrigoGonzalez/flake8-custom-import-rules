@@ -89,7 +89,7 @@ bump:  ## Bump version and update changelog
 	poetry run cz bump --changelog --check-consistency --annotated-tag
 	git push --follow-tags
 
-.PHONY: pre-commit pre-commit-tool commit bump
+.PHONY: pre-commit commit bump
 
 # =============================================================================
 # TESTING

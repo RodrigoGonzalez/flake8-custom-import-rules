@@ -86,6 +86,12 @@ coverage = { version = "^7.2.7",  extras = ["toml"] }
 covdefaults = "^2.3.0"
 
 
+[tool.poetry.group.docs.dependencies]
+mkdocs = "^1.4.0"
+mkdocs-material = "^9.1.6"
+mkdocstrings = {extras = ["optimize", "python"], version = "^0.21.2"}
+
+
 
 [tool.commitizen]
 name = "cz_conventional_commits"

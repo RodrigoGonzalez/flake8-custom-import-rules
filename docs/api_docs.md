@@ -1,3 +1,3 @@
 # API documentation
 
-:::doc_search
+[//]: # (:::flake8_custom_import_rules)
