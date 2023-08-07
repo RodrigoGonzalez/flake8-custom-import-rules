@@ -49,7 +49,11 @@ Project Import Rules (PIR) allow you to define and enforce import rules at a pro
 
 **Restricted Imports**
 
-Use the `--import-restrictions` flag to limit specific import capabilities for packages. This feature allows you to define a list of packages that are restricted from importing certain packages or modules within your base package.
+Use the `--import-restrictions` flag to limit
+specific import capabilities for packages. This
+feature allows you to define a list of packages
+that are restricted from importing certain
+packages or modules within your base package.
 
 Consider a scenario where you're building a data processing application where 'package_a' handles raw data cleaning and 'package_b' carries out sensitive data processing. To avoid accidentally leaking raw data into 'package_b', you might want to prevent 'package_a' from importing 'package_b' or any of its subpackages.
 
@@ -57,7 +61,11 @@ Consider a scenario where you're building a data processing application where 'p
 
 The `--restricted-packages` flag allows you to specify a list of packages that are not permitted to be imported or used by other packages or modules within your base package. This helps maintain a clear separation between high-level and low-level packages.
 
-For example, if you have a 'lower_level_package' that contains utility functions and a 'higher_level_package' that handles business logic, you might want to restrict importing 'lower_level_package' into 'higher_level_package' to avoid circular dependencies.
+For example, if you have a 'lower_level_package' that
+contains utility functions and a 'higher_level_package'
+that handles business logic, you might want to restrict
+importing 'lower_level_package' into
+'higher_level_package' to avoid circular dependencies.
 
 **Isolated Packages**
 
