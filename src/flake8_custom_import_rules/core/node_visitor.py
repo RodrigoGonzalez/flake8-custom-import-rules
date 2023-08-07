@@ -101,6 +101,7 @@ class CustomImportRulesVisitor(ast.NodeVisitor):
             self.stdlib_names = sys.stdlib_module_names
 
         self.resolve_local_imports = self.filename not in STDIN_IDENTIFIERS
+
         logger.debug(f"Resolve local imports: {self.resolve_local_imports}")
         self.file_path = (
             Path(self.filename).resolve()
@@ -108,7 +109,6 @@ class CustomImportRulesVisitor(ast.NodeVisitor):
             else None
         )
         logger.info(f"Visitor filename: {self.filename}")
-        # print("Visitor filename: ", self.filename)
         self.file_identifier = (
             get_module_name_from_filename(str(self.filename))
             if self.resolve_local_imports
