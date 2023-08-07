@@ -61,7 +61,6 @@ else:
             "src/flake8_custom_import_rules/core/rules_checker.py",
         ]
 
-
         # gcc arguments hack: enable optimizations
         os.environ["CFLAGS"] = "-O3"
 

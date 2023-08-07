@@ -20,9 +20,18 @@ COMMA_SEPARATED_LIST_RE = re.compile(r"[,\s]")
 
 
 def parse_comma_separated_list(value: list | str) -> set[str]:
-    """Parse a comma-separated list of values."""
-    # items = re.split(r"\s*,\s*", value)
-    # return {item.strip() for item in items if item}
+    """
+    Parse a comma-separated list of values.
+
+    Parameters
+    ----------
+    value : list | str
+        The value to parse.
+
+    Returns
+    -------
+    set[str]
+    """
     if isinstance(value, list):
         return {item.strip() for item in value if item}
     value = COMMA_SEPARATED_LIST_RE.split(value)
@@ -129,7 +138,20 @@ def check_string(
 
 
 def does_file_match_custom_rule(file_identifier: str, custom_rules: list[str] | str | None) -> bool:
-    """Check if a file identifier is in a custom rule."""
+    """
+    Check if a file identifier is in a custom rule.
+
+    Parameters
+    ----------
+    file_identifier : str
+        The file identifier to check.
+    custom_rules : list[str] | str | None
+        A list of custom rules or a single custom rule to check against.
+
+    Returns
+    -------
+    bool
+    """
     if custom_rules is None:
         return False
     custom_rules = [custom_rules] if isinstance(custom_rules, str) else custom_rules
@@ -139,7 +161,20 @@ def does_file_match_custom_rule(file_identifier: str, custom_rules: list[str] | 
 def does_import_match_restricted_imports(
     node_identifier: str, restricted_imports: list[str] | str | None
 ) -> bool:
-    """Check if an import identifier is in a restricted import."""
+    """
+    Check if an import identifier is in a restricted import.
+
+    Parameters
+    ----------
+    node_identifier : str
+        The import identifier to check.
+    restricted_imports : list[str] | str | None
+        A list of restricted imports or a single restricted import to check against.
+
+    Returns
+    -------
+    bool
+    """
     if restricted_imports is None:
         return False
     restricted_imports = (

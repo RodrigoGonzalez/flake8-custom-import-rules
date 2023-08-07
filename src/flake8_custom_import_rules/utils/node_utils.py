@@ -13,6 +13,7 @@ def get_package_names(module_name: str) -> list[str] | None:
     Parameters
     ----------
     module_name : str
+        The module name.
 
     Returns
     -------

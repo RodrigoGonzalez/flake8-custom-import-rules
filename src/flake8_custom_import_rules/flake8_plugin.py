@@ -57,7 +57,6 @@ class Plugin(CustomImportRulesChecker):
         https://github.com/PyCQA/flake8/blob/main/src/flake8/options/manager.py
         """
         # Add options for CustomImportRulesChecker
-
         register_options(option_manager, CUSTOM_IMPORT_RULES, is_restriction=False)
 
         # Not Implemented Yet
@@ -67,7 +66,7 @@ class Plugin(CustomImportRulesChecker):
             default=DEFAULT_CHECKER_SETTINGS.TOP_LEVEL_ONLY_IMPORTS,
             action="store",
             type=bool,
-            help="Not Implemented Yet",
+            help="Not Implemented",
             # help=(
             #     f"This option allows you to enforce that only top-level "
             #     f"imports are permitted in the project. If violated, could "
@@ -88,12 +87,21 @@ class Plugin(CustomImportRulesChecker):
     def parse_options(
         cls, option_manager: OptionManager, parse_options: Namespace, *args: Any
     ) -> None:
-        """Parse options for flake8-custom-import-rules."""
+        """
+        Parse options for flake8-custom-import-rules.
+
+        Parameters
+        ----------
+        option_manager : OptionManager
+            The option manager from flake8.options.manager
+        parse_options : Namespace
+            The options to parse.
+        args : Any
+            Additional arguments.
+        """
         logger.debug(f"Option Manager: {option_manager}")
         logger.debug(f"Options: {parse_options}")
         logger.debug(f"Args: {args}")
-        # print(f"\n\nOptions: {parse_options}")
-        # print(f"\n\nArgs: {args}")
 
         # Parse options for CustomImportRulesChecker
         options: dict = {}
@@ -115,7 +123,18 @@ class Plugin(CustomImportRulesChecker):
         cls._options = parsed_options
 
     def error(self, error: ErrorMessage) -> tuple:
-        """Return the error."""
+        """
+        Return the error message in a form that can be used by flake8.
+
+        Parameters
+        ----------
+        error : ErrorMessage
+            The error message.
+
+        Returns
+        -------
+        tuple[int, int, str, type[Any]]
+        """
         return (
             error.lineno,
             error.col_offset,
@@ -126,6 +145,5 @@ class Plugin(CustomImportRulesChecker):
     def run(self) -> Generator[tuple[int, int, str, type[Any]], None, None]:
         """Run flake8-custom-import-rules."""
         # Run CustomImportRulesChecker
-        # print(f"Run Options: {self.options}")
         logger.debug(f"Run Options: {self.options}")
         yield from self.check_custom_import_rules()

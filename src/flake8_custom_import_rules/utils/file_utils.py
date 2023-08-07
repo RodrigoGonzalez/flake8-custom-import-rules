@@ -50,11 +50,26 @@ def find_prefix(filename: str) -> str:
     str
     """
     filename = os.path.abspath(filename)
+    logger.debug(f"filename in find_prefix: {filename}")
 
     # Find the deepest path
     matches = (path for path in sys.path if filename.startswith(path))
+    try:
+        return max(matches, key=len)
 
-    return max(matches, key=len)
+    except ValueError as e:
+        machine = sys.platform
+        if machine in {"win32", "cygwin"}:
+            export_string = f"set PYTHONPATH=%PYTHONPATH%;{os.getcwd()}"
+        else:
+            export_string = f"export PYTHONPATH=$PYTHONPATH:{os.getcwd()}"
+
+        raise ValueError(
+            f"Could not find prefix for {filename}. "
+            f"To fix this, add the directory containing {filename} "
+            f"to sys.path using `{export_string}`."
+        ) from e
+        # raise ValueError(f"sys.path {sys.path}") from e
 
 
 def convert_name(filename: str, prefix: str | None = None) -> str:
@@ -125,8 +140,10 @@ def get_file_path_from_module_name(module_name: str) -> str | None:
     if not (existing_paths := list(filter(os.path.isfile, possible_paths))):
         # raise FileNotFoundError(module_name)
         return None
+
     logger.debug(f"existing_paths: {existing_paths}")
     assert isinstance(existing_paths, list)
+
     # return max(existing_paths, key=len) if existing_paths else None
     return existing_paths[0]
 
@@ -151,8 +168,11 @@ def get_relative_path_from_absolute_path(
     logger.debug(f"absolute_path type: {type(absolute_path)}")
     if not absolute_path:
         return None
+
     if isinstance(absolute_path, list):
         return absolute_path[0]
+
     if not isinstance(absolute_path, str):
         raise TypeError(f"Absolute path expected, got {type(absolute_path)}: {absolute_path}")
+
     return os.path.relpath(absolute_path, start=cwd)
