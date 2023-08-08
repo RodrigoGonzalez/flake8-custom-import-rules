@@ -21,7 +21,7 @@ keywords = [
 ]
 classifiers = [
     "Framework :: Flake8",
-    "Intended Audience :: Developers",
+    "Environment :: Console",
     "Development Status :: 3 - Alpha",
     "Intended Audience :: Developers",
     "Programming Language :: Python :: 3",
@@ -43,10 +43,11 @@ license = "MIT"
 include = ["pyproject.toml", "LICENSE", "CHANGELOG.md"]
 
 [tool.poetry.scripts]
-custom_import_rules = "flake8_custom_import_rules.__main__:main"
+import-rules = "flake8_custom_import_rules.__main__:main"
 
 [tool.poetry.urls]
 "GitHub" = "https://github.com/RodrigoGonzalez/flake8-custom-import-rules"
+"Change Log" = "https://github.com/RodrigoGonzalez/flake8-custom-import-rules/blob/main/CHANGELOG.md"
 
 # from https://python-poetry.org/docs/pyproject/#plugins
 [tool.poetry.plugins."flake8.extension"]
