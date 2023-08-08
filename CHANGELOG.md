@@ -1,3 +1,19 @@
+## v0.10.0 (2023-08-07)
+
+### Feat
+
+- **option-utils**: add check conflict function and add tests (#124)
+
+### Fix
+
+- **file-utils**: add try except section to find prefix function (#123)
+
+### Refactor
+
+- **import-rules**: update typing to use specific parsed node classes (#120)
+- **checker**: remove unused functions (#116)
+- **docs**: update documentation directory (#114)
+
 ## v0.9.2 (2023-08-04)
 
 ### Refactor
