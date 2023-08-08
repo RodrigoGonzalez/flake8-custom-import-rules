@@ -68,6 +68,40 @@ MODULE_THREE_MODULE_ERRORS = {
             ["my_second_base_package.module_one"],
             set(),
         ),
+        (
+            "example_repos/my_base_module/my_second_base_package/module_two/file_one.py",
+            ["my_second_base_package", "my_second_base_package.module_one"],
+            set(),
+        ),
+        (
+            "example_repos/my_base_module/my_second_base_package/module_two/file_one.py",
+            ["my_second_base_package.module_one"],
+            set(),
+        ),
+        (
+            "example_repos/my_base_module/my_second_base_package/module_two/file_one.py",
+            ["my_second_base_package.module_two", "my_second_base_package.module_one"],
+            {
+                f"12:0: {CIR302} Using 'from my_second_base_package.module_one."
+                f"file_two import ModuleTwo'. Isolated module "
+                f"'my_second_base_package.module_two.file_one' cannot import "
+                f"from project packages."
+            },
+        ),
+        (
+            "example_repos/my_base_module/my_second_base_package/module_two/file_one.py",
+            ["my_second_base_package.module_two.file_one", "my_second_base_package.module_one"],
+            {
+                f"13:0: {CIR304} Using 'from my_second_base_package.module_two."
+                f"file_two import ModuleTwoFileTwo'. Isolated module "
+                f"'my_second_base_package.module_two.file_one' cannot import "
+                f"from project packages.",
+                f"12:0: {CIR304} Using 'from my_second_base_package.module_one."
+                f"file_two import ModuleTwo'. Isolated module "
+                f"'my_second_base_package.module_two.file_one' cannot import "
+                f"from project packages.",
+            },
+        ),
     ],
 )
 def test_isolated_modules_imports(
