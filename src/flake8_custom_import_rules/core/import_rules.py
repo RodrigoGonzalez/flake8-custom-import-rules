@@ -42,12 +42,13 @@ def filename_not_in_stdin_identifiers(
 
 
 def get_file_matches_custom_rule(option_key: str) -> Callable[[CustomImportRules], bool]:
-    """Get rule."""
+    """Get custom rule."""
     option_key = option_key.upper()
 
     def match_custom_rule(instance: CustomImportRules) -> bool:
         """Match custom rule."""
         custom_rule = getattr(instance.checker_settings, option_key, None)
+
         if custom_rule is None:
             logger.error(f"Option key '{option_key}' not found in checker settings")
             return False
@@ -64,6 +65,7 @@ def get_isolated_package_rule(option_key: str) -> Callable[[CustomImportRules], 
     def isolated_package(instance: CustomImportRules) -> bool:
         """Match custom rule."""
         custom_rule = getattr(instance.checker_settings, option_key, None)
+
         if custom_rule is None:
             logger.error(f"Option key '{option_key}' not found in checker settings")
             return False
@@ -75,7 +77,94 @@ def get_isolated_package_rule(option_key: str) -> Callable[[CustomImportRules], 
 
 @define(slots=True)
 class CustomImportRules:
-    """Custom Import Rules for flake8 & Python Projects"""
+    """Custom Import Rules for flake8 & Python Projects
+
+    Attributes
+    ----------
+    nodes : list[ParsedNode]
+        List of parsed nodes from the AST. Contains all the import nodes
+        found.
+
+    dynamic_nodes : defaultdict[str, list]
+        Dictionary mapping module names to lists of dynamic import nodes
+        importing that module. Captures dynamic imports like
+        importlib.import_module()
+
+    identifiers : defaultdict[str, dict]
+        Dictionary mapping identifiers (variable names) to information
+        about them like what line they are defined on.
+
+    identifiers_by_lineno : defaultdict[str, list]
+        Dictionary mapping line numbers to lists of identifiers defined
+        on that line. Used for checking if an import is happening after
+        an identifier is defined.
+
+    checker_settings : Settings
+        The configuration settings for the checker like base packages and
+        import restrictions.
+
+    restricted_identifiers : dict
+        Dictionary mapping restricted identifiers (like __import__) to
+        their line number. Used to detect if they are used.
+
+    filename : str
+        The filename of the file being checked.
+
+    file_identifier : str
+        The identifier for the file being checked, which is the filename
+        without the extension.
+
+    file_root_package_name : str
+        The root package name of the file being checked.
+        Used to check if imports are within the root package.
+
+    file_packages : list
+        The package names of the file being checked.
+        Used to check if imports are within allowed packages.
+
+    codes_to_check : set[ErrorCode]
+        The error codes to check for in this file, based on the command
+        line options.
+
+    check_custom_import_rules : bool
+        Whether to check custom import rules at all for this file, based
+        on command line options.
+
+    top_level_only_imports : bool
+        Whether to only allow top-level imports in this file, based on
+        command line options.
+
+    import_restrictions : dict
+        The import restriction flags from the configuration settings.
+
+    restricted_packages : list[str]
+        List of packages restricted from importing, based on
+        configuration settings.
+
+    file_in_restricted_packages : bool
+        Whether the file is in one of the restricted packages.
+
+    project_only : bool
+        Whether to restrict imports to only allow project imports.
+
+    base_package_only : bool
+        Whether to restrict imports to only allow base package imports.
+
+    first_party_only : bool
+        Whether to restrict imports to only allow first-party imports.
+
+    third_party_only : bool
+        Whether to restrict imports to only allow third-party imports.
+
+    std_lib_only : bool
+        Whether to restrict imports to only allow standard library imports.
+
+    isolated_module : bool
+        Whether this module is isolated (can only import standard library).
+
+    isolated_package : bool
+        Whether this package is isolated.
+    """
 
     nodes: list[ParsedNode] = field(factory=list)
     dynamic_nodes: defaultdict[str, list] = defaultdict(list)

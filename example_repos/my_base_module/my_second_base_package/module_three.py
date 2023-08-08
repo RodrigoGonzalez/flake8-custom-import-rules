@@ -37,7 +37,6 @@ class ModuleThree:
         """Get the created_at."""
         return self._created_at
 
-
     def initialize_class_x(self) -> X:
         """Initialize class x."""
         return X(
