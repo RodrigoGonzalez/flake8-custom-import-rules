@@ -21,12 +21,7 @@ CUSTOM_MSG = (
 
 MODULE_THREE_PACKAGE_ERRORS = {
     f"9:0: {CIR301} Using 'import my_base_module.module_y'{CUSTOM_MSG}",
-    f"10:0: {CIR301} Using 'import my_second_base_package.module_one.file_one'{CUSTOM_MSG}",
     f"11:0: {CIR302} Using 'from my_base_module.module_x import X'{CUSTOM_MSG}",
-    (
-        f"12:0: {CIR302} Using 'from my_second_base_package.module_one.file_two import "
-        f"ModuleTwo'{CUSTOM_MSG}"
-    ),
 }
 
 MODULE_THREE_MODULE_ERRORS = {
@@ -50,8 +45,28 @@ MODULE_THREE_MODULE_ERRORS = {
         ),
         (
             "example_repos/my_base_module/my_second_base_package/module_three.py",
+            ["my_second_base_package", "my_base_module"],
+            MODULE_THREE_PACKAGE_ERRORS,
+        ),
+        (
+            "example_repos/my_base_module/my_second_base_package/module_three.py",
             ["my_second_base_package.module_three"],
             MODULE_THREE_MODULE_ERRORS,
+        ),
+        (
+            "example_repos/my_base_module/my_second_base_package/module_three.py",
+            ["my_second_base_package.module_three", "my_base_module"],
+            MODULE_THREE_MODULE_ERRORS,
+        ),
+        (
+            "example_repos/my_base_module/my_second_base_package/module_three.py",
+            ["my_second_base_package.module_three", "my_second_base_package.module_one"],
+            MODULE_THREE_MODULE_ERRORS,
+        ),
+        (
+            "example_repos/my_base_module/my_second_base_package/module_three.py",
+            ["my_second_base_package.module_one"],
+            set(),
         ),
     ],
 )

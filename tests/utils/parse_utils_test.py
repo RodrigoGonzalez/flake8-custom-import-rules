@@ -7,7 +7,7 @@ import pytest
 
 from flake8_custom_import_rules.utils.parse_utils import check_string
 from flake8_custom_import_rules.utils.parse_utils import does_file_match_custom_rule
-from flake8_custom_import_rules.utils.parse_utils import does_import_match_restricted_imports
+from flake8_custom_import_rules.utils.parse_utils import does_import_match_isolated_imports
 from flake8_custom_import_rules.utils.parse_utils import parse_module_string
 from flake8_custom_import_rules.utils.parse_utils import retrieve_custom_rule_matches
 
@@ -133,7 +133,7 @@ PACKAGE_6 = [
 
 
 @pytest.mark.parametrize(
-    ("node_identifier", "restricted_imports", "expected"),
+    ("node_identifier", "isolated_imports", "expected"),
     [
         ("my_second_base_package.module_one.file_one", PACKAGE_6, True),
         ("my_second_base_package.module_one.file_two", PACKAGE_6, True),
@@ -146,13 +146,13 @@ PACKAGE_6 = [
         ("my_third_base_package.file", PACKAGE_6, True),
     ],
 )
-def test_does_import_match_restricted_imports(
-    node_identifier: str, restricted_imports: list[str], expected: bool
+def test_does_import_match_isolated_imports(
+    node_identifier: str, isolated_imports: list[str], expected: bool
 ) -> None:
-    """Test does_import_match_restricted_imports."""
+    """Test does_import_match_isolated_imports."""
     assert (
-        does_import_match_restricted_imports(
-            node_identifier=node_identifier, restricted_imports=restricted_imports
+        does_import_match_isolated_imports(
+            node_identifier=node_identifier, isolated_imports=isolated_imports
         )
         == expected
     )
