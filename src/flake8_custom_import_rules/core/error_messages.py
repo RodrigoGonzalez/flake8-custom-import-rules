@@ -7,7 +7,21 @@ from flake8_custom_import_rules.core.nodes import ParsedNode
 
 @define(slots=True)
 class ErrorMessage:
-    """Error message"""
+    """Error message
+
+    Attributes
+    ----------
+    lineno : int
+        The line number of the error.
+    col_offset : int
+        The column offset of the error.
+    code : str
+        The error code.
+    message : str
+        The error message to show to the user.
+    custom_explanation : str | None
+        Custom explanation to add to the error message.
+    """
 
     lineno: int
     col_offset: int
@@ -26,7 +40,22 @@ def standard_error_message(
     error_code: ErrorCode,
     custom_explanation: str | None = None,
 ) -> ErrorMessage:
-    """Generate error message from node."""
+    """
+    Generate error message from node.
+
+    Parameters
+    ----------
+    node : ParsedNode
+        The node that caused the error.
+    error_code : ErrorCode
+        The error code.
+    custom_explanation : str | None
+        Custom explanation to add to the error message.
+
+    Returns
+    -------
+    ErrorMessage
+    """
     return ErrorMessage(
         lineno=node.lineno,
         col_offset=node.col_offset,
@@ -53,7 +82,20 @@ def std_lib_only_error(
     node: ParsedNode,
     error_code: ErrorCode,
 ) -> ErrorMessage:
-    """Generate error message for std lib only."""
+    """
+    Generate error message for std lib only.
+
+    Parameters
+    ----------
+    node : ParsedNode
+        The node that caused the error.
+    error_code : ErrorCode
+        The error code.
+
+    Returns
+    -------
+    ErrorMessage
+    """
     custom_explanation = (
         f"Using '{node.import_statement}'."
         # f"which is not a Python standard library."
@@ -65,7 +107,20 @@ def third_party_only_error(
     node: ParsedNode,
     error_code: ErrorCode,
 ) -> ErrorMessage:
-    """Generate error message for third-party only."""
+    """
+    Generate error message for third-party only.
+
+    Parameters
+    ----------
+    node : ParsedNode
+        The node that caused the error.
+    error_code : ErrorCode
+        The error code.
+
+    Returns
+    -------
+    ErrorMessage
+    """
     custom_explanation = (
         f"Using '{node.import_statement}'."
         # f"which is not a third-party library."
@@ -77,7 +132,19 @@ def first_party_only_error(
     node: ParsedNode,
     error_code: ErrorCode,
 ) -> ErrorMessage:
-    """Generate error message for third-party only."""
+    """Generate error message for first-party only.
+
+    Parameters
+    ----------
+    node : ParsedNode
+        The node that caused the error.
+    error_code : ErrorCode
+        The error code.
+
+    Returns
+    -------
+    ErrorMessage
+    """
     custom_explanation = (
         f"Using '{node.import_statement}'."
         # f"which is not a first-party library."
@@ -89,7 +156,19 @@ def restricted_imports_error(
     node: ParsedNode,
     error_code: ErrorCode,
 ) -> ErrorMessage:
-    """Generate error message for restricted imports."""
+    """Generate error message for restricted imports.
+
+    Parameters
+    ----------
+    node : ParsedNode
+        The node that caused the error.
+    error_code : ErrorCode
+        The error code.
+
+    Returns
+    -------
+    ErrorMessage
+    """
     custom_explanation = (
         f"Using '{node.import_statement}'. Restricted package/module "
         f"cannot be imported outside package/module."

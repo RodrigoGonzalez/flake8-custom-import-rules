@@ -261,24 +261,25 @@ Custom Import Rules (CIR)
 Custom Import Rules allowed import types
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-+-------------------+---------+--------------+-------------+-------------+--------+
-| RULE              | STD LIB | PROJECT [#]_ | FIRST PARTY | THIRD PARTY | FUTURE |
-+===================+=========+==============+=============+=============+========+
-| std_lib_only      | X       |              |             |             | X      |
-+-------------------+---------+--------------+-------------+-------------+--------+
-| project_only      | X       | X            | X           |             | X      |
-+-------------------+---------+--------------+-------------+-------------+--------+
-| base_package_only | X       | X            |             |             | X      |
-+-------------------+---------+--------------+-------------+-------------+--------+
-| first_party_only  | X       |              | X           |             | X      |
-+-------------------+---------+--------------+-------------+-------------+--------+
-| third_party_only  | X       |              |             | X           | X      |
-+-------------------+---------+--------------+-------------+-------------+--------+
-| isolated          | X       |              |             | X           | X      |
-+-------------------+---------+--------------+-------------+-------------+--------+
++-------------------+---------+--------------+-------------+-------------+-------------+
+| RULE              | STD LIB | PROJECT [#]_ | FIRST PARTY | THIRD PARTY | FUTURE [#]_ |
++===================+=========+==============+=============+=============+=============+
+| std_lib_only      | X       |              |             |             | X           |
++-------------------+---------+--------------+-------------+-------------+-------------+
+| project_only      | X       | X            | X           |             | X           |
++-------------------+---------+--------------+-------------+-------------+-------------+
+| base_package_only | X       | X            |             |             | X           |
++-------------------+---------+--------------+-------------+-------------+-------------+
+| first_party_only  | X       |              | X           |             | X           |
++-------------------+---------+--------------+-------------+-------------+-------------+
+| third_party_only  | X       |              |             | X           | X           |
++-------------------+---------+--------------+-------------+-------------+-------------+
+| isolated          | X       |              |             | X           | X           |
++-------------------+---------+--------------+-------------+-------------+-------------+
 
 
 .. [#] Technically project imports are "First Party" imports, but in this case we want to make a distinction between the top-level package and the rest of the project.
+.. [#] To restrict future imports, use the `--restrict-future-imports` flag.
 
 Example Configurations
 ----------------------
@@ -544,3 +545,5 @@ Acknowledgements
     ``flake8`` documentation on writing plugins.
 -   `A flake8 plugin from scratch <https://www.youtube.com/watch?v=ot5Z4KQPBL8>`_ - YouTube video on
     writing a custom ``flake8`` plugin.
+-   `flake8-bugbear <https://github.com/PyCQA/flake8-bugbear>`_ - ``flake8``
+    plugin that finds likely bugs and design problems in your program.

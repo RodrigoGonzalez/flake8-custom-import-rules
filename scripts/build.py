@@ -3,8 +3,8 @@
 This script is called by poetry when building the package. It will compile
 Cython files if Cython is installed. Otherwise, it will do nothing.
 
-See https://cython.readthedocs.io/en/latest/src/userguide/source_files_and_compilation.html#distributing-cython-modules
-for more information.
+See #distributing-cython-modules for more information.
+https://cython.readthedocs.io/en/latest/src/userguide/source_files_and_compilation.html
 
 Taken from:
 https://stackoverflow.com/questions/63679315/how-to-use-cython-with-poetry

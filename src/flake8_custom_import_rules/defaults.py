@@ -317,7 +317,7 @@ def register_options(
     if setting_key == "base-packages":
         error_codes = ""
     else:
-        error_codes = f"If violated, could lead to error codes {ERROR_CODES[setting_key]}."
+        error_codes = f"If violated, leads to error codes {ERROR_CODES[setting_key]}."
 
     if is_restriction:
         option_default_value = DEFAULT_CHECKER_SETTINGS.get_settings_value(item.upper())
