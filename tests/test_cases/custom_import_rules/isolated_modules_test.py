@@ -1,5 +1,10 @@
 """ First-party only test cases.
 
+- CIR301
+- CIR302
+- CIR303
+- CIR304
+
 To run this test file only:
 poetry run python -m pytest -vvvrca tests/test_cases/custom_import_rules/isolated_modules_test.py
 """
@@ -7,14 +12,16 @@ import pycodestyle
 import pytest
 from flake8.utils import normalize_path
 
+from flake8_custom_import_rules.codes.error_codes import ErrorCode
 from flake8_custom_import_rules.defaults import Settings
 from flake8_custom_import_rules.utils.file_utils import get_module_name_from_filename
 from flake8_custom_import_rules.utils.node_utils import root_package_name
 
-CIR301 = "CIR301 Isolated package, imports from project disabled."
-CIR302 = "CIR302 Isolated package, from imports from project disabled."
-CIR303 = "CIR303 Isolated module, imports from project disabled."
-CIR304 = "CIR304 Isolated module, from imports from project disabled."
+CIR301 = ErrorCode.CIR301.full_message
+CIR302 = ErrorCode.CIR302.full_message
+CIR303 = ErrorCode.CIR303.full_message
+CIR304 = ErrorCode.CIR304.full_message
+
 CUSTOM_MSG = (
     ". Isolated module 'my_second_base_package.module_three' cannot import from project packages."
 )

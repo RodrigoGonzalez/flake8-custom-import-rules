@@ -164,3 +164,38 @@ def get_base_plugin() -> partial:
         )
 
     return partial(base_plugin)
+
+
+@pytest.fixture(scope="module")
+def custom_import_rules():
+    """Custom import rules fixture."""
+    return dedent(
+        """
+    import my_second_base_package.module_one.file_one
+    import my_second_base_package.module_one.file_two
+    import my_second_base_package.module_one
+    import my_second_base_package.module_two.file_one
+    import my_second_base_package.module_two.file_two
+    import my_second_base_package.module_two
+    import my_second_base_package.file
+    import my_second_base_package
+    import base_package
+    import my_third_base_package
+
+    from my_second_base_package.module_one.file_one import A
+    from my_second_base_package.module_one.file_two import B
+    from my_second_base_package.module_one import file_one
+    from my_second_base_package.module_one import file_two
+    from my_second_base_package.module_one import C
+    from my_second_base_package.module_two import file_one
+    from my_second_base_package.module_two import file_two
+    from my_second_base_package.module_two import D
+    from my_second_base_package.file import C
+    from my_second_base_package import module_one
+    from my_second_base_package import module_two
+    from my_second_base_package import file
+    from my_second_base_package import E
+    from base_package import F
+    from my_third_base_package import G
+    """
+    )
