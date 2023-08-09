@@ -259,23 +259,32 @@ library modules.
 Custom Import Rules (CIR)
 -------------------------
 
-+----------------------+-----------------------------------------------------------------------------------------------+
-| Option               | Description                                                                                   |
-+======================+===============================================================================================+
-| --std-lib-only       | Restrict package to import only from the Python standard library.                             |
-+----------------------+-----------------------------------------------------------------------------------------------+
-| --project-only       | Restrict package to import only from the local package and the project's top-level package.   |
-+----------------------+-----------------------------------------------------------------------------------------------+
-| --base-package-only  | Restrict package to import only from the project's top-level package only.                    |
-+----------------------+-----------------------------------------------------------------------------------------------+
-| --first-party-only   | Restrict package to import only from the local packages only.                                 |
-+----------------------+-----------------------------------------------------------------------------------------------+
-| --third-party-only   | Restrict package to import only from third-party libraries.                                   |
-+----------------------+-----------------------------------------------------------------------------------------------+
-| --isolated           | Make a package isolated, so it cannot import from any other packages within the base package. |
-+----------------------+-----------------------------------------------------------------------------------------------+
-| --restricted         | Restrict a package from importing another package, or modules from another package.           |
-+----------------------+-----------------------------------------------------------------------------------------------+
+=====================  ============================================================
+ Import Rule            Description
+=====================  ============================================================
+ --std-lib-only         Restrict package to import only from the
+                        Python standard library.
+
+ --project-only         Restrict package to import only from the
+                        local package and the project's top-level package.
+
+ --base-package-only    Restrict package to import only from the project's
+                        top-level package only.
+
+ --first-party-only     Restrict package to import only from the local
+                        packages only.
+
+ --third-party-only     Restrict package to import only from third-party
+                        libraries.
+
+ --isolated             Make a package isolated, so it cannot import
+                        from any other packages within the base package.
+
+ --restricted           Restrict a package from importing another
+                        package, or modules from another package.
+
+=====================  ============================================================
+
 
 Custom Import Rules Allowed Import Types
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -293,13 +302,15 @@ Custom Import Rules Allowed Import Types
 +-------------------+---------+--------------+-------------+-------------+-------------+
 | third_party_only  | X       |              |             | X           | X           |
 +-------------------+---------+--------------+-------------+-------------+-------------+
-| isolated          | X       |              |             | X           | X           |
+| isolated [#]_     | X       | X            |             | X           | X           |
 +-------------------+---------+--------------+-------------+-------------+-------------+
 
 
 .. [#] Technically project imports are "First Party" imports, but in this case we
     want to make a distinction between the top-level package and the rest of the project.
 .. [#] To restrict future imports, use the `--restrict-future-imports` flag.
+.. [#] The difference between third-party only and isolated, is that isolated allows
+    imports from within the isolated module/package, while third-party only does not.
 
 Example Configurations
 ----------------------
