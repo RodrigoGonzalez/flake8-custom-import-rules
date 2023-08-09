@@ -532,14 +532,12 @@ class CustomImportRules:
 
     def _check_isolated_imports(self, node: ParsedStraightImport | ParsedFromImport) -> bool:
         """Check for isolated imports"""
+        custom_rule_matches = retrieve_custom_rule_matches(
+            self.file_identifier, self.checker_settings.ISOLATED_MODULES
+        )
         return (
             node.import_type == ImportType.FIRST_PARTY
-            and not does_import_match_isolated_imports(
-                node.identifier,
-                retrieve_custom_rule_matches(
-                    self.file_identifier, self.checker_settings.ISOLATED_MODULES
-                ),
-            )
+            and not does_import_match_isolated_imports(node.identifier, custom_rule_matches)
         )
 
     def _check_for_cir301(self, node: ParsedStraightImport) -> Generator[ErrorMessage, None, None]:
