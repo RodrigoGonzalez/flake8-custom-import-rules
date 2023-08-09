@@ -1,5 +1,8 @@
 """ Base package only test cases.
 
+- CIR203
+- CIR204
+
 To run this test file only:
 poetry run python -m pytest -vvvrca tests/test_cases/custom_import_rules/base_package_test.py
 """
@@ -7,12 +10,13 @@ import pycodestyle
 import pytest
 from flake8.utils import normalize_path
 
+from flake8_custom_import_rules.codes.error_codes import ErrorCode
 from flake8_custom_import_rules.defaults import Settings
 from flake8_custom_import_rules.utils.file_utils import get_module_name_from_filename
 from flake8_custom_import_rules.utils.node_utils import root_package_name
 
-CIR203 = "CIR203 Non-base package package import."
-CIR204 = "CIR204 Non-base package module import."
+CIR203 = ErrorCode.CIR203.full_message
+CIR204 = ErrorCode.CIR204.full_message
 
 
 # my_second_base_package is main base package

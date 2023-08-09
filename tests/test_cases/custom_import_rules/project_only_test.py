@@ -1,5 +1,8 @@
 """ Project only test cases.
 
+- CIR201
+- CIR202
+
 To run this test file only:
 poetry run python -m pytest -vvvrca tests/test_cases/custom_import_rules/project_only_test.py
 """
@@ -7,12 +10,13 @@ import pycodestyle
 import pytest
 from flake8.utils import normalize_path
 
+from flake8_custom_import_rules.codes.error_codes import ErrorCode
 from flake8_custom_import_rules.defaults import Settings
 from flake8_custom_import_rules.utils.file_utils import get_module_name_from_filename
 from flake8_custom_import_rules.utils.node_utils import root_package_name
 
-CIR201 = "CIR201 Non-project package import."
-CIR202 = "CIR202 Non-project module import."
+CIR201 = ErrorCode.CIR201.full_message
+CIR202 = ErrorCode.CIR202.full_message
 
 MODULE_THREE_ERRORS = {
     f"6:0: {CIR202} Using 'from attrs import define'.",

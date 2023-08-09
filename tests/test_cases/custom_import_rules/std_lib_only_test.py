@@ -1,4 +1,8 @@
 """ Standard library only test cases.
+Test that the standard library is allowed.
+
+- CIR401
+- CIR402
 
 To run this test file only:
 poetry run python -m pytest -vvvrca tests/test_cases/custom_import_rules/std_lib_only_test.py
@@ -7,12 +11,14 @@ import pycodestyle
 import pytest
 from flake8.utils import normalize_path
 
+from flake8_custom_import_rules.codes.error_codes import ErrorCode
 from flake8_custom_import_rules.defaults import Settings
 from flake8_custom_import_rules.utils.file_utils import get_module_name_from_filename
 from flake8_custom_import_rules.utils.node_utils import root_package_name
 
-CIR401 = "CIR401 Non-standard library package import."
-CIR402 = "CIR402 Non-standard library module import."
+CIR401 = ErrorCode.CIR401.full_message
+CIR402 = ErrorCode.CIR402.full_message
+
 MODULE_A_ERRORS = {
     (
         f"22:4: {CIR402} Using 'from my_base_module.package_c.package_e.module_e "

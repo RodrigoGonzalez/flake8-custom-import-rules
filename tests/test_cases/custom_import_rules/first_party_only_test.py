@@ -1,5 +1,8 @@
 """ First-party only test cases.
 
+- CIR205
+- CIR206
+
 To run this test file only:
 poetry run python -m pytest -vvvrca tests/test_cases/custom_import_rules/first_party_only_test.py
 """
@@ -7,12 +10,13 @@ import pycodestyle
 import pytest
 from flake8.utils import normalize_path
 
+from flake8_custom_import_rules.codes.error_codes import ErrorCode
 from flake8_custom_import_rules.defaults import Settings
 from flake8_custom_import_rules.utils.file_utils import get_module_name_from_filename
 from flake8_custom_import_rules.utils.node_utils import root_package_name
 
-CIR205 = "CIR205 Non-first party package import."
-CIR206 = "CIR206 Non-first party module import."
+CIR205 = ErrorCode.CIR205.full_message
+CIR206 = ErrorCode.CIR206.full_message
 
 MODULE_THREE_ERRORS = {
     f"6:0: {CIR206} Using 'from attrs import define'.",

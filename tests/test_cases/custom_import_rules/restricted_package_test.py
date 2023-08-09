@@ -1,57 +1,27 @@
 """ Project only test cases.
 
+- CIR106
+- CIR107
+
 To run this test file only:
 poetry run python -m pytest -vvvrca tests/test_cases/custom_import_rules/restricted_package_test.py
 """
 import ast
 import os
 from collections import defaultdict
-from textwrap import dedent
 
 import pycodestyle
 import pytest
 from flake8.utils import normalize_path
 
+from flake8_custom_import_rules.codes.error_codes import ErrorCode
 from flake8_custom_import_rules.core.import_rules import CustomImportRules
 from flake8_custom_import_rules.defaults import Settings
 from flake8_custom_import_rules.utils.file_utils import get_module_name_from_filename
 from flake8_custom_import_rules.utils.node_utils import root_package_name
 
-CIR106 = "CIR106 Restricted package import."
-CIR107 = "CIR107 Restricted module import."
-MODULE_A_ERRORS = set()
-
-
-COMPLEX_IMPORTS = dedent(
-    """
-    import my_second_base_package.module_one.file_one
-    import my_second_base_package.module_one.file_two
-    import my_second_base_package.module_one
-    import my_second_base_package.module_two.file_one
-    import my_second_base_package.module_two.file_two
-    import my_second_base_package.module_two
-    import my_second_base_package.file
-    import my_second_base_package
-    import base_package
-    import my_third_base_package
-
-    from my_second_base_package.module_one.file_one import A
-    from my_second_base_package.module_one.file_two import B
-    from my_second_base_package.module_one import file_one
-    from my_second_base_package.module_one import file_two
-    from my_second_base_package.module_one import C
-    from my_second_base_package.module_two import file_one
-    from my_second_base_package.module_two import file_two
-    from my_second_base_package.module_two import D
-    from my_second_base_package.file import C
-    from my_second_base_package import module_one
-    from my_second_base_package import module_two
-    from my_second_base_package import file
-    from my_second_base_package import E
-    from base_package import F
-    from my_third_base_package import G
-    """
-)
+CIR106 = ErrorCode.CIR106.full_message
+CIR107 = ErrorCode.CIR107.full_message
 
 RESTRICTED_PACKAGES = [
     "my_second_base_package",
@@ -114,10 +84,11 @@ def test_complex_imports(
     expected_restricted_identifiers: set,
     expected: int,
     get_base_plugin: callable,
+    custom_import_rules: str,
 ) -> None:
     """Test restricted imports."""
-    lines = COMPLEX_IMPORTS.split("\n")
-    tree = ast.parse(COMPLEX_IMPORTS)
+    lines = custom_import_rules.split("\n")
+    tree = ast.parse(custom_import_rules)
     options = {
         "base_packages": ["base_package", "my_second_base_package"],
         "restricted_packages": RESTRICTED_PACKAGES,
