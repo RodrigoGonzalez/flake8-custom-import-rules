@@ -11,136 +11,41 @@ from flake8_custom_import_rules.utils.file_utils import get_file_path_from_modul
 from flake8_custom_import_rules.utils.file_utils import get_relative_path_from_absolute_path
 from flake8_custom_import_rules.utils.node_utils import get_package_names
 from flake8_custom_import_rules.utils.node_utils import root_package_name
+from flake8_custom_import_rules.utils.restricted_import_utils import get_import_restriction_strings
+from flake8_custom_import_rules.utils.restricted_import_utils import get_import_strings
+from flake8_custom_import_rules.utils.restricted_import_utils import get_restricted_package_strings
 
 logger = logging.getLogger(__name__)
 
 
-def get_restricted_package_strings(
-    restricted_packages: list[str],
-    file_packages: list[str],
-) -> list[str]:
-    """
-    Get restricted package strings.
-
-    Parameters
-    ----------
-    restricted_packages: list[str]
-        The restricted packages.
-    file_packages: list[str]
-        The file packages to check. (The module and parent packages.)
-
-    Returns
-    -------
-    list[str]
-        The restricted package strings.
-    """
-    return [
-        restricted_import
-        for restricted_import in restricted_packages
-        if restricted_import not in file_packages
-    ]
-
-
-def get_import_restriction_strings(
-    import_restrictions: defaultdict[str, list[str]],
-    file_packages: list[str],
-) -> list[str]:
-    """
-    Get import restriction strings.
-
-    Parameters
-    ----------
-    import_restrictions: defaultdict[str, list[str]]
-        The import restrictions.
-    file_packages: list[str]
-        The file packages to check. (The module and parent packages.)
-
-    Returns
-    -------
-    list[str]
-        The import restriction strings.
-    """
-    import_restriction_keys = list(import_restrictions.keys())
-    parsed_import_restriction_keys: list = [
-        import_restriction_key
-        for import_restriction_key in import_restriction_keys
-        if import_restriction_key in file_packages
-    ]
-    import_restrictions_from_keys = {
-        restrictions
-        for key in parsed_import_restriction_keys
-        for restrictions in import_restrictions[key]
-    }
-    parsed_import_restrictions = list(import_restrictions_from_keys)
-
-    return get_restricted_package_strings(parsed_import_restrictions, file_packages)
-
-
-def get_import_strings(
-    restrictions: list[str],
-) -> list[str]:
-    """
-    Get import strings.
-
-    Parameters
-    ----------
-    restrictions: list[str]
-        The restrictions to get the import strings for.
-
-    Returns
-    -------
-    list[str]
-        The import strings.
-    """
-    return [f"import {restriction}\n" for restriction in sorted(restrictions)]
-
-
-def subdict_from_keys(
-    import_restrictions: defaultdict[str, list[str]],
-    keys: list[str],
-) -> dict[str, list[str]]:
-    """
-    Function to create a subset of a dictionary given a list of keys.
-
-    Parameters
-    ----------
-    import_restrictions: defaultdict[str, list[str]]
-        The original dictionary.
-    keys: list[str]
-        The keys for the sub-dictionary.
-
-    Returns
-    -------
-    dict
-        A sub-dictionary with the given keys.
-    """
-    return {k: import_restrictions[k] for k in keys if k in import_restrictions}
-
-
-def find_keys_with_string(
-    import_restrictions: defaultdict[str, list[str]], target_string: str
-) -> list[str]:
-    """
-    Function to find keys with the target string in their lists.
-
-    Parameters
-    ----------
-    import_restrictions : defaultdict
-        The defaultdict(list) to search.
-    target_string : str
-        The string to search for.
-
-    Returns
-    -------
-    list
-        A list of keys where the string is found in their lists.
-    """
-    return [k for k, v in import_restrictions.items() if target_string in v]
-
-
 @define(slots=True, kw_only=True, hash=False)
 class RestrictedImportVisitor(ast.NodeVisitor):
-    """Visitor for dynamic strings."""
+    """
+    A visitor class that inspects the Abstract Syntax Tree (AST) of Python
+    code to identify restricted imports within the code.
+
+    Attributes
+    ----------
+    _restricted_packages: list[str]
+        List of restricted packages that are not allowed to be imported.
+    _import_restrictions: defaultdict[str, list[str]]
+        Default dictionary containing import restrictions for specific packages.
+    _check_module_exists: bool
+        Flag to check if the module exists (not implemented). Default is True.
+    _file_packages: list[str]
+        List of file packages to check. Default is an empty list.
+    _restrictions: list[str]
+        List of restrictions for the imports. Computed at initialization.
+    _lines: list[str]
+        List of lines containing the import statements.
+    _tree: ast.AST
+        An AST representation of the import lines.
+    _package_names: list
+        A list of package names extracted from the modules.
+    restricted_identifiers: defaultdict[str, dict]
+        Default dictionary containing restricted identifiers and related
+        package information.
+    """
 
     _restricted_packages: list[str]
     _import_restrictions: defaultdict[str, list[str]]
@@ -154,7 +59,14 @@ class RestrictedImportVisitor(ast.NodeVisitor):
     restricted_identifiers: defaultdict[str, dict] = field(init=False)
 
     def __attrs_post_init__(self) -> None:
-        """Initialize RestrictedImportVisitor."""
+        """
+        Initialize the RestrictedImportVisitor by preparing the restrictions,
+        lines, AST tree, and restricted identifiers.
+
+        NOTE: Also, disables the check for module existence as it is not
+        implemented.
+        """
+
         self._restrictions = self._get_restricted_package_strings()
         self._restrictions.extend(self._get_import_restriction_strings())
         self._restrictions = sorted(list(set(self._restrictions)))
@@ -168,15 +80,41 @@ class RestrictedImportVisitor(ast.NodeVisitor):
         self._check_module_exists = False
 
     def _get_restricted_package_strings(self) -> list[str]:
-        """Get restricted package strings."""
+        """
+        Retrieve the strings representing restricted packages based on
+        the restricted packages and file packages.
+
+        Returns
+        -------
+        list[str]
+            List of restricted package strings.
+        """
         return get_restricted_package_strings(self._restricted_packages, self._file_packages)
 
     def _get_import_restriction_strings(self) -> list[str]:
-        """Get restricted package strings."""
+        """
+        Retrieve the strings representing import restrictions based on the
+        import restrictions and file packages.
+
+        Returns
+        -------
+        list[str]
+            List of import restriction strings.
+        """
+
         return get_import_restriction_strings(self._import_restrictions, self._file_packages)
 
     def visit_Import(self, node: ast.Import) -> None:
-        """Visit a String Import node."""
+        """
+        Visit an AST Import node to check for restricted imports and
+        gather relevant information such as the module, package,
+        package names, import statement, absolute path, and relative path.
+
+        Parameters
+        ----------
+        node: ast.Import
+            The AST Import node being visited.
+        """
 
         for alias in node.names:
             module = alias.name
@@ -215,13 +153,18 @@ class RestrictedImportVisitor(ast.NodeVisitor):
             self.restricted_identifiers[module].update(identifier_dict)
             self._package_names.extend(package_names[:-1])
 
-    # def _process_package_names(self) -> None:
-    #     """Process package names."""
-    #     for package_name in set(self._package_names):
-    #         self._package_names.append(package_name)
-
     def get_restricted_identifiers(self) -> defaultdict[str, dict]:
-        """Get the list of restricted imports."""
+        """
+        Get the dictionary containing information about restricted imports
+        identified by visiting the AST tree.
+
+        Returns
+        -------
+        defaultdict[str, dict]
+            Default dictionary containing restricted identifiers and
+            related information.
+        """
+
         self.visit(self._tree)
         return self.restricted_identifiers
 
