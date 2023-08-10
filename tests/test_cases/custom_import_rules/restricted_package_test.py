@@ -23,12 +23,16 @@ from flake8_custom_import_rules.utils.node_utils import root_package_name
 CIR106 = ErrorCode.CIR106.full_message
 CIR107 = ErrorCode.CIR107.full_message
 
-RESTRICTED_PACKAGES = [
-    "my_second_base_package",
-    "my_second_base_package.module_one",
-    "my_second_base_package.module_one.file_one",
-    "my_third_base_package",
-]
+
+@pytest.fixture(scope="module")
+def restricted_packages() -> list[str]:
+    """Return a list of restricted packages."""
+    return [
+        "my_second_base_package",
+        "my_second_base_package.module_one",
+        "my_second_base_package.module_one.file_one",
+        "my_third_base_package",
+    ]
 
 
 @pytest.mark.parametrize(
@@ -85,16 +89,17 @@ def test_complex_imports(
     expected: int,
     get_base_plugin: callable,
     custom_import_rules: str,
+    restricted_packages: list[str],
 ) -> None:
     """Test restricted imports."""
     lines = custom_import_rules.split("\n")
     tree = ast.parse(custom_import_rules)
     options = {
         "base_packages": ["base_package", "my_second_base_package"],
-        "restricted_packages": RESTRICTED_PACKAGES,
+        "restricted_packages": restricted_packages,
         "checker_settings": Settings(
             **{
-                "RESTRICTED_PACKAGES": RESTRICTED_PACKAGES,
+                "RESTRICTED_PACKAGES": restricted_packages,
                 "RESTRICT_DYNAMIC_IMPORTS": False,
                 "RESTRICT_LOCAL_IMPORTS": False,
                 "RESTRICT_RELATIVE_IMPORTS": False,
