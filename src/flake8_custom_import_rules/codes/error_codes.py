@@ -44,13 +44,13 @@ class ErrorCode(Enum, metaclass=ErrorCodeMeta):
 
     # Custom Import Rules: Restricting imports
     CIR101 = "CIR101 Custom import rule conflicts."
-    CIR102 = "CIR102 Import Restriction Violation. Restrict project import."
-    CIR103 = "CIR103 Import Restriction Violation. Restrict project `from import`"
-    CIR104 = "CIR104 Import Restriction Violation. Restrict non-project import."
-    CIR105 = "CIR105 Import Restriction Violation. Restrict non-project `from import`."
+    CIR102 = "CIR102 Import Restriction Violation. Restricted project import."
+    CIR103 = "CIR103 Import Restriction Violation. Restricted project `from import`"
+    CIR104 = "CIR104 Import Restriction Violation. Restricted non-project import."
+    CIR105 = "CIR105 Import Restriction Violation. Restricted non-project `from import`."
     # Restricted package: For example the high level package can `app` is restricted
-    CIR106 = "CIR106 Restricted package import."
-    CIR107 = "CIR107 Restricted module import."
+    CIR106 = "CIR106 Restricted Package Violation. Restricted project import."
+    CIR107 = "CIR107 Restricted Package Violation. Restricted project `from import`."
 
     # Project only imports. No packages and modules from outside your project
     # (i.e. No Third Party Imports)
