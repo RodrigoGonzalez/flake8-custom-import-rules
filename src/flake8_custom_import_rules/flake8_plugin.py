@@ -112,10 +112,14 @@ class Plugin(CustomImportRulesChecker):
             if option_value is not None:
                 options[option_key] = option_value
 
+        # the Settings class will process and parse the options
+        checker_settings = Settings(**options)
+
         parsed_options: dict = {
-            "restricted_packages": options["RESTRICTED_PACKAGES"],
-            "base_packages": options["BASE_PACKAGES"],
-            "checker_settings": Settings(**options),
+            "restricted_packages": checker_settings.RESTRICTED_PACKAGES,
+            "import_restrictions": checker_settings.IMPORT_RESTRICTIONS,
+            "base_packages": checker_settings.BASE_PACKAGES,
+            "checker_settings": checker_settings,
             "test_env": False,
         }
 
