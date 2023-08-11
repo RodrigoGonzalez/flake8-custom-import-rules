@@ -11,7 +11,6 @@ from flake8_custom_import_rules.utils.file_utils import get_file_path_from_modul
 from flake8_custom_import_rules.utils.file_utils import get_relative_path_from_absolute_path
 from flake8_custom_import_rules.utils.node_utils import get_package_names
 from flake8_custom_import_rules.utils.node_utils import root_package_name
-from flake8_custom_import_rules.utils.restricted_import_utils import check_if_project_package
 from flake8_custom_import_rules.utils.restricted_import_utils import get_import_restriction_strings
 from flake8_custom_import_rules.utils.restricted_import_utils import get_import_strings
 from flake8_custom_import_rules.utils.restricted_import_utils import get_restricted_package_strings
@@ -130,7 +129,6 @@ class RestrictedImportVisitor(ast.NodeVisitor):
             package_names = get_package_names(module)
             restricted_package = module in self._restricted_package_list
             import_restriction = module in self._import_restriction_list
-            project_package = check_if_project_package(self._base_packages, package_names)
 
             if self._check_module_exists:  # Not Implemented
                 absolute_path = get_file_path_from_module_name(module)
@@ -153,7 +151,6 @@ class RestrictedImportVisitor(ast.NodeVisitor):
                     "relative_path": relative_path,
                     "restricted_package": restricted_package,
                     "import_restriction": import_restriction,
-                    "project_package": project_package,
                 }
 
             else:
@@ -164,7 +161,6 @@ class RestrictedImportVisitor(ast.NodeVisitor):
                     "import_statement": ast.unparse(node),
                     "restricted_package": restricted_package,
                     "import_restriction": import_restriction,
-                    "project_package": project_package,
                 }
 
             self.restricted_identifiers[module].update(identifier_dict)
