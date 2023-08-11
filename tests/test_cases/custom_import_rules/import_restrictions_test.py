@@ -752,10 +752,6 @@ def test_complex_imports(
     restricted_identifiers = plugin.restricted_identifiers
     assert isinstance(restricted_identifiers, defaultdict)
     assert plugin.import_rules.restricted_identifiers == restricted_identifiers
-    # for key in restricted_identifiers.keys():
-    #     assert restricted_identifiers[key]["project_package"] == key.startswith(
-    #         "my_second_base_package"
-    #     )
 
     assert set(restricted_identifiers.keys()) == expected_restricted_identifiers
 
