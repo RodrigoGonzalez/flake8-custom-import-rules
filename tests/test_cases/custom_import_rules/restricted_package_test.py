@@ -9,19 +9,24 @@ poetry run python -m pytest -vvvrca tests/test_cases/custom_import_rules/restric
 import ast
 import os
 from collections import defaultdict
+from functools import partial
 
 import pycodestyle
 import pytest
 from flake8.utils import normalize_path
 
 from flake8_custom_import_rules.codes.error_codes import ErrorCode
+from flake8_custom_import_rules.core.error_messages import restricted_package_error
 from flake8_custom_import_rules.core.import_rules import CustomImportRules
+from flake8_custom_import_rules.core.nodes import HelperParsedImport
 from flake8_custom_import_rules.defaults import Settings
 from flake8_custom_import_rules.utils.file_utils import get_module_name_from_filename
 from flake8_custom_import_rules.utils.node_utils import root_package_name
 
-CIR106 = ErrorCode.CIR106.full_message
-CIR107 = ErrorCode.CIR107.full_message
+HPI = partial(HelperParsedImport, col_offset=0)
+
+CIR106 = partial(restricted_package_error, node=HPI, error_code=ErrorCode.CIR106)
+CIR107 = partial(restricted_package_error, node=HPI, error_code=ErrorCode.CIR107)
 
 
 @pytest.fixture(scope="module")
@@ -48,7 +53,7 @@ def restricted_packages() -> list[str]:
             "example_repos/my_base_module/my_second_base_package/module_one/file_two.py",
             "my_second_base_package.module_one.file_two",
             {"my_second_base_package.module_one.file_one", "my_third_base_package"},
-            4,
+            5,
         ),
         (
             "example_repos/my_base_module/my_second_base_package/module_two/file_one.py",
@@ -58,7 +63,7 @@ def restricted_packages() -> list[str]:
                 "my_second_base_package.module_one",
                 "my_third_base_package",
             },
-            8,
+            11,
         ),
         (
             "example_repos/my_base_module/my_second_base_package/module_two/file_two.py",
@@ -68,7 +73,7 @@ def restricted_packages() -> list[str]:
                 "my_second_base_package.module_one",
                 "my_third_base_package",
             },
-            8,
+            11,
         ),
         (
             "example_repos/my_base_module/my_second_base_package/file.py",
@@ -78,7 +83,7 @@ def restricted_packages() -> list[str]:
                 "my_second_base_package.module_one",
                 "my_third_base_package",
             },
-            8,
+            11,
         ),
     ],
 )
@@ -125,17 +130,33 @@ def test_complex_imports(
         (
             "example_repos/my_base_module/my_second_base_package/module_three.py",
             ["my_second_base_package"],
-            set(),
+            [],
         ),
         (
             "example_repos/my_base_module/my_second_base_package/module_three.py",
             ["my_second_base_package.module_three"],
-            set(),
+            [],
         ),
         (
             "example_repos/my_base_module/my_second_base_package/module_three.py",
             ["my_second_base_package.module_one", "my_second_base_package.module_two"],
-            set(),
+            [
+                CIR106(
+                    node=HPI(
+                        lineno=10,
+                        import_statement="import my_second_base_package.module_one.file_one",
+                    ),
+                    file_identifier="my_second_base_package.module_three",
+                ),
+                CIR107(
+                    node=HPI(
+                        lineno=12,
+                        import_statement="from my_second_base_package.module_one."
+                        "file_two import ModuleTwo",
+                    ),
+                    file_identifier="my_second_base_package.module_three",
+                ),
+            ],
         ),
         (
             "example_repos/my_base_module/my_second_base_package/module_three.py",
@@ -144,40 +165,110 @@ def test_complex_imports(
                 "my_second_base_package.module_two",
                 "my_base_module",
             ],
-            set(),
+            [
+                CIR106(
+                    node=HPI(
+                        lineno=9,
+                        import_statement="import my_base_module.module_y",
+                    ),
+                    file_identifier="my_second_base_package.module_three",
+                ),
+                CIR106(
+                    node=HPI(
+                        lineno=10,
+                        import_statement="import my_second_base_package.module_one.file_one",
+                    ),
+                    file_identifier="my_second_base_package.module_three",
+                ),
+                CIR107(
+                    node=HPI(
+                        lineno=11,
+                        import_statement="from my_base_module.module_x import X",
+                    ),
+                    file_identifier="my_second_base_package.module_three",
+                ),
+                CIR107(
+                    node=HPI(
+                        lineno=12,
+                        import_statement="from my_second_base_package.module_one."
+                        "file_two import ModuleTwo",
+                    ),
+                    file_identifier="my_second_base_package.module_three",
+                ),
+            ],
         ),
         (
             "example_repos/my_base_module/my_second_base_package/module_three.py",
             ["my_second_base_package.module_one"],
-            set(),
+            [
+                CIR106(
+                    node=HPI(
+                        lineno=10,
+                        import_statement="import my_second_base_package.module_one.file_one",
+                    ),
+                    file_identifier="my_second_base_package.module_three",
+                ),
+                CIR107(
+                    node=HPI(
+                        lineno=12,
+                        import_statement="from my_second_base_package.module_one."
+                        "file_two import ModuleTwo",
+                    ),
+                    file_identifier="my_second_base_package.module_three",
+                ),
+            ],
         ),
         (
             "example_repos/my_base_module/my_second_base_package/module_three.py",
             ["my_second_base_package.module_one", "my_second_base_package"],
-            set(),
+            [
+                CIR106(
+                    node=HPI(
+                        lineno=10,
+                        import_statement="import my_second_base_package.module_one.file_one",
+                    ),
+                    file_identifier="my_second_base_package.module_three",
+                ),
+                CIR107(
+                    node=HPI(
+                        lineno=12,
+                        import_statement="from my_second_base_package.module_one."
+                        "file_two import ModuleTwo",
+                    ),
+                    file_identifier="my_second_base_package.module_three",
+                ),
+            ],
         ),
         (
             "example_repos/my_base_module/my_second_base_package/module_three.py",
             ["my_base_module"],
-            set(),
+            [
+                CIR106(
+                    node=HPI(lineno=9, import_statement="import my_base_module.module_y"),
+                    file_identifier="my_second_base_package.module_three",
+                ),
+                CIR107(
+                    node=HPI(lineno=11, import_statement="from my_base_module.module_x import X"),
+                    file_identifier="my_second_base_package.module_three",
+                ),
+            ],
         ),
         (
             "example_repos/my_base_module/my_second_base_package/module_three.py",
             ["my_base_module.module_x"],
-            {
-                (
-                    "11:0: CIR107 Restricted module import. Using "
-                    "'from my_base_module.module_x import X'. "
-                    "Restricted package/module cannot be imported outside package/module."
-                )
-            },
+            [
+                CIR107(
+                    node=HPI(lineno=11, import_statement="from my_base_module.module_x import X"),
+                    file_identifier="my_second_base_package.module_three",
+                ),
+            ],
         ),
     ],
 )
 def test_restricted_packages(
     test_case: str,
     restricted_packages: list[str],
-    expected: set,
+    expected: list[str],
     get_flake8_linter_results: callable,
 ) -> None:
     """Test restricted imports."""
@@ -201,7 +292,7 @@ def test_restricted_packages(
     actual = get_flake8_linter_results(
         s="".join(lines), options=options, delimiter="\n", filename=filename
     )
-    assert set(actual) == expected, sorted(actual)
+    assert set(actual) == {str(error) for error in expected}, sorted(actual)
 
 
 def test_restricted_import_settings_do_not_error(

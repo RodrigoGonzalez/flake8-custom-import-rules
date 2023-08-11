@@ -14,7 +14,7 @@ from flake8_custom_import_rules.core.error_messages import ErrorMessage
 from flake8_custom_import_rules.core.error_messages import first_party_only_error
 from flake8_custom_import_rules.core.error_messages import import_restriction_error
 from flake8_custom_import_rules.core.error_messages import isolated_imports_error
-from flake8_custom_import_rules.core.error_messages import restricted_imports_error
+from flake8_custom_import_rules.core.error_messages import restricted_package_error
 from flake8_custom_import_rules.core.error_messages import standard_error_message
 from flake8_custom_import_rules.core.error_messages import std_lib_only_error
 from flake8_custom_import_rules.core.error_messages import third_party_only_error
@@ -218,9 +218,8 @@ class CustomImportRules:
         self.import_restrictions = self.checker_settings.IMPORT_RESTRICTIONS
         self.restricted_packages = self.checker_settings.RESTRICTED_PACKAGES
 
-        logger.info(f"File packages: {self.file_packages}")
-        logger.info(f"Restricted packages: {self.restricted_packages}")
-        # print(f"Restricted packages: {self.restricted_packages}")
+        logger.debug(f"File packages: {self.file_packages}")
+        logger.debug(f"Restricted packages: {self.restricted_packages}")
         logger.info(f"Restricted identifiers: {self.restricted_identifiers}")
         logger.debug(f"Restricted identifiers keys: {list(self.restricted_identifiers.keys())}")
 
@@ -499,19 +498,29 @@ class CustomImportRules:
             f"import_type: {node.import_type}, "
             f"module: `{node.module}`,"
         )
-        return node.module in self.restricted_identifiers
+        if not does_import_match_custom_import_restriction(
+            node.identifier, list(self.restricted_identifiers.keys())
+        ):
+            return False
+
+        matches = retrieve_custom_rule_matches(
+            node.identifier, list(self.restricted_identifiers.keys())
+        )
+        return any(
+            self.restricted_identifiers[match]["restricted_package"] is True for match in matches
+        )
 
     def _check_for_cir106(self, node: ParsedStraightImport) -> Generator[ErrorMessage, None, None]:
         """Check for CIR106."""
         condition = self._check_if_restricted_package(node)
         if ErrorCode.CIR106.code in self.codes_to_check and condition:
-            yield restricted_imports_error(node, ErrorCode.CIR106)
+            yield restricted_package_error(node, ErrorCode.CIR106, self.file_identifier)
 
     def _check_for_cir107(self, node: ParsedFromImport) -> Generator[ErrorMessage, None, None]:
         """Check for CIR107."""
         condition = self._check_if_restricted_package(node)
         if ErrorCode.CIR107.code in self.codes_to_check and condition:
-            yield restricted_imports_error(node, ErrorCode.CIR107)
+            yield restricted_package_error(node, ErrorCode.CIR107, self.file_identifier)
 
     @staticmethod
     def _check_if_project_imports(node: ParsedNode) -> bool:

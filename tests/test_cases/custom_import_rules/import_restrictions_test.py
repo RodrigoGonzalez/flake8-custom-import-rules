@@ -27,7 +27,6 @@ from flake8_custom_import_rules.utils.file_utils import get_module_name_from_fil
 from flake8_custom_import_rules.utils.node_utils import root_package_name
 
 HPI = partial(HelperParsedImport, col_offset=0)
-CIR101 = partial(import_restriction_error, node=HPI, error_code=ErrorCode.CIR101)
 
 CIR102 = partial(import_restriction_error, node=HPI, error_code=ErrorCode.CIR102)
 CIR103 = partial(import_restriction_error, node=HPI, error_code=ErrorCode.CIR103)

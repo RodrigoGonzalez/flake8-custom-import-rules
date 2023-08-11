@@ -156,9 +156,10 @@ def first_party_only_error(
     return standard_error_message(node, error_code, custom_explanation)
 
 
-def restricted_imports_error(
+def restricted_package_error(
     node: ParsedNode,
     error_code: ErrorCode,
+    file_identifier: str,
 ) -> ErrorMessage:
     """Generate error message for restricted imports.
 
@@ -168,14 +169,16 @@ def restricted_imports_error(
         The node that caused the error.
     error_code : ErrorCode
         The error code.
+    file_identifier : str
+        The file identifier.
 
     Returns
     -------
     ErrorMessage
     """
     custom_explanation = (
-        f"Using '{node.import_statement}'. Restricted package/module "
-        f"cannot be imported outside package/module."
+        f"Using '{node.import_statement}'. Restricted package "
+        f"cannot be imported into module '{file_identifier}'."
     )
     return standard_error_message(node, error_code, custom_explanation)
 
