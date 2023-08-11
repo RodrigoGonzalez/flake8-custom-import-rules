@@ -66,7 +66,7 @@ def find_prefix(filename: str) -> str:
 
         raise ValueError(
             f"Could not find prefix for {filename}. "
-            f"To fix this, add the directory containing {filename} "
+            f"To fix this, add the current working directory containing {filename} "
             f"to sys.path using `{export_string}`."
         ) from e
         # raise ValueError(f"sys.path {sys.path}") from e

@@ -181,7 +181,7 @@ class CustomImportRules:
     file_packages: list = field(default=None)
 
     codes_to_check: set[ErrorCode] = set(ErrorCode.get_all_error_codes())
-    # Can only check CIR codes if the file is not stdin
+    # Can only check CIR codes if not stdin
     check_custom_import_rules: bool = field(default=filename_not_in_stdin_identifiers(filename))
 
     top_level_only_imports: bool = field(default=False)  # Not Implemented

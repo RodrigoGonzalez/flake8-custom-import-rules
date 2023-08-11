@@ -1,7 +1,7 @@
 """ Tests for parse_utils.py
 
 To run this test file only:
-poetry run python -m pytest -vvvrca tests/utils/restricted_import_utils_test.py
+poetry run python -m pytest -vvvrca tests/utils/restricted_import_visitor_utils_test.py
 """
 from collections import defaultdict
 

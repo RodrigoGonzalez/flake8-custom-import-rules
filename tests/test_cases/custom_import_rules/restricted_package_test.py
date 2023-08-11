@@ -88,12 +88,12 @@ def test_complex_imports(
     expected_restricted_identifiers: set,
     expected: int,
     get_base_plugin: callable,
-    custom_import_rules: str,
+    custom_import_rules_fixture: str,
     restricted_packages: list[str],
 ) -> None:
     """Test restricted imports."""
-    lines = custom_import_rules.split("\n")
-    tree = ast.parse(custom_import_rules)
+    lines = custom_import_rules_fixture.split("\n")
+    tree = ast.parse(custom_import_rules_fixture)
     options = {
         "base_packages": ["base_package", "my_second_base_package"],
         "restricted_packages": restricted_packages,

@@ -24,7 +24,35 @@ logger = logging.getLogger(__name__)
 
 @define(slots=True, hash=False)
 class CustomImportRulesChecker:
-    """Custom import rules checker."""
+    """Custom import rules checker.
+
+    Custom import rules checker for analyzing and validating import statements
+    within Python code. It utilizes Abstract Syntax Trees (AST) to parse the code
+    and apply specified import rules.
+
+    Attributes
+    ----------
+    _tree : ast.AST
+        Abstract syntax tree representation of the code.
+    _filename : str
+        The name of the file being checked.
+    _lines : list[str]
+        List of code lines.
+    _visitor : CustomImportRulesVisitor
+        Visitor object for traversing and analyzing the AST.
+    _nodes : list[ParsedNode] | None
+        List of parsed nodes in the AST.
+    _identifiers : defaultdict[str, dict] | None
+        Identifiers found in the code.
+    _identifiers_by_lineno : defaultdict[str, list] | None
+        Identifiers indexed by line number.
+    _restricted_identifiers : defaultdict[str, dict] | None
+        Identifiers that are restricted according to the rules.
+    _import_rules : CustomImportRules
+        Custom import rules to be applied.
+    _options : dict[str, list[str] | str | bool]
+        Options for configuring the checker behavior.
+    """
 
     _tree: ast.AST = field(default=None)
     _filename: str = field(default=None)
@@ -40,7 +68,10 @@ class CustomImportRulesChecker:
     _options: dict[str, list[str] | str | bool] = field(init=False)
 
     def __attrs_post_init__(self) -> None:
-        """Initialize."""
+        """
+        Initialize the CustomImportRulesChecker by parsing the code and
+        setting up the necessary attributes.
+        """
         if not self._lines and self._filename is not None:
             if self._filename in STDIN_IDENTIFIERS:
                 self._filename = "stdin"
@@ -57,13 +88,13 @@ class CustomImportRulesChecker:
 
     @property
     def tree(self) -> ast.AST:
-        """Return the tree."""
+        """Return the tree: Get the abstract syntax tree of the code."""
         logger.debug(f"Tree: {self._tree}")
         return self._tree
 
     @property
     def filename(self) -> str:
-        """Return the filename."""
+        """Return the filename: Get the name of the file being checked."""
         if self._filename in STDIN_IDENTIFIERS:
             self._filename = "stdin"
         logger.debug(f"Filename: {self._filename}")
@@ -72,13 +103,13 @@ class CustomImportRulesChecker:
 
     @property
     def lines(self) -> list[str]:
-        """Return the lines."""
+        """Return the lines: Get the lines of code from the file."""
         logger.debug(f"Lines: {self._lines}")
         return self._lines
 
     @property
     def nodes(self) -> list[ParsedNode]:
-        """Return the nodes."""
+        """Return the nodes: Get the parsed nodes from the visitor."""
         # logger.info(f"Nodes: {self._nodes}")
         logger.debug(f"Options: {self._options}")
         if self._nodes is None:
@@ -169,8 +200,15 @@ class CustomImportRulesChecker:
         logger.debug(f"Restricted Identifiers: {self.restricted_identifiers}")
         return self._import_rules
 
-    def check_custom_import_rules(self) -> Generator[Any, None, None]:
-        """Run the plugin."""
+    def check_custom_import_rules(self) -> Generator[ErrorMessage, None, None]:
+        """Run the plugin:
+        Check the code against the custom import rules and yield any
+        violations.
+
+        Yields
+        ------
+        ErrorMessage
+        """
         import_rules = self.import_rules
 
         for error in import_rules.check_import_rules():
