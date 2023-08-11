@@ -7,7 +7,8 @@ def get_restricted_package_strings(
     file_packages: list[str],
 ) -> list[str]:
     """
-    Get restricted package strings.
+    Retrieve the strings representing restricted packages based on
+    the restricted packages and file packages.
 
     Parameters
     ----------
@@ -33,7 +34,8 @@ def get_import_restriction_strings(
     file_packages: list[str],
 ) -> list[str]:
     """
-    Get import restriction strings.
+    Retrieve the strings representing import restrictions based on the
+    import restrictions and file packages.
 
     Parameters
     ----------

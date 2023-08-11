@@ -73,3 +73,19 @@ def package_8(package_7) -> list:
         temp = [package for package in package_7 if not package.startswith(restricted_package)]
         package_8.append(f"{restricted_package}:{','.join(temp)}")
     return package_8
+
+
+@pytest.fixture(scope="module")
+def package_9() -> list:
+    """Test get_restricted_identifiers."""
+    return [
+        "my_second_base_package",
+        "my_second_base_package.module_one",
+        "my_second_base_package.module_one.file_one",
+        "my_third_base_package",
+        "my_second_base_package.module_one",
+        "my_second_base_package.module_two",
+        "my_base_module",
+        "my_fourth_base_package",
+        "my_fifth_base_package",
+    ]

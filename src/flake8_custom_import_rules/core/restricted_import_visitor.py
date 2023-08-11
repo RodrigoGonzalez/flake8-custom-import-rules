@@ -48,7 +48,9 @@ class RestrictedImportVisitor(ast.NodeVisitor):
     """
 
     _restricted_packages: list[str]
+    _restricted_package_list: list[str] = field(init=False)
     _import_restrictions: defaultdict[str, list[str]]
+    _import_restriction_list: list[str] = field(init=False)
     _check_module_exists: bool = field(default=True)  # Not Implemented
     _file_packages: list[str] = field(default=list)
     _restrictions: list[str] = field(init=False)
@@ -67,9 +69,11 @@ class RestrictedImportVisitor(ast.NodeVisitor):
         implemented.
         """
 
-        self._restrictions = self._get_restricted_package_strings()
-        self._restrictions.extend(self._get_import_restriction_strings())
-        self._restrictions = sorted(list(set(self._restrictions)))
+        self._restricted_package_list = self._get_restricted_package_strings()
+        self._import_restriction_list = self._get_import_restriction_strings()
+        self._restrictions = sorted(
+            list(set(self._restricted_package_list + self._import_restriction_list))
+        )
 
         self._lines = get_import_strings(self._restrictions)
         self._tree = ast.parse("".join(self._lines))
@@ -120,6 +124,8 @@ class RestrictedImportVisitor(ast.NodeVisitor):
             module = alias.name
             package = root_package_name(module)
             package_names = get_package_names(module)
+            restricted_package = module in self._restricted_package_list
+            restricted_import = module in self._import_restriction_list
 
             if self._check_module_exists:  # Not Implemented
                 absolute_path = get_file_path_from_module_name(module)
@@ -140,6 +146,8 @@ class RestrictedImportVisitor(ast.NodeVisitor):
                     "import_statement": ast.unparse(node),
                     "absolute_path": absolute_path,
                     "relative_path": relative_path,
+                    "restricted_package": restricted_package,
+                    "restricted_import": restricted_import,
                 }
 
             else:
@@ -148,6 +156,8 @@ class RestrictedImportVisitor(ast.NodeVisitor):
                     "package": package,
                     "package_names": package_names,
                     "import_statement": ast.unparse(node),
+                    "restricted_package": restricted_package,
+                    "restricted_import": restricted_import,
                 }
 
             self.restricted_identifiers[module].update(identifier_dict)
