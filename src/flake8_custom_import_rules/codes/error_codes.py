@@ -36,14 +36,18 @@ class ErrorCodeMeta(EnumMeta):
 
 
 class ErrorCode(Enum, metaclass=ErrorCodeMeta):
-    """Error codes for custom import rules."""
+    """Error codes for custom import rules.
+
+    Error codes are used to identify the error and to provide a short
+    description of the error.
+    """
 
     # Custom Import Rules: Restricting imports
     CIR101 = "CIR101 Custom import rule conflicts."
-    CIR102 = "CIR102 Restrict project import for specific package or module."
-    CIR103 = "CIR103 Restrict project `from import` for specific package or module."
-    CIR104 = "CIR104 Restrict non-project import for specific package or module."
-    CIR105 = "CIR105 Restrict non-project `from import` for specific package or module."
+    CIR102 = "CIR102 Import Restriction Violation. Restrict project import."
+    CIR103 = "CIR103 Import Restriction Violation. Restrict project `from import`"
+    CIR104 = "CIR104 Import Restriction Violation. Restrict non-project import."
+    CIR105 = "CIR105 Import Restriction Violation. Restrict non-project `from import`."
     # Restricted package: For example the high level package can `app` is restricted
     CIR106 = "CIR106 Restricted package import."
     CIR107 = "CIR107 Restricted module import."
