@@ -25,19 +25,17 @@ RESTRICTED_IMPORTS = [
 
 
 @pytest.mark.parametrize(
-    ("restricted_imports", "check_module_exists", "expected"),
-    [(RESTRICTED_IMPORTS, True, {}), (RESTRICTED_IMPORTS, False, {}), ([], True, {})],
+    ("restricted_imports", "expected"),
+    [(RESTRICTED_IMPORTS, {}), ([], {})],
 )
 def test_get_restricted_identifiers(
     restricted_imports: list[str] | str,
-    check_module_exists: bool,
     expected: dict,
 ) -> None:
     """Test get_restricted_identifiers."""
     restricted_identifiers = get_restricted_identifiers(
         base_packages=[],
         restricted_packages=restricted_imports,
-        check_module_exists=check_module_exists,
     )
     assert isinstance(restricted_identifiers, defaultdict)
 
@@ -123,7 +121,6 @@ def test_restricted_import_visitor(
     """Test get_restricted_identifiers."""
     restricted_import_visitor = RestrictedImportVisitor(
         restricted_packages=RESTRICTED_IMPORTS,
-        check_module_exists=True,
         import_restrictions=defaultdict(list),
         file_packages=get_package_names(file_package),
     )
@@ -234,7 +231,6 @@ def test_get_restricted_identifiers__import_restrictions(
     restricted_identifiers = get_restricted_identifiers(
         base_packages=[],
         restricted_packages=[],
-        check_module_exists=False,
         import_restrictions=convert_to_dict(IMPORT_RESTRICTIONS),
         file_packages=get_package_names(file_package),
     )
@@ -865,7 +861,6 @@ def test_get_restricted_identifiers__import_restrictions_two(
     restricted_identifiers = get_restricted_identifiers(
         base_packages=[],
         restricted_packages=[],
-        check_module_exists=False,
         import_restrictions=convert_to_dict(package_8),
         file_packages=get_package_names(file_package),
     )
@@ -1549,7 +1544,6 @@ def test_get_restricted_identifiers__restricted_identifiers(
     restricted_identifiers = get_restricted_identifiers(
         base_packages=[],
         restricted_packages=package_9,
-        check_module_exists=False,
         import_restrictions=convert_to_dict(package_8),
         file_packages=get_package_names(file_package),
     )
