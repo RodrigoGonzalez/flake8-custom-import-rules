@@ -89,3 +89,9 @@ def package_9() -> list:
         "my_fourth_base_package",
         "my_fifth_base_package",
     ]
+
+
+@pytest.fixture(scope="module")
+def package_10(package_8) -> list:
+    """Test import restrictions."""
+    return [f"{import_restriction},uuid" for import_restriction in package_8]

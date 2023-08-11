@@ -11,6 +11,7 @@ import pycodestyle
 import pytest
 from flake8.utils import normalize_path
 
+from flake8_custom_import_rules.core.error_messages import ErrorMessage
 from flake8_custom_import_rules.core.nodes import ParsedFromImport
 from flake8_custom_import_rules.core.nodes import ParsedNode
 from flake8_custom_import_rules.core.nodes import ParsedStraightImport
@@ -95,6 +96,7 @@ class BaseCustomImportRulePlugin(CustomImportRulesChecker):
     _node_list: list
     _run_list: list
     _options: dict = {}
+    _errors_set: set = set()
 
     def __init__(
         self,
@@ -117,10 +119,21 @@ class BaseCustomImportRulePlugin(CustomImportRulesChecker):
         logger.info(f"Init options after setting: {options}")
 
     @property
-    def errors(self):
+    def errors(self) -> list[ErrorMessage]:
         """Return the errors."""
         logger.info("Getting the errors")
         return self._errors
+
+    @property
+    def errors_set(self) -> set:
+        """Return the errors."""
+        logger.info("Getting the errors")
+        if not self._errors_set:
+            self._errors_set = {
+                f"{error.lineno}:{error.col_offset}: {error.code} {error.message}"
+                for error in self._errors
+            }
+        return self._errors_set
 
     def run(self) -> Generator[Any, None, None]:
         """Run the plugin."""
@@ -171,6 +184,9 @@ def custom_import_rules_fixture() -> str:
     """Custom import rules fixture."""
     return dedent(
         """
+        import attrs
+        import uuid
+
         import my_second_base_package.module_one.file_one
         import my_second_base_package.module_one.file_two
         import my_second_base_package.module_one
@@ -181,6 +197,13 @@ def custom_import_rules_fixture() -> str:
         import my_second_base_package
         import base_package
         import my_third_base_package
+
+        from attrs import (
+            define,
+            field,
+        )
+        from uuid import UUID
+        from uuid import uuid4
 
         from my_second_base_package.module_one.file_one import A
         from my_second_base_package.module_one.file_two import B
