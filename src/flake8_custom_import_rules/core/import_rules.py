@@ -12,6 +12,7 @@ from attrs import field
 from flake8_custom_import_rules.codes.error_codes import ErrorCode
 from flake8_custom_import_rules.core.error_messages import ErrorMessage
 from flake8_custom_import_rules.core.error_messages import first_party_only_error
+from flake8_custom_import_rules.core.error_messages import import_restriction_error
 from flake8_custom_import_rules.core.error_messages import isolated_imports_error
 from flake8_custom_import_rules.core.error_messages import restricted_imports_error
 from flake8_custom_import_rules.core.error_messages import standard_error_message
@@ -447,11 +448,16 @@ class CustomImportRules:
 
     def _check_if_import_restriction(self, node: ParsedNode) -> bool:
         """Check if import is restricted."""
-        return (
-            does_import_match_custom_import_restriction(
-                node.identifier, list(self.restricted_identifiers.keys())
-            )
-            and self.restricted_identifiers[node.identifier]["import_restriction"] is True
+        if not does_import_match_custom_import_restriction(
+            node.identifier, list(self.restricted_identifiers.keys())
+        ):
+            return False
+
+        matches = retrieve_custom_rule_matches(
+            node.identifier, list(self.restricted_identifiers.keys())
+        )
+        return any(
+            self.restricted_identifiers[match]["import_restriction"] is True for match in matches
         )
 
     def _check_for_cir102(self, node: ParsedNode) -> Generator[ErrorMessage, None, None]:
@@ -460,7 +466,7 @@ class CustomImportRules:
             node.import_type == ImportType.FIRST_PARTY and self._check_if_import_restriction(node)
         )
         if ErrorCode.CIR102.code in self.codes_to_check and condition:
-            yield standard_error_message(node, ErrorCode.CIR102)
+            yield import_restriction_error(node, ErrorCode.CIR102, self.file_identifier)
 
     def _check_for_cir103(self, node: ParsedNode) -> Generator[ErrorMessage, None, None]:
         """Check for CIR103 import restriction, restrict project from import."""
@@ -468,7 +474,7 @@ class CustomImportRules:
             node.import_type == ImportType.FIRST_PARTY and self._check_if_import_restriction(node)
         )
         if ErrorCode.CIR103.code in self.codes_to_check and condition:
-            yield standard_error_message(node, ErrorCode.CIR103)
+            yield import_restriction_error(node, ErrorCode.CIR103, self.file_identifier)
 
     def _check_for_cir104(self, node: ParsedNode) -> Generator[ErrorMessage, None, None]:
         """Check for CIR104 import restriction, restrict non-project import."""
@@ -476,7 +482,7 @@ class CustomImportRules:
             node.import_type != ImportType.FIRST_PARTY and self._check_if_import_restriction(node)
         )
         if ErrorCode.CIR104.code in self.codes_to_check and condition:
-            yield standard_error_message(node, ErrorCode.CIR104)
+            yield import_restriction_error(node, ErrorCode.CIR104, self.file_identifier)
 
     def _check_for_cir105(self, node: ParsedNode) -> Generator[ErrorMessage, None, None]:
         """Check for CIR105 import restriction, restrict non-project from import."""
@@ -484,7 +490,7 @@ class CustomImportRules:
             node.import_type != ImportType.FIRST_PARTY and self._check_if_import_restriction(node)
         )
         if ErrorCode.CIR105.code in self.codes_to_check and condition:
-            yield standard_error_message(node, ErrorCode.CIR105)
+            yield import_restriction_error(node, ErrorCode.CIR105, self.file_identifier)
 
     def _check_if_restricted_package(self, node: ParsedNode) -> bool:
         """Check if restricted package."""

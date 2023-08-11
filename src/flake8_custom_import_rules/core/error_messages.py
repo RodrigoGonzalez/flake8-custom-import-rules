@@ -34,6 +34,10 @@ class ErrorMessage:
         self.custom_explanation = self.custom_explanation or ""
         self.message = f"{self.message} {self.custom_explanation}".strip()
 
+    def __str__(self) -> str:
+        """Return the error message."""
+        return f"{self.lineno}:{self.col_offset}: {self.code} {self.message}"
+
 
 def standard_error_message(
     node: ParsedNode,
@@ -172,5 +176,32 @@ def restricted_imports_error(
     custom_explanation = (
         f"Using '{node.import_statement}'. Restricted package/module "
         f"cannot be imported outside package/module."
+    )
+    return standard_error_message(node, error_code, custom_explanation)
+
+
+def import_restriction_error(
+    node: ParsedNode,
+    error_code: ErrorCode,
+    file_identifier: str,
+) -> ErrorMessage:
+    """Generate error message for import restriction.
+
+    Parameters
+    ----------
+    node : ParsedNode
+        The node that caused the error.
+    error_code : ErrorCode
+        The error code.
+    file_identifier : str
+        The file identifier.
+
+    Returns
+    -------
+    ErrorMessage
+    """
+    custom_explanation = (
+        f"Using '{node.import_statement}'. Restricted package/module "
+        f"cannot be imported into module '{file_identifier}'."
     )
     return standard_error_message(node, error_code, custom_explanation)

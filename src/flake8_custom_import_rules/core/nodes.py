@@ -145,6 +145,16 @@ class DynamicStringParseSyntaxFailure:
     value: str
 
 
+@define(slots=True)
+class HelperParsedImport:
+    """Helper parsed import statement for tests."""
+
+    lineno: int = 0
+    col_offset: int = 0
+    import_statement: str = ""
+    identifier: str = ""
+
+
 ParsedNode = (
     ParsedStraightImport
     | ParsedFromImport
@@ -152,6 +162,7 @@ ParsedNode = (
     | ParsedClassDef
     | ParsedFunctionDef
     | ParsedCall
+    | HelperParsedImport
     | ParsedDynamicImport
     | ParsedIfImport
     | DynamicStringStraightImport
