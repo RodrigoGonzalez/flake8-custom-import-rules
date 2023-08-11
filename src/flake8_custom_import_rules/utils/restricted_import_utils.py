@@ -125,3 +125,22 @@ def find_keys_with_string(
         A list of keys where the string is found in their lists.
     """
     return [k for k, v in import_restrictions.items() if target_string in v]
+
+
+def check_if_project_package(base_packages: list[str], import_packages: list[str]) -> bool:
+    """
+    Check if the project restriction is satisfied.
+
+    Parameters
+    ----------
+    base_packages: list[str]
+        The base packages.
+    import_packages: list[str]
+        The file packages.
+
+    Returns
+    -------
+    bool
+        True if the project restriction is satisfied, False otherwise.
+    """
+    return any(package in base_packages for package in reversed(import_packages))

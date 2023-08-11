@@ -158,7 +158,7 @@ def does_file_match_custom_rule(file_identifier: str, custom_rules: list[str] | 
     return check_string(file_identifier, prefix=tuple(custom_rules), delimiter=" ")
 
 
-def does_import_match_isolated_imports(
+def does_import_match_custom_import_restriction(
     node_identifier: str, isolated_imports: list[str] | str | None
 ) -> bool:
     """

@@ -35,7 +35,9 @@ def test_get_restricted_identifiers(
 ) -> None:
     """Test get_restricted_identifiers."""
     restricted_identifiers = get_restricted_identifiers(
-        restricted_packages=restricted_imports, check_module_exists=check_module_exists
+        base_packages=[],
+        restricted_packages=restricted_imports,
+        check_module_exists=check_module_exists,
     )
     assert isinstance(restricted_identifiers, defaultdict)
 
@@ -230,6 +232,7 @@ def test_get_restricted_identifiers__import_restrictions(
 ) -> None:
     """Test get_restricted_identifiers."""
     restricted_identifiers = get_restricted_identifiers(
+        base_packages=[],
         restricted_packages=[],
         check_module_exists=False,
         import_restrictions=convert_to_dict(IMPORT_RESTRICTIONS),
@@ -860,6 +863,7 @@ def test_get_restricted_identifiers__import_restrictions_two(
 ) -> None:
     """Test get_restricted_identifiers."""
     restricted_identifiers = get_restricted_identifiers(
+        base_packages=[],
         restricted_packages=[],
         check_module_exists=False,
         import_restrictions=convert_to_dict(package_8),
@@ -1543,6 +1547,7 @@ def test_get_restricted_identifiers__restricted_identifiers(
 ) -> None:
     """Test get_restricted_identifiers."""
     restricted_identifiers = get_restricted_identifiers(
+        base_packages=[],
         restricted_packages=package_9,
         check_module_exists=False,
         import_restrictions=convert_to_dict(package_8),
@@ -1552,4 +1557,3 @@ def test_get_restricted_identifiers__restricted_identifiers(
     assert set(restricted_identifiers.keys()) == expected
     for key in restricted_identifiers.keys():
         assert restricted_identifiers[key], defaultdict
-        assert restricted_identifiers[key]

@@ -7,7 +7,7 @@ import pytest
 
 from flake8_custom_import_rules.utils.parse_utils import check_string
 from flake8_custom_import_rules.utils.parse_utils import does_file_match_custom_rule
-from flake8_custom_import_rules.utils.parse_utils import does_import_match_isolated_imports
+from flake8_custom_import_rules.utils.parse_utils import does_import_match_custom_import_restriction
 from flake8_custom_import_rules.utils.parse_utils import parse_module_string
 from flake8_custom_import_rules.utils.parse_utils import retrieve_custom_rule_matches
 
@@ -146,12 +146,12 @@ PACKAGE_6 = [
         ("my_third_base_package.file", PACKAGE_6, True),
     ],
 )
-def test_does_import_match_isolated_imports(
+def test_does_import_match_custom_import_restriction(
     node_identifier: str, isolated_imports: list[str], expected: bool
 ) -> None:
-    """Test does_import_match_isolated_imports."""
+    """Test does_import_match_custom_import_restriction."""
     assert (
-        does_import_match_isolated_imports(
+        does_import_match_custom_import_restriction(
             node_identifier=node_identifier, isolated_imports=isolated_imports
         )
         == expected

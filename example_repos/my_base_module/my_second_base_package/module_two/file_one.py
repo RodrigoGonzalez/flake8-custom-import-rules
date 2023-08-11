@@ -1,8 +1,6 @@
 """ A basic module. """
+import uuid
 from datetime import datetime
-from uuid import UUID
-from uuid import uuid4
-
 
 from attrs import (
     define,
@@ -12,11 +10,12 @@ from attrs import (
 from my_second_base_package.module_one.file_two import ModuleTwo
 from my_second_base_package.module_two.file_two import ModuleTwoFileTwo
 
+
 @define(slots=True)
 class ModuleTwoFileOne:
     """A basic class"""
 
-    _id: UUID | None = field(factory=uuid4)
+    _id: uuid.UUID | None = field(factory=uuid.uuid4)
     _name: str | None = field(default="name")
     _description: str | None = field(default="description")
     _created_at: datetime | None = field(factory=datetime.now)
