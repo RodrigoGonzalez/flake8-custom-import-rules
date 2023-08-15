@@ -39,15 +39,10 @@ organized, and collaborative-friendly state.
 There are two types of import rules that can be enforced by
 this plugin:
 
-- Custom Import Rules (CIR)
-- Project Import Rules (PIR)
-
-Custom Import Rules (CIR) allow you to define and enforce import
-rules for specific package and modules within your project.
-
-Project Import Rules (PIR) allow you to define and enforce
-import rules at a project level.
-
+-   Custom Import Rules (CIR) allow you to define and enforce
+    import rules for specific package and modules within your project.
+-   Project Import Rules (PIR) allow you to define and enforce
+    import rules at a project level.
 
 
 **Installation**
@@ -64,6 +59,9 @@ Install from ``pip`` with:
 
 Custom Import Rules (CIR) allow you to define and enforce
 import rules for modules and packages within your project.
+
+The following flags are available to restrict specific types
+of imports:
 
 
 =======================  ==============================================================
@@ -252,8 +250,8 @@ project, you can specify:
 In this case, any attempt by 'package_h' to import from other
 packages will be flagged by the linter.
 
-Custom Import Rules Allowed Import Types
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Custom Import Rules: Import Rules and Import Types Table
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 +-------------------+---------+--------------+-------------+-------------+-------------+
 | RULE              | STD LIB | PROJECT [#]_ | FIRST PARTY | THIRD PARTY | FUTURE [#]_ |
@@ -280,6 +278,7 @@ Custom Import Rules Allowed Import Types
 .. [#] The difference between third-party only and isolated,
     is that isolated allows imports from within the isolated
     module/package, while third-party only does not.
+
 
 **Plugin Options: Project Import Rules (PIR)**
 ----------------------------------------------
@@ -382,6 +381,7 @@ restrict-conftest-imports       This flag restricts imports within pytest's
                                 unexpected behavior.
 ============================  ==============================================================
 
+
 These flags help maintain clean and clear import structures
 by preventing certain types of potentially problematic
 imports. For example, you may want to prevent relative
@@ -401,7 +401,7 @@ or modules to only import from the top-level package.
 For instance, to disable relative imports for your project,
 you can set:
 
-.. code-block:: toml
+.. code-block:: cfg
 
     [flake8]
     restrict_relative_imports = True
@@ -487,48 +487,63 @@ library modules.
 **Example Configurations**
 --------------------------
 
-**.toml file**
-~~~~~~~~~~~~~~~~
-
-.. code-block:: toml
-
-    [flake8]
-    # Define the base packages for your project
-    base_packages = ["my_base_package", "my_other_base_package"]
-    import_restrictions = [
-        "my_base_package.package_a:my_base_package.package_b",  # Restrict `package_a` from importing `package_b`
-        "my_base_package.module_x:my_base_package.module_y",  # Restrict `module_x` from importing `module_y`
-    ]
-    # Make `package_c` an isolated package
-    isolated_modules = ["my_base_package.package_c"]
-    # Allow `package_d` to import only from the standard library
-    std_lib_only = ["my_base_package.package_d"]
-    # Allow `package_b` to import only from third-party libraries
-    third_party_only = ["my_base_package.package_b"]
-    # Allow `package_f` to import only from the local packages and the project's
-    # top-level package. This will treat the first package defined in `base_packages` as the top-level package.
-    first_party_only = ["my_base_package.package_f"]
-    # Allow `package_g` to import only from the local package
-    project_only = ["my_base_package.package_g"]
+Define your configurations in either `.flake8`, `setup.cfg`,
+or `tox.ini`.
 
 
-**.ini file**
-~~~~~~~~~~~~~~
+NOTE: Each command-line option that you want to specify in
+your config file can be named in either of two ways:
+
+1. Using underscores (_) instead of hyphens (-)
+2. Simply using hyphens (without the leading hyphens)
+
 
 .. code-block:: ini
 
     [flake8]
+    # Define the base packages for your project
     base-packages = my_base_package,my_other_base_package
+
+    # Define import restrictions for your project
     import-restrictions =
+        # Restrict `package_a` from importing `package_b`
         my_base_package.package_a:my_base_package.package_b
+        # Restrict `module_x` from importing `module_y`
         my_base_package.module_x:my_base_package.module_y
     restricted-packages = my_base_package.package_b
+
+    # Make `package_c` an isolated package
     isolated-modules = my_base_package.package_c
+
+    # Allow `package_d` to import only from the standard library
     std-lib-only = my_base_package.package_d
+
+    # Allow `package_b` to import only from third-party libraries
     third-party-only = my_base_package.package_b
+
+    # Allow `package_f` to import only from the local packages and the project's
     first-party-only = my_base_package.package_f
+
+    # Allow `package_g` to import only from the local package and submodules/packages
     project-only = my_base_package.package_g
 
+
+base_packages = ["my_base_package", "my_other_base_package"]
+import_restrictions = [
+    "my_base_package.package_a:my_base_package.package_b",
+    "my_base_package.module_x:my_base_package.module_y",
+]
+
+isolated_modules = ["my_base_package.package_c"]
+
+std_lib_only = ["my_base_package.package_d"]
+
+third_party_only = ["my_base_package.package_b"]
+
+# This will treat the first package defined in `base_packages` as the top-level package.
+first_party_only = ["my_base_package.package_f"]
+
+project_only = ["my_base_package.package_g"]
 
 **Custom Import Rule Violation Codes**
 --------------------------------------
@@ -619,8 +634,8 @@ library modules.
 =====================  ============================================================
 
 
-Project Import Rule Violation Codes
------------------------------------
+**Project Import Rule Violation Codes**
+---------------------------------------
 
 =====================  ============================================================
  Rule Violation Code        Description
@@ -719,28 +734,34 @@ Project Import Rule Violation Codes
                         **NOT IMPLEMENTED**
 =====================  ============================================================
 
-Plugin Limitations
-------------------
--   This plugin is currently only compatible with Python 3.10+ (support
-    for 3.8 and 3.9 in the works).
--   Option import-restrictions only supports restricting imports by
-    package or module, not by class or function
-    (i.e., module_a.ClassA or module_a.function). However, if you
-    are trying to set import restrictions for a class or function,
-    you should probably move that class or function to a separate
-    module.
+**Plugin Limitations**
+----------------------
+-   This plugin is currently only compatible with Python 3.10+
+    (support for 3.8 and 3.9 in the works).
+
+-   Option import-restrictions only supports restricting
+    imports by package or module, not by class or function
+    (i.e., `module_a.ClassA` or `module_a.function`).
+    However, if you are trying to set import restrictions
+    for a class or function, best practices would dictate
+    that you should move that class or function to a
+    separate module.
+
 -   Files are not supported yet, use modules to set restrictions
-    (e.g., package/module/file.py -> package.module.file).
+    (e.g., `package/module/file.py` -> `package.module.file`).
+
 -   Support for project level exceptions is not implemented yet.
-    (e.g., restrict aliased imports but allow import of numpy as np).
+    (e.g., you would like to restrict aliased imports but allow
+    certain aliased imports such as `numpy as np`).
+
 -   Option top-level-only-imports has not been implemented yet.
 
-License
--------
-This project is licensed under the terms of the MIT license.
+**License**
+-----------
+This project is licensed under the terms of the `MIT License <LICENSE>`_.
 
-Acknowledgements
-----------------
+**Acknowledgements**
+--------------------
 
 -   `flake8 <https://github.com/PyCQA/flake8>`_ - A wrapper around PyFlakes, pycodestyle and McCabe.
 -   `flake8-import-order <https://github.com/PyCQA/flake8-import-order>`_ - ``flake8`` plugin that
