@@ -61,12 +61,12 @@ class ErrorCode(Enum, metaclass=ErrorCodeMeta):
     CIR205 = "CIR205 Non-first party package import."
     CIR206 = "CIR206 Non-first party module import."
 
-    # Isolated package: Package/module that can not import from any other package in your project.
+    # Standalone package: Package/module that can not import from any other package in your project.
     # Standalone package.
-    CIR301 = "CIR301 Isolated package, imports from project disabled."
-    CIR302 = "CIR302 Isolated package, from imports from project disabled."
-    CIR303 = "CIR303 Isolated module, imports from project disabled."
-    CIR304 = "CIR304 Isolated module, from imports from project disabled."
+    CIR301 = "CIR301 Standalone package, imports from project disabled."
+    CIR302 = "CIR302 Standalone package, from imports from project disabled."
+    CIR303 = "CIR303 Standalone module, imports from project disabled."
+    CIR304 = "CIR304 Standalone module, from imports from project disabled."
 
     # Standard library only import in specified packages or modules
     CIR401 = "CIR401 Non-standard library package import."

@@ -7,7 +7,7 @@ organization across their Python projects.
 
 This plugin takes advantage of ``flake8`` linting
 capabilities and provides set of flags that enable you to
-specify import restrictions, isolated packages and modules,
+specify import restrictions, standalone packages and modules,
 and additional custom and project-level import rules.
 These flags can be used in conjunction
 with each other to provide granular control over your import rules.
@@ -22,7 +22,7 @@ with each other to provide granular control over your import rules.
 
 This ``flake8`` plugin significantly enhances the organization
 and consistency of imports in Python projects. By enabling
-developers to set custom restrictions, define isolated packages,
+developers to set custom restrictions, define standalone packages,
 and establish import rules, the plugin aids in mitigating
 unwanted dependencies and maintaining clear separations between
 packages. Specifically, it facilitates the management of
@@ -86,14 +86,14 @@ first_party_only            This flag enforces that only first-party
                             be used in a project where third-party
                             dependencies are intended to be minimized.
 
-isolated_module             This flag enforces that only modules that
-                            are marked as 'isolated' can be imported.
+standalone_module             This flag enforces that only modules that
+                            are marked as 'standalone' can be imported.
                             This could be used in a project where
                             certain modules are intended to be used
                             independently of the rest of the project.
 
-isolated_package            This flag enforces that only packages that
-                            are marked as 'isolated' can be imported.
+standalone_package            This flag enforces that only packages that
+                            are marked as 'standalone' can be imported.
                             This could be used in a project where
                             certain packages are intended to be used
                             independently of the rest of the project.
@@ -138,7 +138,7 @@ restricted_packages         This flag enforces that certain specified
  --third-party-only     Restrict package to import only from third-party
                         libraries.
 
- --isolated             Make a package isolated, so it cannot import
+ --standalone             Make a package standalone, so it cannot import
                         from any other packages within the base package.
 
  --restricted           Restrict a package from importing another
@@ -182,10 +182,10 @@ that handles business logic, you might want to restrict
 importing 'lower_level_package' into
 'higher_level_package' to avoid circular dependencies.
 
-Isolated Packages
-~~~~~~~~~~~~~~~~~
+Standalone Modules
+~~~~~~~~~~~~~~~~~~
 
-The `--isolated-modules` flag allows you to define a list of
+The `--standalone-modules` flag allows you to define a list of
 packages that cannot import from any other packages within
 your base package. This ensures that certain packages remain
 standalone and do not introduce unwanted dependencies.
@@ -193,7 +193,7 @@ standalone and do not introduce unwanted dependencies.
 For instance, you might have a 'standalone_package' that
 performs a specific task independently. To ensure it remains
 decoupled from the rest of the application, you can make
-this package isolated.
+this package standalone.
 
 Standard Library Only Imports
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -253,21 +253,21 @@ packages will be flagged by the linter.
 Custom Import Rules: Import Rules and Import Types Table
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-+-------------------+---------+--------------+-------------+-------------+-------------+
-| RULE              | STD LIB | PROJECT [#]_ | FIRST PARTY | THIRD PARTY | FUTURE [#]_ |
-+===================+=========+==============+=============+=============+=============+
-| std_lib_only      | X       |              |             |             | X           |
-+-------------------+---------+--------------+-------------+-------------+-------------+
-| project_only      | X       | X            | X           |             | X           |
-+-------------------+---------+--------------+-------------+-------------+-------------+
-| base_package_only | X       | X            |             |             | X           |
-+-------------------+---------+--------------+-------------+-------------+-------------+
-| first_party_only  | X       |              | X           |             | X           |
-+-------------------+---------+--------------+-------------+-------------+-------------+
-| third_party_only  | X       |              |             | X           | X           |
-+-------------------+---------+--------------+-------------+-------------+-------------+
-| isolated [#]_     | X       | X            |             | X           | X           |
-+-------------------+---------+--------------+-------------+-------------+-------------+
++--------------------------+---------+--------------+-------------+-------------+-------------+
+| RULE                     | STD LIB | PROJECT [#]_ | FIRST PARTY | THIRD PARTY | FUTURE [#]_ |
++==========================+=========+==============+=============+=============+=============+
+| std_lib_only             | X       |              |             |             | X           |
++--------------------------+---------+--------------+-------------+-------------+-------------+
+| project_only             | X       | X            | X           |             | X           |
++--------------------------+---------+--------------+-------------+-------------+-------------+
+| base_package_only        | X       | X            |             |             | X           |
++--------------------------+---------+--------------+-------------+-------------+-------------+
+| first_party_only         | X       |              | X           |             | X           |
++--------------------------+---------+--------------+-------------+-------------+-------------+
+| third_party_only         | X       |              |             | X           | X           |
++--------------------------+---------+--------------+-------------+-------------+-------------+
+| standalone_modules [#]_  | X       | X            |             | X           | X           |
++--------------------------+---------+--------------+-------------+-------------+-------------+
 
 
 .. [#] Technically project imports are "First Party" imports,
@@ -275,8 +275,8 @@ Custom Import Rules: Import Rules and Import Types Table
     the top-level package and the rest of the project.
 .. [#] To restrict future imports, use the
     `--restrict-future-imports` flag.
-.. [#] The difference between third-party only and isolated,
-    is that isolated allows imports from within the isolated
+.. [#] The difference between third-party only and standalone,
+    is that standalone allows imports from within the standalone
     module/package, while third-party only does not.
 
 
@@ -469,11 +469,11 @@ helps maintain a clear separation between high-level and low-level packages.
 
 Example: Restrict importing 'lower_level_package' into 'higher_level_package'.
 
-Isolated packages: Define a list of packages that cannot import from any other
+Standalone packages: Define a list of packages that cannot import from any other
 packages within your base package. This ensures that certain packages remain
 standalone and do not introduce unwanted dependencies.
 
-Example: Make 'standalone_package' isolated, so it cannot import from any
+Example: Make 'standalone_package' standalone, so it cannot import from any
 other packages within the base package.
 
 Standard library only imports: Specify a set of packages that can only import
@@ -512,8 +512,8 @@ your config file can be named in either of two ways:
         my_base_package.module_x:my_base_package.module_y
     restricted-packages = my_base_package.package_b
 
-    # Make `package_c` an isolated package
-    isolated-modules = my_base_package.package_c
+    # Make `package_c` a standalone package
+    standalone-modules = my_base_package.package_c
 
     # Allow `package_d` to import only from the standard library
     std-lib-only = my_base_package.package_d
@@ -534,7 +534,7 @@ import_restrictions = [
     "my_base_package.module_x:my_base_package.module_y",
 ]
 
-isolated_modules = ["my_base_package.package_c"]
+standalone_modules = ["my_base_package.package_c"]
 
 std_lib_only = ["my_base_package.package_d"]
 
@@ -600,21 +600,21 @@ project_only = ["my_base_package.package_g"]
                         party module, which is not allowed when the
                         **--first-party-only** rule is enabled.
 
-  **CIR301**            This error signifies an import from an isolated
-                        package, which is not allowed when the isolated
+  **CIR301**            This error signifies an import from a standalone
+                        package, which is not allowed when the standalone
                         rule is enabled.
 
   **CIR302**            This error signifies a from import from an
-                        isolated package, which is not allowed when the
-                        isolated rule is enabled.
+                        standalone package, which is not allowed when the
+                        standalone rule is enabled.
 
-  **CIR303**            This error signifies an import from an isolated
-                        module, which is not allowed when the isolated
+  **CIR303**            This error signifies an import from a standalone
+                        module, which is not allowed when the standalone
                         rule is enabled.
 
   **CIR304**            This error signifies a from import from an
-                        isolated module, which is not allowed when the
-                        isolated rule is enabled.
+                        standalone module, which is not allowed when the
+                        standalone rule is enabled.
 
   **CIR401**            This error signifies an import from a non-standard
                         library package, which is not allowed when the

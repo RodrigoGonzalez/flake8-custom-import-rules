@@ -167,7 +167,7 @@
 
 ### Feat
 
-- **isolated-modules**: add test cases (#62)
+- **standalone-modules**: add test cases (#62)
 - **parse-utils**: add module to filename helpers (#61)
 - **project-imports**: added support for non-base and non-first party (#60)
 - **first-party**: updated first party to include base package (#59)

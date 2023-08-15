@@ -69,14 +69,14 @@ def standard_error_message(
     )
 
 
-def isolated_imports_error(
+def standalone_imports_error(
     node: ParsedNode,
     error_code: ErrorCode,
     file_identifier: str,
 ) -> ErrorMessage:
-    """Generate error message for isolated imports."""
+    """Generate error message for standalone imports."""
     custom_explanation = (
-        f"Using '{node.import_statement}'. Isolated module '{file_identifier}' "
+        f"Using '{node.import_statement}'. Standalone module '{file_identifier}' "
         f"cannot import from project packages."
     )
     return standard_error_message(node, error_code, custom_explanation)
