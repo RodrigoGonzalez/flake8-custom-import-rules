@@ -169,12 +169,6 @@ deploy:  ## Deploy to PyPI
 
 ##@ Git Shortcuts
 
-git-commit-num:
-	@echo "+ $@"
-	@echo $(shell git rev-list --all --count)
-
-.PHONY: git-commit-num
-
 current_branch := $(shell git symbolic-ref --short HEAD)
 
 checkout-main:  ## Switch to main branch
