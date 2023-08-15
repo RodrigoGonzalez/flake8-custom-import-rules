@@ -7,7 +7,7 @@ maintain clean and consistent import organization across their Python projects.
 
 This ``flake8`` plugin is extremely useful for enforcing custom import rules and
 maintaining a consistent import organization across Python projects. By
-allowing users to define specific restrictions, isolated packages, and import
+allowing users to define specific restrictions, standalone packages, and import
 rules, this plugin helps to prevent unwanted dependencies and ensures a clear
 separation between high-level and low-level packages. Furthermore, it aids in
 managing lightweight packages by restricting them to import only from the

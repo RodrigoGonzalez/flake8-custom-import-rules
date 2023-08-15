@@ -8,7 +8,7 @@ def test_check_conflicts():
     sample_settings = Settings()
     sample_settings.THIRD_PARTY_ONLY = ["package1", "package2"]
     sample_settings.FIRST_PARTY_ONLY = ["package2", "package3"]
-    sample_settings.ISOLATED_MODULES = ["module1"]
+    sample_settings.STANDALONE_MODULES = ["module1"]
     sample_settings.IMPORT_RESTRICTIONS = {
         "module1": ["submoduleA", "submoduleB"],
         "module2": ["submoduleC"],

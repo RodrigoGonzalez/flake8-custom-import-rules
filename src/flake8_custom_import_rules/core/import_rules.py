@@ -13,8 +13,8 @@ from flake8_custom_import_rules.codes.error_codes import ErrorCode
 from flake8_custom_import_rules.core.error_messages import ErrorMessage
 from flake8_custom_import_rules.core.error_messages import first_party_only_error
 from flake8_custom_import_rules.core.error_messages import import_restriction_error
-from flake8_custom_import_rules.core.error_messages import isolated_imports_error
 from flake8_custom_import_rules.core.error_messages import restricted_package_error
+from flake8_custom_import_rules.core.error_messages import standalone_imports_error
 from flake8_custom_import_rules.core.error_messages import standard_error_message
 from flake8_custom_import_rules.core.error_messages import std_lib_only_error
 from flake8_custom_import_rules.core.error_messages import third_party_only_error
@@ -61,11 +61,11 @@ def get_file_matches_custom_rule(option_key: str) -> Callable[[CustomImportRules
     return match_custom_rule
 
 
-def get_isolated_package_rule(option_key: str) -> Callable[[CustomImportRules], bool]:
-    """Get isolated package rule."""
+def get_standalone_package_rule(option_key: str) -> Callable[[CustomImportRules], bool]:
+    """Get standalone package rule."""
     option_key = option_key.upper()
 
-    def isolated_package(instance: CustomImportRules) -> bool:
+    def standalone_package(instance: CustomImportRules) -> bool:
         """Match custom rule."""
         custom_rule = getattr(instance.checker_settings, option_key, None)
 
@@ -73,9 +73,9 @@ def get_isolated_package_rule(option_key: str) -> Callable[[CustomImportRules], 
             logger.error(f"Option key '{option_key}' not found in checker settings")
             return False
 
-        return instance.isolated_module and instance.file_identifier not in custom_rule
+        return instance.standalone_module and instance.file_identifier not in custom_rule
 
-    return isolated_package
+    return standalone_package
 
 
 @define(slots=True)
@@ -162,11 +162,11 @@ class CustomImportRules:
     std_lib_only : bool
         Whether to restrict imports to only allow standard library imports.
 
-    isolated_module : bool
-        Whether this module is isolated (can only import standard library).
+    standalone_module : bool
+        Whether this module is standalone (can only import standard library).
 
-    isolated_package : bool
-        Whether this package is isolated.
+    standalone_package : bool
+        Whether this package is standalone.
     """
 
     nodes: list[ParsedNode] = field(factory=list)
@@ -193,8 +193,8 @@ class CustomImportRules:
     project_only: bool = field(default=False, init=False)
     base_package_only: bool = field(default=False, init=False)
     first_party_only: bool = field(default=False, init=False)
-    isolated_module: bool = field(default=False, init=False)
-    isolated_package: bool = field(default=False, init=False)
+    standalone_module: bool = field(default=False, init=False)
+    standalone_package: bool = field(default=False, init=False)
     std_lib_only: bool = field(default=False, init=False)
     third_party_only: bool = field(default=False, init=False)
 
@@ -208,8 +208,8 @@ class CustomImportRules:
         self.project_only = get_file_matches_custom_rule("PROJECT_ONLY")(self)
         self.base_package_only = get_file_matches_custom_rule("BASE_PACKAGE_ONLY")(self)
         self.first_party_only = get_file_matches_custom_rule("FIRST_PARTY_ONLY")(self)
-        self.isolated_module = get_file_matches_custom_rule("ISOLATED_MODULES")(self)
-        self.isolated_package = get_isolated_package_rule("ISOLATED_MODULES")(self)
+        self.standalone_module = get_file_matches_custom_rule("STANDALONE_MODULES")(self)
+        self.standalone_package = get_standalone_package_rule("STANDALONE_MODULES")(self)
         self.std_lib_only = get_file_matches_custom_rule("STD_LIB_ONLY")(self)
         self.third_party_only = get_file_matches_custom_rule("THIRD_PARTY_ONLY")(self)
         self.file_in_restricted_packages = get_file_matches_custom_rule("RESTRICTED_PACKAGES")(self)
@@ -242,7 +242,7 @@ class CustomImportRules:
     def _check_custom_import_rules(self, node: ParsedNode) -> Generator[ErrorMessage, None, None]:
         """Check custom import rules"""
         yield from self._check_project_imports(node)
-        yield from self._check_if_isolated_module(node)
+        yield from self._check_if_standalone_module(node)
         yield from self._check_std_lib_only_imports(node)
         yield from self._check_third_party_only_imports(node)
         yield from self._check_restricted_imports(node)
@@ -300,13 +300,13 @@ class CustomImportRules:
             if isinstance(node, ParsedFromImport):
                 yield from self._check_for_cir206(node)
 
-    def _check_if_isolated_module(
+    def _check_if_standalone_module(
         self,
         node: ParsedNode,
     ) -> Generator[ErrorMessage, None, None]:
-        """Check isolated module"""
-        if self.isolated_module:
-            if self.isolated_package:
+        """Check standalone module"""
+        if self.standalone_module:
+            if self.standalone_package:
                 if isinstance(node, ParsedStraightImport):
                     yield from self._check_for_cir301(node)
 
@@ -581,10 +581,10 @@ class CustomImportRules:
         if ErrorCode.CIR206.code in self.codes_to_check and condition:
             yield first_party_only_error(node, ErrorCode.CIR206)
 
-    def _check_isolated_imports(self, node: ParsedStraightImport | ParsedFromImport) -> bool:
-        """Check for isolated imports"""
+    def _check_standalone_imports(self, node: ParsedStraightImport | ParsedFromImport) -> bool:
+        """Check for standalone imports"""
         custom_rule_matches = retrieve_custom_rule_matches(
-            self.file_identifier, self.checker_settings.ISOLATED_MODULES
+            self.file_identifier, self.checker_settings.STANDALONE_MODULES
         )
         return (
             node.import_type == ImportType.FIRST_PARTY
@@ -594,28 +594,28 @@ class CustomImportRules:
         )
 
     def _check_for_cir301(self, node: ParsedStraightImport) -> Generator[ErrorMessage, None, None]:
-        """Check for CIR301, check if isolated package."""
-        condition = self._check_isolated_imports(node)
+        """Check for CIR301, check if standalone package."""
+        condition = self._check_standalone_imports(node)
         if ErrorCode.CIR301.code in self.codes_to_check and condition:
-            yield isolated_imports_error(node, ErrorCode.CIR301, self.file_identifier)
+            yield standalone_imports_error(node, ErrorCode.CIR301, self.file_identifier)
 
     def _check_for_cir302(self, node: ParsedFromImport) -> Generator[ErrorMessage, None, None]:
-        """Check for CIR302, check if isolated module."""
-        condition = self._check_isolated_imports(node)
+        """Check for CIR302, check if standalone module."""
+        condition = self._check_standalone_imports(node)
         if ErrorCode.CIR302.code in self.codes_to_check and condition:
-            yield isolated_imports_error(node, ErrorCode.CIR302, self.file_identifier)
+            yield standalone_imports_error(node, ErrorCode.CIR302, self.file_identifier)
 
     def _check_for_cir303(self, node: ParsedStraightImport) -> Generator[ErrorMessage, None, None]:
-        """Check for CIR303, check if isolated package."""
-        condition = self._check_isolated_imports(node)
+        """Check for CIR303, check if standalone package."""
+        condition = self._check_standalone_imports(node)
         if ErrorCode.CIR303.code in self.codes_to_check and condition:
-            yield isolated_imports_error(node, ErrorCode.CIR303, self.file_identifier)
+            yield standalone_imports_error(node, ErrorCode.CIR303, self.file_identifier)
 
     def _check_for_cir304(self, node: ParsedFromImport) -> Generator[ErrorMessage, None, None]:
-        """Check for CIR304, check if isolated module."""
-        condition = self._check_isolated_imports(node)
+        """Check for CIR304, check if standalone module."""
+        condition = self._check_standalone_imports(node)
         if ErrorCode.CIR304.code in self.codes_to_check and condition:
-            yield isolated_imports_error(node, ErrorCode.CIR304, self.file_identifier)
+            yield standalone_imports_error(node, ErrorCode.CIR304, self.file_identifier)
 
     def _check_for_cir401(self, node: ParsedStraightImport) -> Generator[ErrorMessage, None, None]:
         """Check for CIR401."""

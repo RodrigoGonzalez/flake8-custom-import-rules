@@ -50,7 +50,7 @@ CUSTOM_IMPORT_RULES = [
     "BASE_PACKAGES",
     "IMPORT_RESTRICTIONS",
     "RESTRICTED_PACKAGES",
-    "ISOLATED_MODULES",
+    "STANDALONE_MODULES",
     "STD_LIB_ONLY",
     "THIRD_PARTY_ONLY",
     "FIRST_PARTY_ONLY",
@@ -138,7 +138,7 @@ class Settings:
     BASE_PACKAGES: list = field(factory=list, converter=convert_to_list)
     IMPORT_RESTRICTIONS: defaultdict[str, list] = field(factory=dict, converter=convert_to_dict)
     RESTRICTED_PACKAGES: list = field(factory=list, converter=convert_to_list)
-    ISOLATED_MODULES: list = field(factory=list, converter=convert_to_list)
+    STANDALONE_MODULES: list = field(factory=list, converter=convert_to_list)
     STD_LIB_ONLY: list = field(factory=list, converter=convert_to_list)
     THIRD_PARTY_ONLY: list = field(factory=list, converter=convert_to_list)
     FIRST_PARTY_ONLY: list = field(factory=list, converter=convert_to_list)
@@ -211,7 +211,7 @@ HELP_STRINGS = {
         "This rule helps maintain a clear dependency scope for the specified "
         "packages."
     ),
-    "isolated-modules": (
+    "standalone-modules": (
         "This option allows you to define a list of modules that cannot import "
         "from any other modules within your base package. This ensures that "
         "certain modules remain standalone and do not introduce unwanted "
@@ -254,7 +254,7 @@ ERROR_CODES = {
     "base-package-only": "CIR203 and CIR204",
     "first-party-only": "CIR205 and CIR206",
     "third-party-only": "CIR501 and CIR502",
-    "isolated-modules": "CIR301 to CIR304",
+    "standalone-modules": "CIR301 to CIR304",
     "top-level-only-imports": "PIR101",
     "restrict-relative-imports": "PIR102",
     "restrict-local-imports": "PIR103",

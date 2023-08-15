@@ -21,7 +21,7 @@ def check_conflicts(settings_dict: dict) -> list | None:
 
     # Extract lists from settings
     restricted_packages = settings_dict.get("RESTRICTED_PACKAGES", [])
-    isolated_modules = settings_dict.get("ISOLATED_MODULES", [])
+    standalone_modules = settings_dict.get("STANDALONE_MODULES", [])
     std_lib_only = settings_dict.get("STD_LIB_ONLY", [])
     third_party_only = settings_dict.get("THIRD_PARTY_ONLY", [])
     first_party_only = settings_dict.get("FIRST_PARTY_ONLY", [])
@@ -43,10 +43,10 @@ def check_conflicts(settings_dict: dict) -> list | None:
             f"--std-lib-only and --third-party-only."
         )
 
-    # Check for intersections between isolated_modules and other list options
+    # Check for intersections between standalone_modules and other list options
     conflicts.extend(
-        f"Conflict: {set(isolated_modules).intersection(packages)}. "
-        f"Modules set to --isolated-modules cannot be included in {option}."
+        f"Conflict: {set(standalone_modules).intersection(packages)}. "
+        f"Modules set to --standalone-modules cannot be included in {option}."
         for option, packages in [
             ("--import-restrictions", list(import_restrictions.keys())),
             ("--restricted-packages", restricted_packages),
@@ -56,7 +56,7 @@ def check_conflicts(settings_dict: dict) -> list | None:
             ("--project-only", project_only),
             ("--base-package-only", base_package_only),
         ]
-        if set(isolated_modules).intersection(packages)
+        if set(standalone_modules).intersection(packages)
     )
 
     # If no conflicts are detected

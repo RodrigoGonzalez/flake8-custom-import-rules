@@ -6,7 +6,7 @@
 - CIR304
 
 To run this test file only:
-poetry run python -m pytest -vvvrca tests/test_cases/custom_import_rules/isolated_modules_test.py
+poetry run python -m pytest -vvvrca tests/test_cases/custom_import_rules/standalone_modules_test.py
 """
 import pycodestyle
 import pytest
@@ -23,7 +23,7 @@ CIR303 = ErrorCode.CIR303.full_message
 CIR304 = ErrorCode.CIR304.full_message
 
 CUSTOM_MSG = (
-    ". Isolated module 'my_second_base_package.module_three' cannot import from project packages."
+    ". Standalone module 'my_second_base_package.module_three' cannot import from project packages."
 )
 
 MODULE_THREE_PACKAGE_ERRORS = {
@@ -43,7 +43,7 @@ MODULE_THREE_MODULE_ERRORS = {
 
 
 @pytest.mark.parametrize(
-    ("test_case", "isolated_modules_imports", "expected"),
+    ("test_case", "standalone_modules_imports", "expected"),
     [
         (
             "example_repos/my_base_module/my_second_base_package/module_three.py",
@@ -90,7 +90,7 @@ MODULE_THREE_MODULE_ERRORS = {
             ["my_second_base_package.module_two", "my_second_base_package.module_one"],
             {
                 f"10:0: {CIR302} Using 'from my_second_base_package.module_one."
-                f"file_two import ModuleTwo'. Isolated module "
+                f"file_two import ModuleTwo'. Standalone module "
                 f"'my_second_base_package.module_two.file_one' cannot import "
                 f"from project packages."
             },
@@ -100,24 +100,24 @@ MODULE_THREE_MODULE_ERRORS = {
             ["my_second_base_package.module_two.file_one", "my_second_base_package.module_one"],
             {
                 f"11:0: {CIR304} Using 'from my_second_base_package.module_two."
-                f"file_two import ModuleTwoFileTwo'. Isolated module "
+                f"file_two import ModuleTwoFileTwo'. Standalone module "
                 f"'my_second_base_package.module_two.file_one' cannot import "
                 f"from project packages.",
                 f"10:0: {CIR304} Using 'from my_second_base_package.module_one."
-                f"file_two import ModuleTwo'. Isolated module "
+                f"file_two import ModuleTwo'. Standalone module "
                 f"'my_second_base_package.module_two.file_one' cannot import "
                 f"from project packages.",
             },
         ),
     ],
 )
-def test_isolated_modules_imports(
+def test_standalone_modules_imports(
     test_case: str,
-    isolated_modules_imports: list[str],
+    standalone_modules_imports: list[str],
     expected: set,
     get_flake8_linter_results: callable,
 ) -> None:
-    """Test isolated_modules imports."""
+    """Test standalone_modules imports."""
     filename = normalize_path(test_case)
     lines = pycodestyle.readlines(filename)
     identifier = get_module_name_from_filename(filename)
@@ -126,7 +126,7 @@ def test_isolated_modules_imports(
         "base_packages": ["my_second_base_package", "my_base_module"],
         "checker_settings": Settings(
             **{
-                "ISOLATED_MODULES": isolated_modules_imports,
+                "STANDALONE_MODULES": standalone_modules_imports,
                 "RESTRICT_DYNAMIC_IMPORTS": False,
                 "RESTRICT_LOCAL_IMPORTS": False,
                 "RESTRICT_RELATIVE_IMPORTS": False,
@@ -139,12 +139,12 @@ def test_isolated_modules_imports(
     assert actual == expected, sorted(actual)
 
 
-def test_isolated_modules_import_settings_do_not_error(
+def test_standalone_modules_import_settings_do_not_error(
     valid_custom_import_rules_imports: str,
     get_flake8_linter_results: callable,
 ) -> None:
-    """Test isolated_modules imports do not have an effect on regular import methods."""
-    options = {"checker_settings": Settings(**{"ISOLATED_MODULES": []})}
+    """Test standalone_modules imports do not have an effect on regular import methods."""
+    options = {"checker_settings": Settings(**{"STANDALONE_MODULES": []})}
     actual = get_flake8_linter_results(
         s=valid_custom_import_rules_imports, options=options, delimiter="\n"
     )

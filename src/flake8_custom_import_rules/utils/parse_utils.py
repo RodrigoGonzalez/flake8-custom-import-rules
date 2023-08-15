@@ -159,26 +159,26 @@ def does_file_match_custom_rule(file_identifier: str, custom_rules: list[str] | 
 
 
 def does_import_match_custom_import_restriction(
-    node_identifier: str, isolated_imports: list[str] | str | None
+    node_identifier: str, standalone_imports: list[str] | str | None
 ) -> bool:
     """
-    Check if an import identifier is in an isolated import.
+    Check if an import identifier is in a standalone import.
 
     Parameters
     ----------
     node_identifier : str
         The import identifier to check.
-    isolated_imports : list[str] | str | None
-        A list of isolated imports or a single isolated import to check against.
+    standalone_imports : list[str] | str | None
+        A list of standalone imports or a single standalone import to check against.
 
     Returns
     -------
     bool
     """
-    if isolated_imports is None:
+    if standalone_imports is None:
         return False
     restricted_imports = (
-        [isolated_imports] if isinstance(isolated_imports, str) else isolated_imports
+        [standalone_imports] if isinstance(standalone_imports, str) else standalone_imports
     )
     return check_string(node_identifier, prefix=tuple(restricted_imports), delimiter=" ")
 

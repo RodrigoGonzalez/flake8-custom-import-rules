@@ -133,7 +133,7 @@ PACKAGE_6 = [
 
 
 @pytest.mark.parametrize(
-    ("node_identifier", "isolated_imports", "expected"),
+    ("node_identifier", "standalone_imports", "expected"),
     [
         ("my_second_base_package.module_one.file_one", PACKAGE_6, True),
         ("my_second_base_package.module_one.file_two", PACKAGE_6, True),
@@ -147,12 +147,12 @@ PACKAGE_6 = [
     ],
 )
 def test_does_import_match_custom_import_restriction(
-    node_identifier: str, isolated_imports: list[str], expected: bool
+    node_identifier: str, standalone_imports: list[str], expected: bool
 ) -> None:
     """Test does_import_match_custom_import_restriction."""
     assert (
         does_import_match_custom_import_restriction(
-            node_identifier=node_identifier, isolated_imports=isolated_imports
+            node_identifier=node_identifier, standalone_imports=standalone_imports
         )
         == expected
     )
