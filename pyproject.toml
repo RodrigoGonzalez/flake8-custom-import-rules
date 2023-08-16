@@ -37,10 +37,10 @@ classifiers = [
 
 license = "MIT"
 
-#packages = [
-#    {include = "flake8_custom_import_rules", from = "src"}
-#]
-include = ["pyproject.toml", "LICENSE", "CHANGELOG.md"]
+packages = [
+    {include = "flake8_custom_import_rules", from = "src"}
+]
+include = ["README.rst", "LICENSE", "CHANGELOG.md"]
 
 [tool.poetry.scripts]
 import-rules = "flake8_custom_import_rules.__main__:main"
