@@ -75,7 +75,7 @@ changed_files = $(shell git diff --name-only --diff-filter=d $$(git merge-base H
 # Filter only Python files
 changed_py_files = $(filter %.py, $(changed_files))
 
-pre-commit:  ## Manually run all pre-commit hooks
+pre-commit:  check-readme ## Manually run all pre-commit hooks
 	# not added to `pre-commit-tool` in order to prevent unwanted behavior when running in workflows
 	git add -A
 	poetry run pre-commit run -c .pre-commit-config.yaml
@@ -86,7 +86,7 @@ commit: pre-commit tests clean  ## Commit changes
 
 bump:  ## Bump version and update changelog
 	poetry run cz bump --changelog --check-consistency --annotated-tag
-	git push --follow-tags
+	git push -u origin HEAD --follow-tags
 
 .PHONY: pre-commit commit bump
 
@@ -128,6 +128,10 @@ clean-cov: ## remove output files from pytest & coverage
 
 ##@ Documentation
 
+check-readme: ## check README.rst rendering
+	echo "Checking README.rst is rendering correctly."
+	rst2html.py --halt=2 README.rst > /dev/null
+
 docs-serve: ## serve documentation locally
 	mkdocs serve
 
@@ -140,7 +144,7 @@ docs-deploy: ## build & deploy documentation to "gh-pages" branch
 clean-docs: ## remove output files from mkdocs
 	rm -rf site
 
-.PHONY: docs-serve docs-build docs-deploy clean-docs
+.PHONY: check-readme docs-serve docs-build docs-deploy clean-docs
 
 # =============================================================================
 # BUILD & RELEASE
