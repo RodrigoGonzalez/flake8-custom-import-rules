@@ -39,18 +39,24 @@ def get_package_names(module_name: str) -> list[str] | None:
 
 def root_package_name(module_name: str) -> str | None:
     """
-    Return the root package name of a module name.
+    Retrieve the root package name from a given module name.
+
+    This function parses the module name using the `ast` module and searches
+    for the first occurrence of a `Name` node in the parsed AST. The `Name`
+    node represents a possible root package name.
 
     Parameters
     ----------
     module_name : str
-        The module name.
+        The name of the module.
 
     Returns
     -------
     str | None
-        The root package name.
+        The root package name if found, or `None` if no root package name is
+        found.
     """
+
     tree = ast.parse(module_name)
     return next(
         (node.id for node in ast.walk(tree) if isinstance(node, ast.Name)),
@@ -60,17 +66,22 @@ def root_package_name(module_name: str) -> str | None:
 
 def generate_identifier_path(node: ast.AST | ast.expr) -> Generator[str, None, None]:
     """
-    Generates a node path for a given node in the Abstract Syntax Tree (AST).
+    Generates a path for a given node in the Abstract Syntax Tree (AST).
+
+    This function recursively traverses the AST to generate a path representing
+    the location of the given node. The path consists of the attribute names,
+    function names, variable names, and constant values encountered while
+    traversing the AST.
 
     Parameters
     ----------
     node : ast.AST
-        A node in the AST.
+        The node in the AST for which the path needs to be generated.
 
     Yields
     ------
     str
-        The node path of the node.
+        The components of the path as strings.
     """
     if isinstance(node, ast.Attribute):
         yield from generate_identifier_path(node.value)

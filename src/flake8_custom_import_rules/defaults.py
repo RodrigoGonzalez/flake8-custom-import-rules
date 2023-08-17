@@ -1,4 +1,5 @@
 """The default settings for the flake8_custom_import_rules plugin."""
+
 import optparse
 from collections import defaultdict
 from typing import Any
@@ -10,10 +11,30 @@ from flake8.options.manager import OptionManager
 
 POTENTIAL_DYNAMIC_IMPORTS = {
     "__import__",
-    # "importlib",
     "importlib.import_module",
     "import_module",
-    "importlib.util",
+    "importlib.util.find_spec",
+    "find_spec",
+    "importlib.util.spec_from_loader",
+    "spec_from_loader",
+    "importlib.util.module_from_spec",
+    "module_from_spec",
+    "importlib.util.exec_module",
+    "exec_module",
+    # "importlib.abc.Loader.create_module",
+    # "importlib.abc.Loader.exec_module",
+    # "importlib.abc.InspectLoader.get_code",
+    # "importlib.abc.InspectLoader.get_source",
+    # "importlib.machinery.SourceFileLoader.get_code",
+    # "importlib.machinery.SourceFileLoader.get_source",
+    # "importlib.machinery.ExtensionFileLoader.get_code",
+    # "importlib.machinery.ExtensionFileLoader.get_source",
+    # "importlib.machinery.SourcelessFileLoader.get_code",
+    # "importlib.machinery.SourcelessFileLoader.get_source",
+    # "importlib.machinery.SourceLoader.get_code",
+    # "importlib.machinery.SourceLoader.get_source",
+    "imp.find_module",
+    "find_module",
     # "pkgutil",
     "pkgutil.get_loader",
     "get_loader",
@@ -25,6 +46,7 @@ POTENTIAL_DYNAMIC_IMPORTS = {
     "zipimport.zipimporter",
     "zipimporter",
     "zipimporter.load_module",
+    "load_module",
     "eval",
     "exec",
 }
@@ -117,6 +139,9 @@ def convert_to_dict(value: str | list[str] | None, delimiter: str | None = ":") 
 class Settings:
     """The default settings for the flake8_custom_import_rules plugin."""
 
+    # Set Necessary Options for Project Import Restrictions
+    BASE_PACKAGES: list = field(factory=list, converter=convert_to_list)
+
     # Set Defaults for Project Import Restrictions
     TOP_LEVEL_ONLY_IMPORTS: bool = True
     RESTRICT_RELATIVE_IMPORTS: bool = True
@@ -135,7 +160,6 @@ class Settings:
     RESTRICT_CONFTEST_IMPORTS: bool = True
 
     # Set Defaults for Custom Import Rules
-    BASE_PACKAGES: list = field(factory=list, converter=convert_to_list)
     IMPORT_RESTRICTIONS: defaultdict[str, list] = field(factory=dict, converter=convert_to_dict)
     RESTRICTED_PACKAGES: list = field(factory=list, converter=convert_to_list)
     STANDALONE_MODULES: list = field(factory=list, converter=convert_to_list)

@@ -10,6 +10,7 @@ from functools import partial
 import pytest
 
 from flake8_custom_import_rules.utils.node_utils import check_private_module_import
+from flake8_custom_import_rules.utils.node_utils import generate_identifier_path
 from flake8_custom_import_rules.utils.node_utils import get_module_info_from_import_node
 from flake8_custom_import_rules.utils.node_utils import get_name_info_from_import_node
 
@@ -40,6 +41,30 @@ def test_check_private_module_import(test_case: str, expected: bool) -> None:
     """Test check_private_module_imports."""
     actual = check_private_module_import(test_case)
     assert actual == expected
+
+
+@pytest.mark.parametrize(
+    "node,expected",
+    [
+        # Attribute
+        (ast.parse("a.b").body[0].value, ["a", "b"]),
+        # Call
+        (ast.parse("func()").body[0].value, ["func"]),
+        # Name
+        (ast.parse("variable_name").body[0].value, ["variable_name"]),
+        # Subscript
+        (ast.parse("a[b]").body[0].value, ["a", "b"]),
+        # Constant
+        (ast.parse("42").body[0].value, ["42"]),
+        # Nested Attribute and Call
+        (ast.parse("a.b.c()").body[0].value, ["a", "b", "c"]),
+        # Nested Subscript
+        (ast.parse("a[b][c]").body[0].value, ["a", "b", "c"]),
+    ],
+)
+def test_generate_identifier_path(node, expected):
+    result = list(generate_identifier_path(node))
+    assert result == expected
 
 
 def test_get_module_info_from_import_node(get_import_node: callable) -> None:

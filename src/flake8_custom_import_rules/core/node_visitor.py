@@ -352,15 +352,32 @@ class CustomImportRulesVisitor(ast.NodeVisitor):
         ]
 
     @staticmethod
-    def _check_for_dynamic_imports(strings_to_check: list[str]) -> bool:
-        """Check for dynamic imports."""
+    def _check_for_dynamic_imports(identifier_path_strings: list[str]) -> bool:
+        """
+        Check if there are any dynamic imports present in the given list of
+        identifier path strings.
+
+        This static method checks each identifier path string in the input
+        list for any occurrences of potential dynamic imports. It uses the
+        `check_string` function to perform the check.
+
+        Parameters
+        ----------
+        identifier_path_strings : list[str]
+            The list of identifier path strings to check for dynamic imports.
+
+        Returns
+        -------
+        bool
+            True if any dynamic imports are found, False otherwise.
+        """
         return check_string(
-            strings_to_check=strings_to_check,
+            strings_to_check=identifier_path_strings,
             substring_match=list(POTENTIAL_DYNAMIC_IMPORTS),
         )
 
     @staticmethod
-    def _check_dynamic_code_execution_functions(strings_to_check: list[str]) -> bool:
+    def _check_dynamic_code_execution_functions(identifier_path_strings: list[str]) -> bool:
         """Check for dynamic code execution functions.
 
         Dynamic Code Execution Functions: These functions can execute Python
@@ -381,39 +398,128 @@ class CustomImportRulesVisitor(ast.NodeVisitor):
         and callable instead.
         """
         return check_string(
-            strings_to_check=strings_to_check,
+            strings_to_check=identifier_path_strings,
             substring_match=["eval", "exec"],
         )
 
     @staticmethod
-    def _check_if_contains_package(strings_to_check: list[str]) -> bool:
-        """Check if the string does not contain package information.
-
-        "modules" is a common object name, so we need to check
-        that it was imported from the "sys" package.
-        However, this should be done after running the node visitor.
+    def _check_if_contains_package(identifier_path_strings: list[str]) -> bool:
         """
-        if check_string(strings_to_check, substring_match="modules"):
+        Check if the string does not contain package information.
+
+        This method checks if the given `identifier_path_strings` list contains
+        certain package information that indicates the absence of package
+        information.
+
+        1.  If the list contains the string "modules", it checks if it was imported
+            from the "sys" package. If "sys" is not present in the list, the method
+            returns True, indicating the absence of package information.
+
+        2.  If the list contains the strings "get_loader" or "iter_modules", it
+            checks if the string "pkgutil" is not present in the list. If "pkgutil"
+            is not present, the method returns True.
+
+        3.  If the list contains any of the following strings:
+            - "import_module"
+            - "iter_modules"
+            - "find_spec"
+            - "spec_from_loader"
+            - "module_from_spec"
+            - "exec_module"
+
+            it checks if the string "importlib" is not present in the list. If
+            "importlib" is not present, the method returns True.
+
+        If none of the above conditions are met, the method returns False.
+
+        Parameters
+        ----------
+        identifier_path_strings : list[str]
+            The list of identifier path strings to check for the absence of package information.
+
+        Returns
+        -------
+        bool
+            True if the string does not contain package information, False otherwise.
+        """
+
+        if check_string(identifier_path_strings, substring_match="modules"):
             # if "modules" is in the string, check if it was imported from "sys"
             # if "sys" is not in the string, the following will return True
-            return not check_string(strings_to_check, substring_match="sys")
+            return not check_string(identifier_path_strings, substring_match="sys")
 
-        if check_string(strings_to_check, substring_match=["get_loader", "iter_modules"]):
-            return not check_string(strings_to_check, substring_match="pkgutil")
+        if check_string(identifier_path_strings, substring_match=["get_loader", "iter_modules"]):
+            return not check_string(identifier_path_strings, substring_match="pkgutil")
+
+        if check_string(
+            identifier_path_strings,
+            substring_match=[
+                "import_module",
+                "iter_modules",
+                "find_spec",
+                "spec_from_loader",
+                "module_from_spec",
+                "exec_module",
+            ],
+        ):
+            return not check_string(identifier_path_strings, substring_match="importlib")
 
         return False
 
-    def _check_if_confirmed_dynamic_import(self, strings_to_check: list[str]) -> bool:
-        """Check if the dynamic import is confirmed.
-        # a bare "modules" is not a confirmed dynamic import
+    def _check_if_confirmed_dynamic_import(self, identifier_path_strings: list[str]) -> bool:
         """
-        if self._check_if_contains_package(strings_to_check):
+        Check if the dynamic import is confirmed.
+
+        This method performs two checks to determine if the dynamic import is
+        confirmed.
+
+        1.  Check if the `identifier_path_strings` list contains a package. If
+            it does, the method returns False indicating that it is not a
+            confirmed dynamic import.
+
+        2.  Call the `_check_dynamic_code_execution_functions` method passing
+            the `identifier_path_strings` list as an argument. If this method
+            returns True, it means that dynamic code execution functions are
+            present, so the method returns False. Otherwise, it returns True,
+            indicating that the dynamic import is confirmed.
+
+        Parameters
+        ----------
+        identifier_path_strings : list[str]
+            The list of identifier path strings to check for a confirmed
+            dynamic import.
+
+        Returns
+        -------
+        bool
+            True if the dynamic import is confirmed, False otherwise.
+        """
+
+        if self._check_if_contains_package(identifier_path_strings):
             return False
-        return not self._check_dynamic_code_execution_functions(strings_to_check)
+        return not self._check_dynamic_code_execution_functions(identifier_path_strings)
 
     def _get_parsed_dynamic_import(
-        self, strings_to_check: list[str], node: ast.Call | ast.Assign
+        self, identifier_path_strings: list[str], node: ast.Call | ast.Assign
     ) -> ParsedDynamicImport:
+        """
+        Retrieves the parsed dynamic import information.
+
+        Parameters
+        ----------
+        identifier_path_strings : list[str]
+            The list of strings to check.
+        node : ast.Call | ast.Assign
+            The AST node representing the call or assignment.
+
+        Returns
+        -------
+        ParsedDynamicImport
+            The parsed dynamic import object containing information such as
+            the line number, column offset, dynamic import code, identifier,
+            confirmation status, and values.
+        """
+
         values = None
 
         if isinstance(node, ast.Call):
@@ -423,17 +529,17 @@ class CustomImportRulesVisitor(ast.NodeVisitor):
             lineno=node.lineno,
             col_offset=node.col_offset,
             dynamic_import=ast.unparse(node),
-            identifier=".".join(strings_to_check),
-            confirmed=self._check_if_confirmed_dynamic_import(strings_to_check),
+            identifier=".".join(identifier_path_strings),
+            confirmed=self._check_if_confirmed_dynamic_import(identifier_path_strings),
             values=values,
         )
 
     def visit_Call(self, node: ast.Call) -> None:
         """Visit a Call node."""
-        identifier_path = list(generate_identifier_path(node.func))
+        identifier_path_strings = list(generate_identifier_path(node.func))
 
-        if self._check_for_dynamic_imports(identifier_path):
-            parsed_dynamic_import = self._get_parsed_dynamic_import(identifier_path, node)
+        if self._check_for_dynamic_imports(identifier_path_strings):
+            parsed_dynamic_import = self._get_parsed_dynamic_import(identifier_path_strings, node)
             self.nodes.append(parsed_dynamic_import)
 
         self.generic_visit(node)
