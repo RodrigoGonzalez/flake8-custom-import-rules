@@ -35,7 +35,7 @@ from matplotlib import pyplot as plt
 Here, the `pyplot` module from the `matplotlib` package
 is imported under the alias `plt`.
 
-### Advantages of Aliased Imports:
+### **Advantages of Aliased Imports:**
 
 1.  **Conciseness**: Aliasing can make the code more
     concise, especially when dealing with modules or
@@ -49,7 +49,7 @@ is imported under the alias `plt`.
     recognized and used in specific communities, such as
     `np` for `numpy` or `pd` for `pandas`.
 
-### Disadvantages and Considerations:
+### **Disadvantages and Considerations:**
 
 1.  **Potential Confusion**: Non-standard or
     unconventional aliases might lead to confusion,
@@ -59,7 +59,7 @@ is imported under the alias `plt`.
     overly short or cryptic aliases can reduce the
     readability of the code.
 
-### Best Practices and Recommendations:
+### **Best Practices and Recommendations:**
 
 -   **Use Standard Aliases**: Where possible, stick to
     widely recognized and accepted aliases, such as `np`
@@ -104,28 +104,30 @@ accordingly. This can be useful for maintaining
 compatibility across different versions of Python or
 other varying environments.
 
-### Advantages of Conditional Imports:
+### **Advantages of Conditional Imports:**
 
 1.  **Compatibility**: As shown above, conditional
     imports can be used to handle differences between
     Python versions, platforms, or other varying
     environments, helping to maintain compatibility.
+
 2.  **Optimization**: By importing modules only when
     necessary, you might optimize the loading time or
     resource utilization of your program, especially when
     dealing with large or resource-heavy modules.
 
-### Disadvantages and Risks of Conditional Imports:
+### **Disadvantages and Risks of Conditional Imports:**
 
 1.  **Code Complexity**: Conditional imports can increase
     the complexity of the code, making it harder to read,
     understand, and maintain.
+
 2.  **Potential Inconsistency**: The behavior of the code
     might become inconsistent or harder to predict, as the
     availability of a module or specific symbols may
     depend on runtime conditions.
 
-### Best Practices and Recommendations:
+### **Best Practices and Recommendations:**
 
 -   **Clear Documentation**: If you use conditional
     imports, make sure to document the conditions and the
@@ -171,7 +173,7 @@ module = importlib.import_module(module_name)
 In this example, the code dynamically imports either the
 `os` or `sys` module, depending on the value of `some_condition`.
 
-### Advantages of Dynamic Imports:
+### **Advantages of Dynamic Imports:**
 
 1.  **Flexibility**: Dynamic imports allow you to load modules
     based on runtime conditions, giving you more control and
@@ -181,7 +183,7 @@ In this example, the code dynamically imports either the
     can potentially reduce the initial loading time or resource
     utilization of your application.
 
-### Disadvantages and Risks of Dynamic Imports:
+### **Disadvantages and Risks of Dynamic Imports:**
 
 1.  **Code Complexity**: Dynamic imports can add complexity to
     the code, making it more challenging to read, understand, and
@@ -191,7 +193,7 @@ In this example, the code dynamically imports either the
     only manifest at runtime, making them harder to catch and
     debug.
 
-### Best Practices and Recommendations:
+### **Best Practices and Recommendations:**
 
 -   **Use Standard Libraries**: Utilize the `importlib` standard
     library for dynamic imports rather than relying on the
@@ -203,7 +205,7 @@ In this example, the code dynamically imports either the
 -   **Documentation**: Clearly document the reasoning and usage of
     dynamic imports in the code to aid understanding.
 
-### Limitations and Considerations:
+### **Limitations and Considerations:**
 
 -   **Static Analysis Limitations**: Tools that perform static
     analysis on the code might have difficulty handling dynamic
@@ -241,7 +243,7 @@ even when dividing two integers. This behavior became the
 default in Python 3, but the above import allows you to
 use it in Python 2 as well.
 
-### Common Uses of Future Imports:
+### Common Uses of Future Imports:**
 
 1.  **Division Behavior**: As shown above, changing the
     behavior of the division operator to be consistent
@@ -255,7 +257,7 @@ use it in Python 2 as well.
     literals in Python 2, consistent with the behavior in
     Python 3.
 
-### Advantages of Future Imports:
+### **Advantages of Future Imports:**
 
 1.  **Forward Compatibility**: Future imports help prepare
     your code for future versions of Python, making the
@@ -265,7 +267,7 @@ use it in Python 2 as well.
     with different versions of Python, future imports can
     help ensure consistent behavior across those versions.
 
-### Considerations and Best Practices:
+### **Considerations and Best Practices:**
 
 1.  **Explicitness**: Future imports should be used
     explicitly in each module where the future behavior is
@@ -297,7 +299,8 @@ and stored locally. It's accessed directly from the local
 path rather than from a globally installed location or
 package repository.
 
-Example:
+**Example:**
+
 ```python
 import my_local_package
 from .local_module import local_function
@@ -337,7 +340,7 @@ Here, "local" refers to the scope and context of the
 import, not the physical location of the imported module.
 
 
-### **Advantages of Local Scope Imports:**
+### **Advantages of Local Scope Imports:****
 
 1.  **Reduced Initial Loading Time**: If a module is
     imported inside a function and that function is never
@@ -352,7 +355,7 @@ import, not the physical location of the imported module.
    where it is needed can help in keeping the global
    namespace clean.
 
-### **Disadvantages of Local Scope Imports:**
+### **Disadvantages of Local Scope Imports:****
 
 1.  **Potential Performance Overhead**: If a function with a
     local import is called many times, the import statement
@@ -364,7 +367,7 @@ import, not the physical location of the imported module.
     unclear where exactly different modules and functions
     are being imported.
 
-### **When to Use Local Scope Imports:**
+### **When to Use Local Scope Imports:****
 
 Local scope imports are not common in every project, and
 their usage often depends on specific needs, coding
@@ -385,7 +388,7 @@ Importing from the `__main__` module or a `__main__.py`
 file is generally not considered best practice in Python
 development.
 
-### Importing from the `__main__` Module
+### **Importing from the `__main__` Module**
 
 The `__main__` module is the entry point of a program, and
 it's the context in which the top-level script is run.
@@ -409,7 +412,7 @@ Here are some reasons why:
     from `__main__` may be more difficult to test in
     isolation.
 
-### Importing from a `__main__.py` File
+### **Importing from a `__main__.py` File**
 
 The `__main__.py` file is used to define the entry point
 for a package when it's executed as a script. Here's why
@@ -430,7 +433,7 @@ importing from `__main__.py` can be problematic:
     might treat `__main__.py` specially, leading to
     unexpected behavior.
 
-### Recommended Structure
+### **Recommended Structure**
 
 Instead of putting reusable code in the `__main__` module
 or `__main__.py` file, it's generally a better practice to
@@ -486,7 +489,7 @@ You might import and use the `_private_helper_function` within
 the same package, but it is not intended to be accessed
 directly by external code.
 
-### Why Use Private Imports?
+### **Why Use Private Imports?**
 
 1.  **Encapsulation**: By marking certain symbols as private,
     you can define a clear and stable public API while keeping
@@ -497,7 +500,7 @@ directly by external code.
     clearly separating the public interface from the internal
     implementation details.
 
-### Best Practices and Recommendations:
+### **Best Practices and Recommendations:**
 
 -   **Naming Convention**: Use a single leading underscore to
     mark symbols as private. This does not prevent access to the
@@ -511,7 +514,7 @@ directly by external code.
     packages, respect the private nature of symbols with leading
     underscores and avoid using them directly.
 
-### Limitations and Considerations:
+### **Limitations and Considerations:**
 
 -   **No Strict Enforcement**: Python does not provide a strict
     mechanism to enforce private access. The leading underscore is
@@ -532,7 +535,6 @@ clean and maintainable code by defining a clear boundary between
 public interfaces and internal implementation. They rely on
 community conventions and developer discipline rather than strict
 language enforcement.
-
 
 
 ## Python Modules

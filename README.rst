@@ -94,7 +94,7 @@ user's development practices. As seen below:
 .. code-block:: ini
 
     [flake8]
-    base-packages = my_library
+    base-packages = my_library,my_other_library
 
 It's important to note that if the base-packages flag is
 not configured, the majority of functionality within the
@@ -359,7 +359,8 @@ restrict-relative-imports       This flag prevents the usage of relative imports
                                 Relative imports allow for modules to be imported
                                 relative to the current module's location. This can
                                 sometimes lead to confusion or unintended behavior,
-                                especially in larger code bases. On by default.
+                                especially in larger code bases.
+                                Turned on by default.
 
 restrict-local-scope-imports    This flag restricts local scope imports, preventing
                                 the import of modules or specific functions within
@@ -367,6 +368,7 @@ restrict-local-scope-imports    This flag restricts local scope imports, prevent
                                 method. It enforces that all imports occur at the
                                 top-level of the file, promoting code clarity and
                                 consistency.
+                                Turned on by default.
 
 
 restrict-conditional-imports    This flag restricts the use of conditional imports.
@@ -374,14 +376,16 @@ restrict-conditional-imports    This flag restricts the use of conditional impor
                                 if statement or similar control structure. These can
                                 potentially lead to inconsistent behavior, as
                                 whether or not a module is imported may depend on
-                                runtime conditions. Turned off by default.
+                                runtime conditions.
+                                Turned off by default.
 
 restrict-dynamic-imports        This flag restricts the use of dynamic imports,
                                 which are imports that occur within a function or
                                 method. These can be hard to track and may cause
                                 unexpected behavior, as the availability of a module
                                 may depend on the specific execution path through
-                                the code. Turned on by default.
+                                the code.
+                                Turned on by default.
 
 restrict-private-imports        This flag restricts the import of private modules
                                 (those that start with an underscore). Importing
@@ -396,25 +400,29 @@ restrict-wildcard-imports       This flag restricts the use of wildcard imports
                                 (e.g., `from module import *`). These imports can
                                 lead to confusion, as it's unclear which names are
                                 being imported, and they can potentially overwrite
-                                existing names without warning. Turned on by default.
+                                existing names without warning.
+                                Turned on by default.
 
 restrict-aliased-imports        This flag restricts the import of modules under an
                                 alias (e.g., import numpy as np). While convenient,
                                 this can sometimes lead to confusion, especially
                                 for less common libraries or non-standard aliases.
                                 Given the ubiquity of certain aliases (e.g., np for
-                                numpy), this flag is turned off by default.
+                                numpy).
+                                Turned off by default.
 
 restrict-future-imports         This flag restricts the use of `from __future__
                                 import`. These imports are used to enable features
                                 that will be standard in future versions of Python,
                                 but their use can potentially cause confusion or
-                                compatibility issues. Turned off by default.
+                                compatibility issues.
+                                Turned off by default.
 
 restrict-init-imports           This flag restricts imports from `__init__.py` files.
                                 Importing from these files can sometimes lead to
                                 confusing circular dependencies or other unexpected
-                                behavior. Turned on by default.
+                                behavior.
+                                Turned on by default.
 
 restrict-main-imports           This flag restricts imports from `__main__.py`
                                 files. Importing from a `__main__.py` file
@@ -427,9 +435,9 @@ restrict-main-imports           This flag restricts imports from `__main__.py`
                                 reusable functions or classes.
                                 Turned on by default.
 
-restrict-test-imports           This flag restricts imports within test files. This
-                                can be used to enforce separation of testing and
-                                production code.
+restrict-test-imports           This flag restricts imports from test files and
+                                the tests directory. This can be used to enforce
+                                separation of testing and production code.
                                 Turned on by default.
 
 restrict-conftest-imports       This flag restricts imports within pytest's
@@ -459,21 +467,300 @@ structure.
 Restrict Relative Imports
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The `--restrict-relative-imports` flag is currently not implemented.
-Once available, it should allow you to restrict certain packages
-or modules to only import from the top-level package.
+Relative imports in Python allow you to import modules or
+specific objects from modules within the same package
+hierarchy, using dots (`.`) to represent the relative path.
 
-For instance, to disable relative imports for your project,
-you can set:
+By default, the `--restrict-relative-imports` flag is
+enabled, prohibiting the use of relative imports. Modules
+must instead utilize absolute imports, specifying the full
+path to the target module, starting from the top-level
+package.
+
+To enforce this restriction and disable relative imports
+for your project, you can configure the following setting:
 
 .. code-block:: cfg
 
     [flake8]
     restrict_relative_imports = True
 
+With this configuration, any relative imports encountered
+in your project will be flagged by the linter, guiding you
+to use absolute imports instead.
 
-With this setting, any relative imports in your project will be
-flagged by the linter.
+
+Restrict Local Scope Imports
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Local scope imports refer to the practice of importing
+modules or specific objects within a confined scope, such
+as inside a function or method. While this can allow for
+more granular control over imports, it may lead to code
+that is less clear and consistent.
+
+The `--restrict-local-scope-imports` flag is designed to
+prevent such imports, enforcing that all imports occur at
+the top-level of the file. By centralizing imports, it
+promotes code clarity and consistency across the project.
+
+This restriction is turned on by default, meaning that any
+local scope imports will be flagged by the linter. If you
+wish to adhere to this best practice, ensure that all
+imports are declared at the top-level of your files, rather
+than within specific functions or methods.
+
+.. code-block:: cfg
+
+    [flake8]
+    restrict_local_scope_imports = True
+
+With this configuration, the linter will guide you to
+organize your imports at the top-level, fostering a more
+readable and maintainable codebase.
+
+Restrict Conditional Imports
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Conditional imports in Python refer to the practice of
+importing modules or specific symbols based on certain
+conditions or runtime logic. These imports can be found
+inside control structures like `if` statements.
+
+The `--restrict-conditional-imports` flag aims to limit
+the use of these imports, as they can potentially lead to
+inconsistent behavior. The importation of a module might
+depend on varying runtime conditions, leading to unexpected
+outcomes.
+
+This restriction is turned off by default, allowing for
+conditional imports. However, considering the potential
+risks and complexities, you may choose to enable this flag:
+
+.. code-block:: cfg
+
+    [flake8]
+    restrict_conditional_imports = True
+
+By restricting conditional imports, you can foster a more
+predictable and manageable codebase.
+
+Restrict Dynamic Imports
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+Dynamic imports in Python involve importing modules or
+specific symbols within a function or method. Such imports
+can be challenging to track and may result in unexpected
+behavior, as the availability of a module may hinge on the
+specific execution path.
+
+The `--restrict-dynamic-imports` flag is designed to
+prevent these imports, promoting a more stable and
+transparent code structure. This restriction is turned on
+by default, emphasizing the importance of predictability
+in code execution.
+
+.. code-block:: cfg
+
+    [flake8]
+    restrict_dynamic_imports = True
+
+By enforcing this rule, you encourage a more coherent
+and traceable import structure, enhancing code reliability.
+
+Restrict Private Imports
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+Private modules in Python are typically those that begin
+with an underscore (`_`). These modules are meant for
+internal use within a package, and importing them can lead
+to instability, as they may change without notice.
+
+The `--restrict-private-imports` flag limits the import of
+private modules, preserving the stability of your code.
+Although Python doesn't truly enforce private access,
+this flag provides a layer of protection. It is turned on
+by default, reflecting a best-practice approach.
+
+.. code-block:: cfg
+
+    [flake8]
+    restrict_private_imports = True
+
+By restricting the import of private modules, you align
+with community conventions and safeguard your code from
+potential instabilities related to internal package changes.
+
+
+Restrict Wildcard Imports
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Wildcard imports in Python, expressed as `from module
+import *`, bring all symbols from a module into the
+current namespace. While convenient, these imports can
+lead to confusion, as it becomes unclear which names are
+being imported. Furthermore, they may inadvertently
+overwrite existing names.
+
+The `--restrict-wildcard-imports` flag is designed to
+prohibit these imports, fostering greater code clarity
+and safety. This flag is turned on by default, reflecting
+a standard practice in code organization.
+
+.. code-block:: cfg
+
+    [flake8]
+    restrict_wildcard_imports = True
+
+By restricting wildcard imports, you promote a more
+transparent and manageable code structure, enhancing
+maintainability.
+
+
+Restrict Aliased Imports
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+Aliased imports, such as `import numpy as np`, allow
+modules or specific symbols to be imported under a
+different name. While often convenient, especially for
+widely recognized aliases, they can sometimes cause
+confusion, particularly with non-standard or
+unconventional aliases.
+
+The `--restrict-aliased-imports` flag aims to limit this
+practice, although it is turned off by default,
+acknowledging the common usage of standard aliases.
+
+.. code-block:: cfg
+
+    [flake8]
+    restrict_aliased_imports = False
+
+While aliasing has its benefits, particularly with widely
+accepted conventions, this flag provides an option for
+those who prefer to maintain a stricter naming policy.
+
+
+Restrict Future Imports
+~~~~~~~~~~~~~~~~~~~~~~~
+
+Future imports in Python, expressed as `from __future__
+import`, enable features that will become standard in
+upcoming versions of Python. While they facilitate
+forward compatibility, their use might also introduce
+confusion or compatibility challenges.
+
+The `--restrict-future-imports` flag allows you to limit
+the use of future imports, providing a layer of control.
+This flag is turned off by default, allowing flexibility
+in adopting future language features.
+
+.. code-block:: cfg
+
+    [flake8]
+    restrict_future_imports = False
+
+By offering this restriction, you can ensure that future
+imports are used judiciously and aligned with your
+project's needs and standards.
+
+
+Restrict Imports From Init Files
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Importing from `__init__.py` files can sometimes lead to
+confusing circular dependencies or unexpected behavior.
+These files typically serve to initialize a package, and
+importing from them may complicate the package structure.
+
+The `--restrict-init-imports` flag is designed to prevent
+these imports, promoting cleaner code organization. This
+restriction is turned on by default.
+
+.. code-block:: cfg
+
+    [flake8]
+    restrict_init_imports = True
+
+By enforcing this rule, you can maintain a clear
+separation between initialization and functional code,
+enhancing code clarity and maintainability.
+
+
+Restrict Import From Main Files
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Importing from `__main__.py` files is generally not
+considered best practice in Python development, as
+previously explained. The `__main__.py` file is meant to
+define the entry point for package execution, not to house
+reusable functions or classes.
+
+The `--restrict-main-imports` flag restricts these
+imports, aligning with best practices. This flag is turned
+on by default.
+
+.. code-block:: cfg
+
+    [flake8]
+    restrict_main_imports = True
+
+By adhering to this restriction, you ensure that your
+codebase follows a conventional structure, minimizing
+potential confusion and maintenance challenges.
+
+
+Restrict Test Imports
+~~~~~~~~~~~~~~~~~~~~~
+
+Test imports refer to imports from test files or the
+tests directory. While these imports can be useful for
+testing purposes, they may inadvertently create
+dependencies between testing and production code. This
+entanglement can complicate code maintenance and lead to
+potential issues.
+
+The ``--restrict-test-imports`` flag restricts these
+imports, enforcing a separation between testing and
+production code. This restriction is turned on by default.
+
+.. code-block:: cfg
+
+    [flake8]
+    restrict_test_imports = True
+
+By employing this flag, you ensure a clean demarcation
+between testing and main code, enhancing the modularity
+and maintainability of your codebase.
+
+
+Restrict Conftest Imports
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+In the context of pytest, ``conftest.py`` files are utilized
+to define fixtures and other setup code for tests.
+Importing within these files can lead to unexpected
+behavior, potentially affecting test outcomes.
+
+The ``--restrict-conftest-imports`` flag restricts imports
+within ``conftest.py`` files, mitigating the risk of
+unintended side effects. This flag is turned on by default.
+
+.. code-block:: cfg
+
+    [flake8]
+    restrict_conftest_imports = True
+
+By restricting imports within ``conftest.py``, you promote
+a more controlled and predictable testing environment.
+This aligns with best practices for test setup and
+minimizes potential complications.
+
+Both flags demonstrate a commitment to code clarity and
+organization, reflecting industry standards and best
+practices. Utilizing them in your project can contribute
+to a more robust and maintainable codebase.
+
 
 Top-level Only Imports
 ~~~~~~~~~~~~~~~~~~~~~~
@@ -598,6 +885,18 @@ your config file can be named in either of two ways:
 
     # Allow `package_g` to import only from the local package and submodules/packages
     project-only = my_base_package.package_g
+
+    # Restrict relative imports
+    restrict-relative-imports = True
+
+    # Restrict local scope imports
+    restrict-local-scope-imports = True
+
+    # Restrict conditional imports
+    restrict-conditional-imports = True
+
+    # Allow dynamic imports
+    restrict-dynamic-imports = False
 
 
 **Custom Import Rule Violation Codes**
