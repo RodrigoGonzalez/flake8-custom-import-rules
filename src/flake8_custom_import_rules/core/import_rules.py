@@ -216,7 +216,7 @@ class CustomImportRules:
         Whether to only allow top-level imports in this file, based on
         command line options.
 
-    import_restrictions : dict
+    custom_restrictions : dict
         The import restriction flags from the configuration settings.
 
     restricted_packages : list[str]
@@ -265,7 +265,7 @@ class CustomImportRules:
     check_custom_import_rules: bool = field(default=filename_not_in_stdin_identifiers(filename))
 
     top_level_only_imports: bool = field(default=False)  # Not Implemented
-    import_restrictions: dict = field(factory=dict)
+    custom_restrictions: dict = field(factory=dict)
     restricted_packages: list[str] = field(factory=list)
     file_in_restricted_packages: bool = field(default=False)
 
@@ -294,7 +294,7 @@ class CustomImportRules:
         self.file_in_restricted_packages = get_file_matches_custom_rule("RESTRICTED_PACKAGES")(self)
 
         self.top_level_only_imports = self.checker_settings.TOP_LEVEL_ONLY_IMPORTS
-        self.import_restrictions = self.checker_settings.IMPORT_RESTRICTIONS
+        self.custom_restrictions = self.checker_settings.CUSTOM_RESTRICTIONS
         self.restricted_packages = self.checker_settings.RESTRICTED_PACKAGES
 
         logger.debug(f"File packages: {self.file_packages}")
@@ -349,14 +349,14 @@ class CustomImportRules:
         yield from self._check_std_lib_only_imports(node)
         yield from self._check_third_party_only_imports(node)
         yield from self._check_restricted_imports(node)
-        yield from self._check_import_restrictions(node)
+        yield from self._check_custom_restrictions(node)
 
-    def _check_import_restrictions(
+    def _check_custom_restrictions(
         self,
         node: ParsedNode,
     ) -> Generator[ErrorMessage, None, None]:
         """Check import restrictions"""
-        if self.import_restrictions:
+        if self.custom_restrictions:
             if isinstance(node, ParsedStraightImport):
                 yield from self._check_for_cir102(node)
                 yield from self._check_for_cir104(node)
@@ -450,10 +450,10 @@ class CustomImportRules:
         self, node: ParsedNode
     ) -> Generator[ErrorMessage, None, None]:
         """Check project level restrictions"""
-        yield from self._check_standard_import_restrictions(node)
-        yield from self._check_special_cases_import_restrictions(node)
+        yield from self.check_standard_import_restrictions(node)
+        yield from self.check_special_cases_import_restrictions(node)
 
-    def _check_standard_import_restrictions(
+    def check_standard_import_restrictions(
         self, node: ParsedNode
     ) -> Generator[ErrorMessage, None, None]:
         """Check standard import restrictions"""
@@ -509,7 +509,7 @@ class CustomImportRules:
             if is_restriction_active and isinstance(node, tuple(node_types)):
                 yield from check_func(node)
 
-    def _check_special_cases_import_restrictions(
+    def check_special_cases_import_restrictions(
         self, node: ParsedNode
     ) -> Generator[ErrorMessage, None, None]:
         """Check special cases import restrictions"""
@@ -527,9 +527,9 @@ class CustomImportRules:
                 yield from self._check_for_pir210(node)
 
         if self.checker_settings.RESTRICT_TEST_IMPORTS:
-            yield from self._check_test_import_restrictions(node)
+            yield from self._check_test_custom_restrictions(node)
 
-    def _check_test_import_restrictions(
+    def _check_test_custom_restrictions(
         self, node: ParsedNode
     ) -> Generator[ErrorMessage, None, None]:
         """Check test import restrictions"""

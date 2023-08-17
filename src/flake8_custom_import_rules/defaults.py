@@ -70,7 +70,7 @@ STANDARD_PROJECT_LEVEL_RESTRICTION_KEYS = [
 
 CUSTOM_IMPORT_RULES = [
     "BASE_PACKAGES",
-    "IMPORT_RESTRICTIONS",
+    "CUSTOM_RESTRICTIONS",
     "RESTRICTED_PACKAGES",
     "STANDALONE_MODULES",
     "STD_LIB_ONLY",
@@ -160,7 +160,7 @@ class Settings:
     RESTRICT_CONFTEST_IMPORTS: bool = True
 
     # Set Defaults for Custom Import Rules
-    IMPORT_RESTRICTIONS: defaultdict[str, list] = field(factory=dict, converter=convert_to_dict)
+    CUSTOM_RESTRICTIONS: defaultdict[str, list] = field(factory=dict, converter=convert_to_dict)
     RESTRICTED_PACKAGES: list = field(factory=list, converter=convert_to_list)
     STANDALONE_MODULES: list = field(factory=list, converter=convert_to_list)
     STD_LIB_ONLY: list = field(factory=list, converter=convert_to_list)
@@ -198,7 +198,7 @@ HELP_STRINGS = {
         "would include 'my_library' as a base package. If this option is not "
         "set, some functionality will be disabled."
     ),
-    "import-restrictions": (
+    "custom-restrictions": (
         "This option allows you to restrict specific import capabilities for "
         "packages. You can define a list of packages that are restricted from "
         "importing certain packages or modules within your base package. "
@@ -271,7 +271,7 @@ HELP_STRINGS = {
 
 ERROR_CODES = {
     "base-packages": "",
-    "import-restrictions": "CIR102 to CIR105",
+    "custom-restrictions": "CIR102 to CIR105",
     "restricted-packages": "CIR106 and CIR107",
     "std-lib-only": "CIR401 and CIR402",
     "project-only": "CIR201 and CIR202",

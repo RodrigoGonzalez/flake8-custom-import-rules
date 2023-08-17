@@ -121,7 +121,7 @@ def test_restricted_import_visitor(
     """Test get_restricted_identifiers."""
     restricted_import_visitor = RestrictedImportVisitor(
         restricted_packages=RESTRICTED_IMPORTS,
-        import_restrictions=defaultdict(list),
+        custom_restrictions=defaultdict(list),
         file_packages=get_package_names(file_package),
     )
     restricted_import_visitor.get_restricted_identifiers()
@@ -132,7 +132,7 @@ def test_restricted_import_visitor(
         assert restricted_import_visitor.restricted_identifiers[key]
 
 
-IMPORT_RESTRICTIONS = [
+CUSTOM_RESTRICTIONS = [
     "my_second_base_package:my_third_base_package,my_base_module",
     (
         "my_second_base_package.module_one:my_second_base_package,my_third_base_package,"
@@ -223,7 +223,7 @@ IMPORT_RESTRICTIONS = [
         ),
     ],
 )
-def test_get_restricted_identifiers__import_restrictions(
+def test_get_restricted_identifiers__custom_restrictions(
     file_package: str,
     expected: dict,
 ) -> None:
@@ -231,7 +231,7 @@ def test_get_restricted_identifiers__import_restrictions(
     restricted_identifiers = get_restricted_identifiers(
         base_packages=[],
         restricted_packages=[],
-        import_restrictions=convert_to_dict(IMPORT_RESTRICTIONS),
+        custom_restrictions=convert_to_dict(CUSTOM_RESTRICTIONS),
         file_packages=get_package_names(file_package),
     )
     assert isinstance(restricted_identifiers, defaultdict)
@@ -852,7 +852,7 @@ def test_get_restricted_identifiers__import_restrictions(
         ),
     ],
 )
-def test_get_restricted_identifiers__import_restrictions_two(
+def test_get_restricted_identifiers__custom_restrictions_two(
     file_package: str,
     expected: dict,
     package_8: list,
@@ -861,7 +861,7 @@ def test_get_restricted_identifiers__import_restrictions_two(
     restricted_identifiers = get_restricted_identifiers(
         base_packages=[],
         restricted_packages=[],
-        import_restrictions=convert_to_dict(package_8),
+        custom_restrictions=convert_to_dict(package_8),
         file_packages=get_package_names(file_package),
     )
     assert isinstance(restricted_identifiers, defaultdict)
@@ -1544,7 +1544,7 @@ def test_get_restricted_identifiers__restricted_identifiers(
     restricted_identifiers = get_restricted_identifiers(
         base_packages=[],
         restricted_packages=package_9,
-        import_restrictions=convert_to_dict(package_8),
+        custom_restrictions=convert_to_dict(package_8),
         file_packages=get_package_names(file_package),
     )
     assert isinstance(restricted_identifiers, defaultdict)

@@ -100,7 +100,7 @@ OPTIONS_TEST_CASES = [
     ),
     ParserTestCase(
         (
-            "--import-restrictions=my_base_package.package_A:my_base_package.package_B,"
+            "--custom-restrictions=my_base_package.package_A:my_base_package.package_B,"
             "my_base_package/module_X.py:my_base_package/module_Y.py"
         ),
         {
@@ -110,7 +110,7 @@ OPTIONS_TEST_CASES = [
     ),
     ParserTestCase(
         (
-            "--import-restrictions=my_base_package.package_A:my_base_package.package_B:"
+            "--custom-restrictions=my_base_package.package_A:my_base_package.package_B:"
             "my_base_package.package_C,"
             "my_base_package/module_X.py:my_base_package/module_Y.py"
         ),
@@ -121,7 +121,7 @@ OPTIONS_TEST_CASES = [
     ),
     ParserTestCase(
         (
-            "--import-restrictions=my_base_package.package_A:my_base_package.package_B:"
+            "--custom-restrictions=my_base_package.package_A:my_base_package.package_B:"
             "my_base_package.package_C,"
             "my_base_package/module_X.py:my_base_package/module_Y.py:my_base_package/module_Z.py"
         ),
@@ -135,7 +135,7 @@ OPTIONS_TEST_CASES = [
     ),
     ParserTestCase(
         (
-            "--import-restrictions=my_base_package.package_A:my_base_package.package_B:"
+            "--custom-restrictions=my_base_package.package_A:my_base_package.package_B:"
             "my_base_package.package_C,"
             "my_base_package/module_X.py:my_base_package/module_Y.py,"
             "my_base_package.package_A:my_base_package.package_D"

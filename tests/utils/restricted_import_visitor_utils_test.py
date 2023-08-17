@@ -28,16 +28,16 @@ def test_get_restricted_package_strings(restricted_packages, file_packages, expe
 
 
 @pytest.mark.parametrize(
-    ("import_restrictions", "file_packages", "expected"),
+    ("custom_restrictions", "file_packages", "expected"),
     [
         (defaultdict(list, {"numpy": ["pandas"]}), ["numpy"], ["pandas"]),
         (defaultdict(list, {"numpy": ["pandas"]}), ["scipy"], []),
         (defaultdict(list), ["numpy"], []),
     ],
 )
-def test_get_import_restriction_strings(import_restrictions, file_packages, expected) -> None:
+def test_get_import_restriction_strings(custom_restrictions, file_packages, expected) -> None:
     """Test get_import_restriction_strings."""
-    assert get_import_restriction_strings(import_restrictions, file_packages) == expected
+    assert get_import_restriction_strings(custom_restrictions, file_packages) == expected
 
 
 @pytest.mark.parametrize(
@@ -53,7 +53,7 @@ def test_get_import_strings(restrictions, expected) -> None:
 
 
 @pytest.mark.parametrize(
-    ("import_restrictions", "keys", "expected"),
+    ("custom_restrictions", "keys", "expected"),
     [
         (
             defaultdict(list, {"numpy": ["pandas"], "scipy": ["matplotlib"]}),
@@ -63,13 +63,13 @@ def test_get_import_strings(restrictions, expected) -> None:
         (defaultdict(list, {"numpy": ["pandas"], "scipy": ["matplotlib"]}), ["tensorflow"], {}),
     ],
 )
-def test_subdict_from_keys(import_restrictions, keys, expected) -> None:
+def test_subdict_from_keys(custom_restrictions, keys, expected) -> None:
     """Test subdict_from_keys."""
-    assert subdict_from_keys(import_restrictions, keys) == expected
+    assert subdict_from_keys(custom_restrictions, keys) == expected
 
 
 @pytest.mark.parametrize(
-    ("import_restrictions", "target_string", "expected"),
+    ("custom_restrictions", "target_string", "expected"),
     [
         (
             defaultdict(list, {"numpy": ["pandas"], "scipy": ["pandas"]}),
@@ -79,6 +79,6 @@ def test_subdict_from_keys(import_restrictions, keys, expected) -> None:
         (defaultdict(list, {"numpy": ["pandas"], "scipy": ["matplotlib"]}), "tensorflow", []),
     ],
 )
-def test_find_keys_with_string(import_restrictions, target_string, expected) -> None:
+def test_find_keys_with_string(custom_restrictions, target_string, expected) -> None:
     """Test find_keys_with_string."""
-    assert find_keys_with_string(import_restrictions, target_string) == expected
+    assert find_keys_with_string(custom_restrictions, target_string) == expected

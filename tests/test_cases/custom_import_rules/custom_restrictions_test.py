@@ -6,7 +6,7 @@
 - CIR105
 
 To run this test file only:
-poetry run python -m pytest -vvvrca tests/test_cases/custom_import_rules/import_restrictions_test.py
+poetry run python -m pytest -vvvrca tests/test_cases/custom_import_rules/custom_restrictions_test.py
 """
 import ast
 import os
@@ -733,10 +733,10 @@ def test_complex_imports(
     tree = ast.parse(custom_import_rules_fixture)
     options = {
         "base_packages": ["my_second_base_package"],
-        "import_restrictions": convert_to_dict(package_10),
+        "custom_restrictions": convert_to_dict(package_10),
         "checker_settings": Settings(
             **{
-                "IMPORT_RESTRICTIONS": convert_to_dict(package_10),
+                "CUSTOM_RESTRICTIONS": convert_to_dict(package_10),
                 "RESTRICT_DYNAMIC_IMPORTS": False,
                 "RESTRICT_LOCAL_SCOPE_IMPORTS": False,
                 "RESTRICT_RELATIVE_IMPORTS": False,
@@ -851,7 +851,7 @@ def test_complex_imports(
         ),
     ],
 )
-def test_import_restrictions(
+def test_custom_restrictions(
     test_case: str,
     expected: set,
     get_flake8_linter_results: callable,
@@ -865,10 +865,10 @@ def test_import_restrictions(
     root_package_name(identifier)
     options = {
         "base_packages": ["base_package", "my_second_base_package"],
-        "import_restrictions": convert_to_dict(package_10),
+        "custom_restrictions": convert_to_dict(package_10),
         "checker_settings": Settings(
             **{
-                "IMPORT_RESTRICTIONS": convert_to_dict(package_10),
+                "CUSTOM_RESTRICTIONS": convert_to_dict(package_10),
                 "RESTRICT_DYNAMIC_IMPORTS": False,
                 "RESTRICT_LOCAL_SCOPE_IMPORTS": False,
                 "RESTRICT_RELATIVE_IMPORTS": False,
@@ -881,14 +881,14 @@ def test_import_restrictions(
     assert set(actual) == {str(error) for error in expected}, sorted(actual)
 
 
-def test_import_restrictions_import_settings_do_not_error(
+def test_custom_restrictions_import_settings_do_not_error(
     valid_custom_import_rules_imports: str,
     get_flake8_linter_results: callable,
 ) -> None:
     """Test restricted imports do not have an effect on regular import methods."""
     options = {
-        "checker_settings": Settings(**{"IMPORT_RESTRICTIONS": {}}),
-        "import_restrictions": {},
+        "checker_settings": Settings(**{"CUSTOM_RESTRICTIONS": {}}),
+        "custom_restrictions": {},
     }
     actual = get_flake8_linter_results(
         s=valid_custom_import_rules_imports, options=options, delimiter="\n"

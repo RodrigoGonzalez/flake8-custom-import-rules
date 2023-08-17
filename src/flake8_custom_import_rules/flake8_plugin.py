@@ -117,7 +117,7 @@ class Plugin(CustomImportRulesChecker):
 
         parsed_options: dict = {
             "restricted_packages": checker_settings.RESTRICTED_PACKAGES,
-            "import_restrictions": checker_settings.IMPORT_RESTRICTIONS,
+            "custom_restrictions": checker_settings.CUSTOM_RESTRICTIONS,
             "base_packages": checker_settings.BASE_PACKAGES,
             "checker_settings": checker_settings,
             "test_env": False,
