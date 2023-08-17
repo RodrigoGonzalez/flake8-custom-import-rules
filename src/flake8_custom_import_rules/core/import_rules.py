@@ -450,10 +450,10 @@ class CustomImportRules:
         self, node: ParsedNode
     ) -> Generator[ErrorMessage, None, None]:
         """Check project level restrictions"""
-        yield from self._check_standard_custom_restrictions(node)
-        yield from self._check_special_cases_custom_restrictions(node)
+        yield from self.check_standard_import_restrictions(node)
+        yield from self.check_special_cases_import_restrictions(node)
 
-    def _check_standard_custom_restrictions(
+    def check_standard_import_restrictions(
         self, node: ParsedNode
     ) -> Generator[ErrorMessage, None, None]:
         """Check standard import restrictions"""
@@ -509,7 +509,7 @@ class CustomImportRules:
             if is_restriction_active and isinstance(node, tuple(node_types)):
                 yield from check_func(node)
 
-    def _check_special_cases_custom_restrictions(
+    def check_special_cases_import_restrictions(
         self, node: ParsedNode
     ) -> Generator[ErrorMessage, None, None]:
         """Check special cases import restrictions"""

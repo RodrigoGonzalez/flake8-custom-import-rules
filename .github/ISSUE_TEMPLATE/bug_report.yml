@@ -69,8 +69,8 @@ body:
           File "/Users/rodrigogonzalez/workspace/flake8-custom-import-rules/src/flake8_custom_import_rules/core/import_rules.py", line 159, in _check_import_rules
             yield from self._check_project_level_restrictions(node)
           File "/Users/rodrigogonzalez/workspace/flake8-custom-import-rules/src/flake8_custom_import_rules/core/import_rules.py", line 241, in _check_project_level_restrictions
-            yield from self._check_standard_custom_restrictions(node)
-          File "/Users/rodrigogonzalez/workspace/flake8-custom-import-rules/src/flake8_custom_import_rules/core/import_rules.py", line 298, in _check_standard_custom_restrictions
+            yield from self.check_standard_import_restrictions(node)
+          File "/Users/rodrigogonzalez/workspace/flake8-custom-import-rules/src/flake8_custom_import_rules/core/import_rules.py", line 298, in check_standard_import_restrictions
             yield from check_func(node)
           File "/Users/rodrigogonzalez/workspace/flake8-custom-import-rules/src/flake8_custom_import_rules/core/import_rules.py", line 552, in _check_for_pir103
             if ErrorCode.PIR103.code in self.codes_to_check and condition:
