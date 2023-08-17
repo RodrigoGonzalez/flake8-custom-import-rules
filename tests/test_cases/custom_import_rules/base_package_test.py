@@ -60,7 +60,7 @@ def test_base_package_only_imports(
             **{
                 "BASE_PACKAGE_ONLY": base_package_only_imports,
                 "RESTRICT_DYNAMIC_IMPORTS": False,
-                "RESTRICT_LOCAL_IMPORTS": False,
+                "RESTRICT_LOCAL_SCOPE_IMPORTS": False,
                 "RESTRICT_RELATIVE_IMPORTS": False,
             }
         ),

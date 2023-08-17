@@ -121,46 +121,46 @@ of imports:
 =======================  =====================================================
  Custom Import Rules        Description
 =======================  =====================================================
-project_only                This flag enforces that only project-level
+project-only                This flag enforces that only project-level
                             modules can be imported. This can be used
                             in a project where third-party dependencies
                             are intended to be minimized, and most of
                             the functionality is implemented within the
                             project itself.
 
-base_package_only           This flag enforces that only the base package
+base-package-only           This flag enforces that only the base package
                             of the project can be imported. This can be
                             used in a project with a specific structure
                             where all functionality is accessed through
                             the base package.
 
-first_party_only            This flag enforces that only first-party
+first-party-only            This flag enforces that only first-party
                             modules (i.e., those developed as part of
                             the project) can be imported. This could
                             be used in a project where third-party
                             dependencies are intended to be minimized.
 
-standalone_modules          This flag enforces that only modules that
+standalone-modules          This flag enforces that only modules that
                             are marked as 'standalone' can be imported.
                             This could be used in a project where
                             certain modules are intended to be used
                             independently of the rest of the project.
 
-std_lib_only                This flag enforces that only standard
+std-lib-only                This flag enforces that only standard
                             library modules can be imported. This
                             could be used in a project where it is
                             intended to rely solely on the standard
                             library, without any third-party
                             dependencies.
 
-third_party_only            This flag enforces that only third-party
+third-party-only            This flag enforces that only third-party
                             modules can be imported. This could be
                             used in a project where it is intended
                             to rely heavily on third-party libraries,
                             and not on the standard library or
                             project-specific modules.
 
-restricted_packages         This flag enforces that certain specified
+restricted-packages         This flag enforces that certain specified
                             packages cannot be imported. This could be
                             used in a project where certain packages
                             are known to cause issues or are not
@@ -338,7 +338,7 @@ There are also several flags available to restrict specific
 types of imports. These include:
 
 * `--restrict-relative-imports`
-* `--restrict-local-imports`
+* `--restrict-local-scope-imports`
 * `--restrict-conditional-imports`
 * `--restrict-dynamic-imports`
 * `--restrict-private-imports`
@@ -361,10 +361,13 @@ restrict-relative-imports       This flag prevents the usage of relative imports
                                 sometimes lead to confusion or unintended behavior,
                                 especially in larger code bases. On by default.
 
-restrict-local-imports          This flag restricts the import of modules that are
-                                local to the project. This could be useful to enforce
-                                dependencies only on external libraries and not on
-                                project-specific modules.
+restrict-local-scope-imports    This flag restricts local scope imports, preventing
+                                the import of modules or specific functions within
+                                a particular scope, such as inside a function or
+                                method. It enforces that all imports occur at the
+                                top-level of the file, promoting code clarity and
+                                consistency.
+
 
 restrict-conditional-imports    This flag restricts the use of conditional imports.
                                 Conditional imports are imports that occur within an
@@ -453,10 +456,10 @@ these flags can be enabled or disabled independently,
 allowing for fine-grained control over your project's import
 structure.
 
-Top-level Only Imports
-~~~~~~~~~~~~~~~~~~~~~~
+Restrict Relative Imports
+~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The `--top-level-only-imports` flag is currently not implemented.
+The `--restrict-relative-imports` flag is currently not implemented.
 Once available, it should allow you to restrict certain packages
 or modules to only import from the top-level package.
 
@@ -471,6 +474,13 @@ you can set:
 
 With this setting, any relative imports in your project will be
 flagged by the linter.
+
+Top-level Only Imports
+~~~~~~~~~~~~~~~~~~~~~~
+
+The `--top-level-only-imports` flag is currently not implemented.
+Once available, it should allow you to restrict certain packages
+or modules to only import from the top-level package.
 
 These rules and flags allow you to enforce a clean and
 understandable structure for your project's imports, making
@@ -694,9 +704,9 @@ your config file can be named in either of two ways:
                         detected. This occurs when the
                         **--restrict-relative-imports** option is enabled.
 
-  **PIR103**            This error is thrown when a local import is
+  **PIR103**            This error is thrown when a local scope import is
                         detected. This occurs when the
-                        **--restrict-local-imports** option is enabled.
+                        **--restrict-local-scope-imports** option is enabled.
 
   **PIR104**            This error is thrown when a conditional import is
                         detected. This occurs when the

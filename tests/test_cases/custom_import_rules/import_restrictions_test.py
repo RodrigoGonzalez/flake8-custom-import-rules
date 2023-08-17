@@ -738,7 +738,7 @@ def test_complex_imports(
             **{
                 "IMPORT_RESTRICTIONS": convert_to_dict(package_10),
                 "RESTRICT_DYNAMIC_IMPORTS": False,
-                "RESTRICT_LOCAL_IMPORTS": False,
+                "RESTRICT_LOCAL_SCOPE_IMPORTS": False,
                 "RESTRICT_RELATIVE_IMPORTS": False,
             }
         ),
@@ -870,7 +870,7 @@ def test_import_restrictions(
             **{
                 "IMPORT_RESTRICTIONS": convert_to_dict(package_10),
                 "RESTRICT_DYNAMIC_IMPORTS": False,
-                "RESTRICT_LOCAL_IMPORTS": False,
+                "RESTRICT_LOCAL_SCOPE_IMPORTS": False,
                 "RESTRICT_RELATIVE_IMPORTS": False,
             }
         ),

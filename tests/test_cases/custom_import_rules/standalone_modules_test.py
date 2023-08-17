@@ -128,7 +128,7 @@ def test_standalone_modules_imports(
             **{
                 "STANDALONE_MODULES": standalone_modules_imports,
                 "RESTRICT_DYNAMIC_IMPORTS": False,
-                "RESTRICT_LOCAL_IMPORTS": False,
+                "RESTRICT_LOCAL_SCOPE_IMPORTS": False,
                 "RESTRICT_RELATIVE_IMPORTS": False,
             }
         ),

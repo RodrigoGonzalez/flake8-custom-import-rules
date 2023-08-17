@@ -16,6 +16,9 @@ indent_style = tab
 
 [*.md]
 trim_trailing_whitespace = false
+indent_size = 4
+
+[*.py]
 
 [*.{yaml,yml}]
 indent_size = 2

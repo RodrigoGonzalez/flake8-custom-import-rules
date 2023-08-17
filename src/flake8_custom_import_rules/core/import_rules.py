@@ -366,7 +366,7 @@ class CustomImportRules:
                 self._check_for_pir102,
             ),
             (
-                self.checker_settings.RESTRICT_LOCAL_IMPORTS,
+                self.checker_settings.RESTRICT_LOCAL_SCOPE_IMPORTS,
                 [ParsedLocalImport],
                 self._check_for_pir103,
             ),

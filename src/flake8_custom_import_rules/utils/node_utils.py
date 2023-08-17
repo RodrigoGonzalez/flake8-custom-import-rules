@@ -8,16 +8,18 @@ from flake8_custom_import_rules.utils.parse_utils import parse_module_string
 
 def get_package_names(module_name: str) -> list[str] | None:
     """
-    Return a list of package names for a module name.
+    Get the package names for a given module.
 
     Parameters
     ----------
     module_name : str
-        The module name.
+        The name of the module.
 
     Returns
     -------
     list[str] | None
+        A list of package names for the module. Returns None
+        if no package names are found.
     """
     tree = ast.parse(module_name)
 

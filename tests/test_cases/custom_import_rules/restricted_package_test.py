@@ -106,7 +106,7 @@ def test_complex_imports(
             **{
                 "RESTRICTED_PACKAGES": restricted_packages,
                 "RESTRICT_DYNAMIC_IMPORTS": False,
-                "RESTRICT_LOCAL_IMPORTS": False,
+                "RESTRICT_LOCAL_SCOPE_IMPORTS": False,
                 "RESTRICT_RELATIVE_IMPORTS": False,
             }
         ),
@@ -284,7 +284,7 @@ def test_restricted_packages(
             **{
                 "RESTRICTED_PACKAGES": restricted_packages,
                 "RESTRICT_DYNAMIC_IMPORTS": False,
-                "RESTRICT_LOCAL_IMPORTS": False,
+                "RESTRICT_LOCAL_SCOPE_IMPORTS": False,
                 "RESTRICT_RELATIVE_IMPORTS": False,
             }
         ),
