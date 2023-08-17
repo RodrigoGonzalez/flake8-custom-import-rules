@@ -33,7 +33,7 @@ STDIN_IDENTIFIERS = {"stdin", "-", "/dev/stdin", "", None}
 
 STANDARD_PROJECT_LEVEL_RESTRICTION_KEYS = [
     "RESTRICT_RELATIVE_IMPORTS",
-    "RESTRICT_LOCAL_IMPORTS",
+    "RESTRICT_LOCAL_SCOPE_IMPORTS",
     "RESTRICT_CONDITIONAL_IMPORTS",
     "RESTRICT_DYNAMIC_IMPORTS",
     "RESTRICT_PRIVATE_IMPORTS",
@@ -120,7 +120,7 @@ class Settings:
     # Set Defaults for Project Import Restrictions
     TOP_LEVEL_ONLY_IMPORTS: bool = True
     RESTRICT_RELATIVE_IMPORTS: bool = True
-    RESTRICT_LOCAL_IMPORTS: bool = True
+    RESTRICT_LOCAL_SCOPE_IMPORTS: bool = True
     RESTRICT_CONDITIONAL_IMPORTS: bool = False
     RESTRICT_DYNAMIC_IMPORTS: bool = True
     RESTRICT_PRIVATE_IMPORTS: bool = True
@@ -221,7 +221,7 @@ HELP_STRINGS = {
     # permitted in the project. (default: True)
     # "restrict-relative-imports": If set to True, relative imports for the
     # project are disabled. (default: True)
-    # restrict-local-imports RESTRICT_LOCAL_IMPORTS: If set to True, local
+    # restrict-local-scope-imports RESTRICT_LOCAL_SCOPE_IMPORTS: If set to True, local
     # imports for the project are disabled. (default: True)
     # restrict-conditional-imports RESTRICT_CONDITIONAL_IMPORTS: If set to
     # True, conditional imports for the project are disabled. (default: False)
@@ -257,7 +257,7 @@ ERROR_CODES = {
     "standalone-modules": "CIR301 to CIR304",
     "top-level-only-imports": "PIR101",
     "restrict-relative-imports": "PIR102",
-    "restrict-local-imports": "PIR103",
+    "restrict-local-scope-imports": "PIR103",
     "restrict-conditional-imports": "PIR104",
     "restrict-dynamic-imports": "PIR105",
     "restrict-private-imports": "PIR106",

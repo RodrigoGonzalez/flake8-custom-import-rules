@@ -73,7 +73,7 @@ def test_std_lib_only_imports(
             **{
                 "STD_LIB_ONLY": std_lib_only_imports,
                 "RESTRICT_DYNAMIC_IMPORTS": False,
-                "RESTRICT_LOCAL_IMPORTS": False,
+                "RESTRICT_LOCAL_SCOPE_IMPORTS": False,
                 "RESTRICT_RELATIVE_IMPORTS": False,
             }
         ),

@@ -56,7 +56,7 @@ def test_project_only_imports(
             **{
                 "PROJECT_ONLY": project_only_imports,
                 "RESTRICT_DYNAMIC_IMPORTS": False,
-                "RESTRICT_LOCAL_IMPORTS": False,
+                "RESTRICT_LOCAL_SCOPE_IMPORTS": False,
                 "RESTRICT_RELATIVE_IMPORTS": False,
             }
         ),

@@ -75,7 +75,7 @@ def test_third_party_only_imports(
             **{
                 "THIRD_PARTY_ONLY": third_party_only_imports,
                 "RESTRICT_DYNAMIC_IMPORTS": False,
-                "RESTRICT_LOCAL_IMPORTS": False,
+                "RESTRICT_LOCAL_SCOPE_IMPORTS": False,
                 "RESTRICT_RELATIVE_IMPORTS": False,
             }
         ),

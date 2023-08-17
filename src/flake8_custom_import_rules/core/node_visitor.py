@@ -52,7 +52,7 @@ class CustomImportRulesVisitor(ast.NodeVisitor):
     file_path : Path | None
         File path equal to Path(filename) if filename is not empty or None,
         otherwise None
-    resolve_local_imports : bool | None
+    resolve_local_scope_imports : bool | None
         Resolve local imports
     identifiers : defaultdict[str, dict]
         An identifier is the name of a variable, function, class, module, or
@@ -74,7 +74,7 @@ class CustomImportRulesVisitor(ast.NodeVisitor):
     nodes: list = field(factory=list)
     dynamic_nodes: defaultdict[str, list] = defaultdict(list)
     file_path: Path | None = None
-    resolve_local_imports: bool | None = field(default=False)
+    resolve_local_scope_imports: bool | None = field(default=False)
     identifiers: defaultdict[str, dict] = defaultdict(lambda: defaultdict(str))
     identifiers_by_lineno: defaultdict[str, list] = defaultdict(list)
     stdlib_names: set | frozenset = field(init=False)
@@ -100,25 +100,25 @@ class CustomImportRulesVisitor(ast.NodeVisitor):
         else:
             self.stdlib_names = sys.stdlib_module_names
 
-        self.resolve_local_imports = self.filename not in STDIN_IDENTIFIERS
+        self.resolve_local_scope_imports = self.filename not in STDIN_IDENTIFIERS
 
-        logger.debug(f"Resolve local imports: {self.resolve_local_imports}")
+        logger.debug(f"Resolve local imports: {self.resolve_local_scope_imports}")
         self.file_path = (
             Path(self.filename).resolve()
-            if (self.resolve_local_imports and self.filename)
+            if (self.resolve_local_scope_imports and self.filename)
             else None
         )
         logger.info(f"Visitor filename: {self.filename}")
         self.file_identifier = (
             get_module_name_from_filename(str(self.filename))
-            if self.resolve_local_imports
+            if self.resolve_local_scope_imports
             else None
         )
         self.file_root_package_name = (
-            root_package_name(self.file_identifier) if self.resolve_local_imports else None
+            root_package_name(self.file_identifier) if self.resolve_local_scope_imports else None
         )
         self.file_packages = (
-            get_package_names(self.file_identifier) if self.resolve_local_imports else None
+            get_package_names(self.file_identifier) if self.resolve_local_scope_imports else None
         )
         logger.debug(f"File packages: {self.file_packages}")
 
@@ -126,7 +126,7 @@ class CustomImportRulesVisitor(ast.NodeVisitor):
         """Get all nodes."""
         return self.nodes + list(self.dynamic_nodes.values())
 
-    def _resolve_local_import(self, module: str, node_level: int) -> Path | None:
+    def _resolve_local_scope_import(self, module: str, node_level: int) -> Path | None:
         """Resolve a local import."""
         # parent = self.file_path.parents[node_level - 1] if self.file_path else None
         # return parent / f"{module}.py" if parent else None
@@ -259,7 +259,7 @@ class CustomImportRulesVisitor(ast.NodeVisitor):
         # Ensures a complete traversal of the AST
         self.generic_visit(node)
 
-    def _check_local_import(
+    def _check_local_scope_import(
         self, node: ast.ClassDef | ast.FunctionDef | ast.AsyncFunctionDef
     ) -> None:
         """Check if a local import is resolved."""
@@ -283,7 +283,7 @@ class CustomImportRulesVisitor(ast.NodeVisitor):
             col_offset=node.col_offset,
         )
         self.nodes.append(parsed_class)
-        self._check_local_import(node)
+        self._check_local_scope_import(node)
         self.generic_visit(node)
 
     def visit_FunctionDef(self, node: ast.FunctionDef) -> None:
@@ -294,7 +294,7 @@ class CustomImportRulesVisitor(ast.NodeVisitor):
             col_offset=node.col_offset,
         )
         self.nodes.append(parsed_function)
-        self._check_local_import(node)
+        self._check_local_scope_import(node)
         self.generic_visit(node)
 
     def visit_AsyncFunctionDef(self, node: ast.AsyncFunctionDef) -> None:
@@ -305,7 +305,7 @@ class CustomImportRulesVisitor(ast.NodeVisitor):
             col_offset=node.col_offset,
         )
         self.nodes.append(parsed_async_function)
-        self._check_local_import(node)
+        self._check_local_scope_import(node)
         self.generic_visit(node)
 
     def _get_dynamic_string_visitor(self, lineno: int, col_offset: int) -> DynamicStringVisitor:
