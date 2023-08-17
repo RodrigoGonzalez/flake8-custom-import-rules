@@ -156,21 +156,6 @@ first-party-only            This flag enforces that only first-party
                             be used in a package where third-party
                             dependencies are intended to be minimized.
 
-standalone-modules          This flag allows you to define a list of
-                            packages that cannot import from any other
-                            packages within your base package. This
-                            ensures that certain packages remain
-                            standalone and do not introduce unwanted
-                            dependencies. For instance, you might have
-                            a 'standalone_package' that performs a
-                            specific task independently. To ensure it
-                            remains decoupled from the rest of the
-                            application, you can make this package
-                            standalone. It promotes modular design,
-                            aiding in maintainability and scalability.
-                            (e.g., within the base package have names
-                            like `common`, `utils`, `helpers`, etc.)
-
 third-party-only            This flag enforces that only third-party
                             modules can be imported, restricting the
                             use of standard library or project-specific
@@ -184,6 +169,21 @@ third-party-only            This flag enforces that only third-party
                             does not allow imports from within the
                             specific module or package itself.
 
+standalone-modules          This flag allows you to define a list of
+                            packages that cannot import from any other
+                            packages within your base package. This
+                            ensures that certain packages remain
+                            standalone and do not introduce unwanted
+                            dependencies. For instance, you might have
+                            a 'standalone_package' that performs a
+                            specific task independently. To ensure it
+                            remains decoupled from the rest of the
+                            application, you can make this package
+                            standalone. It promotes modular design,
+                            aiding in maintainability and scalability.
+                            (e.g., typically have names
+                            like `common`, `utils`, `helpers`, etc.)
+
 =======================  =====================================================
 
 
@@ -194,7 +194,7 @@ customization of the import rules.
 Restricted Imports Option
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Use the `--import-restrictions` flag to limit
+Use the `--custom-restrictions` flag to limit
 specific import capabilities for packages. This
 feature allows you to define a list of packages
 that are restricted from importing certain
@@ -326,25 +326,10 @@ Project Import Rules (PIR) allow you to define and enforce
 import rules at a project level.
 
 There are also several flags available to restrict specific
-types of imports. These include:
-
-* `--restrict-relative-imports`
-* `--restrict-local-scope-imports`
-* `--restrict-conditional-imports`
-* `--restrict-dynamic-imports`
-* `--restrict-private-imports`
-* `--restrict-wildcard-imports`
-* `--restrict-aliased-imports`
-* `--restrict-future-imports`
-* `--restrict-init-imports`
-* `--restrict-main-imports`
-* `--restrict-test-imports`
-* `--restrict-conftest-imports`.
-
-Project import restriction flags:
+types of imports. Project import restriction flags:
 
 ============================  ==============================================================
- Import Rule                   Description
+ Project Import Rule           Description
 ============================  ==============================================================
 restrict-relative-imports       This flag prevents the usage of relative imports.
                                 Relative imports allow for modules to be imported
@@ -806,46 +791,6 @@ to consider the trade-offs and potential impacts before
 deciding to use these restrictions.
 
 
-**Additional Options**
-----------------------
-
-Restricted imports: Limit specific import capabilities for packages. Define a
-list of packages that are restricted from importing certain packages or
-modules within your base package. For example, you might want to prevent
-package A from importing package B or any of its subpackages.
-
-Restricted imports can be configured in two ways:
-
-- By package: Restrict a package from importing another package, or subpackages
-  or modules from another package.
-
-  Example: Prevent 'package_a' from importing 'package_b' or any of its
-  subpackages or modules.
-
-- By module: Restrict a module from importing specific modules.
-  Example: Prevent 'package_a.module_a' from importing 'package_b.module_b'.
-
-Restricted packages: Specify a list of packages that are not permitted to be
-imported or used by other packages or modules within your base package. This
-helps maintain a clear separation between high-level and low-level packages.
-
-Example: Restrict importing 'lower_level_package' into 'higher_level_package'.
-
-Standalone packages: Define a list of packages that cannot import from any other
-packages within your base package. This ensures that certain packages remain
-standalone and do not introduce unwanted dependencies.
-
-Example: Make 'standalone_package' standalone, so it cannot import from any
-other packages within the base package.
-
-Standard library only imports: Specify a set of packages that can only import
-from the Python standard library. This rule helps to keep specific packages
-lightweight and free from third-party dependencies.
-
-Example: Allow 'lightweight_package' to import only from Python standard
-library modules.
-
-
 **Example Configurations**
 --------------------------
 
@@ -870,7 +815,7 @@ your config file can be named in either of two ways:
     base-packages = my_base_package,my_other_base_package
 
     # Define import restrictions for your project
-    import-restrictions =
+    custom-restrictions =
         # Restrict `package_a` from importing `package_b`
         my_base_package.package_a:my_base_package.package_b
         # Restrict `module_x` from importing `module_y`
@@ -1099,7 +1044,7 @@ your config file can be named in either of two ways:
 -   This plugin is currently only compatible with Python 3.10+
     (support for 3.8 and 3.9 in the works).
 
--   Option import-restrictions only supports restricting
+-   Option custom-restrictions only supports restricting
     imports by package or module, not by class or function
     (i.e., `module_a.ClassA` or `module_a.function`).
     However, if you are trying to set import restrictions

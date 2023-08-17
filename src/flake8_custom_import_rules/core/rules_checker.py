@@ -152,7 +152,7 @@ class CustomImportRulesChecker:
             self._restricted_identifiers = get_restricted_identifiers(
                 base_packages=self.options.get("base_packages", []),
                 restricted_packages=self.options.get("restricted_packages", []),
-                import_restrictions=self.options.get("import_restrictions", defaultdict(list)),
+                custom_restrictions=self.options.get("custom_restrictions", defaultdict(list)),
                 file_packages=self.visitor.file_packages,
             )
         logger.debug(f"Restricted Identifiers: {self._restricted_identifiers}")

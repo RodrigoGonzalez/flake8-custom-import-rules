@@ -29,7 +29,7 @@ def check_conflicts(settings_dict: dict) -> list | None:
     base_package_only = settings_dict.get("BASE_PACKAGE_ONLY", [])
 
     # Extract dict from settings
-    import_restrictions = settings_dict.get("IMPORT_RESTRICTIONS", {})
+    custom_restrictions = settings_dict.get("CUSTOM_RESTRICTIONS", {})
 
     # Check for intersections among list options
     if conflict := set(third_party_only).intersection(first_party_only):
@@ -48,7 +48,7 @@ def check_conflicts(settings_dict: dict) -> list | None:
         f"Conflict: {set(standalone_modules).intersection(packages)}. "
         f"Modules set to --standalone-modules cannot be included in {option}."
         for option, packages in [
-            ("--import-restrictions", list(import_restrictions.keys())),
+            ("--custom-restrictions", list(custom_restrictions.keys())),
             ("--restricted-packages", restricted_packages),
             ("--std-lib-only", std_lib_only),
             ("--third-party-only", third_party_only),

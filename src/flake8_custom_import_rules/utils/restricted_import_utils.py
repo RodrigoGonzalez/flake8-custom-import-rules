@@ -30,7 +30,7 @@ def get_restricted_package_strings(
 
 
 def get_import_restriction_strings(
-    import_restrictions: defaultdict[str, list[str]],
+    custom_restrictions: defaultdict[str, list[str]],
     file_packages: list[str],
 ) -> list[str]:
     """
@@ -39,7 +39,7 @@ def get_import_restriction_strings(
 
     Parameters
     ----------
-    import_restrictions: defaultdict[str, list[str]]
+    custom_restrictions: defaultdict[str, list[str]]
         The import restrictions.
     file_packages: list[str]
         The file packages to check. (The module and parent packages.)
@@ -49,20 +49,20 @@ def get_import_restriction_strings(
     list[str]
         The import restriction strings.
     """
-    import_restriction_keys = list(import_restrictions.keys())
+    import_restriction_keys = list(custom_restrictions.keys())
     parsed_import_restriction_keys: list = [
         import_restriction_key
         for import_restriction_key in import_restriction_keys
         if import_restriction_key in file_packages
     ]
-    import_restrictions_from_keys = {
+    custom_restrictions_from_keys = {
         restrictions
         for key in parsed_import_restriction_keys
-        for restrictions in import_restrictions[key]
+        for restrictions in custom_restrictions[key]
     }
-    parsed_import_restrictions = list(import_restrictions_from_keys)
+    parsed_custom_restrictions = list(custom_restrictions_from_keys)
 
-    return get_restricted_package_strings(parsed_import_restrictions, file_packages)
+    return get_restricted_package_strings(parsed_custom_restrictions, file_packages)
 
 
 def get_import_strings(
@@ -85,7 +85,7 @@ def get_import_strings(
 
 
 def subdict_from_keys(
-    import_restrictions: defaultdict[str, list[str]],
+    custom_restrictions: defaultdict[str, list[str]],
     keys: list[str],
 ) -> dict[str, list[str]]:
     """
@@ -93,7 +93,7 @@ def subdict_from_keys(
 
     Parameters
     ----------
-    import_restrictions: defaultdict[str, list[str]]
+    custom_restrictions: defaultdict[str, list[str]]
         The original dictionary.
     keys: list[str]
         The keys for the sub-dictionary.
@@ -103,18 +103,18 @@ def subdict_from_keys(
     dict
         A sub-dictionary with the given keys.
     """
-    return {k: import_restrictions[k] for k in keys if k in import_restrictions}
+    return {k: custom_restrictions[k] for k in keys if k in custom_restrictions}
 
 
 def find_keys_with_string(
-    import_restrictions: defaultdict[str, list[str]], target_string: str
+    custom_restrictions: defaultdict[str, list[str]], target_string: str
 ) -> list[str]:
     """
     Function to find keys with the target string in their lists.
 
     Parameters
     ----------
-    import_restrictions : defaultdict
+    custom_restrictions : defaultdict
         The defaultdict(list) to search.
     target_string : str
         The string to search for.
@@ -124,7 +124,7 @@ def find_keys_with_string(
     list
         A list of keys where the string is found in their lists.
     """
-    return [k for k, v in import_restrictions.items() if target_string in v]
+    return [k for k, v in custom_restrictions.items() if target_string in v]
 
 
 def check_if_project_package(base_packages: list[str], import_packages: list[str]) -> bool:

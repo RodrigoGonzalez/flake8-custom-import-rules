@@ -27,7 +27,7 @@ class RestrictedImportVisitor(ast.NodeVisitor):
         The project base packages.
     _restricted_packages: list[str]
         List of restricted packages that are not allowed to be imported.
-    _import_restrictions: defaultdict[str, list[str]]
+    _custom_restrictions: defaultdict[str, list[str]]
         Default dictionary containing import restrictions for specific packages.
     _file_packages: list[str]
         List of file packages to check. Default is an empty list.
@@ -47,7 +47,7 @@ class RestrictedImportVisitor(ast.NodeVisitor):
     _base_packages: list[str] = field(factory=list)
     _restricted_packages: list[str]
     _restricted_package_list: list[str] = field(init=False)
-    _import_restrictions: defaultdict[str, list[str]]
+    _custom_restrictions: defaultdict[str, list[str]]
     _import_restriction_list: list[str] = field(init=False)
     _file_packages: list[str] = field(default=list)
     _restrictions: list[str] = field(init=False)
@@ -96,7 +96,7 @@ class RestrictedImportVisitor(ast.NodeVisitor):
             List of import restriction strings.
         """
 
-        return get_import_restriction_strings(self._import_restrictions, self._file_packages)
+        return get_import_restriction_strings(self._custom_restrictions, self._file_packages)
 
     def visit_Import(self, node: ast.Import) -> None:
         """
@@ -148,7 +148,7 @@ class RestrictedImportVisitor(ast.NodeVisitor):
 def get_restricted_identifiers(
     base_packages: list[str],
     restricted_packages: list[str] | str,
-    import_restrictions: defaultdict[str, list[str]] | None = None,
+    custom_restrictions: defaultdict[str, list[str]] | None = None,
     file_packages: list | None = None,
 ) -> defaultdict[str, dict]:
     """
@@ -160,7 +160,7 @@ def get_restricted_identifiers(
         The project base packages.
     restricted_packages : list[str]
         The list of restricted imports.
-    import_restrictions : defaultdict[str, list[str]], optional
+    custom_restrictions : defaultdict[str, list[str]], optional
         The list of restricted imports, by default None
     file_packages : list[str], optional
         The list of parent packages of the file, by default None
@@ -174,13 +174,13 @@ def get_restricted_identifiers(
         file_packages = []
     if isinstance(restricted_packages, str):
         restricted_packages = [restricted_packages]
-    if import_restrictions is None:
-        import_restrictions = defaultdict(list)
+    if custom_restrictions is None:
+        custom_restrictions = defaultdict(list)
 
     visitor = RestrictedImportVisitor(
         base_packages=base_packages,
         restricted_packages=restricted_packages,
-        import_restrictions=import_restrictions,
+        custom_restrictions=custom_restrictions,
         file_packages=file_packages,
     )
     return visitor.get_restricted_identifiers()
