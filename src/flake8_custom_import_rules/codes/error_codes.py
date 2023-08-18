@@ -12,7 +12,7 @@ class ErrorCodeMeta(EnumMeta):
     """Metaclass for error codes."""
 
     def __contains__(self, item: Any) -> bool:
-        """Check if item is in the error code."""
+        """Determine if the given item is present in the error code enumeration."""
         if isinstance(item, str):
             return item in (member.value.split(" ")[0] for member in self)  # type: ignore
         elif isinstance(item, Enum):
@@ -23,7 +23,7 @@ class ErrorCodeMeta(EnumMeta):
     def __call__(  # type: ignore
         cls, input_value: Any, *args: Any, **kwargs: Any
     ) -> Enum | type[Enum]:
-        """Check if input value is a valid error code."""
+        """Validate if the input value corresponds to a defined error code."""
         if not isinstance(input_value, str):
             try:
                 return super().__call__(input_value, *args, **kwargs)

@@ -122,7 +122,8 @@ of imports:
  Custom Import Rules        Description
 =======================  =====================================================
 restricted-packages         This flag restricts the import of specified
-                            packages within the project. It can be used to
+                            packages into all other packages within your
+                            project. It can be used to
                             prevent the use of packages known to cause
                             problems or that are undesired for specific
                             reasons. For instance, it can enforce a clear
@@ -135,26 +136,37 @@ std-lib-only                This flag ensures that only standard
                             specified package or module. It is useful in
                             scenarios where the target is intended to rely
                             solely on the standard library, without any
-                            third-party dependencies.
+                            third-party or project dependencies. For
+                            example, low-level packages that are used
+                            across the rest of the project can be
+                            restricted.
 
-project-only                This flag enforces that only project-level
-                            modules can be imported. This can be used
-                            in a project where third-party dependencies
+project-only                This flag enforces that only project
+                            packages can be imported in the specified
+                            modules and packages. This can be used
+                            in a package where third-party dependencies
                             are intended to be minimized, and most of
                             the functionality is implemented within the
-                            project itself.
+                            project itself. These are defined by the
+                            base-packages flag.
 
-base-package-only           This flag enforces that   package
-                            of the project can be imported. This can be
-                            used in a project with a specific structure
-                            where all functionality is accessed through
-                            the base package.
+base-package-only           This flag enforces that only the root
+                            package of the project can be imported
+                            into the specified packages or modules.
+                            It ensures that only the root package is
+                            solely relied on. Useful in a project where
+                            a clear hierarchy and dependency flow is
+                            required, and all functionality must be
+                            accessed through the root package.
 
 first-party-only            This flag enforces that only first-party
-                            modules (i.e., those developed as part of
-                            the project) can be imported. This could
-                            be used in a package where third-party
-                            dependencies are intended to be minimized.
+                            modules (i.e., developed as part of the
+                            project) can be imported, including all
+                            imports in base packages except for its
+                            own root package. Useful in security-
+                            sensitive environments, or to minimize
+                            external dependencies, giving more control
+                            over the codebase.
 
 third-party-only            This flag enforces that only third-party
                             modules can be imported, restricting the
@@ -184,6 +196,24 @@ standalone-modules          This flag allows you to define a list of
                             (e.g., typically have names
                             like `common`, `utils`, `helpers`, etc.)
 
+custom-restrictions         This flag enables granular control over
+                            the importing of specific packages or
+                            modules within your project. It allows you
+                            to specify a package or module, followed by
+                            a colon, and then list the restricted imports,
+                            separated by a comma.
+                            These restricted imports can include other
+                            first-party packages, standard library
+                            packages, or third-party imports. Particularly
+                            useful in large projects, this flexibility
+                            helps in managing complex dependencies.
+                            Consider a scenario where 'package_a' handles
+                            raw data cleaning, and 'package_b' processes
+                            sensitive data. To prevent accidental leakage
+                            of raw data into 'package_b', you could
+                            restrict 'package_a' from importing 'package_b'
+                            or its subpackages.
+
 =======================  =====================================================
 
 
@@ -191,8 +221,8 @@ Each of these flags can be set according to the specific needs
 and structure of the project, allowing for a high level of
 customization of the import rules.
 
-Restricted Imports Option
-~~~~~~~~~~~~~~~~~~~~~~~~~
+Custom Restrictions Option
+~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Use the `--custom-restrictions` flag to limit
 specific import capabilities for packages. This
@@ -678,13 +708,13 @@ enhancing code clarity and maintainability.
 Restrict Import From Main Files
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Importing from `__main__.py` files is generally not
+Importing from ``__main__.py`` files is generally not
 considered best practice in Python development, as
-previously explained. The `__main__.py` file is meant to
+previously explained. The ``__main__.py`` file is meant to
 define the entry point for package execution, not to house
 reusable functions or classes.
 
-The `--restrict-main-imports` flag restricts these
+The ``--restrict-main-imports`` flag restricts these
 imports, aligning with best practices. This flag is turned
 on by default.
 

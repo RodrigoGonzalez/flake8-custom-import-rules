@@ -40,13 +40,31 @@ logger = logging.getLogger(__name__)
 def filename_not_in_stdin_identifiers(
     filename: str,
 ) -> bool:
-    """Check if filename is not in STDIN_IDENTIFIERS."""
+    """
+    Check if the provided filename is not included in the list of standard
+    input identifiers.
+
+    This function is used to determine if the filename provided is not a
+    standard input identifier. Standard input identifiers are a predefined set
+    of identifiers that represent standard input streams.
+
+    Parameters
+    ----------
+    filename : str
+        The filename to check.
+
+    Returns
+    -------
+    bool
+        True if the filename is not a standard input identifier, False otherwise.
+    """
     return filename not in STDIN_IDENTIFIERS
 
 
 def get_file_matches_custom_rule(option_key: str) -> Callable[[CustomImportRules], bool]:
     """
-    Get a custom rule based on the provided option key and check if a file matches the rule.
+    Get a custom rule based on the provided option key and check if a file
+    matches the rule.
 
     Parameters
     ----------
@@ -407,7 +425,37 @@ class CustomImportRules:
         self,
         node: ParsedNode,
     ) -> Generator[ErrorMessage, None, None]:
-        """Check standalone module"""
+        """
+        Check if the current module is a standalone module.
+
+        This method checks if the current module is a standalone module based
+        on the values of `self.standalone_module` and
+        `self.standalone_package`. If `self.standalone_module` is True, it
+        performs further checks.
+
+        If `self.standalone_package` is also True, it checks if the `node` is
+        an instance of `ParsedStraightImport` and calls the
+        `_check_for_cir301` method. It yields any error messages returned by
+        that method.
+
+        If `self.standalone_package` is False, it checks if the `node` is an
+        instance of `ParsedStraightImport` and calls the `_check_for_cir303`
+        method. It yields any error messages returned by that method.
+
+        If `self.standalone_module` is False, it checks if the `node` is an
+        instance of `ParsedFromImport` and calls the `_check_for_cir304`
+        method. It yields any error messages returned by that method.
+
+        Parameters
+        ----------
+        node : ParsedNode
+            The parsed node representing an import statement.
+
+        Yields
+        ------
+        ErrorMessage
+            Error messages generated during the checks.
+        """
         if self.standalone_module:
             if self.standalone_package:
                 if isinstance(node, ParsedStraightImport):
@@ -426,7 +474,30 @@ class CustomImportRules:
         self,
         node: ParsedNode,
     ) -> Generator[ErrorMessage, None, None]:
-        """Check standard library only imports"""
+        """
+        Check for standard library only imports.
+
+        This method checks if the `std_lib_only` flag is set to True. If it
+        is, it performs additional checks based on the type of the `node`.
+
+        If the `node` is an instance of `ParsedStraightImport`, it calls the
+        `_check_for_cir401` method and yields any error messages returned by
+        that method.
+
+        If the `node` is an instance of `ParsedFromImport`, it calls the
+        `_check_for_cir402` method and yields any error messages returned by
+        that method.
+
+        Parameters
+        ----------
+        node : ParsedNode
+            The parsed node representing an import statement.
+
+        Yields
+        ------
+        ErrorMessage
+            Error messages generated during the checks.
+        """
         if self.std_lib_only:
             if isinstance(node, ParsedStraightImport):
                 yield from self._check_for_cir401(node)
@@ -506,13 +577,37 @@ class CustomImportRules:
         ]
 
         for is_restriction_active, node_types, check_func in restrictions:
-            if is_restriction_active and isinstance(node, tuple(node_types)):
+            if is_restriction_active and any(
+                isinstance(node, node_type) for node_type in node_types
+            ):
                 yield from check_func(node)
 
     def check_special_cases_import_restrictions(
         self, node: ParsedNode
     ) -> Generator[ErrorMessage, None, None]:
-        """Check special cases import restrictions"""
+        """
+        Check special case import restrictions.
+
+        This method checks for special case import restrictions based on the
+        checker settings. It iterates over a list of restrictions, each defined
+        by a tuple containing a flag indicating if the restriction is active,
+        a list of node types the restriction applies to, and a function to
+        call to check the restriction.
+
+        If the restriction is active and the node is of a type the restriction
+        applies to, it yields from the check function.
+
+        Parameters
+        ----------
+        node : ParsedNode
+            The parsed node representing an import statement.
+
+        Yields
+        ------
+        Generator[ErrorMessage, None, None]
+            A generator that yields ErrorMessage objects if the restriction is
+            active and the node is of a type the restriction applies to.
+        """
 
         if self.checker_settings.RESTRICT_INIT_IMPORTS:
             if isinstance(node, ParsedStraightImport):
@@ -549,7 +644,23 @@ class CustomImportRules:
             yield standard_error_message(node, ErrorCode.CIR101)
 
     def _check_if_import_restriction(self, node: ParsedNode) -> bool:
-        """Check if import is restricted."""
+        """
+        Check if the import is restricted.
+
+        This method checks if the given `node` matches any of the restricted
+        identifiers. If a match is found, it checks if the corresponding
+        import restriction is True.
+
+        Parameters
+        ----------
+        node : ParsedNode
+            The parsed node representing an import statement.
+
+        Returns
+        -------
+        bool
+            True if the import is restricted, False otherwise.
+        """
         if not does_import_match_custom_import_restriction(
             node.identifier, list(self.restricted_identifiers.keys())
         ):
@@ -563,7 +674,24 @@ class CustomImportRules:
         )
 
     def _check_for_cir102(self, node: ParsedNode) -> Generator[ErrorMessage, None, None]:
-        """Check for CIR102 import restriction, restrict project import."""
+        """
+        Check for CIR102 import restriction: restrict project import.
+
+        This method checks if the given `node` represents a FIRST_PARTY import and
+        if the import is restricted according to custom restrictions. If both
+        conditions are met, it yields an import restriction error with the code
+        ErrorCode.CIR102 and the file identifier.
+
+        Parameters
+        ----------
+        node : ParsedNode
+            The parsed node representing an import statement.
+
+        Yields
+        ------
+        ErrorMessage
+            Error message indicating the import restriction error.
+        """
         condition = (
             node.import_type == ImportType.FIRST_PARTY and self._check_if_import_restriction(node)
         )
@@ -571,7 +699,24 @@ class CustomImportRules:
             yield import_restriction_error(node, ErrorCode.CIR102, self.file_identifier)
 
     def _check_for_cir103(self, node: ParsedNode) -> Generator[ErrorMessage, None, None]:
-        """Check for CIR103 import restriction, restrict project from import."""
+        """
+        Check for CIR103 import restriction: restrict third-party import.
+
+        This method checks if the given `node` represents a THIRD_PARTY import and
+        if the import is restricted according to custom restrictions. If both
+        conditions are met, it yields an import restriction error with the code
+        ErrorCode.CIR103 and the file identifier.
+
+        Parameters
+        ----------
+        node : ParsedNode
+            The parsed node representing an import statement.
+
+        Yields
+        ------
+        ErrorMessage
+            Error message indicating the import restriction error.
+        """
         condition = (
             node.import_type == ImportType.FIRST_PARTY and self._check_if_import_restriction(node)
         )
@@ -579,7 +724,24 @@ class CustomImportRules:
             yield import_restriction_error(node, ErrorCode.CIR103, self.file_identifier)
 
     def _check_for_cir104(self, node: ParsedNode) -> Generator[ErrorMessage, None, None]:
-        """Check for CIR104 import restriction, restrict non-project import."""
+        """
+        Check for CIR104 import restriction: restrict standard library import.
+
+        This method checks if the given `node` represents a STDLIB import and
+        if the import is restricted according to custom restrictions. If both
+        conditions are met, it yields an import restriction error with the code
+        ErrorCode.CIR104 and the file identifier.
+
+        Parameters
+        ----------
+        node : ParsedNode
+            The parsed node representing an import statement.
+
+        Yields
+        ------
+        ErrorMessage
+            Error message indicating the import restriction error.
+        """
         condition = (
             node.import_type != ImportType.FIRST_PARTY and self._check_if_import_restriction(node)
         )
@@ -587,7 +749,24 @@ class CustomImportRules:
             yield import_restriction_error(node, ErrorCode.CIR104, self.file_identifier)
 
     def _check_for_cir105(self, node: ParsedNode) -> Generator[ErrorMessage, None, None]:
-        """Check for CIR105 import restriction, restrict non-project from import."""
+        """
+        Check for CIR105 import restriction: restrict future import.
+
+        This method checks if the given `node` represents a FUTURE import and
+        if the import is restricted according to custom restrictions. If both
+        conditions are met, it yields an import restriction error with the code
+        ErrorCode.CIR105 and the file identifier.
+
+        Parameters
+        ----------
+        node : ParsedNode
+            The parsed node representing an import statement.
+
+        Yields
+        ------
+        ErrorMessage
+            Error message indicating the import restriction error.
+        """
         condition = (
             node.import_type != ImportType.FIRST_PARTY and self._check_if_import_restriction(node)
         )
@@ -595,7 +774,22 @@ class CustomImportRules:
             yield import_restriction_error(node, ErrorCode.CIR105, self.file_identifier)
 
     def _check_if_restricted_package(self, node: ParsedNode) -> bool:
-        """Check if restricted package."""
+        """
+        Check if the package is restricted.
+
+        This method checks if the given `node` matches any of the restricted identifiers.
+        If a match is found, it checks if the corresponding package is restricted.
+
+        Parameters
+        ----------
+        node : ParsedNode
+            The parsed node representing an import statement.
+
+        Returns
+        -------
+        bool
+            True if the package is restricted, False otherwise.
+        """
         logging.debug(
             f"Node import_statement: `{node.import_statement}`, "
             f"import_type: {node.import_type}, "
@@ -871,7 +1065,23 @@ class CustomImportRules:
             yield standard_error_message(node, ErrorCode.PIR104)
 
     def _get_dynamic_import_nodes(self, node: ParsedDynamicImport) -> list[ParsedNode]:
-        """Get dynamic nodes."""
+        """
+        Retrieve dynamic import nodes.
+
+        This method retrieves all dynamic import nodes from the list of dynamic nodes
+        associated with the line number of the given node. It filters out nodes that are
+        instances of DynamicStringStraightImport or DynamicStringFromImport.
+
+        Parameters
+        ----------
+        node : ParsedDynamicImport
+            The parsed node representing a dynamic import statement.
+
+        Returns
+        -------
+        list[ParsedNode]
+            A list of dynamic import nodes.
+        """
         return [
             dynamic_node
             for dynamic_node in self.dynamic_nodes[str(node.lineno)]
@@ -879,7 +1089,23 @@ class CustomImportRules:
         ]
 
     def _dynamic_import_check(self, node: ParsedDynamicImport) -> bool:
-        """Check if a node is a dynamic import."""
+        """
+        Determine if a node represents a dynamic import.
+
+        This method checks if the given `node` is a dynamic import by verifying
+        if it matches any of the custom import restrictions. If a match is found,
+        it checks if the corresponding package is restricted.
+
+        Parameters
+        ----------
+        node : ParsedDynamicImport
+            The parsed node representing a dynamic import statement.
+
+        Returns
+        -------
+        bool
+            True if the node represents a dynamic import, False otherwise.
+        """
         if not node.confirmed and check_string(node.identifier, substring_match="modules"):
             node.confirmed = self.identifiers["modules"]["package"] == "sys"
         if not node.confirmed and check_string(
