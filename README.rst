@@ -207,11 +207,11 @@ custom-restrictions         This flag enables granular control over
                             packages, or third-party imports. Particularly
                             useful in large projects, this flexibility
                             helps in managing complex dependencies.
-                            Consider a scenario where 'package_a' handles
-                            raw data cleaning, and 'package_b' processes
+                            Consider a scenario where `package_a` handles
+                            raw data cleaning, and `package_b` processes
                             sensitive data. To prevent accidental leakage
-                            of raw data into 'package_b', you could
-                            restrict 'package_a' from importing 'package_b'
+                            of raw data into `package_b`, you could
+                            restrict `package_a` from importing `package_b`
                             or its subpackages.
 
 =======================  =====================================================
@@ -221,35 +221,199 @@ Each of these flags can be set according to the specific needs
 and structure of the project, allowing for a high level of
 customization of the import rules.
 
-Custom Restrictions Option
-~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Use the `--custom-restrictions` flag to limit
-specific import capabilities for packages. This
-feature allows you to define a list of packages
-that are restricted from importing certain
-packages or modules within your base package.
-
-Consider a scenario where you're building a data processing application
-where 'package_a' handles raw data cleaning and 'package_b' carries
-out sensitive data processing. To avoid accidentally leaking raw
-data into 'package_b', you might want to prevent 'package_a' from
-importing 'package_b' or any of its subpackages.
-
 Restricted Packages Option
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The `--restricted-packages` flag allows you to specify a list
-of packages that are not permitted to be imported or used by
-other packages or modules within your base package. This helps
-maintain a clear separation between high-level and low-level
-packages.
+The `--restricted-packages` flag allows you to specify high-level
+packages that should not be imported into any other packages within
+your project. This maintains the integrity of high-level packages,
+ensuring that they are not tightly coupled with other parts of the
+codebase.
 
-For example, if you have a 'lower_level_package' that
-contains utility functions and a 'higher_level_package'
-that handles business logic, you might want to restrict
-importing 'lower_level_package' into
-'higher_level_package' to avoid circular dependencies.
+For example, if you have a high-level package like 'app' responsible
+for core functionality, you may want to prevent it from being
+imported into lower-level packages such as 'common', 'utils', 'core',
+etc. This can help avoid circular dependencies and preserve a clean
+architectural hierarchy.
+
+.. code-block:: ini
+
+    [flake8]
+    restricted_packages = app
+
+
+Standard Library Only Imports Option
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The `--std-lib-only` flag enables you to designate specific packages
+within your project that are restricted to importing only from the
+Python standard library. This maintains a lightweight footprint for
+those packages, ensuring they remain easily portable and free from
+third-party dependencies.
+
+For example, you might be developing a 'lightweight_package' meant
+to be used across various environments without the need for additional
+dependencies. By restricting this package to import only from the
+Python standard library, you can ensure its compatibility and ease of
+use.
+
+.. code-block:: ini
+
+    [flake8]
+    std_lib_only = lightweight_package
+
+
+Project Only Imports Option
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The `--project-only` flag restricts specified modules and packages
+within your project to import solely from other packages developed
+as part of the project and the standard library. This ensures that
+the internal functionality is prioritized, and third-party
+dependencies are minimized.
+
+Consider a scenario where you want to maintain the integrity and
+independence of your project's core functionality. By using the
+`project-only` option, you can ensure that specific modules or
+packages rely exclusively on the internally developed code, reducing
+the risk of external dependencies and promoting a cohesive codebase.
+
+For example, if you have a package 'package_a' and you want to restrict
+it to only import from the local package and the project's top-level
+package, you can specify:
+
+.. code-block:: ini
+
+    [flake8]
+    project_only = package_a
+
+In this configuration, 'package_a' is limited to importing only from
+other packages defined within the project, fostering a controlled
+and self-contained development environment.
+
+
+Base Package Only Imports Option
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The `--base-package-only` flag is a powerful tool for
+enforcing a hierarchical structure within your project. By
+specifying packages or modules with this flag, you ensure
+that they can only import from the project's root package.
+This centralizes the dependency flow and promotes a
+well-structured project design.
+
+Consider a complex project with multiple interdependent
+packages. You might want to ensure that certain packages
+rely solely on the root package to minimize potential
+conflicts and promote maintainability. The
+`base-package-only` option allows you to create this clear
+and organized dependency structure.
+
+For example, suppose you have a package named `package_h`
+that you want to restrict to only import from the top-level
+package of your project. You can specify this as follows:
+
+.. code-block:: ini
+
+    [flake8]
+    base_package_only = my_base_package.package_h
+
+In this configuration, 'package_h' can only import from
+`my_base_package`. Any attempt to import from other
+packages will be flagged by the linter. This ensures that
+`my_base_package` remains the central point of interaction,
+providing better control and clarity in the project's
+architecture.
+
+Now, let's consider another package, `my_second_package`.
+Suppose you want to ensure that `my_second_package` does
+not import any other packages specified in base-packages.
+This might be useful if 'my_second_package' is designed to
+be independent or if it contains functionality that should
+not be influenced by other parts of the project. You can
+specify this restriction as follows:
+
+.. code-block:: ini
+
+    [flake8]
+    base_package_only = my_base_package.package_h, my_second_package
+
+With this configuration, `my_second_package` is restricted
+from importing any other packages specified in
+base-packages. This ensures the independence of
+`my_second_package`, allowing it to function without being
+affected by changes in other parts of the project.
+
+
+First-Party Only Imports Option
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The `--first-party-only` flag ensures that only first-party modules,
+i.e., those developed within the project, can be imported. This
+restriction includes all imports defined within the base packages,
+excluding the imports from its own root package.
+
+This control over imports can be highly beneficial in security-
+sensitive environments or in projects aiming to minimize external
+dependencies. By limiting the imports to first-party modules, you
+gain more control over the codebase and reduce potential risks
+associated with third-party dependencies.
+
+Consider a scenario where your project requires strict compliance
+with certain regulations or standards. By enforcing a first-party
+only import policy, you can ensure that all code is vetted and
+maintained within your organization, reducing potential legal or
+security concerns.
+
+To implement this restriction, you can specify:
+
+.. code-block:: ini
+
+    [flake8]
+    first_party_only = my_project.my_package
+
+In this example, 'my_package' within 'my_project' will only be
+allowed to import modules developed as part of the project. Any
+attempt to import from outside the project will be flagged by
+the linter, helping to maintain the integrity and security of
+the codebase.
+
+
+Third-Party Only Imports Option
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The `--third-party-only` flag is designed to enforce the use of
+only third-party modules in the specified packages or modules. This
+restriction prohibits the import of both standard library modules
+and project-specific modules, ensuring that only external libraries
+are utilized.
+
+Such a restriction can be particularly useful in scenarios where
+a system is designed to extend its functionality exclusively through
+third-party libraries. For instance, in a plugin system that relies
+on external extensions, this flag guarantees that only those third-
+party libraries are imported, excluding any standard or project-level
+modules.
+
+Unlike the `standalone-modules` rule, the `third-party-only` rule
+prevents even the importation of modules from within the specified
+package or module itself, further narrowing the scope of allowed
+imports.
+
+To apply this restriction, you can specify:
+
+.. code-block:: ini
+
+    [flake8]
+    third_party_only = my_plugin_system.my_plugin
+
+In this example, 'my_plugin' within 'my_plugin_system' will be
+restricted to importing only third-party modules. Any attempt to
+import from the standard library or from other modules within the
+project will be flagged by the linter. This ensures a strict
+adherence to the design principles of relying solely on third-party
+extensions, maintaining the integrity of the plugin system.
+
 
 Standalone Modules Option
 ~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -264,63 +428,56 @@ performs a specific task independently. To ensure it remains
 decoupled from the rest of the application, you can make
 this package standalone.
 
-Standard Library Only Imports Option
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Custom Restrictions Option
+~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The `--std-lib-only` flag allows you to specify a set of
-packages that can only import from the Python standard
-library. This rule helps to keep specific packages
-lightweight and free from third-party dependencies.
+The `--custom-restrictions` flag provides a powerful tool for
+managing and limiting specific import capabilities within your
+project. It enables you to precisely control the import behavior
+of individual packages or modules, ensuring that certain imports
+are restricted as per the project's requirements.
 
-Suppose you're building a 'lightweight_package' that needs
-to be easily portable and free from external dependencies.
-In this case, you might restrict this package to import
-only from Python standard library modules.
+This control is achieved by specifying a package or module,
+followed by a colon, and then listing the restricted imports,
+separated by commas. These restricted imports can range from
+other first-party packages within the project to standard library
+packages, or even third-party imports.
 
+Such granularity is particularly valuable in large or complex
+projects where managing dependencies and maintaining a clear
+structure can be challenging. For example, you may have
+`package_a` responsible for raw data cleaning and `package_b`
+for processing sensitive data. To avoid accidental leakage of
+raw data into `package_b`, you could apply restrictions to
+prevent `package_a` from importing `package_b` or any of its
+subpackages.
 
-For example, if you want to restrict a package to only import
-from the local package and the project's top-level package,
-you can use the `--project-only` flag:
+The configuration might look like this:
 
 .. code-block:: ini
 
     [flake8]
-    project_only = ["my_base_package.package_g"]
+    custom-restrictions =
+        # Restrict `package_a` from importing `package_b`
+        my_base_package.package_a:my_base_package.package_b
+        # Restrict `module_x` from importing `module_y`
+        my_base_package.module_x:my_base_package.module_y
+
+In the example above, specific restrictions are applied to
+`package_a` and `module_x`, preventing them from importing
+certain other packages or modules within the project. This
+ensures that the intended separation and containment of
+functionality are preserved, enhancing the maintainability
+and security of the codebase.
 
 
-In this example, 'package_g' is only allowed to import from
-'my_base_package' and the project's top-level package. Any
-attempt to import from other packages will be flagged by the
-linter.
+
+Custom Import Rules: Import Rules and Import Types Table
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Remember to carefully assess your project's needs and structure
 when applying these import rules, as they can significantly
 impact your project's architecture and design.
-
-
-Base Package Only Imports Option
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-The `--base-package-only` flag allows you to restrict a package
-to import only from the project's top-level package. This can
-help maintain a clear hierarchy within your project's package
-structure.
-
-For example, if you have a package named 'package_h' and you
-want it to only import from the top-level package of your
-project, you can specify:
-
-.. code-block:: ini
-
-    [flake8]
-    base_package_only = ["my_base_package.package_h"]
-
-
-In this case, any attempt by 'package_h' to import from other
-packages will be flagged by the linter.
-
-Custom Import Rules: Import Rules and Import Types Table
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 +--------------------------+---------+----------------+-------------+-------------+-------------+
 | RULE                     | STD LIB | BASE PACKAGE   | FIRST PARTY | THIRD PARTY | FUTURE [#]_ |
@@ -850,6 +1007,7 @@ your config file can be named in either of two ways:
         my_base_package.package_a:my_base_package.package_b
         # Restrict `module_x` from importing `module_y`
         my_base_package.module_x:my_base_package.module_y
+
     restricted-packages = my_base_package.package_b
 
     # Make `package_c` a standalone package
@@ -1094,7 +1252,7 @@ your config file can be named in either of two ways:
 -   Config checks have not been fully implemented yet, so
     it's possible to have invalid configurations that will
     not be caught by the plugin.
-    (e.g. designated a package or module as std-lib-only and
+    (e.g. you designated a package or module as std-lib-only and
     third-party-only at the same time).
 
 -   Private imports in tests are not supported yet. This
