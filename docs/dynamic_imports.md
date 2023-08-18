@@ -21,7 +21,6 @@ print(module.sqrt(4))  # Outputs: 2.0
 
 
 ### 2. **`__import__()`**
-    -
 This is a built-in Python function that can be used for dynamic
 imports. However, it’s generally recommended to use
 `importlib.import_module()` instead, as `__import__()` is more
