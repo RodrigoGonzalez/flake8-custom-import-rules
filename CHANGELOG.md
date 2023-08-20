@@ -1,3 +1,13 @@
+## v1.1.1 (2023-08-20)
+
+### Fix
+
+- **flake8-plugin**: switch to using strings for boolean values, for some reason using boolean options are not working as expected (#175)
+
+### Refactor
+
+- **defaults**: update docstrings and tests for the defaults module (#174)
+
 ## v1.1.0 (2023-08-20)
 
 ### Feat
