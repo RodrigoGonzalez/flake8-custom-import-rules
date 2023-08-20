@@ -1,3 +1,9 @@
+## v1.1.0 (2023-08-20)
+
+### Feat
+
+- **rule-checker**: updated docstrings (#170)
+
 ## v1.0.0 (2023-08-19)
 
 ### Feat
