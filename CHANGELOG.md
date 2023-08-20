@@ -1,3 +1,10 @@
+## v1.0.0 (2023-08-19)
+
+### Feat
+
+- **pyproject**: update development status (#167)
+- **pyproject**: update development status (#165)
+
 ## v0.11.0 (2023-08-19)
 
 ### Feat
