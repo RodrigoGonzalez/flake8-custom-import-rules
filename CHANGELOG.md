@@ -1,3 +1,28 @@
+## v0.10.1 (2023-08-19)
+
+### Fix
+
+- **import-rules**: update restricted packages to correctly identify the packages and modules and subpackages that need to be restricted (#137)
+- **import-rules**: update checks for import restrictions to correctly identify restricted imports (#136)
+- **import-rules**: corrected finding packages that match import restrictions (#135)
+- **checker**: use import restrictions from plugin and update test files (#134)
+- **import-rules**: update functions (#128)
+- **import-rules**: update isolated modules to account for imports from package itself (#126)
+
+### Refactor
+
+- **readme-and-import-rules**: update flag descriptions, add documentation, and refactor code to be more pythonic and efficient (#152)
+- **custom-restrictions**: renamed import restrictions, custom re… (#151)
+- **dynamic-imports**: added additional dynamic import checks, updated documentation to be more thorough, and added test cases to a function that did not have any (#150)
+- **local-imports**: Use local scope imports for clarity instead (#148)
+- **isolated-packages-flag**: renamed isolated modules flag to standalone modules to better reflect and describe what the flag does (#146)
+- **restricted-import-visitor**: remove check module exists option from the restricted import visitor class, not used and unnecessary (#139)
+- **restricted-import-visitor**: remove package imports in this class, calculated elsewhere (#138)
+- **plugin**: update plugin to use preprocessed checker settings for restricted packages and import restrictions (#133)
+- **restricted-import-visitor**: update restricted import visitor class to include whether restriction is from a restricted package or restricted import (#132)
+- **error-codes**: update import restriction error codes (#131)
+- **restricted-import-visitor**: move utility functions to restricted import utils module (#130)
+
 ## v0.10.0 (2023-08-07)
 
 ### Feat
