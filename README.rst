@@ -1,6 +1,13 @@
 ==========================
 flake8-custom-import-rules
 ==========================
+
+.. image:: https://github.com/RodrigoGonzalez/flake8-custom-import-rules/actions/workflows/ci.yml/badge.svg
+   :target: https://github.com/RodrigoGonzalez/flake8-custom-import-rules/actions/workflows/ci.yml
+
+.. image:: https://img.shields.io/badge/code%20style-black-000000.svg
+    :target: https://github.com/psf/black
+
 A ``flake8`` plugin that enforces custom import rules, allowing
 users to define and maintain clean and consistent import
 organization across their Python projects.
