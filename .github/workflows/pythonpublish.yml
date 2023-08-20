@@ -18,7 +18,7 @@ jobs:
       with:
         python-version: '3.x'
 
-      # Install Dependencies
+      # Install dependencies
     - name: Install Dependencies
       run: |
         pipx install poetry==1.5.1
