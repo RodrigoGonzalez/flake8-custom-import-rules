@@ -198,6 +198,9 @@ new-branch: check-branch-name  ## Create a new branch
 new-feat-branch: check-branch-name  ## Create a new feature branch
 	git checkout -b feat/$(BRANCH)_$(commit_count)
 
+new-version-branch: check-branch-name  ## Create a new version branch
+	git checkout -b v$(BRANCH)
+
 .PHONY: check-branch-name new-branch new-feat-branch
 
 # =============================================================================
