@@ -68,7 +68,7 @@ upgrade-deps: update-deps ## Upgrade dependencies to the latest versions
 local: setup update-deps  ## Locally install the package
 	custom-imports --help
 
-.PHONY: setup update-deps local
+.PHONY: update-deps upgrade-deps local pip-upgrade poetry-update pre-commit-autoupdate
 
 # =============================================================================
 # DEVELOPMENT
