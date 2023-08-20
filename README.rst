@@ -217,7 +217,7 @@ custom-restrictions         This flag enables granular control over
                             modules within your project. It allows you
                             to specify a package or module, followed by
                             a colon, and then list the restricted imports,
-                            separated by a comma.
+                            separated by additional colons.
                             These restricted imports can include other
                             first-party packages, standard library
                             packages, or third-party imports. Particularly
@@ -486,9 +486,9 @@ are restricted as per the project's requirements.
 
 This control is achieved by specifying a package or module,
 followed by a colon, and then listing the restricted imports,
-separated by commas. These restricted imports can range from
-other first-party packages within the project to standard library
-packages, or even third-party imports.
+separated by additional colons. These restricted imports can
+range from other first-party packages within the project to
+standard library packages, or even third-party imports.
 
 Such granularity is particularly valuable in large or complex
 projects where managing dependencies and maintaining a clear
@@ -506,9 +506,9 @@ The configuration might look like this:
     [flake8]
     custom-restrictions =
         # Restrict `package_a` from importing `package_b` and `os`
-        my_base_package.package_a:my_base_package.package_b,os
+        my_base_package.package_a:my_base_package.package_b:os
         # Restrict `module_x` from importing `module_y` and `pandas`
-        my_base_package.module_x:my_base_package.module_y,pandas
+        my_base_package.module_x:my_base_package.module_y:pandas
 
 In the example above, specific restrictions are applied to
 `package_a` and `module_x`, preventing them from importing
