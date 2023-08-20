@@ -1,3 +1,9 @@
+## v0.11.0 (2023-08-19)
+
+### Feat
+
+- **flake8-plugin**: add check for rule conflicts (#160)
+
 ## v0.10.1 (2023-08-19)
 
 ### Fix
