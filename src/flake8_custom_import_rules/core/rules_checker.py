@@ -88,13 +88,40 @@ class CustomImportRulesChecker:
 
     @property
     def tree(self) -> ast.AST:
-        """Return the tree: Get the abstract syntax tree of the code."""
+        """
+        Return the tree: This property method retrieves the Abstract Syntax
+        Tree (AST) of the code.
+
+        The AST is a tree representation of the source code that is parsed.
+        Each node of the tree denotes a construct occurring in the source
+        code. The syntax is transformed into semantic structures, such as
+        expressions or statements that can be understood by the compiler. If
+        the tree does not exist, it is created by parsing the lines of code.
+
+        Returns
+        -------
+        ast.AST
+            The Abstract Syntax Tree of the code.
+        """
         logger.debug(f"Tree: {self._tree}")
         return self._tree
 
     @property
     def filename(self) -> str:
-        """Return the filename: Get the name of the file being checked."""
+        """
+        Return the filename: This property method retrieves the name of the
+        file that is currently being checked.
+
+        The filename is used to read the file content when the lines of code
+        are not provided directly. It is also used in error messages to
+        indicate where the error occurred. If the filename is one of the
+        standard input identifiers, it is replaced with 'stdin'.
+
+        Returns
+        -------
+        str
+            The name of the file being checked.
+        """
         if self._filename in STDIN_IDENTIFIERS:
             self._filename = "stdin"
         logger.debug(f"Filename: {self._filename}")
@@ -103,13 +130,38 @@ class CustomImportRulesChecker:
 
     @property
     def lines(self) -> list[str]:
-        """Return the lines: Get the lines of code from the file."""
+        """
+        Return the lines: This property method retrieves the lines of code
+        from the file being checked.
+
+        The lines of code are used to create the Abstract Syntax Tree (AST)
+        for further analysis. If the lines of code are not provided directly,
+        they are read from the file specified by the filename. If the file
+        content has not been read yet, it triggers the reading process.
+
+        Returns
+        -------
+        list[str]
+            The lines of code in the file being checked.
+        """
         logger.debug(f"Lines: {self._lines}")
         return self._lines
 
     @property
     def nodes(self) -> list[ParsedNode]:
-        """Return the nodes: Get the parsed nodes from the visitor."""
+        """
+        Return the nodes: Get the parsed nodes from the visitor.
+
+        This property method returns a list of parsed nodes that are derived
+        from the visitor instance. These nodes represent the various
+        components of the Abstract Syntax Tree (AST) of the code. If the nodes
+        do not exist, it fetches them from the visitor.
+
+        Returns
+        -------
+        list[ParsedNode]
+            The list of parsed nodes found in the code.
+        """
         # logger.info(f"Nodes: {self._nodes}")
         logger.debug(f"Options: {self._options}")
         if self._nodes is None:
@@ -119,7 +171,19 @@ class CustomImportRulesChecker:
 
     @property
     def visitor(self) -> CustomImportRulesVisitor:
-        """Return the visitor to use for this plugin."""
+        """
+        Return the visitor: Get the CustomImportRulesVisitor instance.
+
+        This property method returns the instance of CustomImportRulesVisitor
+        that is used for traversing and analyzing the Abstract Syntax Tree
+        (AST) of the code. If the visitor instance does not exist, it creates
+        a new one with the base packages and filename specified in the options.
+
+        Returns
+        -------
+        CustomImportRulesVisitor
+            The visitor instance used for traversing and analyzing the AST.
+        """
         # logger.info(f"Options: {self._options}")
         # logger.info(f"Visitor: {self._visitor}")
         if self._visitor is None:
@@ -132,21 +196,60 @@ class CustomImportRulesChecker:
 
     @property
     def identifiers(self) -> defaultdict[str, dict]:
-        """Return the identifiers."""
+        """
+        Return the identifiers: Get the identifiers from the visitor.
+
+        This property method returns a dictionary of identifiers that are
+        found in the code. Identifiers are derived from the visitor instance.
+        If the identifiers do not exist, it fetches them from the visitor.
+
+        Returns
+        -------
+        defaultdict[str, dict]
+            The dictionary of identifiers found in the code.
+        """
         if self._identifiers is None:
             self._identifiers = self.visitor.identifiers
         return self._identifiers
 
     @property
     def identifiers_by_lineno(self) -> defaultdict[str, list]:
-        """Return the identifiers by lineno."""
+        """
+        Return the identifiers by line number: Get the identifiers from the
+        visitor indexed by line number.
+
+        This property method returns a dictionary where the keys are line
+        numbers and the values are lists of identifiers found on that line in
+        the code. Identifiers are derived from the visitor instance. If the
+        identifiers indexed by line number do not exist, it fetches them from
+        the visitor.
+
+        Returns
+        -------
+        defaultdict[str, list]
+            The dictionary of identifiers indexed by line number found in the
+            code.
+        """
         if self._identifiers_by_lineno is None:
             self._identifiers_by_lineno = self.visitor.identifiers_by_lineno
         return self._identifiers_by_lineno
 
     @property
     def restricted_identifiers(self) -> defaultdict[str, dict[Any, Any]] | None:
-        """Return the restricted identifiers."""
+        """
+        Return the restricted identifiers: Get the restricted identifiers from
+        the visitor.
+
+        This property method returns a dictionary of identifiers that are
+        restricted according to the rules. Restricted identifiers are derived
+        from the visitor instance. If the restricted identifiers do not exist,
+        it fetches them from the visitor.
+
+        Returns
+        -------
+        defaultdict[str, dict[Any, Any]] | None
+            The dictionary of restricted identifiers found in the code.
+        """
         logger.debug(f"file_packages: {self.visitor.file_packages}")
         if self._restricted_identifiers is None:
             self._restricted_identifiers = get_restricted_identifiers(
@@ -161,7 +264,18 @@ class CustomImportRulesChecker:
 
     @property
     def options(self) -> dict:
-        """Return the options."""
+        """
+        Return the options: Get the options for the checker.
+
+        This property method returns a dictionary of options that are used to
+        configure the behavior of the checker. These options include settings
+        like base packages, restricted packages, and custom restrictions.
+
+        Returns
+        -------
+        dict
+            The dictionary of options used for configuring the checker.
+        """
         return self._options
 
     def update_checker_settings(self, updated_options: dict) -> None:
@@ -182,7 +296,20 @@ class CustomImportRulesChecker:
 
     @property
     def import_rules(self) -> CustomImportRules:
-        """Return the import rules."""
+        """
+        Return the import rules: Get the CustomImportRules instance.
+
+        This property method returns the instance of CustomImportRules that is
+        used for applying the custom import rules on the parsed code. If the
+        instance does not exist, it creates a new one with the necessary
+        parameters derived from the visitor and options.
+
+        Returns
+        -------
+        CustomImportRules
+            The instance used for applying the custom import rules on the
+            parsed code.
+        """
         visitor = self.visitor
 
         self._import_rules = CustomImportRules(
@@ -202,6 +329,7 @@ class CustomImportRulesChecker:
 
     def check_custom_import_rules(self) -> Generator[ErrorMessage, None, None]:
         """Run the plugin:
+
         Check the code against the custom import rules and yield any
         violations.
 
