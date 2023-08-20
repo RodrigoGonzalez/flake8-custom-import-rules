@@ -67,6 +67,13 @@ Install from ``pip`` with:
      pip install flake8-custom-import-rules
 
 
+**Development**
+---------------
+
+Additional details on how to develop and contribute to this
+plugin coming soon.
+
+
 **Plugin Options: Required Flags & Options**
 --------------------------------------------
 The following flag is required to enable most of the
@@ -1031,7 +1038,7 @@ your config file can be named in either of two ways:
     # Restrict `package_b` to import only from third-party libraries
     third-party-only = my_base_package.package_b
 
-    # Restrict `package_f` to import only from the local packages and the project's
+    # Restrict `package_f` to import only other packages within the project
     first-party-only = my_base_package.package_f
 
     # Restrict `package_g` to import only from the local package and submodules/packages
