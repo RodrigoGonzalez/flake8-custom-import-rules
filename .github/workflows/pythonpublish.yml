@@ -26,15 +26,6 @@ jobs:
         poetry install
         pip install -e example_repos/my_base_module
 
-    # Wait for checks to succeed
-    - name: Wait for tests to succeed
-      uses: lewagon/wait-on-check-action@v1.3.1
-      with:
-        ref: ${{ github.ref }}
-        check-name: 'Run Unit Tests'
-        repo-token: ${{ secrets.GITHUB_TOKEN }}
-        wait-interval: 10
-
     - name: Publish
       env:
         PYPI_USERNAME: ${{ secrets.PYPI_USERNAME }}
