@@ -454,7 +454,7 @@ def register_options(
         f"--{setting_key.lower()}",
         default=option_default_value,
         action="store",
-        type=type(option_default_value),
+        type=str,
         help=help_string,
         parse_from_config=True,
         comma_separated_list=not is_restriction,

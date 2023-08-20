@@ -183,3 +183,39 @@ def test_linter(get_plugin_with_parsed_options: Callable[..., type[Plugin]]):
         checker = plugin(tree, lines=data.splitlines(True))
         results = {"{}:{}: {}".format(*r) for r in checker.run()}
         assert results == {"3:0: PIR107 Wildcard Imports are disabled for this project."}
+
+
+def test_linter__local_imports_enabled(get_plugin_with_parsed_options: Callable[..., type[Plugin]]):
+    """Test linter."""
+    with options_context(Plugin, {"test_env": True}):
+        plugin = get_plugin_with_parsed_options(
+            plugin_argv=[
+                "--base-packages=my_base_module",
+                "--restrict-relative-imports=False",
+                "-vvvv",
+            ]
+        )
+        data = "from .module_a_relative import ARelative"
+        pycodestyle.stdin_get_value = lambda: data
+        tree = ast.parse(data)
+
+        checker = plugin(tree, lines=data.splitlines(True))
+        results = {"{}:{}: {}".format(*r) for r in checker.run()}
+        assert not results
+
+
+def test_linter__local_imports_disabled(
+    get_plugin_with_parsed_options: Callable[..., type[Plugin]]
+):
+    """Test linter."""
+    with options_context(Plugin, {"test_env": True}):
+        plugin = get_plugin_with_parsed_options(
+            plugin_argv=["--base-packages=my_base_module", "--restrict-relative-imports=True"]
+        )
+        data = "from .module_a_relative import ARelative"
+        pycodestyle.stdin_get_value = lambda: data
+        tree = ast.parse(data)
+
+        checker = plugin(tree, lines=data.splitlines(True))
+        results = {"{}:{}: {}".format(*r) for r in checker.run()}
+        assert results == {"1:0: PIR102 Relative Imports are disabled for this project."}
