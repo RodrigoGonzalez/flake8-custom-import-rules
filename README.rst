@@ -25,8 +25,17 @@ not be necessary or beneficial in all cases. It's important
 to consider the trade-offs and potential impacts before
 deciding to use these restrictions.
 
+There are two types of import rules that can be enforced by
+this plugin:
 
-.. contents:: README Sections
+-   Custom Import Rules (CIR) allow you to define and enforce
+    import rules for specific package and modules within your
+    project.
+-   Project Import Rules (PIR) allow you to define and enforce
+    import rules at a project level.
+
+
+.. contents:: **Sections**
    :depth: 2
 
 
@@ -48,15 +57,6 @@ promotes a modular architecture that is easier to comprehend,
 test, and debug. Consequently, developers can smoothly adhere
 to best practices, maintaining their projects in a clean,
 organized, and collaborative-friendly state.
-
-There are two types of import rules that can be enforced by
-this plugin:
-
--   Custom Import Rules (CIR) allow you to define and enforce
-    import rules for specific package and modules within your
-    project.
--   Project Import Rules (PIR) allow you to define and enforce
-    import rules at a project level.
 
 NOTE: While certain options might be considered niche and
 are unlikely to be employed in everyday scenarios, their
