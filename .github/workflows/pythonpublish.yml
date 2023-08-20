@@ -1,0 +1,35 @@
+name: Upload Python Package
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        token: '${{ secrets.PERSONAL_ACCESS_TOKEN }}'
+        fetch-depth: 0
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.x'
+
+      # Install Dependencies
+    - name: Install Dependencies
+      run: |
+        pipx install poetry==1.5.1
+        poetry --version
+        poetry install
+        pip install -e example_repos/my_base_module
+
+    - name: Publish
+      env:
+        PYPI_USERNAME: ${{ secrets.PYPI_USERNAME }}
+        PYPI_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
+      run: |
+        poetry build
+        poetry publish --username $PYPI_USERNAME --password $PYPI_PASSWORD
