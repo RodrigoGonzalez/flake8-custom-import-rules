@@ -11,6 +11,12 @@ specify import restrictions, standalone packages and modules,
 and additional custom and project-level import rules.
 These flags can be used in conjunction
 with each other to provide granular control over your import rules.
+The use of these flags is highly dependent on the specific
+needs and coding standards of your project. They provide
+a means to enforce certain styles or practices, but may
+not be necessary or beneficial in all cases. It's important
+to consider the trade-offs and potential impacts before
+deciding to use these restrictions.
 
 
 .. contents:: README Sections
@@ -525,7 +531,7 @@ impact your project's architecture and design.
 +--------------------------+---------+----------------+-------------+-------------+-------------+
 | project-only             | X       | X              | X           |             | X           |
 +--------------------------+---------+----------------+-------------+-------------+-------------+
-| base-package-only        | X       | X              |             |             | X           |
+| base-package-only [#]_   | X       | X              |             |             | X           |
 +--------------------------+---------+----------------+-------------+-------------+-------------+
 | first-party-only         | X       |                | X           |             | X           |
 +--------------------------+---------+----------------+-------------+-------------+-------------+
@@ -535,7 +541,7 @@ impact your project's architecture and design.
 +--------------------------+---------+----------------+-------------+-------------+-------------+
 
 
-.. [#] Technically project imports are "First Party" imports,
+.. [#] Technically base package imports are "First Party" imports,
     but in this case we want to make a distinction between
     the top-level package and the rest of the project.
 .. [#] To restrict future imports, use the
@@ -983,39 +989,6 @@ The `--top-level-only-imports` flag is currently not implemented.
 Once available, it should allow you to restrict certain packages
 or modules to only import from the top-level package.
 
-These rules and flags allow you to enforce a clean and
-understandable structure for your project's imports, making
-your code more maintainable and less prone to bugs or
-design issues. Remember to review each flag and its implications
-carefully, and choose the ones that best suit your project's
-needs and design.
-
-
-**CustomImportRules class**
-
-The `CustomImportRules` class is designed to enforce custom
-import rules in a Python project. It is especially useful in
-large projects where managing the structure and dependencies
-of the project can become difficult. This class uses `flake8`,
-a Python tool for enforcing coding style, to enforce these
-custom rules. It inspects each import statement in the
-codebase and checks whether it violates any of the defined
-rules.
-
-**Import Restriction Flags**
-
-The import restriction flags are defined as fields in the
-`CustomImportRules` class. Each flag corresponds to a specific
-rule that can be enforced in the codebase. These are the
-flags and their use cases:
-
-The use of these flags is highly dependent on the specific
-needs and coding standards of your project. They provide
-a means to enforce certain styles or practices, but may
-not be necessary or beneficial in all cases. It's important
-to consider the trade-offs and potential impacts before
-deciding to use these restrictions.
-
 
 **Example Configurations**
 --------------------------
@@ -1052,19 +1025,19 @@ your config file can be named in either of two ways:
     # Make `package_c` a standalone package
     standalone-modules = my_base_package.package_c
 
-    # Allow `package_d` to import only from the standard library
+    # Restrict `package_d` to import only from the standard library
     std-lib-only = my_base_package.package_d
 
-    # Allow `package_b` to import only from third-party libraries
+    # Restrict `package_b` to import only from third-party libraries
     third-party-only = my_base_package.package_b
 
-    # Allow `package_f` to import only from the local packages and the project's
+    # Restrict `package_f` to import only from the local packages and the project's
     first-party-only = my_base_package.package_f
 
-    # Allow `package_g` to import only from the local package and submodules/packages
+    # Restrict `package_g` to import only from the local package and submodules/packages
     project-only = my_base_package.package_g
 
-    # Restrict relative imports
+    # Do not restrict relative imports
     restrict-relative-imports = False
 
     # Restrict local scope imports
@@ -1079,6 +1052,19 @@ your config file can be named in either of two ways:
 
 **Custom Import Rule Violation Codes**
 --------------------------------------
+
+Custom Import Rule Violation Codes represent specific
+errors related to the import rules defined within a
+project. These codes are used to identify violations of
+custom import restrictions, such as importing from
+restricted packages or modules or violating import
+standards defined by certain flags. Each code
+corresponds to a different rule or condition, allowing
+developers to quickly identify the source of the error and
+take corrective action. The table below outlines the
+various violation codes and their corresponding
+descriptions.
+
 
 =====================  ============================================================
  Rule Violation Code    Description
@@ -1168,6 +1154,19 @@ your config file can be named in either of two ways:
 
 **Project Import Rule Violation Codes**
 ---------------------------------------
+
+Project Import Rule Violation Codes pertain to errors
+thrown due to violations of project-specific import rules.
+These rules are often defined to maintain a specific
+structure or standard within the project, such as
+restricting relative imports or wildcard imports. Violation
+of these rules triggers specific error codes that help
+developers identify the exact nature of the violation,
+aiding in the debugging and maintenance of the codebase.
+The following table provides a comprehensive list of these
+violation codes, detailing their meanings and the conditions
+under which they are triggered.
+
 
 =====================  ============================================================
  Rule Violation Code        Description
