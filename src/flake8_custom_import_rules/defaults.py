@@ -171,15 +171,53 @@ class Settings:
 
     @property
     def dict(self) -> dict:
-        """Return the settings as a dictionary."""
+        """
+        Return the settings as a dictionary.
+
+        This method converts the settings of the flake8_custom_import_rules
+        plugin into a dictionary format. The dictionary includes all the
+        default and custom import rules defined in the settings.
+
+        Returns
+        -------
+        dict
+            A dictionary representation of the settings.
+        """
         return asdict(self)
 
     def get_option_keys(self) -> list:
-        """Return the options as a dictionary."""
+        """
+        Return a list of option keys from the settings dictionary.
+
+        This method retrieves all the keys from the settings dictionary that
+        are in uppercase. These keys represent the options for the
+        flake8_custom_import_rules plugin.
+
+        Returns
+        -------
+        list
+            A list of option keys from the settings dictionary.
+        """
         return [key for key in self.dict.keys() if key.isupper()]
 
     def get_settings_value(self, key: str) -> Any:
-        """Return the settings as a dictionary."""
+        """
+        Get the value of a setting given its key.
+
+        Parameters
+        ----------
+        key : str
+            The key of the setting.
+
+        Raises
+        ------
+        KeyError: If the setting does not exist.
+
+        Returns
+        -------
+        Any
+            The value of the setting.
+        """
         if not hasattr(self, key):
             raise KeyError(f"Settings '{key}' does not exist.")
         return self.dict[key]
@@ -190,56 +228,83 @@ DEFAULT_CHECKER_SETTINGS = Settings()
 
 HELP_STRINGS = {
     "base-packages": (
-        "This option allows you to define the main packages in your project. "
-        "These packages are considered first-party and are generally the ones "
-        "you are developing in your project. Import names to consider as "
-        "first party modules (i.e., the name of your package or library). "
-        "For example, if you're building a library named 'my_library', you "
-        "would include 'my_library' as a base package. If this option is not "
-        "set, some functionality will be disabled."
+        "This option defines the primary packages that constitute your "
+        "project, categorized as first-party. It serves as a foundational "
+        "configuration, clearly delineating main project components from "
+        "external dependencies. For example, include 'my_library' as a base "
+        "package if developing a library with that name. Without this "
+        "configuration, some functionality will be limited or disabled. "
+        "This option is required for the plugin to work as intended. "
+        "Specify base-packages using a comma-separated list."
     ),
     "custom-restrictions": (
-        "This option allows you to restrict specific import capabilities for "
-        "packages. You can define a list of packages that are restricted from "
-        "importing certain packages or modules within your base package. "
-        "This option allows you to define the main packages in your project."
+        "This option enables granular control over importing specific "
+        "packages or modules within your project. "
+        "Useful in managing complex dependencies and preventing accidental "
+        "interactions between specific packages."
+        "Specify a package or module, followed by a colon, then list the "
+        "custom restrictions using a comma-separated list."
+        "(i.e., other modules or packages in your project, even third-party "
+        "or standard library modules), separated by a comma. "
     ),
     "restricted-packages": (
-        "This option lets you specify a list of packages that are not "
-        "permitted to be imported or used by other packages or modules within "
-        "your base package. This helps maintain a clear separation between "
-        "high-level and low-level packages."
+        "This flag restricts the import of specified packages or modules into "
+        "all other packages within your project. It enforces clear separation "
+        "between high-level and low-level packages, such as preventing the "
+        "`app` package from being imported by `common`, `utils`, `core`, etc. "
+        "Specify restricted-packages using a comma-separated list."
     ),
     "std-lib-only": (
-        "This option allows you to specify a set of packages that can only "
-        "import from third-party libraries. This can be useful to limit the "
-        "dependencies of a package to external libraries only."
+        "This flag ensures that only standard library modules can be imported "
+        "within the specified package or module. Useful in scenarios where "
+        "the target is intended to rely solely on the standard library, "
+        "without any third-party or project dependencies. "
+        "Specify std-lib-only using a comma-separated list."
     ),
     "project-only": (
-        "This option allows you to restrict a package to import only from the "
-        "local package and the project's top-level package. This will treat "
-        "the packages defined in `--base-packages` as the top-level package."
+        "This flag enforces that only project packages can be imported in the "
+        "specified modules and packages. Useful to minimize third-party "
+        "dependencies when most functionality is implemented within the "
+        "project. Packages that can be imported (i.e. project packages) are"
+        "defined by the base-packages flag. "
+        "Specify project-only using a comma-separated list."
     ),
     "base-package-only": (
-        "This option lets you restrict a package to import only from the "
-        "project's top-level package. This will treat the first package "
-        "defined in base_packages as the top-level package."
+        "This flag enforces that only the root package of the package or "
+        "module can be imported into the specified packages or modules. "
+        "Useful in a project where a clear hierarchy and dependency flow is "
+        "required, and all functionality must be accessed through the root "
+        "package. Only useful if you have more than one package defined by "
+        "the base-packages flag, in this case, if you would like to prevent "
+        "imports from the base-package of your project from being imported, "
+        "the `custom-restrictions`, `std-lib-only`, and `third-party-only` "
+        "flags may be more appropriate. "
+        "Specify base-package-only using a comma-separated list."
     ),
     "first-party-only": (
-        "This option enables you to specify a set of packages that can only "
-        "import from the local packages (i.e., the packages defined in your "
-        "base packages)."
+        "This flag enforces that only first-party modules can be imported, "
+        "including all imports in base packages except for its own root "
+        "package. Useful in security-sensitive environments or to minimize "
+        "external dependencies, giving more control over the codebase. For, "
+        "example, you only want a specific module to import from the other "
+        "packages in your project, but not from any third-party packages. "
+        "Specify first-party-only using a comma-separated list."
     ),
     "third-party-only": (
-        "Define packages that should only import from third-party libraries. "
-        "This rule helps maintain a clear dependency scope for the specified "
-        "packages."
+        "This flag enforces that only third-party modules can be imported, "
+        "excluding standard modules. For example, in a plugin system, this "
+        "ensures that only external libraries are imported, maintaining a "
+        "separation of concerns and strict adherence to the design "
+        "principles. "
+        "Specify third-party-only using a comma-separated list."
     ),
     "standalone-modules": (
-        "This option allows you to define a list of modules that cannot import "
-        "from any other modules within your base package. This ensures that "
-        "certain modules remain standalone and do not introduce unwanted "
-        "dependencies."
+        "This flag defines packages that cannot import from any other "
+        "packages within your project, except for modules and packages within "
+        "the root package of the standalone module. This ensures certain "
+        "packages remain standalone, promoting modular design and aiding in "
+        "maintainability and scalability. "
+        "Specify standalone-modules using a comma-separated list."
     ),
     # "top-level-only-imports": If set to True, only top-level imports are
     # permitted in the project. (default: True)

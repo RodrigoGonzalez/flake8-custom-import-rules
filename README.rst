@@ -84,9 +84,9 @@ dependencies. This distinction assists in various operations,
 such as linting, dependency analysis, and code organization.
 
 For instance, if a user is developing a library named
-'my_library', they would include 'my_library' as a base
+`my_library`, they would include `my_library` as a base
 package by configuring this flag. This inclusion ensures
-that the tool recognizes 'my_library' a the reference
+that the tool recognizes `my_library` a the reference
 package for imposing many of the rules the user is
 likely to define or enable, aligning its behavior with the
 user's development practices. As seen below:
@@ -183,18 +183,21 @@ third-party-only            This flag enforces that only third-party
 
 standalone-modules          This flag allows you to define a list of
                             packages that cannot import from any other
-                            packages within your base package. This
-                            ensures that certain packages remain
-                            standalone and do not introduce unwanted
-                            dependencies. For instance, you might have
+                            packages within your project, except for
+                            modules and packages within the parent
+                            package. This ensures that certain packages
+                            remain standalone and do not introduce
+                            unwanted dependencies.
+                            For instance, you might have
                             a 'standalone_package' that performs a
                             specific task independently. To ensure it
                             remains decoupled from the rest of the
                             application, you can make this package
                             standalone. It promotes modular design,
                             aiding in maintainability and scalability.
-                            (e.g., typically have names
-                            like `common`, `utils`, `helpers`, etc.)
+                            (e.g., within your base package typically
+                            have names like `common`, `utils`,
+                            `helpers`, etc.)
 
 custom-restrictions         This flag enables granular control over
                             the importing of specific packages or
@@ -418,15 +421,46 @@ extensions, maintaining the integrity of the plugin system.
 Standalone Modules Option
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The `--standalone-modules` flag allows you to define a list of
-packages that cannot import from any other packages within
-your base package. This ensures that certain packages remain
-standalone and do not introduce unwanted dependencies.
+The `--standalone-modules` flag is designed to allow specific
+packages or modules to import only from the standard library,
+the base package of the project, and third-party libraries,
+excluding any other first-party or project-level imports.
+This ensures that the specified standalone packages or modules
+operate independently from other parts of the project, yet they
+still have access to essential third-party libraries, the base
+package, and standard libraries.
 
-For instance, you might have a 'standalone_package' that
-performs a specific task independently. To ensure it remains
-decoupled from the rest of the application, you can make
-this package standalone.
+This option aids in maintainability and scalability, especially
+in complex projects where clear boundaries and modular design
+are essential. Standalone modules or packages can be used to
+encapsulate specific functionalities that don't require
+integration with the rest of the first-party code.
+
+Here's an example of how you can configure this rule:
+
+.. code-block:: ini
+
+    [flake8]
+    standalone_modules = my_base_package.standalone_module
+
+In this example, 'standalone_module' within 'my_base_package'
+is configured to import only from the standard library, the
+base package itself, and third-party libraries. Any attempt to
+import from other first-party packages or modules within the
+project will be flagged by the linter.
+
+It's worth noting the difference between the `standalone-modules`
+rule and the `third-party-only` rule. While both restrict
+project-specific imports, `standalone-modules` allows imports
+from within the standalone package or module itself, whereas
+`third-party-only` does not, further narrowing the scope of
+allowed imports.
+
+By employing the `standalone-modules` option, developers can
+ensure that certain parts of the application remain decoupled
+and self-contained, promoting a clean and organized code
+structure that can be more easily managed and expanded.
+
 
 Custom Restrictions Option
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -458,15 +492,20 @@ The configuration might look like this:
 
     [flake8]
     custom-restrictions =
-        # Restrict `package_a` from importing `package_b`
-        my_base_package.package_a:my_base_package.package_b
-        # Restrict `module_x` from importing `module_y`
-        my_base_package.module_x:my_base_package.module_y
+        # Restrict `package_a` from importing `package_b` and `os`
+        my_base_package.package_a:my_base_package.package_b,os
+        # Restrict `module_x` from importing `module_y` and `pandas`
+        my_base_package.module_x:my_base_package.module_y,pandas
 
 In the example above, specific restrictions are applied to
 `package_a` and `module_x`, preventing them from importing
-certain other packages or modules within the project. This
-ensures that the intended separation and containment of
+certain other packages or modules within the project, or even
+from the standard library or third-party libraries. Again,
+this is to provide a granular level of control over the
+import behavior of individual packages or modules, restricting
+imports from `pandas` or even `os` is not very likely within
+your own project, but there may reasons make these restrictions.
+This ensures that the intended separation and containment of
 functionality are preserved, enhancing the maintainability
 and security of the codebase.
 
