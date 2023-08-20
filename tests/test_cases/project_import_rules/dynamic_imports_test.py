@@ -1,6 +1,6 @@
 """ Test dynamic import restrictions.
 
-PIR105 = "PIR105 Dynamic imports are disabled for this project."
+PIR105 = "PIR105 Dynamic Imports are disabled for this project."
 
 To run this test file only:
 poetry run python -m pytest -vvvrca tests/test_cases/project_import_rules/dynamic_imports_test.py
@@ -15,7 +15,7 @@ from flake8_custom_import_rules.defaults import Settings
     [
         (
             "eval('from my_base_module.module_z import Z')",
-            {"1:0: PIR105 Dynamic imports are disabled for this project."},
+            {"1:0: PIR105 Dynamic Imports are disabled for this project."},
             True,
         ),
         (
@@ -25,7 +25,7 @@ from flake8_custom_import_rules.defaults import Settings
         ),
         (
             "exec('import datetime')",
-            {"1:0: PIR105 Dynamic imports are disabled for this project."},
+            {"1:0: PIR105 Dynamic Imports are disabled for this project."},
             True,
         ),
         (
@@ -35,7 +35,7 @@ from flake8_custom_import_rules.defaults import Settings
         ),
         (
             "import importlib; importlib.import_module('datetime')",
-            {"1:18: PIR105 Dynamic imports are disabled for this project."},
+            {"1:18: PIR105 Dynamic Imports are disabled for this project."},
             True,
         ),
         (
@@ -45,7 +45,7 @@ from flake8_custom_import_rules.defaults import Settings
         ),
         (
             "from importlib import import_module; importlib.import_module('datetime')",
-            {"1:37: PIR105 Dynamic imports are disabled for this project."},
+            {"1:37: PIR105 Dynamic Imports are disabled for this project."},
             True,
         ),
         (
@@ -55,7 +55,7 @@ from flake8_custom_import_rules.defaults import Settings
         ),
         (
             "from sys import modules; dynamic_datetime = modules['datetime']",
-            {"1:25: PIR105 Dynamic imports are disabled for this project."},
+            {"1:25: PIR105 Dynamic Imports are disabled for this project."},
             True,
         ),
         (
@@ -65,7 +65,7 @@ from flake8_custom_import_rules.defaults import Settings
         ),
         (
             "import sys; dynamic_datetime = sys.modules['datetime']",
-            {"1:12: PIR105 Dynamic imports are disabled for this project."},
+            {"1:12: PIR105 Dynamic Imports are disabled for this project."},
             True,
         ),
         (
@@ -80,10 +80,10 @@ from flake8_custom_import_rules.defaults import Settings
                 "my_module = zipimporter.load_module('my_module')"
             ),
             {
-                "1:35: PIR105 Dynamic imports are disabled for this project.",
-                "1:49: PIR105 Dynamic imports are disabled for this project.",
-                "1:79: PIR105 Dynamic imports are disabled for this project.",
-                "1:91: PIR105 Dynamic imports are disabled for this project.",
+                "1:35: PIR105 Dynamic Imports are disabled for this project.",
+                "1:49: PIR105 Dynamic Imports are disabled for this project.",
+                "1:79: PIR105 Dynamic Imports are disabled for this project.",
+                "1:91: PIR105 Dynamic Imports are disabled for this project.",
             },
             True,
         ),

@@ -1,7 +1,7 @@
 """ Test private import restrictions for private imports, private modules,
 and private packages.
 
-PIR106 = "PIR106 Private imports are disabled for this project."
+PIR106 = "PIR106 Private Imports are disabled for this project."
 
 To run this test file only:
 poetry run python -m pytest -vvvrca tests/test_cases/project_import_rules/private_imports_test.py
@@ -31,11 +31,11 @@ PRIVATE_IMPORT_CODE = dedent(
         (
             PRIVATE_IMPORT_CODE,
             {
-                "2:0: PIR106 Private imports are disabled for this project.",
-                "5:0: PIR106 Private imports are disabled for this project.",
-                "6:0: PIR106 Private imports are disabled for this project.",
-                "7:0: PIR106 Private imports are disabled for this project.",
-                "8:0: PIR106 Private imports are disabled for this project.",
+                "2:0: PIR106 Private Imports are disabled for this project.",
+                "5:0: PIR106 Private Imports are disabled for this project.",
+                "6:0: PIR106 Private Imports are disabled for this project.",
+                "7:0: PIR106 Private Imports are disabled for this project.",
+                "8:0: PIR106 Private Imports are disabled for this project.",
             },
             True,
         ),

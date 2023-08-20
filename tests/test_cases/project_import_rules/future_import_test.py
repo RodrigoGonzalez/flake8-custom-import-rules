@@ -9,7 +9,7 @@ import pytest
 
 from flake8_custom_import_rules.defaults import Settings
 
-PIR109 = "PIR109 Future imports are disabled for this project."
+PIR109 = "PIR109 Future Imports are disabled for this project."
 
 
 @pytest.mark.parametrize(
@@ -17,7 +17,7 @@ PIR109 = "PIR109 Future imports are disabled for this project."
     [
         (
             "import __future__",
-            {"1:0: PIR109 Future imports are disabled for this project."},
+            {"1:0: PIR109 Future Imports are disabled for this project."},
             True,
         ),
         (
@@ -27,7 +27,7 @@ PIR109 = "PIR109 Future imports are disabled for this project."
         ),
         (
             "from __future__ import annotations",
-            {"1:0: PIR109 Future imports are disabled for this project."},
+            {"1:0: PIR109 Future Imports are disabled for this project."},
             True,
         ),
         (

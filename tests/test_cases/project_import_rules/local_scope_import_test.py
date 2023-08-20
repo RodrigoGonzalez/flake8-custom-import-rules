@@ -1,6 +1,6 @@
 """ Test local import restrictions.
 
-PIR103 = "PIR103 Local imports are disabled for this project."
+PIR103 = "PIR103 Local Imports are disabled for this project."
 
 To run this test file only:
 poetry run python -m pytest -vvvrca tests/test_cases/project_import_rules/local_scope_import_test.py
@@ -33,9 +33,9 @@ LOCAL_SCOPE_IMPORT_CODE = dedent(
         (
             LOCAL_SCOPE_IMPORT_CODE,
             {
-                "5:4: PIR103 Local imports are disabled for this project.",
-                "8:4: PIR103 Local imports are disabled for this project.",
-                "11:4: PIR103 Local imports are disabled for this project.",
+                "5:4: PIR103 Local Imports are disabled for this project.",
+                "8:4: PIR103 Local Imports are disabled for this project.",
+                "11:4: PIR103 Local Imports are disabled for this project.",
             },
             True,
         ),

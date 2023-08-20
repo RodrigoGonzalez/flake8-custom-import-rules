@@ -31,11 +31,11 @@ TOP_LEVEL_ONLY_IMPORT_CODE = dedent(
         (
             TOP_LEVEL_ONLY_IMPORT_CODE,
             {
-                "2:0: PIR106 Private imports are disabled for this project.",
-                "5:0: PIR106 Private imports are disabled for this project.",
-                "6:0: PIR106 Private imports are disabled for this project.",
-                "7:0: PIR106 Private imports are disabled for this project.",
-                "8:0: PIR106 Private imports are disabled for this project.",
+                "2:0: PIR106 Private Imports are disabled for this project.",
+                "5:0: PIR106 Private Imports are disabled for this project.",
+                "6:0: PIR106 Private Imports are disabled for this project.",
+                "7:0: PIR106 Private Imports are disabled for this project.",
+                "8:0: PIR106 Private Imports are disabled for this project.",
             },
             True,
         ),

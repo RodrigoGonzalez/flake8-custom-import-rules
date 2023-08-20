@@ -113,7 +113,7 @@ unit-tests-cov: ## run unit-tests with pytest and show coverage (terminal + html
 
 unit-tests-cov-fail: ## run unit tests w/ pytest and coverage (terminal + html) & create files for CI
 	poetry run pytest  -vvvvsra --doctest-modules --cov=src --cov-report term-missing \
-	--cov-report=html --cov-fail-under=80 --junitxml=pytest.xml | tee pytest-coverage.txt
+	--cov-report=xml --cov-fail-under=80 --junitxml=pytest.xml | tee pytest-coverage.txt
 
 clean-cov: ## remove output files from pytest & coverage
 	rm -rf .coverage
