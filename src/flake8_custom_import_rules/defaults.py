@@ -243,9 +243,9 @@ HELP_STRINGS = {
         "Useful in managing complex dependencies and preventing accidental "
         "interactions between specific packages."
         "Specify a package or module, followed by a colon, then list the "
-        "custom restrictions using a comma-separated list."
-        "(i.e., other modules or packages in your project, even third-party "
-        "or standard library modules), separated by a comma. "
+        "custom restrictions for that package or module separate by "
+        "additional colons. (i.e., other modules or packages in your "
+        "project, even third-party or standard library modules). "
     ),
     "restricted-packages": (
         "This flag restricts the import of specified packages or modules into "
