@@ -1,6 +1,6 @@
 """ Test relative import restrictions.
 
-PIR102 = "PIR102 Relative imports are disabled for this project."
+PIR102 = "PIR102 Relative Imports are disabled for this project."
 
 To run this test file only:
 poetry run python -m pytest -vvvrca tests/test_cases/project_import_rules/relative_imports_test.py
@@ -15,7 +15,7 @@ from flake8_custom_import_rules.defaults import Settings
     [
         (
             "from .module_z import Z",
-            {"1:0: PIR102 Relative imports are disabled for this project."},
+            {"1:0: PIR102 Relative Imports are disabled for this project."},
             True,
         ),
         (
@@ -25,7 +25,7 @@ from flake8_custom_import_rules.defaults import Settings
         ),
         (
             "from . import module_z",
-            {"1:0: PIR102 Relative imports are disabled for this project."},
+            {"1:0: PIR102 Relative Imports are disabled for this project."},
             True,
         ),
         (
@@ -35,7 +35,7 @@ from flake8_custom_import_rules.defaults import Settings
         ),
         (
             "from ..module_z import Z",
-            {"1:0: PIR102 Relative imports are disabled for this project."},
+            {"1:0: PIR102 Relative Imports are disabled for this project."},
             True,
         ),
         (

@@ -78,14 +78,14 @@ class ErrorCode(Enum, metaclass=ErrorCodeMeta):
 
     # Project Level Import Rules and Restrictions
     PIR101 = "PIR101 Only top level imports are permitted in the project."
-    PIR102 = "PIR102 Relative imports are disabled for this project."
-    PIR103 = "PIR103 Local imports are disabled for this project."
-    PIR104 = "PIR104 Conditional imports are disabled for this project."
-    PIR105 = "PIR105 Dynamic imports are disabled for this project."
-    PIR106 = "PIR106 Private imports are disabled for this project."
-    PIR107 = "PIR107 Wildcard imports are disabled for this project."
-    PIR108 = "PIR108 Aliased imports are disabled for this project."
-    PIR109 = "PIR109 Future imports are disabled for this project."
+    PIR102 = "PIR102 Relative Imports are disabled for this project."
+    PIR103 = "PIR103 Local Imports are disabled for this project."
+    PIR104 = "PIR104 Conditional Imports are disabled for this project."
+    PIR105 = "PIR105 Dynamic Imports are disabled for this project."
+    PIR106 = "PIR106 Private Imports are disabled for this project."
+    PIR107 = "PIR107 Wildcard Imports are disabled for this project."
+    PIR108 = "PIR108 Aliased Imports are disabled for this project."
+    PIR109 = "PIR109 Future Imports are disabled for this project."
 
     # Project Level Import Rules for Special Cases
     PIR201 = "PIR201 Importing test_*/*_test modules is restricted."

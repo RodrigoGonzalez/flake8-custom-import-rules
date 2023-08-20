@@ -182,4 +182,4 @@ def test_linter(get_plugin_with_parsed_options: Callable[..., type[Plugin]]):
 
         checker = plugin(tree, lines=data.splitlines(True))
         results = {"{}:{}: {}".format(*r) for r in checker.run()}
-        assert results == {"3:0: PIR107 Wildcard imports are disabled for this project."}
+        assert results == {"3:0: PIR107 Wildcard Imports are disabled for this project."}

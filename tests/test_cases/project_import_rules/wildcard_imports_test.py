@@ -1,6 +1,6 @@
 """ Test wildcard/star imports restriction.
 
-PIR107 = "PIR107 Wildcard imports are disabled for this project."
+PIR107 = "PIR107 Wildcard Imports are disabled for this project."
 
 To run this test file only:
 poetry run python -m pytest -vvvrca tests/test_cases/project_import_rules/wildcard_imports_test.py
@@ -15,7 +15,7 @@ from flake8_custom_import_rules.defaults import Settings
     [
         (
             "from my_base_module.module_z import *",
-            {"1:0: PIR107 Wildcard imports are disabled for this project."},
+            {"1:0: PIR107 Wildcard Imports are disabled for this project."},
             True,
         ),
         (
