@@ -137,7 +137,15 @@ def convert_to_dict(value: str | list[str] | None, delimiter: str | None = ":") 
 
 @define(slots=True)
 class Settings:
-    """The default settings for the flake8_custom_import_rules plugin."""
+    """
+    This class defines the default settings for the flake8_custom_import_rules
+    plugin.
+
+    The settings include various import rules and restrictions that can be
+    customized by the user. These settings are used to control the behavior of
+    the plugin, allowing it to enforce specific import rules and restrictions
+    in a Python project.
+    """
 
     # Set Necessary Options for Project Import Restrictions
     BASE_PACKAGES: list = field(factory=list, converter=convert_to_list)
@@ -368,7 +376,13 @@ def register_options(
     help_string: str | None = None,
     **kwargs: Any,
 ) -> None:
-    """Register rules or restrictions.
+    """
+    Register rules or restrictions for the flake8_custom_import_rules plugin.
+
+    This function is used to register either rules or restrictions for the
+    flake8_custom_import_rules plugin. Rules are custom import rules that the
+    user can define, while restrictions are predefined rules that the user can
+    enable or disable.
 
     If using short options, set both the following options:
         short_option_name: str | _ARG = _ARG.NO
@@ -379,18 +393,25 @@ def register_options(
     Parameters
     ----------
     option_manager : OptionManager
-        The option manager.
+        The option manager instance that is used to register the options.
     item : list | str
-        The item or list of items to register.
+        The item or list of items to register. Each item is a string that
+        represents the name of the rule or restriction.
     is_restriction : bool, optional
-        Whether the item is a restriction, meaning the option is either True
-        or False, by default True (i.e., we are registering a restriction).
+        A flag that indicates whether the item is a restriction. If True, the
+        option is either True or False, by default True (i.e., we are
+        registering a restriction).
+        If False, the item is considered a rule.
     option_default_value : str | bool, optional
-        The default value for the option, by default "".
+        The default value for the option. For restrictions, this is typically
+        a boolean value. For rules, this can be any string value, by
+        default "".
     help_string : str | None, optional
-        The help string for the option, by default None.
+        The help string for the option. This string is displayed when the user
+        requests help on this option, by default None.
     kwargs : Any
-        Additional keyword arguments to pass to register_opt.
+        Additional keyword arguments to pass to register_opt. These are passed
+        directly to the underlying option registration function.
     """
     if isinstance(item, list):
         for single_item in item:
@@ -442,7 +463,16 @@ def register_options(
 
 
 def register_opt(self: OptionManager, *args: Any, **kwargs: Any) -> None:
-    """Register options for flake8-custom-import-rules."""
+    """
+    Register options for the flake8-custom-import-rules plugin.
+
+    This function is responsible for registering the options that are used by
+    the flake8-custom-import-rules plugin. These options include both rules
+    and restrictions that can be defined by the user. The function takes in an
+    OptionManager instance, a list or string representing the item(s) to
+    register, and several optional parameters that further define the behavior
+    of the registered item(s).
+    """
     try:
         # flake8 3.x registration
         self.add_option(*args, **kwargs)
