@@ -85,10 +85,13 @@ commit: pre-commit tests clean  ## Commit changes
 	./scripts/commit.sh
 
 bump:  ## Bump version and update changelog
-	poetry run cz bump --changelog --check-consistency --annotated-tag
+	poetry run cz bump --changelog --check-consistency --annotated-tag --retry
 	git push -u origin HEAD --follow-tags
 
-.PHONY: pre-commit commit bump
+dry-run-bump:  ## Generate the changes that would be made by bumping the version
+	poetry run cz bump --dry-run
+
+.PHONY: pre-commit commit bump dry-run-bump
 
 # =============================================================================
 # TESTING
@@ -198,7 +201,11 @@ new-branch: check-branch-name  ## Create a new branch
 new-feat-branch: check-branch-name  ## Create a new feature branch
 	git checkout -b feat/$(BRANCH)_$(commit_count)
 
-.PHONY: check-branch-name new-branch new-feat-branch
+new-version-branch: check-branch-name  ## Create a new version branch
+	NEW_VERSION=$(shell poetry run cz bump --dry-run | grep 'bump: version' | awk -F ' ' '{print $$NF}'); \
+	git checkout -b bump/v$$NEW_VERSION
+
+.PHONY: check-branch-name new-branch new-feat-branch new-version-branch
 
 # =============================================================================
 # SELF DOCUMENTATION
