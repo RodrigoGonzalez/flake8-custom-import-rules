@@ -541,11 +541,11 @@ impact your project's architecture and design.
 +--------------------------+---------+----------------+-------------+-------------+-------------+
 
 
+.. [#] To restrict future imports, use the
+    `--restrict-future-imports` flag.
 .. [#] Technically base package imports are "First Party" imports,
     but in this case we want to make a distinction between
     the top-level package and the rest of the project.
-.. [#] To restrict future imports, use the
-    `--restrict-future-imports` flag.
 .. [#] The difference between third-party only and standalone,
     is that standalone allows imports from within the standalone
     module/package, while third-party only does not.
