@@ -17,6 +17,7 @@ from flake8_custom_import_rules.defaults import Settings
 from flake8_custom_import_rules.defaults import register_opt
 from flake8_custom_import_rules.defaults import register_options
 from flake8_custom_import_rules.utils.option_utils import check_conflicts
+from flake8_custom_import_rules.utils.option_utils import get_bool_value
 
 logger = logging.getLogger(__name__)
 
@@ -110,6 +111,8 @@ class Plugin(CustomImportRulesChecker):
         # Update options with the options set in the config or on the command line
         for option_key in DEFAULT_CHECKER_SETTINGS.get_option_keys():
             option_value = getattr(parse_options, option_key.lower())
+            if option_key in STANDARD_PROJECT_LEVEL_RESTRICTION_KEYS:
+                option_value = get_bool_value(option_value)
             if option_value is not None:
                 options[option_key] = option_value
 
