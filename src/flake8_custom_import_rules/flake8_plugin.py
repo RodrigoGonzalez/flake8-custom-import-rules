@@ -16,6 +16,7 @@ from flake8_custom_import_rules.defaults import STANDARD_PROJECT_LEVEL_RESTRICTI
 from flake8_custom_import_rules.defaults import Settings
 from flake8_custom_import_rules.defaults import register_opt
 from flake8_custom_import_rules.defaults import register_options
+from flake8_custom_import_rules.utils.option_utils import check_conflicts
 
 logger = logging.getLogger(__name__)
 
@@ -114,6 +115,9 @@ class Plugin(CustomImportRulesChecker):
 
         # the Settings class will process and parse the options
         checker_settings = Settings(**options)
+
+        # check for potential setting conflicts
+        check_conflicts(checker_settings.dict)
 
         parsed_options: dict = {
             "restricted_packages": checker_settings.RESTRICTED_PACKAGES,
