@@ -22,10 +22,10 @@ with each other to provide granular control over your import rules.
 
 This ``flake8`` plugin significantly enhances the organization
 and consistency of imports in Python projects. By enabling
-developers to set custom restrictions, define standalone packages,
-and establish import rules, the plugin aids in mitigating
-unwanted dependencies and maintaining clear separations between
-packages. Specifically, it facilitates the management of
+developers to set custom restrictions, define standalone
+packages, and establish import rules, the plugin aids in
+mitigating unwanted dependencies and maintaining clear separations
+between packages. Specifically, it facilitates the management of
 lightweight packages by limiting their imports to the Python
 standard library or third-party libraries, thus preventing
 unnecessary dependencies.
