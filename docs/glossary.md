@@ -652,6 +652,55 @@ package structure and following consistent practices is key
 to using relative imports effectively.
 
 
+## Root Package
+
+A root package, also referred to as the top-level package,
+is the main or primary package in a project that serves as
+the entry point for accessing other modules and packages
+within the project hierarchy. It is often the package that
+represents the project's main functionality or encapsulates
+the entire codebase. The root package can be considered the
+"base" or "parent" of all other packages and modules within
+the project.
+
+**Definition:**
+
+The root package is the highest-level package in a project's
+hierarchy. It often contains the main entry points, key
+functionalities, or core components of the project. Other
+packages and modules within the project are typically
+organized under the root package, either directly or
+through nested subpackages.
+
+**Example:**
+
+Consider a project called `MyApp` that has the following
+directory structure:
+
+```
+MyApp/
+├── my_root_package/
+│   ├── __init__.py
+│   ├── subpackage_a/
+│   │   ├── __init__.py
+│   │   └── module_a.py
+│   ├── subpackage_b/
+│   │   ├── __init__.py
+│   │   └── module_b.py
+│   └── main_module.py
+└── setup.py
+```
+
+In this example, `my_root_package` is the root package of
+the project. It serves as the top-level package containing
+all the other subpackages (`subpackage_a`, `subpackage_b`)
+and modules (`main_module.py`) within the project. The root
+package often plays a central role in the project's
+architecture and dependency management. Accessing
+functionalities within the project would typically involve
+importing from this root package.
+
+
 ## Wildcard Imports
 
 Wildcard imports in Python refer to the practice of
