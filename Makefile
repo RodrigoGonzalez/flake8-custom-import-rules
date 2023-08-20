@@ -201,7 +201,7 @@ new-branch: check-branch-name  ## Create a new branch
 new-feat-branch: check-branch-name  ## Create a new feature branch
 	git checkout -b feat/$(BRANCH)_$(commit_count)
 
-new-version-branch: check-branch-name  ## Create a new version branch
+new-version-branch:  ## Create a new version branch
 	NEW_VERSION=$(shell poetry run cz bump --dry-run | grep 'bump: version' | awk -F ' ' '{print $$NF}'); \
 	git checkout -b bump/v$$NEW_VERSION
 
