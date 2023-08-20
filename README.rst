@@ -5,8 +5,20 @@ flake8-custom-import-rules
 .. image:: https://github.com/RodrigoGonzalez/flake8-custom-import-rules/actions/workflows/ci.yml/badge.svg
    :target: https://github.com/RodrigoGonzalez/flake8-custom-import-rules/actions/workflows/ci.yml
 
+.. image:: https://img.shields.io/pypi/v/flake8-custom-import-rules.svg?style=flat-square
+    :target: https://pypi.org/project/flake8-custom-import-rules/
+    :alt: PyPI Package latest release
+
+.. image:: https://img.shields.io/pypi/pyversions/flake8-custom-import-rules.svg?style=flat-square
+    :target: https://pypi.org/project/flake8-custom-import-rules/
+    :alt: Supported versions
+
 .. image:: https://img.shields.io/badge/code%20style-black-000000.svg
     :target: https://github.com/psf/black
+
+.. image:: https://codecov.io/gh/RodrigoGonzalez/flake8-custom-import-rules/graph/badge.svg?token=WIQPI6YRBL
+    :target: https://codecov.io/gh/RodrigoGonzalez/flake8-custom-import-rules
+
 
 A ``flake8`` plugin that enforces custom import rules, allowing
 users to define and maintain clean and consistent import
