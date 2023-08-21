@@ -1,0 +1,1950 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="api_docs.html">
+      
+      
+        <link rel="next" href="dynamic_imports.html">
+      
+      
+      <link rel="icon" href="assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.5.2, mkdocs-material-9.2.0">
+    
+    
+      
+        <title>Glossary - Custom Import Rules</title>
+      
+    
+    
+      <link rel="stylesheet" href="assets/stylesheets/main.0e669242.min.css">
+      
+        
+        <link rel="stylesheet" href="assets/stylesheets/palette.85d0ee34.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="assets/_mkdocstrings.css">
+    
+    <script>__md_scope=new URL(".",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&"object"==typeof palette.color)for(var key of Object.keys(palette.color))document.body.setAttribute("data-md-color-"+key,palette.color[key])</script>
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#glossary-and-terminology" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="index.html" title="Custom Import Rules" class="md-header__button md-logo" aria-label="Custom Import Rules" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Custom Import Rules
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Glossary
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_2" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 6H7c-3.31 0-6 2.69-6 6s2.69 6 6 6h10c3.31 0 6-2.69 6-6s-2.69-6-6-6zm0 10H7c-2.21 0-4-1.79-4-4s1.79-4 4-4h10c2.21 0 4 1.79 4 4s-1.79 4-4 4zM7 9c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_2">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 7H7a5 5 0 0 0-5 5 5 5 0 0 0 5 5h10a5 5 0 0 0 5-5 5 5 0 0 0-5-5m0 8a3 3 0 0 1-3-3 3 3 0 0 1 3-3 3 3 0 0 1 3 3 3 3 0 0 1-3 3Z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/RodrigoGonzalez/flake8-custom-import-rules" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    RodrigoGonzalez/flake8-custom-import-rules
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="index.html" title="Custom Import Rules" class="md-nav__button md-logo" aria-label="Custom Import Rules" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    Custom Import Rules
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/RodrigoGonzalez/flake8-custom-import-rules" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    RodrigoGonzalez/flake8-custom-import-rules
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="index.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Introduction
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="api_docs.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    API Documentation
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Glossary
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="glossary.html" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    Glossary
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#glossary-and-terminology" class="md-nav__link">
+    Glossary and Terminology
+  </a>
+  
+    <nav class="md-nav" aria-label="Glossary and Terminology">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#important-terms-used-in-this-package" class="md-nav__link">
+    Important Terms Used in This Package
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#aliased-imports" class="md-nav__link">
+    Aliased Imports
+  </a>
+  
+    <nav class="md-nav" aria-label="Aliased Imports">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#advantages-of-aliased-imports" class="md-nav__link">
+    Advantages of Aliased Imports:
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#disadvantages-and-considerations" class="md-nav__link">
+    Disadvantages and Considerations:
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#best-practices-and-recommendations" class="md-nav__link">
+    Best Practices and Recommendations:
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#conditional-imports" class="md-nav__link">
+    Conditional Imports
+  </a>
+  
+    <nav class="md-nav" aria-label="Conditional Imports">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#advantages-of-conditional-imports" class="md-nav__link">
+    Advantages of Conditional Imports:
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#disadvantages-and-risks-of-conditional-imports" class="md-nav__link">
+    Disadvantages and Risks of Conditional Imports:
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#best-practices-and-recommendations_1" class="md-nav__link">
+    Best Practices and Recommendations:
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dynamic-imports" class="md-nav__link">
+    Dynamic Imports
+  </a>
+  
+    <nav class="md-nav" aria-label="Dynamic Imports">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#advantages-of-dynamic-imports" class="md-nav__link">
+    Advantages of Dynamic Imports:
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#disadvantages-and-risks-of-dynamic-imports" class="md-nav__link">
+    Disadvantages and Risks of Dynamic Imports:
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#best-practices-and-recommendations_2" class="md-nav__link">
+    Best Practices and Recommendations:
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#limitations-and-considerations" class="md-nav__link">
+    Limitations and Considerations:
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#future-imports-__future__" class="md-nav__link">
+    Future Imports ( __future__ )
+  </a>
+  
+    <nav class="md-nav" aria-label="Future Imports ( __future__ )">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#common-uses-of-future-imports" class="md-nav__link">
+    Common Uses of Future Imports:**
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#advantages-of-future-imports" class="md-nav__link">
+    Advantages of Future Imports:
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#considerations-and-best-practices" class="md-nav__link">
+    Considerations and Best Practices:
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#importing-a-package-locally" class="md-nav__link">
+    Importing a Package Locally
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#local-scope-import" class="md-nav__link">
+    Local Scope Import
+  </a>
+  
+    <nav class="md-nav" aria-label="Local Scope Import">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#advantages-of-local-scope-imports" class="md-nav__link">
+    Advantages of Local Scope Imports:**
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#disadvantages-of-local-scope-imports" class="md-nav__link">
+    Disadvantages of Local Scope Imports:**
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#when-to-use-local-scope-imports" class="md-nav__link">
+    When to Use Local Scope Imports:**
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#main-script-imports-__main__" class="md-nav__link">
+    Main Script Imports (__main__)
+  </a>
+  
+    <nav class="md-nav" aria-label="Main Script Imports (__main__)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#importing-from-the-__main__-module" class="md-nav__link">
+    Importing from the __main__ Module
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#importing-from-a-__main__py-file" class="md-nav__link">
+    Importing from a __main__.py File
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#recommended-structure" class="md-nav__link">
+    Recommended Structure
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#private-imports" class="md-nav__link">
+    Private Imports
+  </a>
+  
+    <nav class="md-nav" aria-label="Private Imports">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#why-use-private-imports" class="md-nav__link">
+    Why Use Private Imports?
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#best-practices-and-recommendations_3" class="md-nav__link">
+    Best Practices and Recommendations:
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#limitations-and-considerations_1" class="md-nav__link">
+    Limitations and Considerations:
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#python-modules" class="md-nav__link">
+    Python Modules
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#python-packages" class="md-nav__link">
+    Python Packages
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#relative-imports" class="md-nav__link">
+    Relative Imports
+  </a>
+  
+    <nav class="md-nav" aria-label="Relative Imports">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#advantages-of-relative-imports" class="md-nav__link">
+    Advantages of Relative Imports
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#potential-issues" class="md-nav__link">
+    Potential Issues
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#best-practices" class="md-nav__link">
+    Best Practices
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#root-package" class="md-nav__link">
+    Root Package
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#wildcard-imports" class="md-nav__link">
+    Wildcard Imports
+  </a>
+  
+    <nav class="md-nav" aria-label="Wildcard Imports">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#advantages-of-wildcard-imports" class="md-nav__link">
+    Advantages of Wildcard Imports
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#disadvantages-and-risks-of-wildcard-imports" class="md-nav__link">
+    Disadvantages and Risks of Wildcard Imports
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#best-practices-and-recommendations_4" class="md-nav__link">
+    Best Practices and Recommendations
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="dynamic_imports.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Dynamic Imports Explained
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="changelog.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Changelog
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="license.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    License
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#glossary-and-terminology" class="md-nav__link">
+    Glossary and Terminology
+  </a>
+  
+    <nav class="md-nav" aria-label="Glossary and Terminology">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#important-terms-used-in-this-package" class="md-nav__link">
+    Important Terms Used in This Package
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#aliased-imports" class="md-nav__link">
+    Aliased Imports
+  </a>
+  
+    <nav class="md-nav" aria-label="Aliased Imports">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#advantages-of-aliased-imports" class="md-nav__link">
+    Advantages of Aliased Imports:
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#disadvantages-and-considerations" class="md-nav__link">
+    Disadvantages and Considerations:
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#best-practices-and-recommendations" class="md-nav__link">
+    Best Practices and Recommendations:
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#conditional-imports" class="md-nav__link">
+    Conditional Imports
+  </a>
+  
+    <nav class="md-nav" aria-label="Conditional Imports">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#advantages-of-conditional-imports" class="md-nav__link">
+    Advantages of Conditional Imports:
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#disadvantages-and-risks-of-conditional-imports" class="md-nav__link">
+    Disadvantages and Risks of Conditional Imports:
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#best-practices-and-recommendations_1" class="md-nav__link">
+    Best Practices and Recommendations:
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dynamic-imports" class="md-nav__link">
+    Dynamic Imports
+  </a>
+  
+    <nav class="md-nav" aria-label="Dynamic Imports">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#advantages-of-dynamic-imports" class="md-nav__link">
+    Advantages of Dynamic Imports:
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#disadvantages-and-risks-of-dynamic-imports" class="md-nav__link">
+    Disadvantages and Risks of Dynamic Imports:
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#best-practices-and-recommendations_2" class="md-nav__link">
+    Best Practices and Recommendations:
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#limitations-and-considerations" class="md-nav__link">
+    Limitations and Considerations:
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#future-imports-__future__" class="md-nav__link">
+    Future Imports ( __future__ )
+  </a>
+  
+    <nav class="md-nav" aria-label="Future Imports ( __future__ )">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#common-uses-of-future-imports" class="md-nav__link">
+    Common Uses of Future Imports:**
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#advantages-of-future-imports" class="md-nav__link">
+    Advantages of Future Imports:
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#considerations-and-best-practices" class="md-nav__link">
+    Considerations and Best Practices:
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#importing-a-package-locally" class="md-nav__link">
+    Importing a Package Locally
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#local-scope-import" class="md-nav__link">
+    Local Scope Import
+  </a>
+  
+    <nav class="md-nav" aria-label="Local Scope Import">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#advantages-of-local-scope-imports" class="md-nav__link">
+    Advantages of Local Scope Imports:**
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#disadvantages-of-local-scope-imports" class="md-nav__link">
+    Disadvantages of Local Scope Imports:**
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#when-to-use-local-scope-imports" class="md-nav__link">
+    When to Use Local Scope Imports:**
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#main-script-imports-__main__" class="md-nav__link">
+    Main Script Imports (__main__)
+  </a>
+  
+    <nav class="md-nav" aria-label="Main Script Imports (__main__)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#importing-from-the-__main__-module" class="md-nav__link">
+    Importing from the __main__ Module
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#importing-from-a-__main__py-file" class="md-nav__link">
+    Importing from a __main__.py File
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#recommended-structure" class="md-nav__link">
+    Recommended Structure
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#private-imports" class="md-nav__link">
+    Private Imports
+  </a>
+  
+    <nav class="md-nav" aria-label="Private Imports">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#why-use-private-imports" class="md-nav__link">
+    Why Use Private Imports?
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#best-practices-and-recommendations_3" class="md-nav__link">
+    Best Practices and Recommendations:
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#limitations-and-considerations_1" class="md-nav__link">
+    Limitations and Considerations:
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#python-modules" class="md-nav__link">
+    Python Modules
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#python-packages" class="md-nav__link">
+    Python Packages
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#relative-imports" class="md-nav__link">
+    Relative Imports
+  </a>
+  
+    <nav class="md-nav" aria-label="Relative Imports">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#advantages-of-relative-imports" class="md-nav__link">
+    Advantages of Relative Imports
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#potential-issues" class="md-nav__link">
+    Potential Issues
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#best-practices" class="md-nav__link">
+    Best Practices
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#root-package" class="md-nav__link">
+    Root Package
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#wildcard-imports" class="md-nav__link">
+    Wildcard Imports
+  </a>
+  
+    <nav class="md-nav" aria-label="Wildcard Imports">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#advantages-of-wildcard-imports" class="md-nav__link">
+    Advantages of Wildcard Imports
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#disadvantages-and-risks-of-wildcard-imports" class="md-nav__link">
+    Disadvantages and Risks of Wildcard Imports
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#best-practices-and-recommendations_4" class="md-nav__link">
+    Best Practices and Recommendations
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  
+  
+
+
+  <h1>Glossary</h1>
+
+<h2 id="glossary-and-terminology">Glossary and Terminology</h2>
+<p>Welcome to the "Glossary," a comprehensive guide to
+understanding key concepts and terminology in the
+<code>flake8-custom-import-rules</code> package.</p>
+<h3 id="important-terms-used-in-this-package">Important Terms Used in This Package</h3>
+<ul>
+<li><a href="#aliased-imports">Aliased Imports</a></li>
+<li><a href="#conditional-imports">Conditional Imports</a></li>
+<li><a href="#dynamic-imports">Dynamic Imports</a></li>
+<li><a href="#future-imports-__future__">Future Imports (__future__)</a></li>
+<li><a href="#importing-a-package-locally">Importing a Package Locally</a></li>
+<li><a href="#local-scope-import">Local Scope Import</a></li>
+<li><a href="#main-script-imports-__main__">Main Script Imports (__main__)</a></li>
+<li><a href="#private-imports">Private Imports</a></li>
+<li><a href="#python-modules">Python Modules</a></li>
+<li><a href="#python-packages">Python Packages</a></li>
+<li><a href="#relative-imports">Relative Imports</a></li>
+<li><a href="#root-package">Root Package</a></li>
+<li><a href="#wildcard-imports">Wildcard Imports</a></li>
+</ul>
+<h3 id="aliased-imports">Aliased Imports</h3>
+<p>Aliased imports in Python refer to the practice of
+importing a module or specific symbols from a module
+under a different name, typically to make the code
+more concise or to avoid naming conflicts. This is
+done using the <code>as</code> keyword, allowing you to assign a
+different name (alias) to the imported module or
+symbol.</p>
+<p>Here's an example of an aliased import:</p>
+<pre><code class="language-python">import numpy as np
+</code></pre>
+<p>In this example, the numpy module is imported under
+the alias np, so you can refer to it as np in your
+code instead of numpy. This is a common convention in
+the scientific and data analysis community.</p>
+<p>Here's another example, where a specific symbol is
+aliased:</p>
+<pre><code class="language-python">from matplotlib import pyplot as plt
+</code></pre>
+<p>Here, the <code>pyplot</code> module from the <code>matplotlib</code> package
+is imported under the alias <code>plt</code>.</p>
+<h4 id="advantages-of-aliased-imports"><strong>Advantages of Aliased Imports:</strong></h4>
+<ol>
+<li>
+<p><strong>Conciseness</strong>: Aliasing can make the code more
+    concise, especially when dealing with modules or
+    symbols with long or cumbersome names.</p>
+</li>
+<li>
+<p><strong>Avoiding Naming Conflicts</strong>: If you have symbols
+    with the same name in different modules, you can use
+    aliasing to avoid conflicts.</p>
+</li>
+<li>
+<p><strong>Community Conventions</strong>: Certain aliases are widely
+    recognized and used in specific communities, such as
+    <code>np</code> for <code>numpy</code> or <code>pd</code> for <code>pandas</code>.</p>
+</li>
+</ol>
+<h4 id="disadvantages-and-considerations"><strong>Disadvantages and Considerations:</strong></h4>
+<ol>
+<li><strong>Potential Confusion</strong>: Non-standard or
+    unconventional aliases might lead to confusion,
+    especially for readers who are not familiar with the
+    specific aliasing choices.</li>
+<li><strong>Loss of Clarity</strong>: Overuse of aliasing or using
+    overly short or cryptic aliases can reduce the
+    readability of the code.</li>
+</ol>
+<h4 id="best-practices-and-recommendations"><strong>Best Practices and Recommendations:</strong></h4>
+<ul>
+<li><strong>Use Standard Aliases</strong>: Where possible, stick to
+    widely recognized and accepted aliases, such as <code>np</code>
+    for <code>numpy</code>.</li>
+<li><strong>Be Clear and Consistent</strong>: If you choose to use
+    aliases, make sure they are clear, descriptive, and
+    used consistently throughout your codebase.</li>
+<li><strong>Consider Readability</strong>: Use aliasing judiciously and
+    consider the trade-off between conciseness and
+    readability.</li>
+</ul>
+<p>In summary, aliased imports are a useful tool in Python,
+allowing for more concise code and the ability to handle
+naming conflicts. However, they should be used
+thoughtfully and in line with community standards and best
+practices to maintain code clarity and readability.</p>
+<h3 id="conditional-imports">Conditional Imports</h3>
+<p>Conditional imports in Python refer to the practice of
+importing a module or specific symbols from a module based
+on certain conditions or runtime logic. This means that the
+import statement is executed only if a particular condition
+is met, typically determined by an <code>if</code> statement or
+similar control structure.</p>
+<p>Here's an example that illustrates the concept of
+conditional imports:</p>
+<pre><code class="language-python">import sys
+
+if sys.version_info[0] == 3:
+    import urllib.request as urllib_request
+else:
+    import urllib2 as urllib_request
+</code></pre>
+<p>In this example, the code checks the major version of
+Python being used and imports the appropriate module
+accordingly. This can be useful for maintaining
+compatibility across different versions of Python or
+other varying environments.</p>
+<h4 id="advantages-of-conditional-imports"><strong>Advantages of Conditional Imports:</strong></h4>
+<ol>
+<li>
+<p><strong>Compatibility</strong>: As shown above, conditional
+    imports can be used to handle differences between
+    Python versions, platforms, or other varying
+    environments, helping to maintain compatibility.</p>
+</li>
+<li>
+<p><strong>Optimization</strong>: By importing modules only when
+    necessary, you might optimize the loading time or
+    resource utilization of your program, especially when
+    dealing with large or resource-heavy modules.</p>
+</li>
+</ol>
+<h4 id="disadvantages-and-risks-of-conditional-imports"><strong>Disadvantages and Risks of Conditional Imports:</strong></h4>
+<ol>
+<li>
+<p><strong>Code Complexity</strong>: Conditional imports can increase
+    the complexity of the code, making it harder to read,
+    understand, and maintain.</p>
+</li>
+<li>
+<p><strong>Potential Inconsistency</strong>: The behavior of the code
+    might become inconsistent or harder to predict, as the
+    availability of a module or specific symbols may
+    depend on runtime conditions.</p>
+</li>
+</ol>
+<h4 id="best-practices-and-recommendations_1"><strong>Best Practices and Recommendations:</strong></h4>
+<ul>
+<li><strong>Clear Documentation</strong>: If you use conditional
+    imports, make sure to document the conditions and the
+    reasoning behind them to help others (and yourself)
+    understand the code.</li>
+<li><strong>Testing</strong>: Thoroughly test the code under different
+    conditions to ensure that the conditional imports work
+    as intended and do not introduce unexpected behavior or
+    bugs.</li>
+<li><strong>Avoid Overuse</strong>: Consider whether conditional
+    imports are truly necessary for your use case, and
+    avoid overusing them, as they can lead to more complex
+    and challenging-to-maintain code.</li>
+</ul>
+<p>Conditional imports are a tool best suited for specific
+scenarios, such as handling differences between Python
+versions or platforms. In general code, it's usually
+preferable to stick with straightforward and consistent
+import statements.</p>
+<h3 id="dynamic-imports">Dynamic Imports</h3>
+<p>Dynamic imports in Python refer to the practice of
+importing modules or specific symbols from modules at
+runtime, based on conditions or logic within the code.
+Unlike standard imports, which are resolved at the time the
+code is compiled, dynamic imports are resolved when the
+code is executed. This is achieved using functions like
+<code>importlib.import_module</code> or the built-in <code>__import__</code>
+function.</p>
+<p>Here's an example that illustrates the concept of dynamic
+imports:</p>
+<pre><code class="language-python">import importlib
+
+module_name = &quot;os&quot; if some_condition else &quot;sys&quot;
+module = importlib.import_module(module_name)
+</code></pre>
+<p>In this example, the code dynamically imports either the
+<code>os</code> or <code>sys</code> module, depending on the value of <code>some_condition</code>.</p>
+<h4 id="advantages-of-dynamic-imports"><strong>Advantages of Dynamic Imports:</strong></h4>
+<ol>
+<li>
+<p><strong>Flexibility</strong>: Dynamic imports allow you to load modules
+    based on runtime conditions, giving you more control and
+    adaptability in your code.</p>
+</li>
+<li>
+<p><strong>Optimization</strong>: By importing modules only when needed, you
+    can potentially reduce the initial loading time or resource
+    utilization of your application.</p>
+</li>
+</ol>
+<h4 id="disadvantages-and-risks-of-dynamic-imports"><strong>Disadvantages and Risks of Dynamic Imports:</strong></h4>
+<ol>
+<li>
+<p><strong>Code Complexity</strong>: Dynamic imports can add complexity to
+    the code, making it more challenging to read, understand, and
+    maintain.</p>
+</li>
+<li>
+<p><strong>Potential Errors</strong>: Errors related to dynamic imports might
+    only manifest at runtime, making them harder to catch and
+    debug.</p>
+</li>
+</ol>
+<h4 id="best-practices-and-recommendations_2"><strong>Best Practices and Recommendations:</strong></h4>
+<ul>
+<li>
+<p><strong>Use Standard Libraries</strong>: Utilize the <code>importlib</code> standard
+    library for dynamic imports rather than relying on the
+    lower-level <code>__import__</code> function.</p>
+</li>
+<li>
+<p><strong>Testing</strong>: Ensure thorough testing of the code paths that
+    involve dynamic imports to catch potential issues.</p>
+</li>
+<li>
+<p><strong>Documentation</strong>: Clearly document the reasoning and usage of
+    dynamic imports in the code to aid understanding.</p>
+</li>
+</ul>
+<h4 id="limitations-and-considerations"><strong>Limitations and Considerations:</strong></h4>
+<ul>
+<li><strong>Static Analysis Limitations</strong>: Tools that perform static
+    analysis on the code might have difficulty handling dynamic
+    imports, as the imported modules are determined at runtime.</li>
+</ul>
+<p>In summary, dynamic imports are a powerful but complex feature in
+Python, allowing for more adaptable and potentially optimized
+code. Care must be taken in their use to ensure clarity,
+maintainability, and robustness.</p>
+<h3 id="future-imports-__future__">Future Imports ( __future__ )</h3>
+<p>Future imports in Python are a special mechanism that
+allows you to enable features that will become standard in
+future versions of the language. By using future imports,
+you can ensure compatibility with newer Python versions
+and make your code more forward-compatible.</p>
+<p>The <code>__future__</code> module in Python provides these future
+import statements. When you import a feature from
+<code>__future__</code>, it changes the compiler's behavior to
+include that feature, even if it's not the default
+behavior in the current version of Python.</p>
+<p>Here's an example of a future import:</p>
+<pre><code class="language-python">from __future__ import division
+</code></pre>
+<p>This import changes the division operator <code>/</code> to always
+perform true division, returning a floating-point result
+even when dividing two integers. This behavior became the
+default in Python 3, but the above import allows you to
+use it in Python 2 as well.</p>
+<h4 id="common-uses-of-future-imports">Common Uses of Future Imports:**</h4>
+<ol>
+<li>
+<p><strong>Division Behavior</strong>: As shown above, changing the
+    behavior of the division operator to be consistent
+    with Python 3.</p>
+</li>
+<li>
+<p><strong>Print Function</strong>: Enabling the use of the <code>print</code>
+    function instead of the <code>print</code> statement in Python 2,
+    making the code compatible with Python 3.</p>
+</li>
+<li>
+<p><strong>Unicode Literals</strong>: Enabling the use of Unicode
+    literals in Python 2, consistent with the behavior in
+    Python 3.</p>
+</li>
+</ol>
+<h4 id="advantages-of-future-imports"><strong>Advantages of Future Imports:</strong></h4>
+<ol>
+<li>
+<p><strong>Forward Compatibility</strong>: Future imports help prepare
+    your code for future versions of Python, making the
+    transition smoother when you decide to upgrade.</p>
+</li>
+<li>
+<p><strong>Consistency</strong>: If you're working in an environment
+    with different versions of Python, future imports can
+    help ensure consistent behavior across those versions.</p>
+</li>
+</ol>
+<h4 id="considerations-and-best-practices"><strong>Considerations and Best Practices:</strong></h4>
+<ol>
+<li>
+<p><strong>Explicitness</strong>: Future imports should be used
+    explicitly in each module where the future behavior is
+    needed.</p>
+</li>
+<li>
+<p><strong>Placement</strong>: Future imports must appear at the top
+    of the file, before any other imports or code, to affect
+    the entire module.</p>
+</li>
+<li>
+<p><strong>Documentation</strong>: If you're using future imports, it
+    may be helpful to document why, especially if the reason
+    might not be immediately obvious to others reading the
+    code.</p>
+</li>
+</ol>
+<p>In summary, future imports are a valuable tool for ensuring
+forward compatibility and consistency across different Python
+versions. By understanding and using them appropriately, you
+can write code that's more robust and maintainable as the
+Python language evolves.</p>
+<h3 id="importing-a-package-locally">Importing a Package Locally</h3>
+<p>This typically refers to importing a package that resides
+within the local file system or project directory. It may
+be a package or module developed specifically for the
+project or a third-party package that has been downloaded
+and stored locally. It's accessed directly from the local
+path rather than from a globally installed location or
+package repository.</p>
+<p><strong>Example:</strong></p>
+<pre><code class="language-python">import my_local_package
+from .local_module import local_function
+</code></pre>
+<p>In this context, "local" refers to the physical location of
+the package on the system.</p>
+<p>While the terms local scope import and import a package locally
+may sound similar, they refer to different
+aspects of the import process. The first is concerned with
+where the package or module is located on the file system,
+while the second deals with where in the code the import
+statement is placed and the scope of the imported elements.</p>
+<h3 id="local-scope-import">Local Scope Import</h3>
+<p>A local import often refers to an import statement that
+is specific to a particular scope within the code. It
+may mean importing a module or function within a specific
+function or method, rather than at the top level of a
+file. This type of import is often used to minimize
+the scope of the imported element, ensuring that it's
+only available where it's needed.</p>
+<p><strong>Example:</strong></p>
+<pre><code class="language-python">def my_function():
+    &quot;&quot;&quot;A function that imports a module locally.&quot;&quot;&quot;
+    import requests  # third-party local import
+    response = requests.get('https://example.com')
+    return response.text
+</code></pre>
+<p>Here, "local" refers to the scope and context of the
+import, not the physical location of the imported module.</p>
+<h4 id="advantages-of-local-scope-imports"><strong>Advantages of Local Scope Imports:</strong>**</h4>
+<ol>
+<li>
+<p><strong>Reduced Initial Loading Time</strong>: If a module is
+    imported inside a function and that function is never
+    called, the module won't be imported, potentially
+    reducing the initial loading time of the script.</p>
+</li>
+<li>
+<p><strong>Avoiding Circular Dependencies</strong>: Sometimes, local
+    imports can help in avoiding circular dependencies
+    between different modules.</p>
+</li>
+<li>
+<p><strong>Selective Importing</strong>: Importing only in the scope
+   where it is needed can help in keeping the global
+   namespace clean.</p>
+</li>
+</ol>
+<h4 id="disadvantages-of-local-scope-imports"><strong>Disadvantages of Local Scope Imports:</strong>**</h4>
+<ol>
+<li>
+<p><strong>Potential Performance Overhead</strong>: If a function with a
+    local import is called many times, the import statement
+    will be executed each time the function is called,
+    which might introduce a small performance overhead.</p>
+</li>
+<li>
+<p><strong>Code Clarity</strong>: Local imports can make the code harder
+    to follow, especially if overused, as it may become
+    unclear where exactly different modules and functions
+    are being imported.</p>
+</li>
+</ol>
+<h4 id="when-to-use-local-scope-imports"><strong>When to Use Local Scope Imports:</strong>**</h4>
+<p>Local scope imports are not common in every project, and
+their usage often depends on specific needs, coding
+guidelines, and design considerations. They might be used
+to solve particular problems like circular dependencies
+or to optimize the loading of large and infrequently used
+modules.</p>
+<p>Typically, code style guides recommend importing at the
+top level of the file for clarity and consistency, but
+local scope imports can be a valuable tool in certain
+situations.</p>
+<h3 id="main-script-imports-__main__">Main Script Imports (__main__)</h3>
+<p>Importing from the <code>__main__</code> module or a <code>__main__.py</code>
+file is generally not considered best practice in Python
+development.</p>
+<h4 id="importing-from-the-__main__-module"><strong>Importing from the <code>__main__</code> Module</strong></h4>
+<p>The <code>__main__</code> module is the entry point of a program, and
+it's the context in which the top-level script is run.
+Importing from this module is relatively uncommon and can
+lead to code that is difficult to understand or maintain.
+Here are some reasons why:</p>
+<ul>
+<li>
+<p><strong>Uncommon Practice</strong>: The <code>__main__</code> module is
+    typically associated with script execution, not with
+    defining reusable components.</p>
+</li>
+<li>
+<p><strong>Potential Confusion</strong>: It might be unclear what is
+    being imported from <code>__main__</code>, especially if the main
+    script is large or complex.</p>
+</li>
+<li>
+<p><strong>Code Organization Issues</strong>: Needing to import from
+    <code>__main__</code> may indicate that the code could benefit
+    from reorganization.</p>
+</li>
+<li>
+<p><strong>Testing Challenges</strong>: Code that relies on imports
+    from <code>__main__</code> may be more difficult to test in
+    isolation.</p>
+</li>
+</ul>
+<h4 id="importing-from-a-__main__py-file"><strong>Importing from a <code>__main__.py</code> File</strong></h4>
+<p>The <code>__main__.py</code> file is used to define the entry point
+for a package when it's executed as a script. Here's why
+importing from <code>__main__.py</code> can be problematic:</p>
+<ul>
+<li>
+<p><strong>Lack of Clarity</strong>: Like the <code>__main__</code> module,
+    <code>__main__.py</code> is usually associated with script
+    execution, not with defining reusable components.</p>
+</li>
+<li>
+<p><strong>Potential Circular Dependencies</strong>: You can easily end
+    up with circular dependencies that are difficult to
+    resolve.</p>
+</li>
+<li>
+<p><strong>Maintenance Challenges</strong>: Serving dual purposes can
+    become a maintenance burden.</p>
+</li>
+<li>
+<p><strong>Incompatibility with Certain Tools</strong>: Some tools
+    might treat <code>__main__.py</code> specially, leading to
+    unexpected behavior.</p>
+</li>
+</ul>
+<h4 id="recommended-structure"><strong>Recommended Structure</strong></h4>
+<p>Instead of putting reusable code in the <code>__main__</code> module
+or <code>__main__.py</code> file, it's generally a better practice to
+define functions, classes, and other reusable components in
+separate modules within your package. Here's an example
+structure:</p>
+<pre><code class="language-plaintext">mypackage/
+├── __main__.py         # Entry point for script execution
+├── utilities.py        # Reusable functions and classes
+└── other_module.py     # Other reusable components
+</code></pre>
+<p>In <code>__main__.py</code>, you can import from <code>utilities.py</code> and
+other_module.py as needed for script execution. This keeps
+your codebase organized and clear and avoids the potential
+problems mentioned above.</p>
+<p>In summary, while importing from the <code>__main__</code> module or a
+<code>__main__.py</code> file is technically possible, it's generally
+not a common or recommended practice. Organizing code into
+separate modules enhances clarity, maintainability, and
+avoids potential issues.</p>
+<h3 id="private-imports">Private Imports</h3>
+<p>Private imports in Python refer to the practice of
+importing symbols (such as functions, classes, or variables)
+that are intended for internal use within a module or
+package and are not part of the public API. These symbols
+are often prefixed with an underscore (<code>_</code>), which by
+convention signals that they are considered "private" or
+"internal" and should not be accessed directly by external
+code.</p>
+<p>Here's an example to illustrate private imports:</p>
+<p>Suppose you have a module <code>my_module.py</code>:</p>
+<pre><code class="language-python"># my_module.py
+
+def public_function():
+    &quot;&quot;&quot;A public function that can be accessed externally.&quot;&quot;&quot;
+    return _private_helper_function()
+
+def _private_helper_function():
+    return &quot;This is a private function!&quot;
+</code></pre>
+<p>You might import and use the <code>_private_helper_function</code> within
+the same package, but it is not intended to be accessed
+directly by external code.</p>
+<h4 id="why-use-private-imports"><strong>Why Use Private Imports?</strong></h4>
+<ol>
+<li>
+<p><strong>Encapsulation</strong>: By marking certain symbols as private,
+    you can define a clear and stable public API while keeping
+    the flexibility to change, remove, or refactor the internal
+    implementation without affecting external code.</p>
+</li>
+<li>
+<p><strong>Code Organization</strong>: Private imports help organize code by
+    clearly separating the public interface from the internal
+    implementation details.</p>
+</li>
+</ol>
+<h4 id="best-practices-and-recommendations_3"><strong>Best Practices and Recommendations:</strong></h4>
+<ul>
+<li>
+<p><strong>Naming Convention</strong>: Use a single leading underscore to
+    mark symbols as private. This does not prevent access to the
+    symbols but serves as a gentle warning to other developers
+    that the symbol is considered internal.</p>
+</li>
+<li>
+<p><strong>Documentation</strong>: Clearly document which parts of your module
+    or package are considered public and which are private.</p>
+</li>
+<li>
+<p><strong>Respect the Convention</strong>: As a consumer of other modules or
+    packages, respect the private nature of symbols with leading
+    underscores and avoid using them directly.</p>
+</li>
+</ul>
+<h4 id="limitations-and-considerations_1"><strong>Limitations and Considerations:</strong></h4>
+<ul>
+<li>
+<p><strong>No Strict Enforcement</strong>: Python does not provide a strict
+    mechanism to enforce private access. The leading underscore is
+    a convention, not a hard restriction, so external code can still
+    import and use private symbols. However, doing so is generally
+    considered bad practice and may lead to compatibility issues if
+    the internal symbols change in future versions of the module
+    or package.</p>
+</li>
+<li>
+<p><strong>Not to be Confused with Name Mangling</strong>: Double leading
+    underscores (e.g., <code>__private_var</code>) trigger name mangling in
+    Python, which alters the name to avoid clashes in subclasses.
+    This is a separate mechanism and not the same as marking a
+    symbol as private.</p>
+</li>
+</ul>
+<p>In summary, private imports are a valuable tool in designing
+clean and maintainable code by defining a clear boundary between
+public interfaces and internal implementation. They rely on
+community conventions and developer discipline rather than strict
+language enforcement.</p>
+<h3 id="python-modules">Python Modules</h3>
+<p><strong>Definition</strong>: A module is a single file containing Python
+code. It can contain functions, variables, classes, and
+runnable code. Essentially, any Python file with a <code>.py</code>
+extension is a module.</p>
+<p><strong>Purpose</strong>: Modules are used to organize code into reusable
+and manageable chunks. By putting related functions and
+variables into a module, you can import them into other
+Python files.</p>
+<p><strong>Example:</strong></p>
+<p>A file named <code>mymodule.py</code> containing functions
+and classes related to mathematical operations.</p>
+<h3 id="python-packages">Python Packages</h3>
+<p><strong>Definition</strong>: A package is a directory that contains
+multiple module files and a special <code>__init__.py</code> file.
+The presence of <code>__init__.py</code> (which can be empty) tells
+Python that the directory should be considered a package.</p>
+<p><strong>Purpose</strong>: Packages are used to organize multiple modules
+into a hierarchical namespace. This allows for structuring
+your code in a way that groups related modules together,
+making it more maintainable and scalable.</p>
+<p><strong>Example:</strong></p>
+<p>A directory named mypackage containing several
+module files related to different aspects of data
+processing, and an <code>__init__.py</code> file to signify it as a
+package.</p>
+<h3 id="relative-imports">Relative Imports</h3>
+<p>Relative imports in Python allow you to import modules or
+specific objects from modules that are located relative to
+the current module or package. They make use of dots (<code>.</code>)
+to indicate the relative path to the desired module within
+the same package hierarchy.</p>
+<p>Here's a breakdown of how relative imports work:</p>
+<ul>
+<li>A single dot (<code>.</code>) refers to the current package or
+    directory.</li>
+<li>Two dots (<code>..</code>) refer to the parent package or
+    directory.</li>
+<li>Additional dots (<code>...</code>, <code>....</code>, etc.) refer to
+    higher-level parent packages or directories.</li>
+</ul>
+<p><strong>Example:</strong></p>
+<p>Consider the following directory structure:</p>
+<pre><code class="language-plaintext">my_package/
+├── subpackage_a/
+│   ├── module_a.py
+│   └── __init__.py
+├── subpackage_b/
+│   ├── module_b.py
+│   └── __init__.py
+└── __init__.py
+</code></pre>
+<p>If you want to import <code>module_a.py</code> from <code>module_b.py</code>,
+you can use a relative import like this (inside
+<code>module_b.py</code>):</p>
+<pre><code class="language-python">from ..subpackage_a import module_a
+</code></pre>
+<h4 id="advantages-of-relative-imports"><strong>Advantages of Relative Imports</strong></h4>
+<ol>
+<li>
+<p><strong>Portability</strong>: Relative imports make the code more
+   portable, as they don't rely on the absolute path of
+   the module. If you move the package to a different
+   location, the relative imports will still work.</p>
+</li>
+<li>
+<p><strong>Readability</strong>: In a well-structured project, relative
+   imports can make the code more concise and clear by
+   showing the relationship between modules.</p>
+</li>
+</ol>
+<h4 id="potential-issues"><strong>Potential Issues</strong></h4>
+<ol>
+<li>
+<p><strong>Ambiguity</strong>: Without clear context, relative imports
+   might be less intuitive to understand, especially in a
+   complex project.</p>
+</li>
+<li>
+<p><strong>Compatibility</strong>: Relative imports require the file to
+   be part of a package (i.e., there must be an
+   <code>__init__.py</code> file), and they are not meant to be used
+   in standalone scripts.</p>
+</li>
+</ol>
+<h4 id="best-practices"><strong>Best Practices</strong></h4>
+<p>While relative imports can be useful, it's essential to
+use them thoughtfully and consistently. Many projects
+prefer to use absolute imports for clarity, especially if
+the package structure is not overly complex. Mixing
+relative and absolute imports without clear guidelines can
+lead to confusing code.</p>
+<p>In Python 3, all imports that start with a dot are
+considered relative, and attempting to perform a relative
+import from a script that is not part of a package will
+result in an ImportError. Therefore, understanding the
+package structure and following consistent practices is key
+to using relative imports effectively.</p>
+<h3 id="root-package">Root Package</h3>
+<p>A root package, also referred to as the top-level package,
+is the main or primary package in a project that serves as
+the entry point for accessing other modules and packages
+within the project hierarchy. It is often the package that
+represents the project's main functionality or encapsulates
+the entire codebase. The root package can be considered the
+"base" or "parent" of all other packages and modules within
+the project.</p>
+<p><strong>Definition:</strong></p>
+<p>The root package is the highest-level package in a project's
+hierarchy. It often contains the main entry points, key
+functionalities, or core components of the project. Other
+packages and modules within the project are typically
+organized under the root package, either directly or
+through nested subpackages.</p>
+<p><strong>Example:</strong></p>
+<p>Consider a project called <code>MyApp</code> that has the following
+directory structure:</p>
+<pre><code>MyApp/
+├── my_root_package/
+│   ├── __init__.py
+│   ├── subpackage_a/
+│   │   ├── __init__.py
+│   │   └── module_a.py
+│   ├── subpackage_b/
+│   │   ├── __init__.py
+│   │   └── module_b.py
+│   └── main_module.py
+└── setup.py
+</code></pre>
+<p>In this example, <code>my_root_package</code> is the root package of
+the project. It serves as the top-level package containing
+all the other subpackages (<code>subpackage_a</code>, <code>subpackage_b</code>)
+and modules (<code>main_module.py</code>) within the project. The root
+package often plays a central role in the project's
+architecture and dependency management. Accessing
+functionalities within the project would typically involve
+importing from this root package.</p>
+<h3 id="wildcard-imports">Wildcard Imports</h3>
+<p>Wildcard imports in Python refer to the practice of
+importing all symbols (functions, classes, variables, etc.)
+from a module into the current namespace using the asterisk
+(<code>*</code>) symbol. This can make all the names defined in the
+imported module available in the current scope without
+needing to prefix them with the module name.</p>
+<p>Here's an example of a wildcard import:</p>
+<pre><code class="language-python">from math import *
+</code></pre>
+<p>After this import, you can directly use functions like
+<code>sqrt</code>, <code>sin</code>, <code>cos</code>, etc., from the <code>math</code> module
+without prefixing them with <code>math.</code>.</p>
+<h4 id="advantages-of-wildcard-imports"><strong>Advantages of Wildcard Imports</strong></h4>
+<ol>
+<li><strong>Conciseness</strong>: Wildcard imports can make the code
+   more concise, as you don't need to prefix every call
+   with the module name or list all the specific names
+   you want to import.</li>
+</ol>
+<h4 id="disadvantages-and-risks-of-wildcard-imports"><strong>Disadvantages and Risks of Wildcard Imports</strong></h4>
+<ol>
+<li>
+<p><strong>Namespace Clashes</strong>: If different modules define
+   symbols with the same name, wildcard imports can lead
+   to name clashes, potentially overwriting existing names
+   in the current namespace.</p>
+</li>
+<li>
+<p><strong>Readability and Maintainability</strong>: Wildcard imports
+   can make the code less readable, as it becomes unclear
+   where a specific symbol comes from. This can make code
+   maintenance and debugging more challenging.</p>
+</li>
+<li>
+<p><strong>Lack of Control</strong>: By importing everything, you may
+   bring into scope symbols that you don't need or intend
+   to use, cluttering the namespace.</p>
+</li>
+<li>
+<p><strong>Potential Inefficiency</strong>: Importing everything from
+   a large module might consume more memory or slow down
+   the loading time, even if you only need a small subset
+   of the functions or classes.</p>
+</li>
+</ol>
+<h4 id="best-practices-and-recommendations_4"><strong>Best Practices and Recommendations</strong></h4>
+<p>Wildcard imports are generally discouraged in production
+code due to the risks and disadvantages mentioned above.
+Many style guides, such as PEP 8, recommend avoiding
+wildcard imports and instead explicitly listing the names
+you want to import. This promotes clarity, maintainability,
+and reduces the risk of unexpected behavior.</p>
+<p>If you need to use many symbols from a module, you can
+import the module itself and then use the module prefix to
+access its symbols:</p>
+<pre><code class="language-python">import math
+
+result = math.sqrt(16)
+</code></pre>
+<p>Or, you can explicitly list the symbols you want to
+import:</p>
+<pre><code class="language-python">from math import sqrt, sin, cos
+</code></pre>
+<p>Both of these approaches provide more control and clarity
+compared to wildcard imports.</p>
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    <script id="__config" type="application/json">{"base": ".", "features": ["navigation.indexes", "navigation.instant"], "search": "assets/javascripts/workers/search.dfff1995.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="assets/javascripts/bundle.78eede0e.min.js"></script>
+      
+    
+  </body>
+</html>

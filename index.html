@@ -1,0 +1,1469 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+      
+        <link rel="next" href="api_docs.html">
+      
+      
+      <link rel="icon" href="assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.5.2, mkdocs-material-9.2.0">
+    
+    
+      
+        <title>Custom Import Rules</title>
+      
+    
+    
+      <link rel="stylesheet" href="assets/stylesheets/main.0e669242.min.css">
+      
+        
+        <link rel="stylesheet" href="assets/stylesheets/palette.85d0ee34.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="assets/_mkdocstrings.css">
+    
+    <script>__md_scope=new URL(".",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&"object"==typeof palette.color)for(var key of Object.keys(palette.color))document.body.setAttribute("data-md-color-"+key,palette.color[key])</script>
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#flake8-custom-import-rules" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="index.html" title="Custom Import Rules" class="md-header__button md-logo" aria-label="Custom Import Rules" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Custom Import Rules
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Introduction
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_2" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 6H7c-3.31 0-6 2.69-6 6s2.69 6 6 6h10c3.31 0 6-2.69 6-6s-2.69-6-6-6zm0 10H7c-2.21 0-4-1.79-4-4s1.79-4 4-4h10c2.21 0 4 1.79 4 4s-1.79 4-4 4zM7 9c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_2">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 7H7a5 5 0 0 0-5 5 5 5 0 0 0 5 5h10a5 5 0 0 0 5-5 5 5 0 0 0-5-5m0 8a3 3 0 0 1-3-3 3 3 0 0 1 3-3 3 3 0 0 1 3 3 3 3 0 0 1-3 3Z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/RodrigoGonzalez/flake8-custom-import-rules" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    RodrigoGonzalez/flake8-custom-import-rules
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="index.html" title="Custom Import Rules" class="md-nav__button md-logo" aria-label="Custom Import Rules" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    Custom Import Rules
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/RodrigoGonzalez/flake8-custom-import-rules" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    RodrigoGonzalez/flake8-custom-import-rules
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Introduction
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="index.html" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    Introduction
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#flake8-custom-import-rules" class="md-nav__link">
+    flake8-custom-import-rules
+  </a>
+  
+    <nav class="md-nav" aria-label="flake8-custom-import-rules">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#motivation" class="md-nav__link">
+    Motivation
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#installation" class="md-nav__link">
+    Installation
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#plugin-options-required-flags-options" class="md-nav__link">
+    Plugin Options: Required Flags &amp; Options
+  </a>
+  
+    <nav class="md-nav" aria-label="Plugin Options: Required Flags & Options">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#base-packages-option" class="md-nav__link">
+    Base Packages Option
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#plugin-options-custom-import-rules-cir" class="md-nav__link">
+    Plugin Options: Custom Import Rules (CIR)
+  </a>
+  
+    <nav class="md-nav" aria-label="Plugin Options: Custom Import Rules (CIR)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#restricted-packages-option" class="md-nav__link">
+    Restricted Packages Option
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#standard-library-only-imports-option" class="md-nav__link">
+    Standard Library Only Imports Option
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#project-only-imports-option" class="md-nav__link">
+    Project Only Imports Option
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#base-package-only-imports-option" class="md-nav__link">
+    Base Package Only Imports Option
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#first-party-only-imports-option" class="md-nav__link">
+    First-Party Only Imports Option
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#third-party-only-imports-option" class="md-nav__link">
+    Third-Party Only Imports Option
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#standalone-modules-option" class="md-nav__link">
+    Standalone Modules Option
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#custom-restrictions-option" class="md-nav__link">
+    Custom Restrictions Option
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#plugin-options-project-import-rules-pir" class="md-nav__link">
+    Plugin Options: Project Import Rules (PIR)
+  </a>
+  
+    <nav class="md-nav" aria-label="Plugin Options: Project Import Rules (PIR)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#restrict-relative-imports" class="md-nav__link">
+    Restrict Relative Imports
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#restrict-local-scope-imports" class="md-nav__link">
+    Restrict Local Scope Imports
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#restrict-conditional-imports" class="md-nav__link">
+    Restrict Conditional Imports
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#restrict-dynamic-imports" class="md-nav__link">
+    Restrict Dynamic Imports
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#restrict-private-imports" class="md-nav__link">
+    Restrict Private Imports
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#restrict-wildcard-imports" class="md-nav__link">
+    Restrict Wildcard Imports
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#restrict-aliased-imports" class="md-nav__link">
+    Restrict Aliased Imports
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#restrict-future-imports" class="md-nav__link">
+    Restrict Future Imports
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#restrict-imports-from-init-files" class="md-nav__link">
+    Restrict Imports From Init Files
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#restrict-import-from-main-files" class="md-nav__link">
+    Restrict Import From Main Files
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#restrict-test-imports" class="md-nav__link">
+    Restrict Test Imports
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#restrict-conftest-imports" class="md-nav__link">
+    Restrict Conftest Imports
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#plugin-limitations" class="md-nav__link">
+    Plugin Limitations
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="api_docs.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    API Documentation
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="glossary.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Glossary
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="dynamic_imports.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Dynamic Imports Explained
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="changelog.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Changelog
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="license.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    License
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#flake8-custom-import-rules" class="md-nav__link">
+    flake8-custom-import-rules
+  </a>
+  
+    <nav class="md-nav" aria-label="flake8-custom-import-rules">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#motivation" class="md-nav__link">
+    Motivation
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#installation" class="md-nav__link">
+    Installation
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#plugin-options-required-flags-options" class="md-nav__link">
+    Plugin Options: Required Flags &amp; Options
+  </a>
+  
+    <nav class="md-nav" aria-label="Plugin Options: Required Flags & Options">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#base-packages-option" class="md-nav__link">
+    Base Packages Option
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#plugin-options-custom-import-rules-cir" class="md-nav__link">
+    Plugin Options: Custom Import Rules (CIR)
+  </a>
+  
+    <nav class="md-nav" aria-label="Plugin Options: Custom Import Rules (CIR)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#restricted-packages-option" class="md-nav__link">
+    Restricted Packages Option
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#standard-library-only-imports-option" class="md-nav__link">
+    Standard Library Only Imports Option
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#project-only-imports-option" class="md-nav__link">
+    Project Only Imports Option
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#base-package-only-imports-option" class="md-nav__link">
+    Base Package Only Imports Option
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#first-party-only-imports-option" class="md-nav__link">
+    First-Party Only Imports Option
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#third-party-only-imports-option" class="md-nav__link">
+    Third-Party Only Imports Option
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#standalone-modules-option" class="md-nav__link">
+    Standalone Modules Option
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#custom-restrictions-option" class="md-nav__link">
+    Custom Restrictions Option
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#plugin-options-project-import-rules-pir" class="md-nav__link">
+    Plugin Options: Project Import Rules (PIR)
+  </a>
+  
+    <nav class="md-nav" aria-label="Plugin Options: Project Import Rules (PIR)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#restrict-relative-imports" class="md-nav__link">
+    Restrict Relative Imports
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#restrict-local-scope-imports" class="md-nav__link">
+    Restrict Local Scope Imports
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#restrict-conditional-imports" class="md-nav__link">
+    Restrict Conditional Imports
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#restrict-dynamic-imports" class="md-nav__link">
+    Restrict Dynamic Imports
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#restrict-private-imports" class="md-nav__link">
+    Restrict Private Imports
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#restrict-wildcard-imports" class="md-nav__link">
+    Restrict Wildcard Imports
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#restrict-aliased-imports" class="md-nav__link">
+    Restrict Aliased Imports
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#restrict-future-imports" class="md-nav__link">
+    Restrict Future Imports
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#restrict-imports-from-init-files" class="md-nav__link">
+    Restrict Imports From Init Files
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#restrict-import-from-main-files" class="md-nav__link">
+    Restrict Import From Main Files
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#restrict-test-imports" class="md-nav__link">
+    Restrict Test Imports
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#restrict-conftest-imports" class="md-nav__link">
+    Restrict Conftest Imports
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#plugin-limitations" class="md-nav__link">
+    Plugin Limitations
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  
+  
+
+
+  <h1>Introduction</h1>
+
+<h2 id="flake8-custom-import-rules">flake8-custom-import-rules</h2>
+<p>A <code>flake8</code> plugin that enforces custom import rules, allowing users to define and
+maintain clean and consistent import organization across their Python projects.</p>
+<p>This plugin takes advantage of <code>flake8</code> linting
+capabilities and provides set of flags that enable you to
+specify import restrictions, standalone packages and modules,
+and additional custom and project-level import rules.
+These flags can be used in conjunction
+with each other to provide granular control over your import rules.
+The use of these flags is highly dependent on the specific
+needs and coding standards of your project. They provide
+a means to enforce certain styles or practices, but may
+not be necessary or beneficial in all cases. It's important
+to consider the trade-offs and potential impacts before
+deciding to use these restrictions.</p>
+<p>There are two types of import rules that can be enforced by
+this plugin:</p>
+<ul>
+<li>Custom Import Rules (CIR) allow you to define and enforce
+    import rules for specific package and modules within your
+    project.</li>
+<li>Project Import Rules (PIR) allow you to define and enforce
+    import rules at a project level.</li>
+</ul>
+<h3 id="motivation">Motivation</h3>
+<p>This <code>flake8</code> plugin is extremely useful for enforcing custom import rules and
+maintaining a consistent import organization across Python projects. By
+allowing users to define specific restrictions, standalone packages, and import
+rules, this plugin helps to prevent unwanted dependencies and ensures a clear
+separation between high-level and low-level packages. Furthermore, it aids in
+managing lightweight packages by restricting them to import only from the
+Python standard library or third-party libraries, keeping them free
+from unnecessary dependencies.</p>
+<p>This plugin not only enhances code readability and maintainability but also
+encourages a modular architecture that is easier to understand, test, and debug.
+As a result, developers can effortlessly adhere to best practices, ensuring
+their projects remain clean, well-organized, and optimized for efficient
+collaboration.</p>
+<p>In today's digital age, with the prolific production of code at many
+organizations and the increasing number of contributors to various projects,
+one of the significant challenges we face is the maintainability and
+comprehensibility of code. Ensuring consistent and clean code is not merely
+an aesthetic or pedantic pursuit; it directly impacts the efficiency of
+onboarding new team members and the associated costs. Misunderstandings and
+inconsistencies in code can lead to miscommunication, errors, and increased
+time spent onboarding and training new staff. By enforcing custom import
+rules and maintaining a consistent import organization across Python projects,
+we can significantly mitigate these issues, streamlining the process of
+integrating new team members and maintaining the high quality and readability
+of our codebase.</p>
+<p>A <code>flake8</code> plugin that enforces custom import rules, allowing users to define
+and maintain clean and consistent import organization across their Python
+projects.</p>
+<h3 id="installation">Installation</h3>
+<p>Install from <code>pip</code> with:</p>
+<pre><code class="language-shell">pip install flake8-custom-import-rules
+</code></pre>
+<h3 id="plugin-options-required-flags-options">Plugin Options: Required Flags &amp; Options</h3>
+<p>The following flag is required to enable most of the
+plugin functionality:</p>
+<ul>
+<li>base-packages</li>
+</ul>
+<h4 id="base-packages-option">Base Packages Option</h4>
+<p>The <code>--base-packages</code> flag serves as a foundational configuration
+option within the tool, allowing users to explicitly define
+the primary packages that constitute their project. These
+identified packages are categorized as first-party,
+signifying the core elements that are actively being developed
+within the scope of the project itself.</p>
+<p>By specifying the base packages, users create a clear
+delineation between their main project components and external
+dependencies. This distinction assists in various operations,
+such as linting, dependency analysis, and code organization.</p>
+<p>For instance, if a user is developing a library named
+<code>my_library</code>, they would include <code>my_library</code> as a base
+package by configuring this flag. This inclusion ensures
+that the tool recognizes <code>my_library</code> as the reference
+package for imposing many of the rules the user is
+likely to define or enable, aligning its behavior with the
+user's development practices. As seen below:</p>
+<pre><code class="language-ini">[flake8]
+base-packages = my_library,my_other_library
+</code></pre>
+<p>It's important to note that if the base-packages flag is
+not configured, the majority of functionality within the
+tool will be limited or disabled. This flag is instrumental
+in tailoring the plugin's behavior to the specific
+structure and needs of the project.</p>
+<p>That said, the project import rules (PIR) are not dependent
+on the base-packages flag, and can be used independently,
+therefore the base-packages flag is not set to as required
+within the <code>flake8</code> framework.</p>
+<h3 id="plugin-options-custom-import-rules-cir">Plugin Options: Custom Import Rules (CIR)</h3>
+<p>Custom Import Rules (CIR) allow you to define and enforce
+import rules for modules and packages within your project.</p>
+<h4 id="restricted-packages-option">Restricted Packages Option</h4>
+<p>The <code>--restricted-packages</code> flag allows you to specify high-level
+packages that should not be imported into any other packages within
+your project. This maintains the integrity of high-level packages,
+ensuring that they are not tightly coupled with other parts of the
+codebase.</p>
+<p>For example, if you have a high-level package like 'app' responsible
+for core functionality, you may want to prevent it from being
+imported into lower-level packages such as 'common', 'utils', 'core',
+etc. This can help avoid circular dependencies and preserve a clean
+architectural hierarchy.</p>
+<pre><code class="language-ini">[flake8]
+restricted_packages = app
+</code></pre>
+<h4 id="standard-library-only-imports-option">Standard Library Only Imports Option</h4>
+<p>The <code>--std-lib-only</code> flag enables you to designate specific packages
+within your project that are restricted to importing only from the
+Python standard library. This maintains a lightweight footprint for
+those packages, ensuring they remain easily portable and free from
+third-party dependencies.</p>
+<p>For example, you might be developing a 'lightweight_package' meant
+to be used across various environments without the need for additional
+dependencies. By restricting this package to import only from the
+Python standard library, you can ensure its compatibility and ease of
+use.</p>
+<pre><code class="language-ini">[flake8]
+std_lib_only = lightweight_package
+</code></pre>
+<h4 id="project-only-imports-option">Project Only Imports Option</h4>
+<p>The <code>--project-only</code> flag restricts specified modules and packages
+within your project to import solely from other packages developed
+as part of the project and the standard library. This ensures that
+the internal functionality is prioritized, and third-party
+dependencies are minimized.</p>
+<p>Consider a scenario where you want to maintain the integrity and
+independence of your project's core functionality. By using the
+<code>project-only</code> option, you can ensure that specific modules or
+packages rely exclusively on the internally developed code, reducing
+the risk of external dependencies and promoting a cohesive codebase.</p>
+<p>For example, if you have a package 'package_a' and you want to restrict
+it to only import from the local package and the project's top-level
+package, you can specify:</p>
+<pre><code class="language-ini">[flake8]
+project_only = package_a
+</code></pre>
+<p>In this configuration, 'package_a' is limited to importing only from
+other packages defined within the project, fostering a controlled
+and self-contained development environment.</p>
+<h4 id="base-package-only-imports-option">Base Package Only Imports Option</h4>
+<p>The <code>--base-package-only</code> flag is a powerful tool for
+enforcing a hierarchical structure within your project. By
+specifying packages or modules with this flag, you ensure
+that they can only import from the project's root package.
+This centralizes the dependency flow and promotes a
+well-structured project design.</p>
+<p>Consider a complex project with multiple interdependent
+packages. You might want to ensure that certain packages
+rely solely on the root package to minimize potential
+conflicts and promote maintainability. The
+<code>base-package-only</code> option allows you to create this clear
+and organized dependency structure.</p>
+<p>For example, suppose you have a package named <code>package_h</code>
+that you want to restrict to only import from the top-level
+package of your project. You can specify this as follows:</p>
+<pre><code class="language-ini">[flake8]
+base_package_only = my_base_package.package_h
+</code></pre>
+<p>In this configuration, 'package_h' can only import from
+<code>my_base_package</code>. Any attempt to import from other
+packages will be flagged by the linter. This ensures that
+<code>my_base_package</code> remains the central point of interaction,
+providing better control and clarity in the project's
+architecture.</p>
+<p>Now, let's consider another package, <code>my_second_package</code>.
+Suppose you want to ensure that <code>my_second_package</code> does
+not import any other packages specified in base-packages.
+This might be useful if 'my_second_package' is designed to
+be independent or if it contains functionality that should
+not be influenced by other parts of the project. You can
+specify this restriction as follows:</p>
+<pre><code class="language-ini">[flake8]
+base_package_only = my_base_package.package_h, my_second_package
+
+</code></pre>
+<p>With this configuration, <code>my_second_package</code> is restricted
+from importing any other packages specified in
+base-packages. This ensures the independence of
+<code>my_second_package</code>, allowing it to function without being
+affected by changes in other parts of the project.</p>
+<h4 id="first-party-only-imports-option">First-Party Only Imports Option</h4>
+<p>The <code>--first-party-only</code> flag ensures that only first-party modules,
+i.e., those developed within the project, can be imported. This
+restriction includes all imports defined within the base packages,
+excluding the imports from its own root package.</p>
+<p>This control over imports can be highly beneficial in security-
+sensitive environments or in projects aiming to minimize external
+dependencies. By limiting the imports to first-party modules, you
+gain more control over the codebase and reduce potential risks
+associated with third-party dependencies.</p>
+<p>Consider a scenario where your project requires strict compliance
+with certain regulations or standards. By enforcing a first-party
+only import policy, you can ensure that all code is vetted and
+maintained within your organization, reducing potential legal or
+security concerns.</p>
+<p>To implement this restriction, you can specify:</p>
+<pre><code class="language-ini">[flake8]
+first_party_only = my_project.my_package
+</code></pre>
+<p>In this example, 'my_package' within 'my_project' will only be
+allowed to import modules developed as part of the project. Any
+attempt to import from outside the project will be flagged by
+the linter, helping to maintain the integrity and security of
+the codebase.</p>
+<h4 id="third-party-only-imports-option">Third-Party Only Imports Option</h4>
+<p>The <code>--third-party-only</code> flag is designed to enforce the use of
+only third-party modules in the specified packages or modules. This
+restriction prohibits the import of both standard library modules
+and project-specific modules, ensuring that only external libraries
+are utilized.</p>
+<p>Such a restriction can be particularly useful in scenarios where
+a system is designed to extend its functionality exclusively through
+third-party libraries. For instance, in a plugin system that relies
+on external extensions, this flag guarantees that only those third-
+party libraries are imported, excluding any standard or project-level
+modules.</p>
+<p>Unlike the <code>standalone-modules</code> rule, the <code>third-party-only</code> rule
+prevents even the importation of modules from within the specified
+package or module itself, further narrowing the scope of allowed
+imports.</p>
+<p>To apply this restriction, you can specify:</p>
+<pre><code class="language-ini">[flake8]
+third_party_only = my_plugin_system.my_plugin
+</code></pre>
+<p>In this example, 'my_plugin' within 'my_plugin_system' will be
+restricted to importing only third-party modules. Any attempt to
+import from the standard library or from other modules within the
+project will be flagged by the linter. This ensures a strict
+adherence to the design principles of relying solely on third-party
+extensions, maintaining the integrity of the plugin system.</p>
+<h4 id="standalone-modules-option">Standalone Modules Option</h4>
+<p>The <code>--standalone-modules</code> flag is designed to allow specific
+packages or modules to import only from the standard library,
+the base package of the project, and third-party libraries,
+excluding any other first-party or project-level imports.
+This ensures that the specified standalone packages or modules
+operate independently from other parts of the project, yet they
+still have access to essential third-party libraries, the base
+package, and standard libraries.</p>
+<p>This option aids in maintainability and scalability, especially
+in complex projects where clear boundaries and modular design
+are essential. Standalone modules or packages can be used to
+encapsulate specific functionalities that don't require
+integration with the rest of the first-party code.</p>
+<p>Here's an example of how you can configure this rule:</p>
+<pre><code class="language-ini">[flake8]
+standalone_modules = my_base_package.standalone_module
+</code></pre>
+<p>In this example, 'standalone_module' within 'my_base_package'
+is configured to import only from the standard library, the
+base package itself, and third-party libraries. Any attempt to
+import from other first-party packages or modules within the
+project will be flagged by the linter.</p>
+<p>It's worth noting the difference between the <code>standalone-modules</code>
+rule and the <code>third-party-only</code> rule. While both restrict
+project-specific imports, <code>standalone-modules</code> allows imports
+from within the standalone package or module itself, whereas
+<code>third-party-only</code> does not, further narrowing the scope of
+allowed imports.</p>
+<p>By employing the <code>standalone-modules</code> option, developers can
+ensure that certain parts of the application remain decoupled
+and self-contained, promoting a clean and organized code
+structure that can be more easily managed and expanded.</p>
+<h4 id="custom-restrictions-option">Custom Restrictions Option</h4>
+<p>The <code>--custom-restrictions</code> flag provides a powerful tool for
+managing and limiting specific import capabilities within your
+project. It enables you to precisely control the import behavior
+of individual packages or modules, ensuring that certain imports
+are restricted as per the project's requirements.</p>
+<p>This control is achieved by specifying a package or module,
+followed by a colon, and then listing the restricted imports,
+separated by additional colons. These restricted imports can
+range from other first-party packages within the project to
+standard library packages, or even third-party imports.</p>
+<p>Such granularity is particularly valuable in large or complex
+projects where managing dependencies and maintaining a clear
+structure can be challenging. For example, you may have
+<code>package_a</code> responsible for raw data cleaning and <code>package_b</code>
+for processing sensitive data. To avoid accidental leakage of
+raw data into <code>package_b</code>, you could apply restrictions to
+prevent <code>package_a</code> from importing <code>package_b</code> or any of its
+subpackages.</p>
+<p>The configuration might look like this:</p>
+<pre><code class="language-ini">[flake8]
+custom-restrictions =
+    # Restrict `package_a` from importing `package_b` and `os`
+    my_base_package.package_a:my_base_package.package_b:os
+    # Restrict `module_x` from importing `module_y` and `pandas`
+    my_base_package.module_x:my_base_package.module_y:pandas
+</code></pre>
+<p>In the example above, specific restrictions are applied to
+<code>package_a</code> and <code>module_x</code>, preventing them from importing
+certain other packages or modules within the project, or even
+from the standard library or third-party libraries. Again,
+this is to provide a granular level of control over the
+import behavior of individual packages or modules, restricting
+imports from <code>pandas</code> or even <code>os</code> is not very likely within
+your own project, but there may reasons make these restrictions.
+This ensures that the intended separation and containment of
+functionality are preserved, enhancing the maintainability
+and security of the codebase.</p>
+<h3 id="plugin-options-project-import-rules-pir">Plugin Options: Project Import Rules (PIR)</h3>
+<p>Project Import Rules (PIR) allow you to define and enforce
+import rules at a project level.</p>
+<h4 id="restrict-relative-imports">Restrict Relative Imports</h4>
+<p>Relative imports in Python allow you to import modules or 
+specific objects from modules within the same package 
+hierarchy, using dots (<code>.</code>) to represent the relative path.</p>
+<p>By default, the <code>--restrict-relative-imports</code> flag is 
+enabled, prohibiting the use of relative imports. Modules 
+must instead utilize absolute imports, specifying the full 
+path to the target module, starting from the top-level 
+package.</p>
+<p>To enforce this restriction and disable relative imports 
+for your project, you can configure the following setting:</p>
+<pre><code class="language-ini">[flake8]
+restrict_relative_imports = True
+</code></pre>
+<p>With this configuration, any relative imports encountered 
+in your project will be flagged by the linter, guiding you
+to use absolute imports instead.</p>
+<h4 id="restrict-local-scope-imports">Restrict Local Scope Imports</h4>
+<p>Local scope imports refer to the practice of importing 
+modules or specific objects within a confined scope, 
+such as inside a function or method. While this can allow 
+for more granular control over imports, it may lead to 
+code that is less clear and consistent.</p>
+<p>The <code>--restrict-local-scope-imports</code> flag is designed to 
+prevent such imports, enforcing that all imports occur at 
+the top-level of the file. By centralizing imports, it 
+promotes code clarity and consistency across the project.</p>
+<p>This restriction is turned on by default, meaning that 
+any local scope imports will be flagged by the linter. If 
+you wish to adhere to this best practice, ensure that all 
+imports are declared at the top-level of your files, rather 
+than within specific functions or methods.</p>
+<pre><code class="language-ini">[flake8]
+restrict_local_scope_imports = True
+</code></pre>
+<p>With this configuration, the linter will guide you to organize 
+your imports at the top-level, fostering a more readable and 
+maintainable codebase.</p>
+<h4 id="restrict-conditional-imports">Restrict Conditional Imports</h4>
+<p>Conditional imports in Python refer to the practice of 
+importing modules or specific symbols based on certain 
+conditions or runtime logic. These imports can be found 
+inside control structures like <code>if</code> statements.</p>
+<p>The <code>--restrict-conditional-imports</code> flag aims to limit the 
+use of these imports, as they can potentially lead to 
+inconsistent behavior. The importation of a module might 
+depend on varying runtime conditions, leading to unexpected 
+outcomes.</p>
+<p>This restriction is turned off by default, allowing for 
+conditional imports. However, considering the potential 
+risks and complexities, you may choose to enable this flag:</p>
+<pre><code class="language-ini">[flake8]
+restrict_conditional_imports = True
+</code></pre>
+<p>By restricting conditional imports, you can foster a more 
+predictable and manageable codebase.</p>
+<h4 id="restrict-dynamic-imports">Restrict Dynamic Imports</h4>
+<p>Dynamic imports in Python involve importing modules or 
+specific symbols within a function or method. Such imports 
+can be challenging to track and may result in unexpected 
+behavior, as the availability of a module may hinge on the 
+specific execution path.</p>
+<p>The <code>--restrict-dynamic-imports</code> flag is designed to 
+prevent these imports, promoting a more stable and 
+transparent code structure. This restriction is turned on 
+by default, emphasizing the importance of predictability in
+code execution.</p>
+<pre><code class="language-ini">[flake8]
+restrict_dynamic_imports = True
+</code></pre>
+<p>By enforcing this rule, you encourage a more coherent and 
+traceable import structure, enhancing code reliability.</p>
+<h4 id="restrict-private-imports">Restrict Private Imports</h4>
+<p>Private modules in Python are typically those that begin 
+with an underscore (<code>_</code>). These modules are meant for 
+internal use within a package, and importing them can lead 
+to instability, as they may change without notice.</p>
+<p>The <code>--restrict-private-imports</code> flag limits the import of 
+private modules, preserving the stability of your code. 
+Although Python doesn't truly enforce private access, this 
+flag provides a layer of protection. It is turned on by 
+default, reflecting a best-practice approach.</p>
+<pre><code class="language-ini">[flake8]
+restrict_private_imports = True
+</code></pre>
+<p>By restricting the import of private modules, you align 
+with community conventions and safeguard your code from 
+potential instabilities related to internal package 
+changes.</p>
+<h4 id="restrict-wildcard-imports">Restrict Wildcard Imports</h4>
+<p>Wildcard imports in Python, expressed as <code>from module import *</code>, 
+bring all symbols from a module into the current namespace. While 
+convenient, these imports can lead to confusion, as it becomes 
+unclear which names are being imported. Furthermore, they may 
+inadvertently overwrite existing names.</p>
+<p>The <code>--restrict-wildcard-imports</code> flag is designed to 
+prohibit these imports, fostering greater code clarity and 
+safety. This flag is turned on by default, reflecting a 
+standard practice in code organization.</p>
+<pre><code class="language-ini">[flake8]
+restrict_wildcard_imports = True
+</code></pre>
+<p>By restricting wildcard imports, you promote a more transparent 
+and manageable code structure, enhancing maintainability.</p>
+<h4 id="restrict-aliased-imports">Restrict Aliased Imports</h4>
+<p>Aliased imports, such as <code>import numpy as np</code>, allow modules or 
+specific symbols to be imported under a different name. While 
+often convenient, especially for widely recognized aliases, 
+they can sometimes cause confusion, particularly with 
+non-standard or unconventional aliases.</p>
+<p>The <code>--restrict-aliased-imports</code> flag aims to limit this 
+practice, although it is turned off by default, acknowledging 
+the common usage of standard aliases.</p>
+<pre><code class="language-ini">[flake8]
+restrict_aliased_imports = False
+</code></pre>
+<p>While aliasing has its benefits, particularly with widely 
+accepted conventions, this flag provides an option for 
+those who prefer to maintain a stricter naming policy.</p>
+<h4 id="restrict-future-imports">Restrict Future Imports</h4>
+<p>Future imports in Python, expressed as 
+<code>from __future__ import</code>, enable features that will become 
+standard in upcoming versions of Python. While they 
+facilitate forward compatibility, their use might also 
+introduce confusion or compatibility challenges.</p>
+<p>The <code>--restrict-future-imports</code> flag allows you to limit
+the use of future imports, providing a layer of control.
+This flag is turned off by default, allowing flexibility 
+in adopting future language features.</p>
+<pre><code class="language-ini">[flake8]
+restrict_future_imports = False
+</code></pre>
+<p>By offering this restriction, you can ensure that future 
+imports are used judiciously and aligned with your 
+project's needs and standards.</p>
+<h4 id="restrict-imports-from-init-files">Restrict Imports From Init Files</h4>
+<p>Importing from <code>__init__.py</code> files can sometimes lead to 
+confusing circular dependencies or unexpected behavior. 
+These files typically serve to initialize a package, and 
+importing from them may complicate the package structure.</p>
+<p>The <code>--restrict-init-imports</code> flag is designed to prevent 
+these imports, promoting cleaner code organization. This 
+restriction is turned on by default.</p>
+<pre><code class="language-ini">[flake8]
+restrict_init_imports = True
+</code></pre>
+<p>By enforcing this rule, you can maintain a clear separation 
+between initialization and functional code, enhancing code 
+clarity and maintainability.</p>
+<h4 id="restrict-import-from-main-files">Restrict Import From Main Files</h4>
+<p>Importing from <code>__main__.py</code> files is generally not considered 
+best practice in Python development, as previously explained. 
+The <code>__main__.py</code> file is meant to define the entry point for 
+package execution, not to house reusable functions or classes.</p>
+<p>The <code>--restrict-main-imports</code> flag restricts these imports, 
+aligning with best practices. This flag is turned on by default.</p>
+<pre><code class="language-ini">[flake8]
+restrict_main_imports = True
+</code></pre>
+<p>By adhering to this restriction, you ensure that your 
+codebase follows a conventional structure, minimizing 
+potential confusion and maintenance challenges.</p>
+<h4 id="restrict-test-imports">Restrict Test Imports</h4>
+<p>Test imports refer to imports from test files or the tests
+directory. While these imports can be useful for testing 
+purposes, they may inadvertently create dependencies between 
+testing and production code. This entanglement can 
+complicate code maintenance and lead to potential issues.</p>
+<p>The <code>--restrict-test-imports</code> flag restricts these imports, 
+enforcing a separation between testing and production code. 
+This restriction is turned on by default.</p>
+<pre><code class="language-ini">[flake8]
+restrict_test_imports = True
+</code></pre>
+<p>By employing this flag, you ensure a clean demarcation between 
+testing and main code, enhancing the modularity and 
+maintainability of your codebase.</p>
+<h4 id="restrict-conftest-imports">Restrict Conftest Imports</h4>
+<p>In the context of pytest, <code>conftest.py</code> files are utilized 
+to define fixtures and other setup code for tests. 
+Importing within these files can lead to unexpected 
+behavior, potentially affecting test outcomes.</p>
+<p>The <code>--restrict-conftest-imports</code> flag restricts imports 
+within <code>conftest.py</code> files, mitigating the risk of 
+unintended side effects. This flag is turned on by default.</p>
+<pre><code class="language-ini">[flake8]
+restrict_conftest_imports = True
+</code></pre>
+<p>By restricting imports within <code>conftest.py</code>, you promote a 
+more controlled and predictable testing environment. This 
+aligns with best practices for test setup and minimizes 
+potential complications.</p>
+<h3 id="plugin-limitations">Plugin Limitations</h3>
+<ul>
+<li>
+<p>This plugin is currently only compatible with Python 3.10+
+    (support for 3.8 and 3.9 in the works).</p>
+</li>
+<li>
+<p>Option custom-restrictions only supports restricting
+    imports by package or module, not by class or function
+    (i.e., <code>module_a.ClassA</code> or <code>module_a.function</code>).
+    However, if you are trying to set import restrictions
+    for a class or function, best practices would dictate
+    that you should move that class or function to a
+    separate module.</p>
+</li>
+<li>
+<p>Files are not supported yet, use modules to set restrictions
+    (e.g., <code>package/module/file.py</code> -&gt; <code>package.module.file</code>).</p>
+</li>
+<li>
+<p>Support for project level exceptions is not implemented yet.
+    (e.g., you would like to restrict aliased imports but allow
+    certain commonly aliased imports such as <code>numpy as np</code>).</p>
+</li>
+<li>
+<p>Option <code>top-level-only-imports</code> has not been implemented yet.</p>
+</li>
+<li>
+<p>Config checks have not been fully implemented yet, so
+    it's possible to have invalid configurations that will
+    not be caught by the plugin.
+    (e.g., you designated a package or module as std-lib-only and
+    third-party-only at the same time).</p>
+</li>
+<li>
+<p>Private imports in tests are not supported yet. This
+    means that if you have a test file that imports a private
+    module, it will be flagged by the plugin. (An easy fix,
+    including here in case I don't get to implementing it
+    right away). Set the <code>--restrict-private-imports</code> flag
+    to False in your config file if problematic.</p>
+</li>
+</ul>
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    <script id="__config" type="application/json">{"base": ".", "features": ["navigation.indexes", "navigation.instant"], "search": "assets/javascripts/workers/search.dfff1995.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="assets/javascripts/bundle.78eede0e.min.js"></script>
+      
+    
+  </body>
+</html>

@@ -1,0 +1,2388 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="dynamic_imports.html">
+      
+      
+        <link rel="next" href="license.html">
+      
+      
+      <link rel="icon" href="assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.5.2, mkdocs-material-9.2.0">
+    
+    
+      
+        <title>Changelog - Custom Import Rules</title>
+      
+    
+    
+      <link rel="stylesheet" href="assets/stylesheets/main.0e669242.min.css">
+      
+        
+        <link rel="stylesheet" href="assets/stylesheets/palette.85d0ee34.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="assets/_mkdocstrings.css">
+    
+    <script>__md_scope=new URL(".",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&"object"==typeof palette.color)for(var key of Object.keys(palette.color))document.body.setAttribute("data-md-color-"+key,palette.color[key])</script>
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#v111-2023-08-20" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="index.html" title="Custom Import Rules" class="md-header__button md-logo" aria-label="Custom Import Rules" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Custom Import Rules
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Changelog
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_2" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 6H7c-3.31 0-6 2.69-6 6s2.69 6 6 6h10c3.31 0 6-2.69 6-6s-2.69-6-6-6zm0 10H7c-2.21 0-4-1.79-4-4s1.79-4 4-4h10c2.21 0 4 1.79 4 4s-1.79 4-4 4zM7 9c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_2">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 7H7a5 5 0 0 0-5 5 5 5 0 0 0 5 5h10a5 5 0 0 0 5-5 5 5 0 0 0-5-5m0 8a3 3 0 0 1-3-3 3 3 0 0 1 3-3 3 3 0 0 1 3 3 3 3 0 0 1-3 3Z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/RodrigoGonzalez/flake8-custom-import-rules" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    RodrigoGonzalez/flake8-custom-import-rules
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="index.html" title="Custom Import Rules" class="md-nav__button md-logo" aria-label="Custom Import Rules" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    Custom Import Rules
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/RodrigoGonzalez/flake8-custom-import-rules" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    RodrigoGonzalez/flake8-custom-import-rules
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="index.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Introduction
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="api_docs.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    API Documentation
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="glossary.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Glossary
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="dynamic_imports.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Dynamic Imports Explained
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Changelog
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="changelog.html" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    Changelog
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#v111-2023-08-20" class="md-nav__link">
+    v1.1.1 (2023-08-20)
+  </a>
+  
+    <nav class="md-nav" aria-label="v1.1.1 (2023-08-20)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fix" class="md-nav__link">
+    Fix
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#refactor" class="md-nav__link">
+    Refactor
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#v110-2023-08-20" class="md-nav__link">
+    v1.1.0 (2023-08-20)
+  </a>
+  
+    <nav class="md-nav" aria-label="v1.1.0 (2023-08-20)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#feat" class="md-nav__link">
+    Feat
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#v100-2023-08-19" class="md-nav__link">
+    v1.0.0 (2023-08-19)
+  </a>
+  
+    <nav class="md-nav" aria-label="v1.0.0 (2023-08-19)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#feat_1" class="md-nav__link">
+    Feat
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#v0110-2023-08-19" class="md-nav__link">
+    v0.11.0 (2023-08-19)
+  </a>
+  
+    <nav class="md-nav" aria-label="v0.11.0 (2023-08-19)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#feat_2" class="md-nav__link">
+    Feat
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#v0101-2023-08-19" class="md-nav__link">
+    v0.10.1 (2023-08-19)
+  </a>
+  
+    <nav class="md-nav" aria-label="v0.10.1 (2023-08-19)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fix_1" class="md-nav__link">
+    Fix
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#refactor_1" class="md-nav__link">
+    Refactor
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#v0100-2023-08-07" class="md-nav__link">
+    v0.10.0 (2023-08-07)
+  </a>
+  
+    <nav class="md-nav" aria-label="v0.10.0 (2023-08-07)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#feat_3" class="md-nav__link">
+    Feat
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fix_2" class="md-nav__link">
+    Fix
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#refactor_2" class="md-nav__link">
+    Refactor
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#v092-2023-08-04" class="md-nav__link">
+    v0.9.2 (2023-08-04)
+  </a>
+  
+    <nav class="md-nav" aria-label="v0.9.2 (2023-08-04)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#refactor_3" class="md-nav__link">
+    Refactor
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#v091-2023-08-04" class="md-nav__link">
+    v0.9.1 (2023-08-04)
+  </a>
+  
+    <nav class="md-nav" aria-label="v0.9.1 (2023-08-04)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#refactor_4" class="md-nav__link">
+    Refactor
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#v090-2023-08-03" class="md-nav__link">
+    v0.9.0 (2023-08-03)
+  </a>
+  
+    <nav class="md-nav" aria-label="v0.9.0 (2023-08-03)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fix_3" class="md-nav__link">
+    Fix
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#refactor_5" class="md-nav__link">
+    Refactor
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#v0810-2023-08-02" class="md-nav__link">
+    v0.8.10 (2023-08-02)
+  </a>
+  
+    <nav class="md-nav" aria-label="v0.8.10 (2023-08-02)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#refactor_6" class="md-nav__link">
+    Refactor
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#v089-2023-08-01" class="md-nav__link">
+    v0.8.9 (2023-08-01)
+  </a>
+  
+    <nav class="md-nav" aria-label="v0.8.9 (2023-08-01)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fix_4" class="md-nav__link">
+    Fix
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#refactor_7" class="md-nav__link">
+    Refactor
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#v088-2023-07-31" class="md-nav__link">
+    v0.8.8 (2023-07-31)
+  </a>
+  
+    <nav class="md-nav" aria-label="v0.8.8 (2023-07-31)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#refactor_8" class="md-nav__link">
+    Refactor
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#v087-2023-07-31" class="md-nav__link">
+    v0.8.7 (2023-07-31)
+  </a>
+  
+    <nav class="md-nav" aria-label="v0.8.7 (2023-07-31)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#refactor_9" class="md-nav__link">
+    Refactor
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#v086-2023-07-31" class="md-nav__link">
+    v0.8.6 (2023-07-31)
+  </a>
+  
+    <nav class="md-nav" aria-label="v0.8.6 (2023-07-31)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#refactor_10" class="md-nav__link">
+    Refactor
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#v085-2023-07-31" class="md-nav__link">
+    v0.8.5 (2023-07-31)
+  </a>
+  
+    <nav class="md-nav" aria-label="v0.8.5 (2023-07-31)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fix_5" class="md-nav__link">
+    Fix
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#refactor_11" class="md-nav__link">
+    Refactor
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#v084-2023-07-31" class="md-nav__link">
+    v0.8.4 (2023-07-31)
+  </a>
+  
+    <nav class="md-nav" aria-label="v0.8.4 (2023-07-31)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fix_6" class="md-nav__link">
+    Fix
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#refactor_12" class="md-nav__link">
+    Refactor
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#v083-2023-07-31" class="md-nav__link">
+    v0.8.3 (2023-07-31)
+  </a>
+  
+    <nav class="md-nav" aria-label="v0.8.3 (2023-07-31)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#refactor_13" class="md-nav__link">
+    Refactor
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#v082-2023-07-30" class="md-nav__link">
+    v0.8.2 (2023-07-30)
+  </a>
+  
+    <nav class="md-nav" aria-label="v0.8.2 (2023-07-30)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fix_7" class="md-nav__link">
+    Fix
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#refactor_14" class="md-nav__link">
+    Refactor
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#v081-2023-07-28" class="md-nav__link">
+    v0.8.1 (2023-07-28)
+  </a>
+  
+    <nav class="md-nav" aria-label="v0.8.1 (2023-07-28)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#refactor_15" class="md-nav__link">
+    Refactor
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#v080-2023-07-28" class="md-nav__link">
+    v0.8.0 (2023-07-28)
+  </a>
+  
+    <nav class="md-nav" aria-label="v0.8.0 (2023-07-28)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#feat_4" class="md-nav__link">
+    Feat
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fix_8" class="md-nav__link">
+    Fix
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#refactor_16" class="md-nav__link">
+    Refactor
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#v071-2023-07-25" class="md-nav__link">
+    v0.7.1 (2023-07-25)
+  </a>
+  
+    <nav class="md-nav" aria-label="v0.7.1 (2023-07-25)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#refactor_17" class="md-nav__link">
+    Refactor
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#v070-2023-07-25" class="md-nav__link">
+    v0.7.0 (2023-07-25)
+  </a>
+  
+    <nav class="md-nav" aria-label="v0.7.0 (2023-07-25)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#feat_5" class="md-nav__link">
+    Feat
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#refactor_18" class="md-nav__link">
+    Refactor
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#v060-2023-07-22" class="md-nav__link">
+    v0.6.0 (2023-07-22)
+  </a>
+  
+    <nav class="md-nav" aria-label="v0.6.0 (2023-07-22)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#feat_6" class="md-nav__link">
+    Feat
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#refactor_19" class="md-nav__link">
+    Refactor
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#v050-2023-07-21" class="md-nav__link">
+    v0.5.0 (2023-07-21)
+  </a>
+  
+    <nav class="md-nav" aria-label="v0.5.0 (2023-07-21)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#refactor_20" class="md-nav__link">
+    Refactor
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#v045-2023-07-20" class="md-nav__link">
+    v0.4.5 (2023-07-20)
+  </a>
+  
+    <nav class="md-nav" aria-label="v0.4.5 (2023-07-20)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#refactor_21" class="md-nav__link">
+    Refactor
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#v044-2023-07-20" class="md-nav__link">
+    v0.4.4 (2023-07-20)
+  </a>
+  
+    <nav class="md-nav" aria-label="v0.4.4 (2023-07-20)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#refactor_22" class="md-nav__link">
+    Refactor
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#v043-2023-07-20" class="md-nav__link">
+    v0.4.3 (2023-07-20)
+  </a>
+  
+    <nav class="md-nav" aria-label="v0.4.3 (2023-07-20)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#refactor_23" class="md-nav__link">
+    Refactor
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#v042-2023-07-19" class="md-nav__link">
+    v0.4.2 (2023-07-19)
+  </a>
+  
+    <nav class="md-nav" aria-label="v0.4.2 (2023-07-19)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#refactor_24" class="md-nav__link">
+    Refactor
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#v041-2023-07-19" class="md-nav__link">
+    v0.4.1 (2023-07-19)
+  </a>
+  
+    <nav class="md-nav" aria-label="v0.4.1 (2023-07-19)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#refactor_25" class="md-nav__link">
+    Refactor
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#v040-2023-07-19" class="md-nav__link">
+    v0.4.0 (2023-07-19)
+  </a>
+  
+    <nav class="md-nav" aria-label="v0.4.0 (2023-07-19)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#feat_7" class="md-nav__link">
+    Feat
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#refactor_26" class="md-nav__link">
+    Refactor
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#v030-2023-07-17" class="md-nav__link">
+    v0.3.0 (2023-07-17)
+  </a>
+  
+    <nav class="md-nav" aria-label="v0.3.0 (2023-07-17)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#feat_8" class="md-nav__link">
+    Feat
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fix_9" class="md-nav__link">
+    Fix
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#refactor_27" class="md-nav__link">
+    Refactor
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#v020-2023-04-27" class="md-nav__link">
+    v0.2.0 (2023-04-27)
+  </a>
+  
+    <nav class="md-nav" aria-label="v0.2.0 (2023-04-27)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#feat_9" class="md-nav__link">
+    Feat
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#v010-2023-04-26" class="md-nav__link">
+    v0.1.0 (2023-04-26)
+  </a>
+  
+    <nav class="md-nav" aria-label="v0.1.0 (2023-04-26)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#feat_10" class="md-nav__link">
+    Feat
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#v001-2023-04-24" class="md-nav__link">
+    v0.0.1 (2023-04-24)
+  </a>
+  
+    <nav class="md-nav" aria-label="v0.0.1 (2023-04-24)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#feat_11" class="md-nav__link">
+    Feat
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="license.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    License
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#v111-2023-08-20" class="md-nav__link">
+    v1.1.1 (2023-08-20)
+  </a>
+  
+    <nav class="md-nav" aria-label="v1.1.1 (2023-08-20)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fix" class="md-nav__link">
+    Fix
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#refactor" class="md-nav__link">
+    Refactor
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#v110-2023-08-20" class="md-nav__link">
+    v1.1.0 (2023-08-20)
+  </a>
+  
+    <nav class="md-nav" aria-label="v1.1.0 (2023-08-20)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#feat" class="md-nav__link">
+    Feat
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#v100-2023-08-19" class="md-nav__link">
+    v1.0.0 (2023-08-19)
+  </a>
+  
+    <nav class="md-nav" aria-label="v1.0.0 (2023-08-19)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#feat_1" class="md-nav__link">
+    Feat
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#v0110-2023-08-19" class="md-nav__link">
+    v0.11.0 (2023-08-19)
+  </a>
+  
+    <nav class="md-nav" aria-label="v0.11.0 (2023-08-19)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#feat_2" class="md-nav__link">
+    Feat
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#v0101-2023-08-19" class="md-nav__link">
+    v0.10.1 (2023-08-19)
+  </a>
+  
+    <nav class="md-nav" aria-label="v0.10.1 (2023-08-19)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fix_1" class="md-nav__link">
+    Fix
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#refactor_1" class="md-nav__link">
+    Refactor
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#v0100-2023-08-07" class="md-nav__link">
+    v0.10.0 (2023-08-07)
+  </a>
+  
+    <nav class="md-nav" aria-label="v0.10.0 (2023-08-07)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#feat_3" class="md-nav__link">
+    Feat
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fix_2" class="md-nav__link">
+    Fix
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#refactor_2" class="md-nav__link">
+    Refactor
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#v092-2023-08-04" class="md-nav__link">
+    v0.9.2 (2023-08-04)
+  </a>
+  
+    <nav class="md-nav" aria-label="v0.9.2 (2023-08-04)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#refactor_3" class="md-nav__link">
+    Refactor
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#v091-2023-08-04" class="md-nav__link">
+    v0.9.1 (2023-08-04)
+  </a>
+  
+    <nav class="md-nav" aria-label="v0.9.1 (2023-08-04)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#refactor_4" class="md-nav__link">
+    Refactor
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#v090-2023-08-03" class="md-nav__link">
+    v0.9.0 (2023-08-03)
+  </a>
+  
+    <nav class="md-nav" aria-label="v0.9.0 (2023-08-03)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fix_3" class="md-nav__link">
+    Fix
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#refactor_5" class="md-nav__link">
+    Refactor
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#v0810-2023-08-02" class="md-nav__link">
+    v0.8.10 (2023-08-02)
+  </a>
+  
+    <nav class="md-nav" aria-label="v0.8.10 (2023-08-02)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#refactor_6" class="md-nav__link">
+    Refactor
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#v089-2023-08-01" class="md-nav__link">
+    v0.8.9 (2023-08-01)
+  </a>
+  
+    <nav class="md-nav" aria-label="v0.8.9 (2023-08-01)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fix_4" class="md-nav__link">
+    Fix
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#refactor_7" class="md-nav__link">
+    Refactor
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#v088-2023-07-31" class="md-nav__link">
+    v0.8.8 (2023-07-31)
+  </a>
+  
+    <nav class="md-nav" aria-label="v0.8.8 (2023-07-31)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#refactor_8" class="md-nav__link">
+    Refactor
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#v087-2023-07-31" class="md-nav__link">
+    v0.8.7 (2023-07-31)
+  </a>
+  
+    <nav class="md-nav" aria-label="v0.8.7 (2023-07-31)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#refactor_9" class="md-nav__link">
+    Refactor
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#v086-2023-07-31" class="md-nav__link">
+    v0.8.6 (2023-07-31)
+  </a>
+  
+    <nav class="md-nav" aria-label="v0.8.6 (2023-07-31)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#refactor_10" class="md-nav__link">
+    Refactor
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#v085-2023-07-31" class="md-nav__link">
+    v0.8.5 (2023-07-31)
+  </a>
+  
+    <nav class="md-nav" aria-label="v0.8.5 (2023-07-31)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fix_5" class="md-nav__link">
+    Fix
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#refactor_11" class="md-nav__link">
+    Refactor
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#v084-2023-07-31" class="md-nav__link">
+    v0.8.4 (2023-07-31)
+  </a>
+  
+    <nav class="md-nav" aria-label="v0.8.4 (2023-07-31)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fix_6" class="md-nav__link">
+    Fix
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#refactor_12" class="md-nav__link">
+    Refactor
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#v083-2023-07-31" class="md-nav__link">
+    v0.8.3 (2023-07-31)
+  </a>
+  
+    <nav class="md-nav" aria-label="v0.8.3 (2023-07-31)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#refactor_13" class="md-nav__link">
+    Refactor
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#v082-2023-07-30" class="md-nav__link">
+    v0.8.2 (2023-07-30)
+  </a>
+  
+    <nav class="md-nav" aria-label="v0.8.2 (2023-07-30)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fix_7" class="md-nav__link">
+    Fix
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#refactor_14" class="md-nav__link">
+    Refactor
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#v081-2023-07-28" class="md-nav__link">
+    v0.8.1 (2023-07-28)
+  </a>
+  
+    <nav class="md-nav" aria-label="v0.8.1 (2023-07-28)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#refactor_15" class="md-nav__link">
+    Refactor
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#v080-2023-07-28" class="md-nav__link">
+    v0.8.0 (2023-07-28)
+  </a>
+  
+    <nav class="md-nav" aria-label="v0.8.0 (2023-07-28)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#feat_4" class="md-nav__link">
+    Feat
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fix_8" class="md-nav__link">
+    Fix
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#refactor_16" class="md-nav__link">
+    Refactor
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#v071-2023-07-25" class="md-nav__link">
+    v0.7.1 (2023-07-25)
+  </a>
+  
+    <nav class="md-nav" aria-label="v0.7.1 (2023-07-25)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#refactor_17" class="md-nav__link">
+    Refactor
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#v070-2023-07-25" class="md-nav__link">
+    v0.7.0 (2023-07-25)
+  </a>
+  
+    <nav class="md-nav" aria-label="v0.7.0 (2023-07-25)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#feat_5" class="md-nav__link">
+    Feat
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#refactor_18" class="md-nav__link">
+    Refactor
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#v060-2023-07-22" class="md-nav__link">
+    v0.6.0 (2023-07-22)
+  </a>
+  
+    <nav class="md-nav" aria-label="v0.6.0 (2023-07-22)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#feat_6" class="md-nav__link">
+    Feat
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#refactor_19" class="md-nav__link">
+    Refactor
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#v050-2023-07-21" class="md-nav__link">
+    v0.5.0 (2023-07-21)
+  </a>
+  
+    <nav class="md-nav" aria-label="v0.5.0 (2023-07-21)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#refactor_20" class="md-nav__link">
+    Refactor
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#v045-2023-07-20" class="md-nav__link">
+    v0.4.5 (2023-07-20)
+  </a>
+  
+    <nav class="md-nav" aria-label="v0.4.5 (2023-07-20)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#refactor_21" class="md-nav__link">
+    Refactor
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#v044-2023-07-20" class="md-nav__link">
+    v0.4.4 (2023-07-20)
+  </a>
+  
+    <nav class="md-nav" aria-label="v0.4.4 (2023-07-20)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#refactor_22" class="md-nav__link">
+    Refactor
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#v043-2023-07-20" class="md-nav__link">
+    v0.4.3 (2023-07-20)
+  </a>
+  
+    <nav class="md-nav" aria-label="v0.4.3 (2023-07-20)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#refactor_23" class="md-nav__link">
+    Refactor
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#v042-2023-07-19" class="md-nav__link">
+    v0.4.2 (2023-07-19)
+  </a>
+  
+    <nav class="md-nav" aria-label="v0.4.2 (2023-07-19)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#refactor_24" class="md-nav__link">
+    Refactor
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#v041-2023-07-19" class="md-nav__link">
+    v0.4.1 (2023-07-19)
+  </a>
+  
+    <nav class="md-nav" aria-label="v0.4.1 (2023-07-19)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#refactor_25" class="md-nav__link">
+    Refactor
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#v040-2023-07-19" class="md-nav__link">
+    v0.4.0 (2023-07-19)
+  </a>
+  
+    <nav class="md-nav" aria-label="v0.4.0 (2023-07-19)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#feat_7" class="md-nav__link">
+    Feat
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#refactor_26" class="md-nav__link">
+    Refactor
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#v030-2023-07-17" class="md-nav__link">
+    v0.3.0 (2023-07-17)
+  </a>
+  
+    <nav class="md-nav" aria-label="v0.3.0 (2023-07-17)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#feat_8" class="md-nav__link">
+    Feat
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fix_9" class="md-nav__link">
+    Fix
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#refactor_27" class="md-nav__link">
+    Refactor
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#v020-2023-04-27" class="md-nav__link">
+    v0.2.0 (2023-04-27)
+  </a>
+  
+    <nav class="md-nav" aria-label="v0.2.0 (2023-04-27)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#feat_9" class="md-nav__link">
+    Feat
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#v010-2023-04-26" class="md-nav__link">
+    v0.1.0 (2023-04-26)
+  </a>
+  
+    <nav class="md-nav" aria-label="v0.1.0 (2023-04-26)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#feat_10" class="md-nav__link">
+    Feat
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#v001-2023-04-24" class="md-nav__link">
+    v0.0.1 (2023-04-24)
+  </a>
+  
+    <nav class="md-nav" aria-label="v0.0.1 (2023-04-24)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#feat_11" class="md-nav__link">
+    Feat
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  
+  
+
+
+  <h1>Changelog</h1>
+
+<h3 id="v111-2023-08-20">v1.1.1 (2023-08-20)</h3>
+<h4 id="fix">Fix</h4>
+<ul>
+<li><strong>flake8-plugin</strong>: switch to using strings for boolean values, for some reason using boolean options are not working as expected (#175)</li>
+</ul>
+<h4 id="refactor">Refactor</h4>
+<ul>
+<li><strong>defaults</strong>: update docstrings and tests for the defaults module (#174)</li>
+</ul>
+<h3 id="v110-2023-08-20">v1.1.0 (2023-08-20)</h3>
+<h4 id="feat">Feat</h4>
+<ul>
+<li><strong>rule-checker</strong>: updated docstrings (#170)</li>
+</ul>
+<h3 id="v100-2023-08-19">v1.0.0 (2023-08-19)</h3>
+<h4 id="feat_1">Feat</h4>
+<ul>
+<li><strong>pyproject</strong>: update development status (#167)</li>
+<li><strong>pyproject</strong>: update development status (#165)</li>
+</ul>
+<h3 id="v0110-2023-08-19">v0.11.0 (2023-08-19)</h3>
+<h4 id="feat_2">Feat</h4>
+<ul>
+<li><strong>flake8-plugin</strong>: add check for rule conflicts (#160)</li>
+</ul>
+<h3 id="v0101-2023-08-19">v0.10.1 (2023-08-19)</h3>
+<h4 id="fix_1">Fix</h4>
+<ul>
+<li><strong>import-rules</strong>: update restricted packages to correctly identify the packages and modules and subpackages that need to be restricted (#137)</li>
+<li><strong>import-rules</strong>: update checks for import restrictions to correctly identify restricted imports (#136)</li>
+<li><strong>import-rules</strong>: corrected finding packages that match import restrictions (#135)</li>
+<li><strong>checker</strong>: use import restrictions from plugin and update test files (#134)</li>
+<li><strong>import-rules</strong>: update functions (#128)</li>
+<li><strong>import-rules</strong>: update isolated modules to account for imports from package itself (#126)</li>
+</ul>
+<h4 id="refactor_1">Refactor</h4>
+<ul>
+<li><strong>readme-and-import-rules</strong>: update flag descriptions, add documentation, and refactor code to be more pythonic and efficient (#152)</li>
+<li><strong>custom-restrictions</strong>: renamed import restrictions, custom re… (#151)</li>
+<li><strong>dynamic-imports</strong>: added additional dynamic import checks, updated documentation to be more thorough, and added test cases to a function that did not have any (#150)</li>
+<li><strong>local-imports</strong>: Use local scope imports for clarity instead (#148)</li>
+<li><strong>isolated-packages-flag</strong>: renamed isolated modules flag to standalone modules to better reflect and describe what the flag does (#146)</li>
+<li><strong>restricted-import-visitor</strong>: remove check module exists option from the restricted import visitor class, not used and unnecessary (#139)</li>
+<li><strong>restricted-import-visitor</strong>: remove package imports in this class, calculated elsewhere (#138)</li>
+<li><strong>plugin</strong>: update plugin to use preprocessed checker settings for restricted packages and import restrictions (#133)</li>
+<li><strong>restricted-import-visitor</strong>: update restricted import visitor class to include whether restriction is from a restricted package or restricted import (#132)</li>
+<li><strong>error-codes</strong>: update import restriction error codes (#131)</li>
+<li><strong>restricted-import-visitor</strong>: move utility functions to restricted import utils module (#130)</li>
+</ul>
+<h3 id="v0100-2023-08-07">v0.10.0 (2023-08-07)</h3>
+<h4 id="feat_3">Feat</h4>
+<ul>
+<li><strong>option-utils</strong>: add check conflict function and add tests (#124)</li>
+</ul>
+<h4 id="fix_2">Fix</h4>
+<ul>
+<li><strong>file-utils</strong>: add try except section to find prefix function (#123)</li>
+</ul>
+<h4 id="refactor_2">Refactor</h4>
+<ul>
+<li><strong>import-rules</strong>: update typing to use specific parsed node classes (#120)</li>
+<li><strong>checker</strong>: remove unused functions (#116)</li>
+<li><strong>docs</strong>: update documentation directory (#114)</li>
+</ul>
+<h3 id="v092-2023-08-04">v0.9.2 (2023-08-04)</h3>
+<h4 id="refactor_3">Refactor</h4>
+<ul>
+<li><strong>docs</strong>: update documentation directory</li>
+<li><strong>readme</strong>: update readme section titles (#113)</li>
+</ul>
+<h3 id="v091-2023-08-04">v0.9.1 (2023-08-04)</h3>
+<h4 id="refactor_4">Refactor</h4>
+<ul>
+<li><strong>file-utils</strong>: remove unused functions (#112)</li>
+</ul>
+<h3 id="v090-2023-08-03">v0.9.0 (2023-08-03)</h3>
+<h4 id="fix_3">Fix</h4>
+<ul>
+<li><strong>pyproject</strong>: fix flake8 extension (#108)</li>
+<li><strong>node-visitor</strong>: stdlib_list should be imported locally where it is used (#106)</li>
+<li><strong>restricted-visitor</strong>: refactor get strings functions (#84)</li>
+<li><strong>visitor</strong>: get_module_name_from_filename uses filename not file_path (#83)</li>
+<li><strong>default</strong>: fix default settings (#77)</li>
+</ul>
+<h4 id="refactor_5">Refactor</h4>
+<ul>
+<li><strong>node-utils</strong>: remove unused function (#111)</li>
+<li><strong>pyproject</strong>: add project info (#109)</li>
+<li><strong>dependencies</strong>: remove pandas and numpy dependencies (#96)</li>
+<li><strong>example_repos</strong>: remove pendulum dependency (#95)</li>
+<li><strong>readme</strong>: update intro paragraph, remove unnecessary comments (#88)</li>
+<li><strong>error-codes</strong>: make error code checks using set instead of list (#86)</li>
+<li><strong>core</strong>: refactor to make code easier to follow (#85)</li>
+<li><strong>help-strings</strong>: add error codes to flake8 help strings (#82)</li>
+<li><strong>defaults</strong>: update help strings (#81)</li>
+<li><strong>main</strong>: update readme, change log to debug (#80)</li>
+<li><strong>restricted-imports</strong>: add support for import restrictions (#79)</li>
+<li><strong>defaults</strong>: update converters and add test cases (#78)</li>
+<li><strong>import-rules</strong>: update import rules to implement restricted i… (#76)</li>
+</ul>
+<h3 id="v0810-2023-08-02">v0.8.10 (2023-08-02)</h3>
+<h4 id="refactor_6">Refactor</h4>
+<ul>
+<li><strong>node-utils</strong>: remove unused function (#111)</li>
+</ul>
+<h3 id="v089-2023-08-01">v0.8.9 (2023-08-01)</h3>
+<h4 id="fix_4">Fix</h4>
+<ul>
+<li><strong>pyproject</strong>: fix flake8 extension (#108)</li>
+<li><strong>node-visitor</strong>: stdlib list should be imported locally where it is used (#106)</li>
+</ul>
+<h4 id="refactor_7">Refactor</h4>
+<ul>
+<li><strong>pyproject</strong>: add project info (#109)</li>
+</ul>
+<h3 id="v088-2023-07-31">v0.8.8 (2023-07-31)</h3>
+<h4 id="refactor_8">Refactor</h4>
+<ul>
+<li><strong>dependencies</strong>: remove pandas and numpy dependencies (#96)</li>
+</ul>
+<h3 id="v087-2023-07-31">v0.8.7 (2023-07-31)</h3>
+<h4 id="refactor_9">Refactor</h4>
+<ul>
+<li><strong>example_repos</strong>: remove pendulum dependency (#95)</li>
+</ul>
+<h3 id="v086-2023-07-31">v0.8.6 (2023-07-31)</h3>
+<h4 id="refactor_10">Refactor</h4>
+<ul>
+<li><strong>readme</strong>: update intro paragraph, remove unnecessary comments (#88)</li>
+<li><strong>error-codes</strong>: make error code checks using set instead of list (#86)</li>
+<li><strong>core</strong>: refactor to make code easier to follow (#85)</li>
+</ul>
+<h3 id="v085-2023-07-31">v0.8.5 (2023-07-31)</h3>
+<h4 id="fix_5">Fix</h4>
+<ul>
+<li><strong>restricted-visitor</strong>: refactor get strings functions (#84)</li>
+</ul>
+<h4 id="refactor_11">Refactor</h4>
+<ul>
+<li><strong>core</strong>: refactor to make code easier to follow (#85)</li>
+</ul>
+<h3 id="v084-2023-07-31">v0.8.4 (2023-07-31)</h3>
+<h4 id="fix_6">Fix</h4>
+<ul>
+<li><strong>visitor</strong>: get_module_name_from_filename uses filename not file_path (#83)</li>
+</ul>
+<h4 id="refactor_12">Refactor</h4>
+<ul>
+<li><strong>help-strings</strong>: add error codes to flake8 help strings (#82)</li>
+</ul>
+<h3 id="v083-2023-07-31">v0.8.3 (2023-07-31)</h3>
+<h4 id="refactor_13">Refactor</h4>
+<ul>
+<li><strong>defaults</strong>: update help strings (#81)</li>
+<li><strong>main</strong>: update readme, change log to debug (#80)</li>
+<li><strong>restricted-imports</strong>: add support for import restrictions (#79)</li>
+</ul>
+<h3 id="v082-2023-07-30">v0.8.2 (2023-07-30)</h3>
+<h4 id="fix_7">Fix</h4>
+<ul>
+<li><strong>default</strong>: fix default settings (#77)</li>
+</ul>
+<h4 id="refactor_14">Refactor</h4>
+<ul>
+<li><strong>defaults</strong>: update converters and add test cases (#78)</li>
+<li><strong>import-rules</strong>: update import rules to implement restricted i… (#76)</li>
+</ul>
+<h3 id="v081-2023-07-28">v0.8.1 (2023-07-28)</h3>
+<h4 id="refactor_15">Refactor</h4>
+<ul>
+<li><strong>restricted-imports</strong>: passing file packages to restricted imp… (#75)</li>
+</ul>
+<h3 id="v080-2023-07-28">v0.8.0 (2023-07-28)</h3>
+<h4 id="feat_4">Feat</h4>
+<ul>
+<li><strong>checker</strong>: added support for restricted imports (#69)</li>
+<li><strong>restricted-imports</strong>: added restricted import visitor and utility functions (#68)</li>
+</ul>
+<h4 id="fix_8">Fix</h4>
+<ul>
+<li><strong>rules-checker</strong>: fix typing in restricted identifiers (#72)</li>
+<li><strong>file-utils</strong>: return none if file does not exist (#71)</li>
+<li>add parsing for import restrictions (#67)</li>
+</ul>
+<h4 id="refactor_16">Refactor</h4>
+<ul>
+<li><strong>rules-checker</strong>: remove extraneous code to make more efficient (#74)</li>
+<li><strong>rules-checker</strong>: refactoring to minimize the number of calls (#73)</li>
+<li><strong>file-utils</strong>: move file util functions to own module (#70)</li>
+<li>update parsing tests and plugin (#66)</li>
+<li><strong>import-rules</strong>: update custom import rules to use closure (#65)</li>
+<li>cleaned up functions and improved method names (#64)</li>
+</ul>
+<h3 id="v071-2023-07-25">v0.7.1 (2023-07-25)</h3>
+<h4 id="refactor_17">Refactor</h4>
+<ul>
+<li>cleaned up functions and improved method names</li>
+</ul>
+<h3 id="v070-2023-07-25">v0.7.0 (2023-07-25)</h3>
+<h4 id="feat_5">Feat</h4>
+<ul>
+<li><strong>standalone-modules</strong>: add test cases (#62)</li>
+<li><strong>parse-utils</strong>: add module to filename helpers (#61)</li>
+<li><strong>project-imports</strong>: added support for non-base and non-first party (#60)</li>
+<li><strong>first-party</strong>: updated first party to include base package (#59)</li>
+<li><strong>future</strong>: add support for restricting <strong>future</strong> imports (#58)</li>
+<li><strong>error-codes</strong>: updated error code messages (#57)</li>
+<li><strong>third-party</strong>: added support for third party only imports (#56)</li>
+<li><strong>imports</strong>: update imports to straight imports (#55)</li>
+<li><strong>import-rules</strong>: implement std lib import restrictions (#54)</li>
+<li><strong>parse-utils</strong>: add file conversion utils (#53)</li>
+<li><strong>checker</strong>: update checkers and parsers (#52)</li>
+<li><strong>registry</strong>: remove old registry options (#50)</li>
+<li><strong>flake8-linter</strong>: add register options (#49)</li>
+<li><strong>dynamic</strong>: add custom import rules to default settings (#48)</li>
+<li><strong>import-rules</strong>: add handling for dynamic string syntax errors (#47)</li>
+<li>added support for standard lib packages (#45)</li>
+<li><strong>dynamic</strong>: added dynamic string visitor to capture dynamic string… (#44)</li>
+</ul>
+<h4 id="refactor_18">Refactor</h4>
+<ul>
+<li>update support for #noqa (#51)</li>
+<li><strong>error-codes</strong>: update error code messages (#46)</li>
+</ul>
+<h3 id="v060-2023-07-22">v0.6.0 (2023-07-22)</h3>
+<h4 id="feat_6">Feat</h4>
+<ul>
+<li><strong>dynamic</strong>: added support for dynamic imports and fixed numerous tests (#42)</li>
+</ul>
+<h4 id="refactor_19">Refactor</h4>
+<ul>
+<li><strong>nodes</strong>: moved parsed nodes to their own file (#43)</li>
+</ul>
+<h3 id="v050-2023-07-21">v0.5.0 (2023-07-21)</h3>
+<h4 id="refactor_20">Refactor</h4>
+<ul>
+<li><strong>import-rules</strong>: add restrictions for main imports (#39)</li>
+<li><strong>import-rules</strong>: add private import restrictions (#38)</li>
+</ul>
+<h3 id="v045-2023-07-20">v0.4.5 (2023-07-20)</h3>
+<h4 id="refactor_21">Refactor</h4>
+<ul>
+<li><strong>import-rules</strong>: implement local import restrictions (#37)</li>
+<li><strong>import-rules</strong>: add aliased import restrictions (#36)</li>
+<li><strong>import-rules</strong>: add conditional import restrictions (#35)</li>
+</ul>
+<h3 id="v044-2023-07-20">v0.4.4 (2023-07-20)</h3>
+<h4 id="refactor_22">Refactor</h4>
+<ul>
+<li><strong>import-rules</strong>: add relative import restrictions (#34)</li>
+<li><strong>test-cases</strong>: updated wildcard import checks (#33)</li>
+</ul>
+<h3 id="v043-2023-07-20">v0.4.3 (2023-07-20)</h3>
+<h4 id="refactor_23">Refactor</h4>
+<ul>
+<li><strong>tests</strong>: update tests to use linter fixture (#32)</li>
+<li>implement and connect import rules (#31)</li>
+<li><strong>import-rules</strong>: remove option arguments, use option dict directly (#30)</li>
+<li>update setting option keys (#29)</li>
+<li>update linters and vistor and error codes (#28)</li>
+<li><strong>error-codes</strong>: add properties for code and message (#27)</li>
+</ul>
+<h3 id="v042-2023-07-19">v0.4.2 (2023-07-19)</h3>
+<h4 id="refactor_24">Refactor</h4>
+<ul>
+<li>updated linter, checker, and visitor classes and tests (#26)</li>
+</ul>
+<h3 id="v041-2023-07-19">v0.4.1 (2023-07-19)</h3>
+<h4 id="refactor_25">Refactor</h4>
+<ul>
+<li><strong>error-codes</strong>: update error code stem (#25)</li>
+</ul>
+<h3 id="v040-2023-07-19">v0.4.0 (2023-07-19)</h3>
+<h4 id="feat_7">Feat</h4>
+<ul>
+<li><strong>main-package</strong>: updated node visitor and added tests (#22)</li>
+</ul>
+<h4 id="refactor_26">Refactor</h4>
+<ul>
+<li><strong>checker</strong>: use attrs define and field with slots (#24)</li>
+</ul>
+<h3 id="v030-2023-07-17">v0.3.0 (2023-07-17)</h3>
+<h4 id="feat_8">Feat</h4>
+<ul>
+<li><strong>makefile</strong>: Added linter files (#15)</li>
+<li><strong>error-codes</strong>: defined error codes for what linter will cover (#10)</li>
+</ul>
+<h4 id="fix_9">Fix</h4>
+<ul>
+<li><strong>error-codes</strong>: added methods to error codes enum (#12)</li>
+</ul>
+<h4 id="refactor_27">Refactor</h4>
+<ul>
+<li><strong>import-rules</strong>: move files into directories (#21)</li>
+<li><strong>main-package</strong>: continuing to implement checker (#20)</li>
+<li><strong>example-package</strong>: updating imports and docstrings (#19)</li>
+<li><strong>example-package</strong>: rename package and updating imports (#18)</li>
+<li><strong>custom-import-rules</strong>: update parameters (#17)</li>
+<li><strong>visitor</strong>: Consolidate visitor classes (#16)</li>
+</ul>
+<h3 id="v020-2023-04-27">v0.2.0 (2023-04-27)</h3>
+<h4 id="feat_9">Feat</h4>
+<ul>
+<li>added import rules module and parse utils and error codes (#9)</li>
+<li>added rules checker class to process the results of parsing through file (#8)</li>
+<li>add custom import rules visitor class for traversing imports (#6)</li>
+</ul>
+<h3 id="v010-2023-04-26">v0.1.0 (2023-04-26)</h3>
+<h4 id="feat_10">Feat</h4>
+<ul>
+<li>added parsed import namedtuple for holding parsed imports from ast</li>
+</ul>
+<h3 id="v001-2023-04-24">v0.0.1 (2023-04-24)</h3>
+<h4 id="feat_11">Feat</h4>
+<ul>
+<li>add Visitor and Plugin classes</li>
+</ul>
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    <script id="__config" type="application/json">{"base": ".", "features": ["navigation.indexes", "navigation.instant"], "search": "assets/javascripts/workers/search.dfff1995.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="assets/javascripts/bundle.78eede0e.min.js"></script>
+      
+    
+  </body>
+</html>

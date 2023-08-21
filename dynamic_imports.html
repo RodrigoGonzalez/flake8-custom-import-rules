@@ -1,0 +1,894 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="glossary.html">
+      
+      
+        <link rel="next" href="changelog.html">
+      
+      
+      <link rel="icon" href="assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.5.2, mkdocs-material-9.2.0">
+    
+    
+      
+        <title>Dynamic Imports Explained - Custom Import Rules</title>
+      
+    
+    
+      <link rel="stylesheet" href="assets/stylesheets/main.0e669242.min.css">
+      
+        
+        <link rel="stylesheet" href="assets/stylesheets/palette.85d0ee34.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="assets/_mkdocstrings.css">
+    
+    <script>__md_scope=new URL(".",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&"object"==typeof palette.color)for(var key of Object.keys(palette.color))document.body.setAttribute("data-md-color-"+key,palette.color[key])</script>
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#dynamic-imports-explained" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="index.html" title="Custom Import Rules" class="md-header__button md-logo" aria-label="Custom Import Rules" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Custom Import Rules
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Dynamic Imports Explained
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_2" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 6H7c-3.31 0-6 2.69-6 6s2.69 6 6 6h10c3.31 0 6-2.69 6-6s-2.69-6-6-6zm0 10H7c-2.21 0-4-1.79-4-4s1.79-4 4-4h10c2.21 0 4 1.79 4 4s-1.79 4-4 4zM7 9c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_2">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 7H7a5 5 0 0 0-5 5 5 5 0 0 0 5 5h10a5 5 0 0 0 5-5 5 5 0 0 0-5-5m0 8a3 3 0 0 1-3-3 3 3 0 0 1 3-3 3 3 0 0 1 3 3 3 3 0 0 1-3 3Z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/RodrigoGonzalez/flake8-custom-import-rules" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    RodrigoGonzalez/flake8-custom-import-rules
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="index.html" title="Custom Import Rules" class="md-nav__button md-logo" aria-label="Custom Import Rules" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    Custom Import Rules
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/RodrigoGonzalez/flake8-custom-import-rules" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    RodrigoGonzalez/flake8-custom-import-rules
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="index.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Introduction
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="api_docs.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    API Documentation
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="glossary.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Glossary
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Dynamic Imports Explained
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="dynamic_imports.html" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    Dynamic Imports Explained
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#dynamic-imports-explained" class="md-nav__link">
+    Dynamic Imports Explained
+  </a>
+  
+    <nav class="md-nav" aria-label="Dynamic Imports Explained">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#why-we-dont-want-dynamic-imports" class="md-nav__link">
+    Why We Don't Want Dynamic Imports
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#examples-from-built-in-functions" class="md-nav__link">
+    Examples From Built-In Functions
+  </a>
+  
+    <nav class="md-nav" aria-label="Examples From Built-In Functions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-importlib" class="md-nav__link">
+    1. importlib
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-__import__" class="md-nav__link">
+    2. __import__()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-exec-and-eval" class="md-nav__link">
+    3. exec() and eval()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-globals-and-locals" class="md-nav__link">
+    4. globals() and locals()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-pkgutil" class="md-nav__link">
+    5. pkgutil
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#6-pkgutilget_loader" class="md-nav__link">
+    6. pkgutil.get_loader
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#7-pkgutiliter_modules" class="md-nav__link">
+    7. pkgutil.iter_modules
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#8-zipimport" class="md-nav__link">
+    8. zipimport
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#9-zipimportzipimporter" class="md-nav__link">
+    9. zipimport.zipimporter
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="changelog.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Changelog
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="license.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    License
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#dynamic-imports-explained" class="md-nav__link">
+    Dynamic Imports Explained
+  </a>
+  
+    <nav class="md-nav" aria-label="Dynamic Imports Explained">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#why-we-dont-want-dynamic-imports" class="md-nav__link">
+    Why We Don't Want Dynamic Imports
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#examples-from-built-in-functions" class="md-nav__link">
+    Examples From Built-In Functions
+  </a>
+  
+    <nav class="md-nav" aria-label="Examples From Built-In Functions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-importlib" class="md-nav__link">
+    1. importlib
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-__import__" class="md-nav__link">
+    2. __import__()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-exec-and-eval" class="md-nav__link">
+    3. exec() and eval()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-globals-and-locals" class="md-nav__link">
+    4. globals() and locals()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-pkgutil" class="md-nav__link">
+    5. pkgutil
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#6-pkgutilget_loader" class="md-nav__link">
+    6. pkgutil.get_loader
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#7-pkgutiliter_modules" class="md-nav__link">
+    7. pkgutil.iter_modules
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#8-zipimport" class="md-nav__link">
+    8. zipimport
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#9-zipimportzipimporter" class="md-nav__link">
+    9. zipimport.zipimporter
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  
+  
+
+
+  <h1>Dynamic Imports Explained</h1>
+
+<h2 id="dynamic-imports-explained">Dynamic Imports Explained</h2>
+<p>Dynamic imports, also known as lazy loading, refer to the 
+practice of importing modules or specific symbols from 
+modules at runtime, rather than at the beginning of the 
+program's execution. This allows for more flexible and 
+optimized code by loading resources only when they are 
+needed.</p>
+<h3 id="why-we-dont-want-dynamic-imports">Why We Don't Want Dynamic Imports</h3>
+<p>While dynamic importing is a powerful feature that allows 
+modules to be loaded when needed or at runtime, there are 
+several reasons why it might not always be a preferred 
+approach:</p>
+<ol>
+<li>
+<p><strong>Code Readability</strong>: Dynamic imports can make code 
+more complex and harder to understand. This complexity can 
+lead to difficulties in maintaining and debugging the code, 
+especially for those who are not familiar with the specific 
+use of dynamic imports.</p>
+</li>
+<li>
+<p><strong>Security Risks</strong>: Using functions like <code>exec()</code> for 
+dynamic imports can pose significant security risks, 
+especially when dealing with untrusted input. Malicious 
+code can be executed unintentionally, leading to potential 
+breaches and vulnerabilities.</p>
+</li>
+<li>
+<p><strong>Performance Considerations</strong>: Dynamic imports can 
+introduce overhead at runtime, potentially leading to 
+performance issues. Loading modules dynamically can slow 
+down the execution, especially if done excessively or 
+improperly.</p>
+</li>
+<li>
+<p><strong>Dependency Tracking</strong>: Dynamic imports can make it 
+challenging to track dependencies and manage them properly. 
+Tools that analyze code dependencies might not detect 
+dynamically imported modules, leading to problems in 
+dependency management and potential conflicts.</p>
+</li>
+<li>
+<p><strong>Testing Challenges</strong>: Writing tests for code that 
+utilizes dynamic imports can be more complex. Ensuring 
+proper coverage and creating mock objects for testing 
+might become cumbersome and error-prone.</p>
+</li>
+<li>
+<p><strong>Lack of Community Standards</strong>: Dynamic imports are 
+not commonly used in many coding communities, and there 
+might not be established best practices or conventions. 
+This lack of standardization can lead to inconsistency and
+confusion across different parts of the codebase.</p>
+</li>
+<li>
+<p><strong>Potential Compatibility Issues</strong>: Some methods of 
+dynamic importing might not be compatible across different 
+versions of Python or with certain third-party libraries 
+and tools. This can lead to unexpected behaviors and 
+require additional effort to ensure compatibility.</p>
+</li>
+<li>
+<p><strong>Loss of IDE Support</strong>: Many Integrated Development 
+Environments (IDEs) provide features like auto-completion, 
+refactoring, and navigation based on static analysis of 
+imports. Dynamic imports can break these features, 
+reducing development efficiency and productivity.</p>
+</li>
+</ol>
+<p>In summary, while dynamic imports offer flexibility and 
+can be useful in specific scenarios, they come with 
+trade-offs that must be carefully considered. The potential 
+complexity, security risks, and other challenges mean that 
+dynamic imports should be used judiciously, following best 
+practices, and with a clear understanding of the 
+implications.</p>
+<p><strong>NOTE</strong>: If dynamic imports are essential for a particular
+use case, it is recommended to follow established 
+guidelines and best practices, utilize trusted libraries, 
+and thoroughly test the implementation to mitigate the 
+associated risks and challenges.</p>
+<p>Dynamic importing is a method where modules are loaded when they are
+needed, or at runtime. Python provides several built-in functions
+and packages that support dynamic imports. Here are a few examples:</p>
+<h3 id="examples-from-built-in-functions">Examples From Built-In Functions</h3>
+<p>Python provides several built-in functions
+and packages that support dynamic imports. Here are a few examples:</p>
+<h4 id="1-importlib">1. <strong><code>importlib</code></strong></h4>
+<p>This is a built-in Python library that offers functions for importing
+modules programmatically. The <code>import_module()</code> function is commonly
+used for dynamic imports. Here’s an example:</p>
+<pre><code class="language-python">&quot;&quot;&quot;Dynamic Imports importlib Example&quot;&quot;&quot;
+import importlib
+
+module = importlib.import_module('math')
+print(module.sqrt(4))  # Outputs: 2.0
+</code></pre>
+<h4 id="2-__import__">2. <strong><code>__import__()</code></strong></h4>
+<p>This is a built-in Python function that can be used for dynamic
+imports. However, it’s generally recommended to use
+<code>importlib.import_module()</code> instead, as <code>__import__()</code> is more
+complex and not intended for direct use. Here’s an example:</p>
+<pre><code class="language-python">&quot;&quot;&quot;Dynamic Imports importlib Example&quot;&quot;&quot;
+module_name = &quot;math&quot;
+module = __import__(module_name)
+print(module.sqrt(4))
+# Outputs: 2.0
+</code></pre>
+<h4 id="3-exec-and-eval">3. <strong><code>exec() and eval()</code></strong></h4>
+<p>This is a built-in Python function that can execute Python code
+dynamically. It can be used for dynamic imports, but it’s
+generally not recommended because it can pose security risks if used
+with untrusted input. Here’s an example:</p>
+<pre><code class="language-python">&quot;&quot;&quot;Dynamic Imports Execute Example&quot;&quot;&quot;
+module_name = &quot;math&quot;
+exec(f&quot;import {module_name}&quot;)
+print(math.sqrt(4))
+# Outputs: 2.0
+</code></pre>
+<h4 id="4-globals-and-locals">4. <strong><code>globals()</code> and <code>locals()</code></strong></h4>
+<p>These are built-in Python functions that return the current global
+and local symbol table, respectively. They can be used in
+conjunction with <code>exec()</code> or <code>__import__()</code> to dynamically import
+modules into the current namespace.</p>
+<p>Here’s an example of using <code>globals()</code> with <code>__import__()</code> to
+dynamically import a module into the current namespace:</p>
+<pre><code class="language-python">&quot;&quot;&quot;Dynamic Imports Globals Example&quot;&quot;&quot;
+module_name = &quot;math&quot;
+globals()[module_name] = __import__(&quot;math&quot;)
+
+# Now you can use the 'math' module directly
+print(math.sqrt(4))
+# Outputs: 2.0
+</code></pre>
+<p>And here’s an example of using <code>locals()</code> with <code>exec()</code> to
+dynamically import a module into the current namespace:</p>
+<pre><code class="language-python">&quot;&quot;&quot;Dynamic Imports Example&quot;&quot;&quot;
+module_name = &quot;math&quot;
+exec(f&quot;{module_name} = __import__('{module_name}')&quot;)
+
+# Now you can use the 'math' module directly
+print(math.sqrt(4))
+# Outputs: 2.0
+</code></pre>
+<p>In this example,
+<code>exec(f"{module_name} = __import__('{module_name}')")</code>
+executes a string of Python code that imports the <code>math</code> module
+and adds it to the local symbol table. This allows you to use the
+<code>math</code> module directly in your code, just like if you had imported
+it with <code>import math</code>.</p>
+<p>The <code>exec()</code> function should be used with caution, as it can pose
+security risks if used with untrusted input.</p>
+<h4 id="5-pkgutil">5. <strong><code>pkgutil</code></strong></h4>
+<p>This is a standard library in Python that supports the 
+discovery and loading of Python packages and modules. 
+It can be used to dynamically load modules. Here's an 
+example:</p>
+<pre><code class="language-python">&quot;&quot;&quot;Dynamic Imports pkgutil Example&quot;&quot;&quot;
+import pkgutil
+
+# Load the 'os' module
+module = pkgutil.get_loader('os').load_module('os')
+</code></pre>
+<h4 id="6-pkgutilget_loader">6. <strong><code>pkgutil.get_loader</code></strong></h4>
+<p>This function within the <code>pkgutil</code> library returns a 
+PEP 302 "loader" object for a module. It can be used to 
+dynamically load the specified module. Here's an example:</p>
+<pre><code class="language-python">&quot;&quot;&quot;Dynamic Imports pkgutil.get_loader Example&quot;&quot;&quot;
+from pkgutil import get_loader
+
+# Load the 'os' module
+module = get_loader('os').load_module('os')
+</code></pre>
+<h4 id="7-pkgutiliter_modules">7. <strong><code>pkgutil.iter_modules</code></strong></h4>
+<p>This function in the <code>pkgutil</code> module is used to iterate 
+over all the modules in a given package. It's useful for 
+discovering modules dynamically. Here's an example:</p>
+<pre><code class="language-python">&quot;&quot;&quot;Dynamic Imports pkgutil.iter_modules Example&quot;&quot;&quot;
+import pkgutil
+
+# List all the modules in the 'os' package
+for module_info in pkgutil.iter_modules(['os']):
+    print(module_info)
+</code></pre>
+<h4 id="8-zipimport">8. <strong><code>zipimport</code></strong></h4>
+<p>This is a built-in Python module that allows the importing 
+of Python modules from zip archives. It can be used to 
+dynamically import modules stored in zip files. Here's an 
+example:</p>
+<pre><code class="language-python">&quot;&quot;&quot;Dynamic Imports zipimport Example&quot;&quot;&quot;
+import zipimport
+
+# Import a module from a zip archive
+zipimporter = zipimport.zipimporter('my_module.zip')
+module = zipimporter.load_module('my_module')
+</code></pre>
+<h4 id="9-zipimportzipimporter">9. <strong><code>zipimport.zipimporter</code></strong></h4>
+<p>This class within the <code>zipimport</code> module provides access to 
+resources within a zip archive. It allows for dynamic 
+importing of modules from zip archives. Here's an example:</p>
+<pre><code class="language-python">&quot;&quot;&quot;Dynamic Imports zipimport.zipimporter Example&quot;&quot;&quot;
+from zipimport import zipimporter
+
+# Import a module from a zip archive
+zipimporter = zipimporter('my_module.zip')
+module = zipimporter.load_module('my_module')
+</code></pre>
+<p><strong>NOTE</strong>: Remember, dynamic imports can make code harder 
+to understand and debug, and they can pose security risks 
+if used improperly. Therefore, they should be used 
+sparingly and with caution.</p>
+<p>These improvements make sure that the latter sections 
+align with the formatting and explanation style of the 
+previous sections, providing a consistent reading 
+experience throughout the document.</p>
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    <script id="__config" type="application/json">{"base": ".", "features": ["navigation.indexes", "navigation.instant"], "search": "assets/javascripts/workers/search.dfff1995.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="assets/javascripts/bundle.78eede0e.min.js"></script>
+      
+    
+  </body>
+</html>
