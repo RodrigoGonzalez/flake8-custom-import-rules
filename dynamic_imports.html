@@ -633,85 +633,85 @@
   <h1>Dynamic Imports Explained</h1>
 
 <h2 id="dynamic-imports-explained">Dynamic Imports Explained</h2>
-<p>Dynamic imports, also known as lazy loading, refer to the 
-practice of importing modules or specific symbols from 
-modules at runtime, rather than at the beginning of the 
-program's execution. This allows for more flexible and 
-optimized code by loading resources only when they are 
+<p>Dynamic imports, also known as lazy loading, refer to the
+practice of importing modules or specific symbols from
+modules at runtime, rather than at the beginning of the
+program's execution. This allows for more flexible and
+optimized code by loading resources only when they are
 needed.</p>
 <h3 id="why-we-dont-want-dynamic-imports">Why We Don't Want Dynamic Imports</h3>
-<p>While dynamic importing is a powerful feature that allows 
-modules to be loaded when needed or at runtime, there are 
-several reasons why it might not always be a preferred 
+<p>While dynamic importing is a powerful feature that allows
+modules to be loaded when needed or at runtime, there are
+several reasons why it might not always be a preferred
 approach:</p>
 <ol>
 <li>
-<p><strong>Code Readability</strong>: Dynamic imports can make code 
-more complex and harder to understand. This complexity can 
-lead to difficulties in maintaining and debugging the code, 
-especially for those who are not familiar with the specific 
+<p><strong>Code Readability</strong>: Dynamic imports can make code
+more complex and harder to understand. This complexity can
+lead to difficulties in maintaining and debugging the code,
+especially for those who are not familiar with the specific
 use of dynamic imports.</p>
 </li>
 <li>
-<p><strong>Security Risks</strong>: Using functions like <code>exec()</code> for 
-dynamic imports can pose significant security risks, 
-especially when dealing with untrusted input. Malicious 
-code can be executed unintentionally, leading to potential 
+<p><strong>Security Risks</strong>: Using functions like <code>exec()</code> for
+dynamic imports can pose significant security risks,
+especially when dealing with untrusted input. Malicious
+code can be executed unintentionally, leading to potential
 breaches and vulnerabilities.</p>
 </li>
 <li>
-<p><strong>Performance Considerations</strong>: Dynamic imports can 
-introduce overhead at runtime, potentially leading to 
-performance issues. Loading modules dynamically can slow 
-down the execution, especially if done excessively or 
+<p><strong>Performance Considerations</strong>: Dynamic imports can
+introduce overhead at runtime, potentially leading to
+performance issues. Loading modules dynamically can slow
+down the execution, especially if done excessively or
 improperly.</p>
 </li>
 <li>
-<p><strong>Dependency Tracking</strong>: Dynamic imports can make it 
-challenging to track dependencies and manage them properly. 
-Tools that analyze code dependencies might not detect 
-dynamically imported modules, leading to problems in 
+<p><strong>Dependency Tracking</strong>: Dynamic imports can make it
+challenging to track dependencies and manage them properly.
+Tools that analyze code dependencies might not detect
+dynamically imported modules, leading to problems in
 dependency management and potential conflicts.</p>
 </li>
 <li>
-<p><strong>Testing Challenges</strong>: Writing tests for code that 
-utilizes dynamic imports can be more complex. Ensuring 
-proper coverage and creating mock objects for testing 
+<p><strong>Testing Challenges</strong>: Writing tests for code that
+utilizes dynamic imports can be more complex. Ensuring
+proper coverage and creating mock objects for testing
 might become cumbersome and error-prone.</p>
 </li>
 <li>
-<p><strong>Lack of Community Standards</strong>: Dynamic imports are 
-not commonly used in many coding communities, and there 
-might not be established best practices or conventions. 
+<p><strong>Lack of Community Standards</strong>: Dynamic imports are
+not commonly used in many coding communities, and there
+might not be established best practices or conventions.
 This lack of standardization can lead to inconsistency and
 confusion across different parts of the codebase.</p>
 </li>
 <li>
-<p><strong>Potential Compatibility Issues</strong>: Some methods of 
-dynamic importing might not be compatible across different 
-versions of Python or with certain third-party libraries 
-and tools. This can lead to unexpected behaviors and 
+<p><strong>Potential Compatibility Issues</strong>: Some methods of
+dynamic importing might not be compatible across different
+versions of Python or with certain third-party libraries
+and tools. This can lead to unexpected behaviors and
 require additional effort to ensure compatibility.</p>
 </li>
 <li>
-<p><strong>Loss of IDE Support</strong>: Many Integrated Development 
-Environments (IDEs) provide features like auto-completion, 
-refactoring, and navigation based on static analysis of 
-imports. Dynamic imports can break these features, 
+<p><strong>Loss of IDE Support</strong>: Many Integrated Development
+Environments (IDEs) provide features like auto-completion,
+refactoring, and navigation based on static analysis of
+imports. Dynamic imports can break these features,
 reducing development efficiency and productivity.</p>
 </li>
 </ol>
-<p>In summary, while dynamic imports offer flexibility and 
-can be useful in specific scenarios, they come with 
-trade-offs that must be carefully considered. The potential 
-complexity, security risks, and other challenges mean that 
-dynamic imports should be used judiciously, following best 
-practices, and with a clear understanding of the 
+<p>In summary, while dynamic imports offer flexibility and
+can be useful in specific scenarios, they come with
+trade-offs that must be carefully considered. The potential
+complexity, security risks, and other challenges mean that
+dynamic imports should be used judiciously, following best
+practices, and with a clear understanding of the
 implications.</p>
 <p><strong>NOTE</strong>: If dynamic imports are essential for a particular
-use case, it is recommended to follow established 
-guidelines and best practices, utilize trusted libraries, 
-and thoroughly test the implementation to mitigate the 
+use case, it is recommended to follow established
+guidelines and best practices, utilize trusted libraries,
+and thoroughly test the implementation to mitigate the
 associated risks and challenges.</p>
 <p>Dynamic importing is a method where modules are loaded when they are
 needed, or at runtime. Python provides several built-in functions
@@ -785,9 +785,9 @@ it with <code>import math</code>.</p>
 <p>The <code>exec()</code> function should be used with caution, as it can pose
 security risks if used with untrusted input.</p>
 <h4 id="5-pkgutil">5. <strong><code>pkgutil</code></strong></h4>
-<p>This is a standard library in Python that supports the 
-discovery and loading of Python packages and modules. 
-It can be used to dynamically load modules. Here's an 
+<p>This is a standard library in Python that supports the
+discovery and loading of Python packages and modules.
+It can be used to dynamically load modules. Here's an
 example:</p>
 <pre><code class="language-python">&quot;&quot;&quot;Dynamic Imports pkgutil Example&quot;&quot;&quot;
 import pkgutil
@@ -796,8 +796,8 @@ import pkgutil
 module = pkgutil.get_loader('os').load_module('os')
 </code></pre>
 <h4 id="6-pkgutilget_loader">6. <strong><code>pkgutil.get_loader</code></strong></h4>
-<p>This function within the <code>pkgutil</code> library returns a 
-PEP 302 "loader" object for a module. It can be used to 
+<p>This function within the <code>pkgutil</code> library returns a
+PEP 302 "loader" object for a module. It can be used to
 dynamically load the specified module. Here's an example:</p>
 <pre><code class="language-python">&quot;&quot;&quot;Dynamic Imports pkgutil.get_loader Example&quot;&quot;&quot;
 from pkgutil import get_loader
@@ -806,8 +806,8 @@ from pkgutil import get_loader
 module = get_loader('os').load_module('os')
 </code></pre>
 <h4 id="7-pkgutiliter_modules">7. <strong><code>pkgutil.iter_modules</code></strong></h4>
-<p>This function in the <code>pkgutil</code> module is used to iterate 
-over all the modules in a given package. It's useful for 
+<p>This function in the <code>pkgutil</code> module is used to iterate
+over all the modules in a given package. It's useful for
 discovering modules dynamically. Here's an example:</p>
 <pre><code class="language-python">&quot;&quot;&quot;Dynamic Imports pkgutil.iter_modules Example&quot;&quot;&quot;
 import pkgutil
@@ -817,9 +817,9 @@ for module_info in pkgutil.iter_modules(['os']):
     print(module_info)
 </code></pre>
 <h4 id="8-zipimport">8. <strong><code>zipimport</code></strong></h4>
-<p>This is a built-in Python module that allows the importing 
-of Python modules from zip archives. It can be used to 
-dynamically import modules stored in zip files. Here's an 
+<p>This is a built-in Python module that allows the importing
+of Python modules from zip archives. It can be used to
+dynamically import modules stored in zip files. Here's an
 example:</p>
 <pre><code class="language-python">&quot;&quot;&quot;Dynamic Imports zipimport Example&quot;&quot;&quot;
 import zipimport
@@ -829,8 +829,8 @@ zipimporter = zipimport.zipimporter('my_module.zip')
 module = zipimporter.load_module('my_module')
 </code></pre>
 <h4 id="9-zipimportzipimporter">9. <strong><code>zipimport.zipimporter</code></strong></h4>
-<p>This class within the <code>zipimport</code> module provides access to 
-resources within a zip archive. It allows for dynamic 
+<p>This class within the <code>zipimport</code> module provides access to
+resources within a zip archive. It allows for dynamic
 importing of modules from zip archives. Here's an example:</p>
 <pre><code class="language-python">&quot;&quot;&quot;Dynamic Imports zipimport.zipimporter Example&quot;&quot;&quot;
 from zipimport import zipimporter
@@ -839,13 +839,13 @@ from zipimport import zipimporter
 zipimporter = zipimporter('my_module.zip')
 module = zipimporter.load_module('my_module')
 </code></pre>
-<p><strong>NOTE</strong>: Remember, dynamic imports can make code harder 
-to understand and debug, and they can pose security risks 
-if used improperly. Therefore, they should be used 
+<p><strong>NOTE</strong>: Remember, dynamic imports can make code harder
+to understand and debug, and they can pose security risks
+if used improperly. Therefore, they should be used
 sparingly and with caution.</p>
-<p>These improvements make sure that the latter sections 
-align with the formatting and explanation style of the 
-previous sections, providing a consistent reading 
+<p>These improvements make sure that the latter sections
+align with the formatting and explanation style of the
+previous sections, providing a consistent reading
 experience throughout the document.</p>
 
 

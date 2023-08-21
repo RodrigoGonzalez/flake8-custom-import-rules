@@ -1188,196 +1188,196 @@ and security of the codebase.</p>
 <p>Project Import Rules (PIR) allow you to define and enforce
 import rules at a project level.</p>
 <h4 id="restrict-relative-imports">Restrict Relative Imports</h4>
-<p>Relative imports in Python allow you to import modules or 
-specific objects from modules within the same package 
+<p>Relative imports in Python allow you to import modules or
+specific objects from modules within the same package
 hierarchy, using dots (<code>.</code>) to represent the relative path.</p>
-<p>By default, the <code>--restrict-relative-imports</code> flag is 
-enabled, prohibiting the use of relative imports. Modules 
-must instead utilize absolute imports, specifying the full 
-path to the target module, starting from the top-level 
+<p>By default, the <code>--restrict-relative-imports</code> flag is
+enabled, prohibiting the use of relative imports. Modules
+must instead utilize absolute imports, specifying the full
+path to the target module, starting from the top-level
 package.</p>
-<p>To enforce this restriction and disable relative imports 
+<p>To enforce this restriction and disable relative imports
 for your project, you can configure the following setting:</p>
 <pre><code class="language-ini">[flake8]
 restrict_relative_imports = True
 </code></pre>
-<p>With this configuration, any relative imports encountered 
+<p>With this configuration, any relative imports encountered
 in your project will be flagged by the linter, guiding you
 to use absolute imports instead.</p>
 <h4 id="restrict-local-scope-imports">Restrict Local Scope Imports</h4>
-<p>Local scope imports refer to the practice of importing 
-modules or specific objects within a confined scope, 
-such as inside a function or method. While this can allow 
-for more granular control over imports, it may lead to 
+<p>Local scope imports refer to the practice of importing
+modules or specific objects within a confined scope,
+such as inside a function or method. While this can allow
+for more granular control over imports, it may lead to
 code that is less clear and consistent.</p>
-<p>The <code>--restrict-local-scope-imports</code> flag is designed to 
-prevent such imports, enforcing that all imports occur at 
-the top-level of the file. By centralizing imports, it 
+<p>The <code>--restrict-local-scope-imports</code> flag is designed to
+prevent such imports, enforcing that all imports occur at
+the top-level of the file. By centralizing imports, it
 promotes code clarity and consistency across the project.</p>
-<p>This restriction is turned on by default, meaning that 
-any local scope imports will be flagged by the linter. If 
-you wish to adhere to this best practice, ensure that all 
-imports are declared at the top-level of your files, rather 
+<p>This restriction is turned on by default, meaning that
+any local scope imports will be flagged by the linter. If
+you wish to adhere to this best practice, ensure that all
+imports are declared at the top-level of your files, rather
 than within specific functions or methods.</p>
 <pre><code class="language-ini">[flake8]
 restrict_local_scope_imports = True
 </code></pre>
-<p>With this configuration, the linter will guide you to organize 
-your imports at the top-level, fostering a more readable and 
+<p>With this configuration, the linter will guide you to organize
+your imports at the top-level, fostering a more readable and
 maintainable codebase.</p>
 <h4 id="restrict-conditional-imports">Restrict Conditional Imports</h4>
-<p>Conditional imports in Python refer to the practice of 
-importing modules or specific symbols based on certain 
-conditions or runtime logic. These imports can be found 
+<p>Conditional imports in Python refer to the practice of
+importing modules or specific symbols based on certain
+conditions or runtime logic. These imports can be found
 inside control structures like <code>if</code> statements.</p>
-<p>The <code>--restrict-conditional-imports</code> flag aims to limit the 
-use of these imports, as they can potentially lead to 
-inconsistent behavior. The importation of a module might 
-depend on varying runtime conditions, leading to unexpected 
+<p>The <code>--restrict-conditional-imports</code> flag aims to limit the
+use of these imports, as they can potentially lead to
+inconsistent behavior. The importation of a module might
+depend on varying runtime conditions, leading to unexpected
 outcomes.</p>
-<p>This restriction is turned off by default, allowing for 
-conditional imports. However, considering the potential 
+<p>This restriction is turned off by default, allowing for
+conditional imports. However, considering the potential
 risks and complexities, you may choose to enable this flag:</p>
 <pre><code class="language-ini">[flake8]
 restrict_conditional_imports = True
 </code></pre>
-<p>By restricting conditional imports, you can foster a more 
+<p>By restricting conditional imports, you can foster a more
 predictable and manageable codebase.</p>
 <h4 id="restrict-dynamic-imports">Restrict Dynamic Imports</h4>
-<p>Dynamic imports in Python involve importing modules or 
-specific symbols within a function or method. Such imports 
-can be challenging to track and may result in unexpected 
-behavior, as the availability of a module may hinge on the 
+<p>Dynamic imports in Python involve importing modules or
+specific symbols within a function or method. Such imports
+can be challenging to track and may result in unexpected
+behavior, as the availability of a module may hinge on the
 specific execution path.</p>
-<p>The <code>--restrict-dynamic-imports</code> flag is designed to 
-prevent these imports, promoting a more stable and 
-transparent code structure. This restriction is turned on 
+<p>The <code>--restrict-dynamic-imports</code> flag is designed to
+prevent these imports, promoting a more stable and
+transparent code structure. This restriction is turned on
 by default, emphasizing the importance of predictability in
 code execution.</p>
 <pre><code class="language-ini">[flake8]
 restrict_dynamic_imports = True
 </code></pre>
-<p>By enforcing this rule, you encourage a more coherent and 
+<p>By enforcing this rule, you encourage a more coherent and
 traceable import structure, enhancing code reliability.</p>
 <h4 id="restrict-private-imports">Restrict Private Imports</h4>
-<p>Private modules in Python are typically those that begin 
-with an underscore (<code>_</code>). These modules are meant for 
-internal use within a package, and importing them can lead 
+<p>Private modules in Python are typically those that begin
+with an underscore (<code>_</code>). These modules are meant for
+internal use within a package, and importing them can lead
 to instability, as they may change without notice.</p>
-<p>The <code>--restrict-private-imports</code> flag limits the import of 
-private modules, preserving the stability of your code. 
-Although Python doesn't truly enforce private access, this 
-flag provides a layer of protection. It is turned on by 
+<p>The <code>--restrict-private-imports</code> flag limits the import of
+private modules, preserving the stability of your code.
+Although Python doesn't truly enforce private access, this
+flag provides a layer of protection. It is turned on by
 default, reflecting a best-practice approach.</p>
 <pre><code class="language-ini">[flake8]
 restrict_private_imports = True
 </code></pre>
-<p>By restricting the import of private modules, you align 
-with community conventions and safeguard your code from 
-potential instabilities related to internal package 
+<p>By restricting the import of private modules, you align
+with community conventions and safeguard your code from
+potential instabilities related to internal package
 changes.</p>
 <h4 id="restrict-wildcard-imports">Restrict Wildcard Imports</h4>
-<p>Wildcard imports in Python, expressed as <code>from module import *</code>, 
-bring all symbols from a module into the current namespace. While 
-convenient, these imports can lead to confusion, as it becomes 
-unclear which names are being imported. Furthermore, they may 
+<p>Wildcard imports in Python, expressed as <code>from module import *</code>,
+bring all symbols from a module into the current namespace. While
+convenient, these imports can lead to confusion, as it becomes
+unclear which names are being imported. Furthermore, they may
 inadvertently overwrite existing names.</p>
-<p>The <code>--restrict-wildcard-imports</code> flag is designed to 
-prohibit these imports, fostering greater code clarity and 
-safety. This flag is turned on by default, reflecting a 
+<p>The <code>--restrict-wildcard-imports</code> flag is designed to
+prohibit these imports, fostering greater code clarity and
+safety. This flag is turned on by default, reflecting a
 standard practice in code organization.</p>
 <pre><code class="language-ini">[flake8]
 restrict_wildcard_imports = True
 </code></pre>
-<p>By restricting wildcard imports, you promote a more transparent 
+<p>By restricting wildcard imports, you promote a more transparent
 and manageable code structure, enhancing maintainability.</p>
 <h4 id="restrict-aliased-imports">Restrict Aliased Imports</h4>
-<p>Aliased imports, such as <code>import numpy as np</code>, allow modules or 
-specific symbols to be imported under a different name. While 
-often convenient, especially for widely recognized aliases, 
-they can sometimes cause confusion, particularly with 
+<p>Aliased imports, such as <code>import numpy as np</code>, allow modules or
+specific symbols to be imported under a different name. While
+often convenient, especially for widely recognized aliases,
+they can sometimes cause confusion, particularly with
 non-standard or unconventional aliases.</p>
-<p>The <code>--restrict-aliased-imports</code> flag aims to limit this 
-practice, although it is turned off by default, acknowledging 
+<p>The <code>--restrict-aliased-imports</code> flag aims to limit this
+practice, although it is turned off by default, acknowledging
 the common usage of standard aliases.</p>
 <pre><code class="language-ini">[flake8]
 restrict_aliased_imports = False
 </code></pre>
-<p>While aliasing has its benefits, particularly with widely 
-accepted conventions, this flag provides an option for 
+<p>While aliasing has its benefits, particularly with widely
+accepted conventions, this flag provides an option for
 those who prefer to maintain a stricter naming policy.</p>
 <h4 id="restrict-future-imports">Restrict Future Imports</h4>
-<p>Future imports in Python, expressed as 
-<code>from __future__ import</code>, enable features that will become 
-standard in upcoming versions of Python. While they 
-facilitate forward compatibility, their use might also 
+<p>Future imports in Python, expressed as
+<code>from __future__ import</code>, enable features that will become
+standard in upcoming versions of Python. While they
+facilitate forward compatibility, their use might also
 introduce confusion or compatibility challenges.</p>
 <p>The <code>--restrict-future-imports</code> flag allows you to limit
 the use of future imports, providing a layer of control.
-This flag is turned off by default, allowing flexibility 
+This flag is turned off by default, allowing flexibility
 in adopting future language features.</p>
 <pre><code class="language-ini">[flake8]
 restrict_future_imports = False
 </code></pre>
-<p>By offering this restriction, you can ensure that future 
-imports are used judiciously and aligned with your 
+<p>By offering this restriction, you can ensure that future
+imports are used judiciously and aligned with your
 project's needs and standards.</p>
 <h4 id="restrict-imports-from-init-files">Restrict Imports From Init Files</h4>
-<p>Importing from <code>__init__.py</code> files can sometimes lead to 
-confusing circular dependencies or unexpected behavior. 
-These files typically serve to initialize a package, and 
+<p>Importing from <code>__init__.py</code> files can sometimes lead to
+confusing circular dependencies or unexpected behavior.
+These files typically serve to initialize a package, and
 importing from them may complicate the package structure.</p>
-<p>The <code>--restrict-init-imports</code> flag is designed to prevent 
-these imports, promoting cleaner code organization. This 
+<p>The <code>--restrict-init-imports</code> flag is designed to prevent
+these imports, promoting cleaner code organization. This
 restriction is turned on by default.</p>
 <pre><code class="language-ini">[flake8]
 restrict_init_imports = True
 </code></pre>
-<p>By enforcing this rule, you can maintain a clear separation 
-between initialization and functional code, enhancing code 
+<p>By enforcing this rule, you can maintain a clear separation
+between initialization and functional code, enhancing code
 clarity and maintainability.</p>
 <h4 id="restrict-import-from-main-files">Restrict Import From Main Files</h4>
-<p>Importing from <code>__main__.py</code> files is generally not considered 
-best practice in Python development, as previously explained. 
-The <code>__main__.py</code> file is meant to define the entry point for 
+<p>Importing from <code>__main__.py</code> files is generally not considered
+best practice in Python development, as previously explained.
+The <code>__main__.py</code> file is meant to define the entry point for
 package execution, not to house reusable functions or classes.</p>
-<p>The <code>--restrict-main-imports</code> flag restricts these imports, 
+<p>The <code>--restrict-main-imports</code> flag restricts these imports,
 aligning with best practices. This flag is turned on by default.</p>
 <pre><code class="language-ini">[flake8]
 restrict_main_imports = True
 </code></pre>
-<p>By adhering to this restriction, you ensure that your 
-codebase follows a conventional structure, minimizing 
+<p>By adhering to this restriction, you ensure that your
+codebase follows a conventional structure, minimizing
 potential confusion and maintenance challenges.</p>
 <h4 id="restrict-test-imports">Restrict Test Imports</h4>
 <p>Test imports refer to imports from test files or the tests
-directory. While these imports can be useful for testing 
-purposes, they may inadvertently create dependencies between 
-testing and production code. This entanglement can 
+directory. While these imports can be useful for testing
+purposes, they may inadvertently create dependencies between
+testing and production code. This entanglement can
 complicate code maintenance and lead to potential issues.</p>
-<p>The <code>--restrict-test-imports</code> flag restricts these imports, 
-enforcing a separation between testing and production code. 
+<p>The <code>--restrict-test-imports</code> flag restricts these imports,
+enforcing a separation between testing and production code.
 This restriction is turned on by default.</p>
 <pre><code class="language-ini">[flake8]
 restrict_test_imports = True
 </code></pre>
-<p>By employing this flag, you ensure a clean demarcation between 
-testing and main code, enhancing the modularity and 
+<p>By employing this flag, you ensure a clean demarcation between
+testing and main code, enhancing the modularity and
 maintainability of your codebase.</p>
 <h4 id="restrict-conftest-imports">Restrict Conftest Imports</h4>
-<p>In the context of pytest, <code>conftest.py</code> files are utilized 
-to define fixtures and other setup code for tests. 
-Importing within these files can lead to unexpected 
+<p>In the context of pytest, <code>conftest.py</code> files are utilized
+to define fixtures and other setup code for tests.
+Importing within these files can lead to unexpected
 behavior, potentially affecting test outcomes.</p>
-<p>The <code>--restrict-conftest-imports</code> flag restricts imports 
-within <code>conftest.py</code> files, mitigating the risk of 
+<p>The <code>--restrict-conftest-imports</code> flag restricts imports
+within <code>conftest.py</code> files, mitigating the risk of
 unintended side effects. This flag is turned on by default.</p>
 <pre><code class="language-ini">[flake8]
 restrict_conftest_imports = True
 </code></pre>
-<p>By restricting imports within <code>conftest.py</code>, you promote a 
-more controlled and predictable testing environment. This 
-aligns with best practices for test setup and minimizes 
+<p>By restricting imports within <code>conftest.py</code>, you promote a
+more controlled and predictable testing environment. This
+aligns with best practices for test setup and minimizes
 potential complications.</p>
 <h3 id="plugin-limitations">Plugin Limitations</h3>
 <ul>
