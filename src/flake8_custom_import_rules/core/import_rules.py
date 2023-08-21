@@ -286,6 +286,7 @@ class CustomImportRules:
     custom_restrictions: dict = field(factory=dict)
     restricted_packages: list[str] = field(factory=list)
     file_in_restricted_packages: bool = field(default=False)
+    file_in_tests: bool = field(default=False)
 
     project_only: bool = field(default=False, init=False)
     base_package_only: bool = field(default=False, init=False)
@@ -300,7 +301,7 @@ class CustomImportRules:
         logging.debug(f"file_identifier: {self.file_identifier}")
         self.nodes = sorted(self.nodes, key=lambda element: element.lineno)
 
-        # for these restrictions we want to match a file identifier
+        # for these restrictions, we want to match a file identifier
         # because the import rules correspond to an ImportType
         self.project_only = get_file_matches_custom_rule("PROJECT_ONLY")(self)
         self.base_package_only = get_file_matches_custom_rule("BASE_PACKAGE_ONLY")(self)
@@ -310,6 +311,9 @@ class CustomImportRules:
         self.std_lib_only = get_file_matches_custom_rule("STD_LIB_ONLY")(self)
         self.third_party_only = get_file_matches_custom_rule("THIRD_PARTY_ONLY")(self)
         self.file_in_restricted_packages = get_file_matches_custom_rule("RESTRICTED_PACKAGES")(self)
+        self.file_in_tests = (
+            self.file_identifier.startswith("tests") if self.file_identifier is not None else False
+        )
 
         self.top_level_only_imports = self.checker_settings.TOP_LEVEL_ONLY_IMPORTS
         self.custom_restrictions = self.checker_settings.CUSTOM_RESTRICTIONS
@@ -1161,13 +1165,17 @@ class CustomImportRules:
 
     def _check_for_pir201(self, node: ParsedStraightImport) -> Generator[ErrorMessage, None, None]:
         """Check for PIR201, import test_*/*_test modules is restricted."""
-        condition = check_string(node.identifier, prefix="test_", suffix="_test")
+        condition = (
+            check_string(node.identifier, prefix="test_", suffix="_test") and not self.file_in_tests
+        )
         if ErrorCode.PIR201.code in self.codes_to_check and condition:
             yield standard_error_message(node, ErrorCode.PIR201)
 
     def _check_for_pir202(self, node: ParsedFromImport) -> Generator[ErrorMessage, None, None]:
         """Check for PIR202, import from test_*/*_test modules is restricted."""
-        condition = check_string(node.identifier, prefix="test_", suffix="_test")
+        condition = (
+            check_string(node.identifier, prefix="test_", suffix="_test") and not self.file_in_tests
+        )
         if ErrorCode.PIR202.code in self.codes_to_check and condition:
             yield standard_error_message(node, ErrorCode.PIR202)
 
@@ -1185,13 +1193,17 @@ class CustomImportRules:
 
     def _check_for_pir205(self, node: ParsedStraightImport) -> Generator[ErrorMessage, None, None]:
         """Check for PIR205 import tests directory is restricted."""
-        condition = check_string(node.identifier, substring_match="tests")
+        condition = (
+            check_string(node.identifier, substring_match="tests") and not self.file_in_tests
+        )
         if ErrorCode.PIR205.code in self.codes_to_check and condition:
             yield standard_error_message(node, ErrorCode.PIR205)
 
     def _check_for_pir206(self, node: ParsedFromImport) -> Generator[ErrorMessage, None, None]:
         """Check for PIR206, import from tests directory is restricted."""
-        condition = check_string(node.identifier, substring_match="tests")
+        condition = (
+            check_string(node.identifier, substring_match="tests") and not self.file_in_tests
+        )
         if ErrorCode.PIR206.code in self.codes_to_check and condition:
             yield standard_error_message(node, ErrorCode.PIR206)
 
