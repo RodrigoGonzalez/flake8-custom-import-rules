@@ -65,7 +65,7 @@ def check_conflicts(settings_dict: dict) -> list | None:
 
 def get_bool_value(value: int | str | bool) -> bool:
     """
-    Interprets and coerces a given value to boolean type.
+    Interprets and coerces a given value to a boolean type.
 
     This function is designed to handle a variety of input types (int, str,
     bool) and interpret them as boolean values. For example, it treats the

@@ -4,6 +4,24 @@ Welcome to the "Glossary," a comprehensive guide to
 understanding key concepts and terminology in the
 `flake8-custom-import-rules` package.
 
+## Important Terms Used in This Package
+
+- [Aliased Imports](#aliased-imports)
+- [Conditional Imports](#conditional-imports)
+- [Dynamic Imports](#dynamic-imports)
+- [Future Imports (\_\_future__)](#future-imports-__future__)
+- [Importing a Package Locally](#importing-a-package-locally)
+- [Local Scope Import](#local-scope-import)
+- [Main Script Imports (\_\_main__)](#main-script-imports-__main__)
+- [Private Imports](#private-imports)
+- [Python Modules](#python-modules)
+- [Python Packages](#python-packages)
+- [Relative Imports](#relative-imports)
+- [Root Package](#root-package)
+- [Wildcard Imports](#wildcard-imports)
+
+
+
 ## Aliased Imports
 
 Aliased imports in Python refer to the practice of
