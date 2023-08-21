@@ -1002,11 +1002,6 @@ a more controlled and predictable testing environment.
 This aligns with best practices for test setup and
 minimizes potential complications.
 
-Both flags demonstrate a commitment to code clarity and
-organization, reflecting industry standards and best
-practices. Utilizing them in your project can contribute
-to a more robust and maintainable codebase.
-
 
 Top-level Only Imports
 ~~~~~~~~~~~~~~~~~~~~~~
@@ -1316,7 +1311,7 @@ under which they are triggered.
 -   Config checks have not been fully implemented yet, so
     it's possible to have invalid configurations that will
     not be caught by the plugin.
-    (e.g. you designated a package or module as std-lib-only and
+    (e.g., you designated a package or module as std-lib-only and
     third-party-only at the same time).
 
 -   Private imports in tests are not supported yet. This

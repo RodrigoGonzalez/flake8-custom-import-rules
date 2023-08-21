@@ -14,9 +14,12 @@ theme:
         icon: material/toggle-switch
         name: Switch to light mode
   features:
-    - navigation.tabs
+    #      - navigation.tabs
     - navigation.indexes
     - navigation.instant
+
+repo_name: RodrigoGonzalez/flake8-custom-import-rules
+repo_url: https://github.com/RodrigoGonzalez/flake8-custom-import-rules
 
 plugins:
   - search:
@@ -27,21 +30,24 @@ plugins:
           rendering:
             show_signature_annotations: true
             show_source: true
+          paths: [src/flake8_custom_import_rules/]
 
 watch:
   - src/flake8_custom_import_rules
 
 nav:
   - Introduction: "index.md"
-  - changelog.md
-  - dynamic_imports.md
-#  - api_docs.md
+  - API Documentation: "api_docs.md"
+  - glossary.md
+  - Dynamic Imports Explained: "dynamic_imports.md"
+  - Changelog: "changelog.md"
+  - License: "license.md"
 
 markdown_extensions:
   - pymdownx.snippets:
       check_paths: true
-
-repo_url: https://github.com/RodrigoGonzalez/flake8-custom-import-rules
+  - toc:
+      baselevel: 2
 
 # to navigate with `/site` content correctly
 use_directory_urls: false
