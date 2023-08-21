@@ -47,6 +47,9 @@ this plugin:
     import rules at a project level.
 
 
+Detailed Documentation: https://rodrigogonzalez.github.io/flake8-custom-import-rules/
+
+
 .. contents:: **Sections**
    :depth: 2
 

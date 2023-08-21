@@ -47,6 +47,7 @@ import-rules = "flake8_custom_import_rules.__main__:main"
 
 [tool.poetry.urls]
 "GitHub" = "https://github.com/RodrigoGonzalez/flake8-custom-import-rules"
+"Documentation" = "https://RodrigoGonzalez.github.io/flake8-custom-import-rules/"
 "Change Log" = "https://github.com/RodrigoGonzalez/flake8-custom-import-rules/blob/main/CHANGELOG.md"
 
 # from https://python-poetry.org/docs/pyproject/#plugins
