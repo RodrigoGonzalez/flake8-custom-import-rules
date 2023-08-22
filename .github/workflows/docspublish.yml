@@ -2,8 +2,8 @@ name: Publish documentation
 
 on:
   push:
-    branches:
-      - gh-pages
+    tags:
+      - 'v*'
 
 jobs:
   publish-documentation:
@@ -24,6 +24,7 @@ jobs:
     - name: Install dependencies
       run: |
         poetry install --only main,docs
+
     - name: Build docs
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
