@@ -53,8 +53,21 @@ class Plugin(CustomImportRulesChecker):
 
     @classmethod
     def add_options(cls, option_manager: OptionManager) -> None:
-        """Add options for flake8-custom-import-rules.
+        """
+        Add options for flake8-custom-import-rules.
 
+        Parameters
+        ----------
+        option_manager : OptionManager
+            The option manager to add the options to.
+
+        Returns
+        -------
+        None
+            This method does not return anything.
+
+        Notes
+        -----
         For full customization of options that can be added, see
         https://github.com/PyCQA/flake8/blob/main/src/flake8/options/manager.py
         """
