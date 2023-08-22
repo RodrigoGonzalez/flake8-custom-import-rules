@@ -78,6 +78,7 @@ mypy = "^1.5.1"
 lxml = "^4.9.3"
 cython = "^3.0.0"
 cmake = "^3.27.2"
+tryceratops = "^2.3.2"
 
 
 [tool.poetry.group.test.dependencies]
@@ -178,6 +179,11 @@ exclude = [
 [tool.coverage.run]
 plugins = ["covdefaults"]
 omit = ["flake8_custom_import_rules/example_repos/*"]
+
+[tool.tryceratops]
+exclude = ["flake8_custom_import_rules/example_repos/", "scripts/*"]
+experimental = false
+check_pickable = false
 
 [build-system]
 requires = ["poetry-core"]
