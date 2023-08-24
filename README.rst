@@ -2,21 +2,30 @@
 flake8-custom-import-rules
 ==========================
 
-.. image:: https://github.com/RodrigoGonzalez/flake8-custom-import-rules/actions/workflows/ci.yml/badge.svg
+.. image:: <https://images.squarespace-cdn.com/content/v1/5739206dc6fc0814566cf91d/
+            1692854973337-STZOMBOTWFPEVZVQ4GRI/dependency-wheel.png?format=1000w>
+   :target: <https://rodrigo-gonzalez.com/projects#/flake8-custom-import-rules/>
+   :alt: Project Dependency Wheel
+
+.. image:: <https://github.com/RodrigoGonzalez/flake8-custom-import-rules/actions/
+            workflows/ci.yml/badge.svg>
    :target: https://github.com/RodrigoGonzalez/flake8-custom-import-rules/actions/workflows/ci.yml
+    :alt: CI Build Status
 
 .. image:: https://img.shields.io/pypi/v/flake8-custom-import-rules.svg?style=flat-square
     :target: https://pypi.org/project/flake8-custom-import-rules/
     :alt: PyPI Package latest release
 
-.. image:: https://img.shields.io/pypi/pyversions/flake8-custom-import-rules.svg?style=flat-square
+.. image:: <https://img.shields.io/pypi/pyversions/flake8-custom-import-rules.svg?
+            style=flat-square>
     :target: https://pypi.org/project/flake8-custom-import-rules/
     :alt: Supported versions
 
 .. image:: https://img.shields.io/badge/code%20style-black-000000.svg
     :target: https://github.com/psf/black
 
-.. image:: https://codecov.io/gh/RodrigoGonzalez/flake8-custom-import-rules/graph/badge.svg?token=WIQPI6YRBL
+.. image:: <https://codecov.io/gh/RodrigoGonzalez/flake8-custom-import-rules/
+            graph/badge.svg?token=WIQPI6YRBL>
     :target: https://codecov.io/gh/RodrigoGonzalez/flake8-custom-import-rules
 
 
