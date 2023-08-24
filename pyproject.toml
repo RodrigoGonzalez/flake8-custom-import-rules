@@ -79,6 +79,8 @@ lxml = "^4.9.3"
 cython = "^3.0.0"
 cmake = "^3.27.2"
 tryceratops = "^2.3.2"
+tomark = "^0.1.4"
+modulegraph = "^0.19.5"
 
 
 [tool.poetry.group.test.dependencies]

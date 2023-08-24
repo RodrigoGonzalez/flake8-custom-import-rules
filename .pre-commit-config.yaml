@@ -102,12 +102,12 @@ repos:
       args: [--verbose, --options=pylama.ini, --max-complexity=20, --concurrent]
       stages: [commit, manual, push]
 
-  - repo: https://github.com/RodrigoGonzalez/check-mkdocs
-    rev: v1.2.0
-    hooks:
-      - id: check-mkdocs
-        name: check-mkdocs
-        stages: [commit, manual, push]
+#  - repo: https://github.com/RodrigoGonzalez/check-mkdocs
+#    rev: v1.2.0
+#    hooks:
+#      - id: check-mkdocs
+#        name: check-mkdocs
+#        stages: [commit, manual, push]
 
 #  - repo: https://github.com/asottile/setup-cfg-fmt
 #    rev: v2.4.0

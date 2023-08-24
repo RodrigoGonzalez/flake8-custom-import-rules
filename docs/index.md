@@ -250,8 +250,8 @@ i.e., those developed within the project, can be imported. This
 restriction includes all imports defined within the base packages,
 excluding the imports from its own root package.
 
-This control over imports can be highly beneficial in security-
-sensitive environments or in projects aiming to minimize external
+This control over imports can be highly beneficial in security-sensitive
+environments or in projects aiming to minimize external
 dependencies. By limiting the imports to first-party modules, you
 gain more control over the codebase and reduce potential risks
 associated with third-party dependencies.
@@ -288,8 +288,8 @@ are utilized.
 Such a restriction can be particularly useful in scenarios where
 a system is designed to extend its functionality exclusively through
 third-party libraries. For instance, in a plugin system that relies
-on external extensions, this flag guarantees that only those third-
-party libraries are imported, excluding any standard or project-level
+on external extensions, this flag guarantees that only those third-party
+libraries are imported, excluding any standard or project-level
 modules.
 
 Unlike the `standalone-modules` rule, the `third-party-only` rule
@@ -320,7 +320,7 @@ packages or modules to import only from the standard library,
 the base package of the project, and third-party libraries,
 excluding any other first-party or project-level imports.
 This ensures that the specified standalone packages or modules
-operate independently from other parts of the project, yet they
+operate independently of other parts of the project, yet they
 still have access to essential third-party libraries, the base
 package, and standard libraries.
 
