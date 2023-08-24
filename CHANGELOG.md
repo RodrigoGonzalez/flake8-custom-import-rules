@@ -1,3 +1,11 @@
+## v1.1.2 (2023-08-24)
+
+### Fix
+
+- **readme**: fix broken links (#186)
+- **readme**: using new logo that renders, before had been using javascript which does not render on GitHub (#185)
+- **import-rules**: disabling test violation code checks within the tests directory (#181)
+
 ## v1.1.1 (2023-08-20)
 
 ### Fix
