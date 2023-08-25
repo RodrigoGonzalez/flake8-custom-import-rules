@@ -1,0 +1,15 @@
+coverage:
+  status:
+    project:
+      default:
+        informational: true
+    patch:
+      default:
+        informational: true
+
+ignore:
+  - "assets"
+  - "dependency_wheel"
+  - "example_repos"
+  - "scripts"
+  - "tests"
