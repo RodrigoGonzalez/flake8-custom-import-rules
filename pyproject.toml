@@ -80,10 +80,10 @@ cython = "^3.0.0"
 cmake = "^3.27.2"
 tryceratops = "^2.3.2"
 tomark = "^0.1.4"
-modulegraph = "^0.19.5"
 
 
 [tool.poetry.group.test.dependencies]
+modulegraph = "^0.19.5"
 pytest = "^7.4.0"
 pytest-cov = "^4.1.0"
 toml = "^0.10.2"
