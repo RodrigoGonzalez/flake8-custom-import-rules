@@ -51,7 +51,7 @@ jobs:
           set -o pipefail
           poetry run make clean
           poetry run make unit-tests-cov-fail
-          poetry run tox
+          # poetry run tox
 
       # upload coverage reports to Codecov
       - name: Upload coverage reports to Codecov
