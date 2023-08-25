@@ -1,3 +1,10 @@
+## v1.1.3 (2023-08-25)
+
+### Fix
+
+- **file-utils**: fix could not find prefix for file, adding find pref… (#191)
+- **file-utils**: update to return the longest path in get file path f… (#190)
+
 ## v1.1.2 (2023-08-24)
 
 ### Fix
