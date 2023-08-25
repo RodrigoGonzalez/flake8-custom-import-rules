@@ -144,8 +144,8 @@ def get_file_path_from_module_name(module_name: str) -> str | None:
     logger.debug(f"existing_paths: {existing_paths}")
     assert isinstance(existing_paths, list)
 
-    # return max(existing_paths, key=len) if existing_paths else None
-    return existing_paths[0]
+    return max(existing_paths, key=len) if existing_paths else None
+    # return existing_paths[0]
 
 
 def get_relative_path_from_absolute_path(
