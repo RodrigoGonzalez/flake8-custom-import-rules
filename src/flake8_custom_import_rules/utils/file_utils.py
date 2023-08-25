@@ -56,7 +56,30 @@ def find_prefix(filename: str) -> str:
     matches = (path for path in sys.path if filename.startswith(path))
     try:
         return max(matches, key=len)
+    except ValueError:
+        # Add the current working directory to sys.path
+        sys.path.append(os.getcwd())
 
+    return find_prefix_again(filename)
+
+
+def find_prefix_again(filename: str) -> str:
+    """
+    Try to find the appropriate module prefix string for the filename again.
+
+    Parameters
+    ----------
+    filename : str
+        The filename to find the prefix for.
+
+    Returns
+    -------
+    str
+    """
+    # Try to find the prefix again
+    matches = (path for path in sys.path if filename.startswith(path))
+    try:
+        return max(matches, key=len)
     except ValueError as e:
         machine = sys.platform
         if machine in {"win32", "cygwin"}:
