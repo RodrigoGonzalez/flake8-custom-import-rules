@@ -7,6 +7,7 @@ import ast
 from contextlib import contextmanager
 from functools import partial
 from typing import Callable
+from unittest.mock import patch
 
 import pycodestyle
 import pytest
@@ -17,6 +18,8 @@ from flake8.options import aggregator
 from flake8.options import config
 from flake8.options import manager
 
+from flake8_custom_import_rules import __version__
+from flake8_custom_import_rules import show_versions
 from flake8_custom_import_rules.flake8_plugin import Plugin
 
 
@@ -219,3 +222,10 @@ def test_linter__local_imports_disabled(
         checker = plugin(tree, lines=data.splitlines(True))
         results = {"{}:{}: {}".format(*r) for r in checker.run()}
         assert results == {"1:0: PIR102 Relative Imports are disabled for this project."}
+
+
+@patch("builtins.print")
+def test_show_versions(mock_print):
+    """Test show_versions from __init__.py file"""
+    show_versions()
+    mock_print.assert_called_once_with(__version__)
