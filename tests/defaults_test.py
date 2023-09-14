@@ -188,29 +188,20 @@ def test_register_opt_for_flake8_3x(mocker):
 
 
 def test_register_opt_for_flake8_2x(mocker):
-    """Test register_opt for flake8 2.x registration."""
+    """
+    Test that the `register_opt` function correctly handles optparse.OptionError.
+    """
+    # Create a mock instance of OptionManager
+    mock_option_manager = mocker.Mock(spec=OptionManager)
+    args = ("--example",)
+    kwargs = {"action": "store_true"}
 
-    def test_register_opt_handles_option_error(mocker):
-        """
-        Test that the `register_opt` function correctly handles optparse.OptionError.
-        """
-        # Create a mock instance of OptionManager
-        mock_option_manager = mocker.Mock(spec=OptionManager)
-        args = ("--example",)
-        kwargs = {"action": "store_true"}
+    # Make add_option raise optparse.OptionError when called
+    mock_option_manager.add_option.side_effect = optparse.OptionError("some error", "some option")
 
-        # Make add_option raise optparse.OptionError when called
-        mock_option_manager.add_option.side_effect = optparse.OptionError(
-            "some error", "some option"
-        )
+    # Call register_opt
+    with pytest.raises(Exception):
+        register_opt(mock_option_manager, *args, **kwargs)
 
-        # Call register_opt
-        try:
-            register_opt(
-                mock_option_manager, *args, **kwargs
-            )  # replace args and kwargs with actual values you want to test
-        except Exception as e:
-            pytest.fail(f"register_opt should not raise an exception, but got {e}")
-
-        # Assert that add_option was called twice: once for 3.x and once for 2.x
-        assert mock_option_manager.add_option.call_count == 2
+    # Assert that add_option was called twice: once for 3.x and once for 2.x
+    assert mock_option_manager.add_option.call_count == 2
