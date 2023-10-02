@@ -1186,13 +1186,13 @@ mkdocstrings = ">=0.20"
 
 [[package]]
 name = "modulegraph"
-version = "0.19.5"
+version = "0.19.6"
 description = "Python module dependency analysis tool"
 optional = false
 python-versions = "*"
 files = [
-    {file = "modulegraph-0.19.5-py2.py3-none-any.whl", hash = "sha256:165517001fa568ab3703877215d174a6744bbbb8abd770cb8023601705922396"},
-    {file = "modulegraph-0.19.5.tar.gz", hash = "sha256:1389108c8bdd0dd51c99df0d59160515a37a9150cddfb86d114326226bcd11b8"},
+    {file = "modulegraph-0.19.6-py2.py3-none-any.whl", hash = "sha256:5443e6d93c0b263f4ea309e2ff01312eef7c424dd51981a1e78e960c90e572b8"},
+    {file = "modulegraph-0.19.6.tar.gz", hash = "sha256:c914c8c95a0e10fe88505d4e9c2284b4e3dbc70943e306cc6567e36cc541bf4b"},
 ]
 
 [package.dependencies]
