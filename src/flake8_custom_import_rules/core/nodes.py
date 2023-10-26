@@ -1,4 +1,4 @@
-"""Parsed Nodes for custom import rules."""
+"""Parsed Node Classes to store library and module info to check custom import rules."""
 from enum import Enum
 
 from attrs import define

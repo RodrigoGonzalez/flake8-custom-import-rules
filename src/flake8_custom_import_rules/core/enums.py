@@ -1,4 +1,4 @@
-"""Enums used by the core package."""
+"""Enums used by the main package."""
 from enum import Enum
 
 
