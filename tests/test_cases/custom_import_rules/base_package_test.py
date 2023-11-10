@@ -41,6 +41,16 @@ MODULE_THREE_ERRORS = {
             ["my_second_base_package.module_three"],
             MODULE_THREE_ERRORS,
         ),
+        (
+            "example_repos/my_base_module/my_second_base_package_two/module_one.py",
+            ["my_second_base_package"],
+            set(),
+        ),
+        (
+            "example_repos/my_base_module/my_second_base_package_two/module_one.py",
+            ["my_second_base_package.module_three"],
+            set(),
+        ),
     ],
 )
 def test_base_package_only_imports(
@@ -55,9 +65,14 @@ def test_base_package_only_imports(
     identifier = get_module_name_from_filename(filename)
     root_package_name(identifier)
     options = {
-        "base_packages": ["my_second_base_package", "my_base_module"],
+        "base_packages": ["my_third_base_package", "my_base_module", "my_second_base_package"],
         "checker_settings": Settings(
             **{
+                "BASE_PACKAGES": [
+                    "my_second_base_package_two",
+                    "my_base_module",
+                    "my_second_base_package",
+                ],
                 "BASE_PACKAGE_ONLY": base_package_only_imports,
                 "RESTRICT_DYNAMIC_IMPORTS": False,
                 "RESTRICT_LOCAL_SCOPE_IMPORTS": False,

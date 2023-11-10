@@ -5,6 +5,7 @@ poetry run python -m pytest -vvvrca tests/utils/parse_utils_test.py
 """
 import pytest
 
+from flake8_custom_import_rules.utils.node_utils import get_package_names
 from flake8_custom_import_rules.utils.parse_utils import check_string
 from flake8_custom_import_rules.utils.parse_utils import does_file_match_custom_rule
 from flake8_custom_import_rules.utils.parse_utils import does_import_match_custom_import_restriction
@@ -95,7 +96,7 @@ PACKAGE_5 = ["my_base_package.package_a.mod_a"]
 
 
 @pytest.mark.parametrize(
-    ("file_identifier", "custom_rules", "expected"),
+    ("file_packages", "custom_rules", "expected"),
     [
         ("my_base_package.package_c", PACKAGE_1, False),
         ("my_base_package.package_a", PACKAGE_1, True),
@@ -115,11 +116,13 @@ PACKAGE_5 = ["my_base_package.package_a.mod_a"]
     ],
 )
 def test_does_file_match_custom_rule(
-    file_identifier: str, custom_rules: list[str], expected: bool
+    file_packages: str, custom_rules: list[str], expected: bool
 ) -> None:
     """Test does_file_match_custom_rule."""
     assert (
-        does_file_match_custom_rule(file_identifier=file_identifier, custom_rules=custom_rules)
+        does_file_match_custom_rule(
+            file_packages=get_package_names(file_packages), custom_rules=custom_rules
+        )
         == expected
     )
 

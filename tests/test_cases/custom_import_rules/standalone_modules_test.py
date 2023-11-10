@@ -126,6 +126,7 @@ def test_standalone_modules_imports(
         "base_packages": ["my_second_base_package", "my_base_module"],
         "checker_settings": Settings(
             **{
+                "BASE_PACKAGES": ["my_second_base_package", "my_base_module"],
                 "STANDALONE_MODULES": standalone_modules_imports,
                 "RESTRICT_DYNAMIC_IMPORTS": False,
                 "RESTRICT_LOCAL_SCOPE_IMPORTS": False,

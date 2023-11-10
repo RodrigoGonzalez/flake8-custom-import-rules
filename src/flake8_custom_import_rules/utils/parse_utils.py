@@ -1,5 +1,9 @@
 """ Parse utils. """
+import logging
 import re
+
+logger = logging.getLogger(__name__)
+
 
 NOQA_INLINE_REGEXP = re.compile(
     # We're looking for items that look like this:
@@ -137,14 +141,16 @@ def check_string(
         return False
 
 
-def does_file_match_custom_rule(file_identifier: str, custom_rules: list[str] | str | None) -> bool:
+def does_file_match_custom_rule(
+    file_packages: list[str] | str, custom_rules: list[str] | str | None
+) -> bool:
     """
     Check if a file identifier is in a custom rule.
 
     Parameters
     ----------
-    file_identifier : str
-        The file identifier to check.
+    file_packages : list[str] | str
+        The file package identifiers to check.
     custom_rules : list[str] | str | None
         A list of custom rules or a single custom rule to check against.
 
@@ -155,7 +161,7 @@ def does_file_match_custom_rule(file_identifier: str, custom_rules: list[str] | 
     if custom_rules is None:
         return False
     custom_rules = [custom_rules] if isinstance(custom_rules, str) else custom_rules
-    return check_string(file_identifier, prefix=tuple(custom_rules), delimiter=" ")
+    return check_string(file_packages, substring_match=custom_rules, delimiter=" ")
 
 
 def does_import_match_custom_import_restriction(
