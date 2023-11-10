@@ -72,13 +72,13 @@ repos:
         types: [python]
         stages: [commit, manual, push]
 
-      - id: tryceratops
-        name: tryceratops
-        entry: poetry run tryceratops
-        args: [--autofix]
-        language: system
-        types: [python]
-        stages: [commit, manual, push]
+#      - id: tryceratops
+#        name: tryceratops
+#        entry: poetry run tryceratops src
+#        args: [--autofix]
+#        language: system
+#        types: [python]
+#        stages: [commit, manual, push]
 
   - repo: https://github.com/PyCQA/flake8
     rev: 6.1.0

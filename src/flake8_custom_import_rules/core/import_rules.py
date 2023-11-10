@@ -114,7 +114,7 @@ def get_file_matches_custom_rule(option_key: str) -> Callable[[CustomImportRules
         if custom_rule is None:
             raise ValueError(f"Option key '{option_key}' not found in checker settings")
 
-        return does_file_match_custom_rule(instance.file_identifier, custom_rule)
+        return does_file_match_custom_rule(instance.file_packages, custom_rule)
 
     return match_custom_rule
 
