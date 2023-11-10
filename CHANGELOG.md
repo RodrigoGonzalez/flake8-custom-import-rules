@@ -1,3 +1,9 @@
+## v1.1.4 (2023-11-10)
+
+### Fix
+
+- **parse-utils**: checking custom rules against file package names instead (#225)
+
 ## v1.1.3 (2023-08-25)
 
 ### Fix
