@@ -91,7 +91,7 @@ pytest-mock = "^3.12.0"
 [tool.poetry.group.docs.dependencies]
 mkdocs = "^1.5.3"
 mkdocs-material = "^9.4.8"
-mkdocstrings = {extras = ["optimize", "python"], version = ">=0.22,<0.24"}
+mkdocstrings = {extras = ["optimize", "python"], version = ">=0.22,<0.25"}
 
 
 
