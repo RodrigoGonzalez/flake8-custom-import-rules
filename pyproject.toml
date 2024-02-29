@@ -50,7 +50,7 @@ CIR = "flake8_custom_import_rules.flake8_plugin:Plugin"
 
 [tool.poetry.dependencies]
 python = ">=3.9,<=3.12"
-flake8 = "^6.1.0"
+flake8 = ">=6.1,<8.0"
 importlib-metadata = { version = "*", python = "<3.8" }
 pylama = "^8.4.1"
 stdlib-list = { version = ">=0.10.0", python = "<3.10" }
@@ -69,7 +69,7 @@ isort = "^5.13.2"
 black = ">=23.11,<25.0"
 autoflake = "^2.2.1"
 mypy = "^1.8.0"
-lxml = "^4.9.4"
+lxml = ">=4.9.4,<6.0.0"
 cython = "^3.0.8"
 cmake = "^3.28.1"
 tryceratops = "^2.3.2"
@@ -78,7 +78,7 @@ tomark = "^0.1.4"
 
 [tool.poetry.group.test.dependencies]
 modulegraph = "^0.19.6"
-pytest = "^7.4.4"
+pytest = ">=7.4.4,<9.0.0"
 pytest-cov = "^4.1.0"
 toml = "^0.10.2"
 tox = "^4.12.1"
