@@ -50,7 +50,7 @@ CIR = "flake8_custom_import_rules.flake8_plugin:Plugin"
 
 [tool.poetry.dependencies]
 python = ">=3.9,<=3.12"
-flake8 = "^6.1.0"
+flake8 = ">=6.1,<8.0"
 importlib-metadata = { version = "*", python = "<3.8" }
 pylama = "^8.4.1"
 stdlib-list = { version = ">=0.10.0", python = "<3.10" }
