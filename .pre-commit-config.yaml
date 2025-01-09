@@ -27,7 +27,7 @@ repos:
         args: [--remove-all-unused-imports, --remove-unused-variables]
         language: system
         types: [python]
-        stages: [commit, manual, push]
+        stages: [pre-commit, manual, pre-push]
 
       - id: isort
         name: isort-format
@@ -35,7 +35,7 @@ repos:
         entry: poetry run isort
         args: [--settings-path=pyproject.toml]
         types: [python]
-        stages: [commit, manual]
+        stages: [pre-commit, manual]
 
       - id: isort-check
         name: isort-lint
@@ -43,7 +43,7 @@ repos:
         args: [--settings-path=pyproject.toml, --check-only]
         language: system
         types: [python]
-        stages: [push]
+        stages: [pre-push]
 
       - id: black
         name: black-format
@@ -51,7 +51,7 @@ repos:
         args: [--config=pyproject.toml]
         language: system
         types: [python]
-        stages: [commit, manual]
+        stages: [pre-commit, manual]
 
       - id: black-check
         name: black-lint
@@ -59,7 +59,7 @@ repos:
         args: [--config=pyproject.toml]
         language: system
         types: [python]
-        stages: [push]
+        stages: [pre-push]
 
       - id: mypy
         name: mypy
@@ -70,7 +70,7 @@ repos:
         require_serial: false
         verbose: true
         types: [python]
-        stages: [commit, manual, push]
+        stages: [pre-commit, manual, pre-push]
 
 #      - id: tryceratops
 #        name: tryceratops
@@ -92,7 +92,7 @@ repos:
         types: [yaml]
         exclude: ^(.*/)?\..*\.ya?ml$
         args: [--write, --ignore-path=.prettierignore]
-        stages: [commit, manual, push]
+        stages: [pre-commit, manual, pre-push]
 
   - repo: https://github.com/gvanderest/pylama-pre-commit
     rev: 0.1.2
@@ -100,7 +100,7 @@ repos:
     - id: pylama
       name: pylama
       args: [--verbose, --options=pylama.ini, --max-complexity=20, --concurrent]
-      stages: [commit, manual, push]
+      stages: [pre-commit, manual, pre-push]
 
 #  - repo: https://github.com/RodrigoGonzalez/check-mkdocs
 #    rev: v1.2.0
