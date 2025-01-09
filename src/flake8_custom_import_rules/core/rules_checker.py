@@ -1,4 +1,5 @@
 """Checker for dependency rules checker."""
+
 import ast
 import logging
 from collections import defaultdict

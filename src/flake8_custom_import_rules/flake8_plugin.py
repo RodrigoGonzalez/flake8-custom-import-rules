@@ -1,4 +1,5 @@
 """ flake8 linter for flake8-custom-import-rules. """
+
 import ast
 import importlib.metadata
 import logging

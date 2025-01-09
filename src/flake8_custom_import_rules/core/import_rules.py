@@ -1,4 +1,5 @@
 """ Custom Import Rules for flake8 & Python Projects. """
+
 from __future__ import annotations
 
 import logging

@@ -6,6 +6,7 @@
 To run this test file only:
 poetry run python -m pytest -vvvrca tests/test_cases/custom_import_rules/project_only_test.py
 """
+
 import pycodestyle
 import pytest
 from flake8.utils import normalize_path

@@ -1,4 +1,5 @@
 """ Visitor for parsing restricted imports. """
+
 import ast
 import logging
 from collections import defaultdict

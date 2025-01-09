@@ -1,4 +1,5 @@
 """ Pytest configuration file. """
+
 import configparser
 import itertools
 from pathlib import Path

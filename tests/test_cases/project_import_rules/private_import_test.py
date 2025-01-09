@@ -6,6 +6,7 @@ PIR106 = "PIR106 Private Imports are disabled for this project."
 To run this test file only:
 poetry run python -m pytest -vvvrca tests/test_cases/project_import_rules/private_imports_test.py
 """
+
 from textwrap import dedent
 
 import pytest

@@ -1,4 +1,5 @@
 """Test the option utils with a sample setting instance"""
+
 import pytest
 
 from flake8_custom_import_rules.defaults import Settings

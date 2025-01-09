@@ -5,6 +5,7 @@ PIR107 = "PIR107 Wildcard Imports are disabled for this project."
 To run this test file only:
 poetry run python -m pytest -vvvrca tests/test_cases/project_import_rules/wildcard_imports_test.py
 """
+
 import pytest
 
 from flake8_custom_import_rules.defaults import Settings

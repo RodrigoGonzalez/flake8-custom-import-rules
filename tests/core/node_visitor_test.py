@@ -4,6 +4,7 @@ Node visitor tests.
 To run this test file only:
 poetry run python -m pytest -vvvrca tests/core/node_visitor_test.py
 """
+
 import ast
 
 import pytest

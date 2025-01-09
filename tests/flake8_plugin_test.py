@@ -3,6 +3,7 @@
 To run this test file only:
 poetry run python -m pytest -vvvrca tests/flake8_plugin_test.py
 """
+
 import ast
 from contextlib import contextmanager
 from functools import partial

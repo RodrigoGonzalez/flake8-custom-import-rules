@@ -1,4 +1,5 @@
 """Functions for processing nodes."""
+
 import ast
 from collections import defaultdict
 from typing import Generator

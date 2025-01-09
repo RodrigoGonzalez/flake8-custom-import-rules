@@ -1,4 +1,5 @@
 """ Functions for working with files and paths. """
+
 import logging
 import os
 import sys

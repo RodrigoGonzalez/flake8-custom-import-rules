@@ -1,4 +1,5 @@
 """Enums used by the main package."""
+
 from enum import Enum
 
 

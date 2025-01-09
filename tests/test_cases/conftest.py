@@ -1,4 +1,5 @@
 """ Pytest configuration file for error code test cases. """
+
 import ast
 import logging
 import os

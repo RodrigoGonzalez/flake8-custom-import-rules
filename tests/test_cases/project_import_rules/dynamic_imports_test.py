@@ -5,6 +5,7 @@ PIR105 = "PIR105 Dynamic Imports are disabled for this project."
 To run this test file only:
 poetry run python -m pytest -vvvrca tests/test_cases/project_import_rules/dynamic_imports_test.py
 """
+
 import pytest
 
 from flake8_custom_import_rules.defaults import Settings

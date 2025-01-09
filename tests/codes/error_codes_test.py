@@ -3,6 +3,7 @@
 To run this test file only:
 poetry run python -m pytest -vvvrca tests/error_codes_test.py
 """
+
 from __future__ import annotations
 
 import pytest

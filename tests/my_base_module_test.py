@@ -1,4 +1,5 @@
 """ Test module included in the example repo. """
+
 import ast
 
 import pycodestyle

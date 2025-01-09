@@ -1,4 +1,5 @@
 """ Utils to use by RestrictedImportVisitor class."""
+
 from collections import defaultdict
 
 

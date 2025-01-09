@@ -1,3 +1,9 @@
+## v1.1.5 (2025-01-09)
+
+### Fix
+
+- **main-app**: update vulnerabilities (#285)
+
 ## v1.1.4 (2023-11-10)
 
 ### Fix

@@ -5,6 +5,7 @@ PIR102 = "PIR102 Relative Imports are disabled for this project."
 To run this test file only:
 poetry run python -m pytest -vvvrca tests/test_cases/project_import_rules/relative_imports_test.py
 """
+
 import pytest
 
 from flake8_custom_import_rules.defaults import Settings

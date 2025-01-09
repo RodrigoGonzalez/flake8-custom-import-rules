@@ -1,4 +1,5 @@
 """Error codes and messages."""
+
 from enum import Enum
 from enum import EnumMeta
 from functools import singledispatch

@@ -10,6 +10,7 @@ PIR206 = "PIR206 Importing from tests directory or its subdirectories is restric
 To run this test file only:
 poetry run python -m pytest -vvvrca tests/test_cases/project_import_rules/tests_import_test.py
 """
+
 from textwrap import dedent
 
 import pytest

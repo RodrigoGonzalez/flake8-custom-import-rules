@@ -3,6 +3,7 @@
 To run this test file only:
 poetry run python -m pytest -vvvrca tests/utils/parse_utils_test.py
 """
+
 import pytest
 
 from flake8_custom_import_rules.utils.node_utils import get_package_names
