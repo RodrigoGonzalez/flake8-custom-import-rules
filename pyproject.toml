@@ -78,7 +78,7 @@ tomark = "*"
 [tool.poetry.group.test.dependencies]
 modulegraph = "^0.19.6"
 pytest = ">=7.4.4,<9.0.0"
-pytest-cov = "^4.1.0"
+pytest-cov = ">=4.1,<7.0"
 toml = "^0.10.2"
 tox = "^4.12.1"
 tox-gh-actions = "^3.2.0"
