@@ -2,7 +2,7 @@
 
 ### Fix
 
-- **deps**: bump python version (#292)
+- **deps**: bump Python version (#292)
 
 ## v1.1.5 (2025-01-09)
 
