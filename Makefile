@@ -25,7 +25,7 @@
 # GLOBAL VARIABLES
 # =============================================================================
 
-PROJECTNAME := $(shell basename "$(PWD)")
+PROJECT_NAME := $(shell basename "$(PWD)")
 PYTHON_INTERPRETER := python3.10
 
 .SILENT: ;               # no need for @
@@ -222,7 +222,7 @@ new-version-branch:  ## Create a new version branch
 .PHONY: help
 help:  ## Display this help
 	echo
-	echo " The following commands can be run for "$(PROJECTNAME)":"
+	echo " The following commands can be run for "$(PROJECT_NAME)":"
 	echo
 	awk 'BEGIN {FS = ":.*##"; printf "\nUsage:\n  make \033[36m<target>\033[0m\n"} /^[a-zA-Z_-]+:.*?##/ \
 	{ printf "  \033[36m%-20s\033[0m %s\n", $$1, $$2 } /^##@/ { printf "\n\033[1m%s\033[0m\n", substr($$0, 5) } ' \
