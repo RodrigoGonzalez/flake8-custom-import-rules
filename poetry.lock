@@ -1297,18 +1297,18 @@ mkdocstrings = ">=0.26"
 
 [[package]]
 name = "modulegraph"
-version = "0.19.6"
+version = "0.19.7"
 description = "Python module dependency analysis tool"
 optional = false
 python-versions = "*"
 groups = ["test"]
 files = [
-    {file = "modulegraph-0.19.6-py2.py3-none-any.whl", hash = "sha256:5443e6d93c0b263f4ea309e2ff01312eef7c424dd51981a1e78e960c90e572b8"},
-    {file = "modulegraph-0.19.6.tar.gz", hash = "sha256:c914c8c95a0e10fe88505d4e9c2284b4e3dbc70943e306cc6567e36cc541bf4b"},
+    {file = "modulegraph-0.19.7-py2.py3-none-any.whl", hash = "sha256:139f89042c9912777ba4bbf1d5496591c6ad780110ea3082c11e8737cf82cacc"},
+    {file = "modulegraph-0.19.7.tar.gz", hash = "sha256:9ad8a81148ba1d90ade66617a153786f7d7cf6a88de83ee28e251183122c2a57"},
 ]
 
 [package.dependencies]
-altgraph = ">=0.15"
+altgraph = "*"
 setuptools = "*"
 
 [[package]]
