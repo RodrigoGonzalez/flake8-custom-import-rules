@@ -940,18 +940,35 @@ dev = ["flake8", "markdown", "twine", "wheel"]
 
 [[package]]
 name = "griffe"
-version = "1.5.4"
+version = "1.14.0"
 description = "Signatures for entire Python programs. Extract the structure, the frame, the skeleton of your project, to generate API documentation or find breaking changes in your API."
 optional = false
 python-versions = ">=3.9"
 groups = ["docs"]
+markers = "python_version == \"3.9\""
 files = [
-    {file = "griffe-1.5.4-py3-none-any.whl", hash = "sha256:ed33af890586a5bebc842fcb919fc694b3dc1bc55b7d9e0228de41ce566b4a1d"},
-    {file = "griffe-1.5.4.tar.gz", hash = "sha256:073e78ad3e10c8378c2f798bd4ef87b92d8411e9916e157fd366a17cc4fd4e52"},
+    {file = "griffe-1.14.0-py3-none-any.whl", hash = "sha256:0e9d52832cccf0f7188cfe585ba962d2674b241c01916d780925df34873bceb0"},
+    {file = "griffe-1.14.0.tar.gz", hash = "sha256:9d2a15c1eca966d68e00517de5d69dd1bc5c9f2335ef6c1775362ba5b8651a13"},
 ]
 
 [package.dependencies]
 colorama = ">=0.4"
+
+[[package]]
+name = "griffelib"
+version = "2.0.2"
+description = "Signatures for entire Python programs. Extract the structure, the frame, the skeleton of your project, to generate API documentation or find breaking changes in your API."
+optional = false
+python-versions = ">=3.10"
+groups = ["docs"]
+markers = "python_version >= \"3.10\""
+files = [
+    {file = "griffelib-2.0.2-py3-none-any.whl", hash = "sha256:925c857658fb1ba40c0772c37acbc2ab650bd794d9c1b9726922e36ea4117ea1"},
+    {file = "griffelib-2.0.2.tar.gz", hash = "sha256:3cf20b3bc470e83763ffbf236e0076b1211bac1bc67de13daf494640f2de707e"},
+]
+
+[package.extras]
+pypi = ["pip (>=24.0)", "platformdirs (>=4.2)", "wheel (>=0.42)"]
 
 [[package]]
 name = "identify"
@@ -1583,14 +1600,14 @@ min-versions = ["babel (==2.9.0)", "click (==7.0)", "colorama (==0.4) ; platform
 
 [[package]]
 name = "mkdocs-autorefs"
-version = "1.3.0"
+version = "1.4.4"
 description = "Automatically link across pages in MkDocs."
 optional = false
 python-versions = ">=3.9"
 groups = ["docs"]
 files = [
-    {file = "mkdocs_autorefs-1.3.0-py3-none-any.whl", hash = "sha256:d180f9778a04e78b7134e31418f238bba56f56d6a8af97873946ff661befffb3"},
-    {file = "mkdocs_autorefs-1.3.0.tar.gz", hash = "sha256:6867764c099ace9025d6ac24fd07b85a98335fbd30107ef01053697c8f46db61"},
+    {file = "mkdocs_autorefs-1.4.4-py3-none-any.whl", hash = "sha256:834ef5408d827071ad1bc69e0f39704fa34c7fc05bc8e1c72b227dfdc5c76089"},
+    {file = "mkdocs_autorefs-1.4.4.tar.gz", hash = "sha256:d54a284f27a7346b9c38f1f852177940c222da508e66edc816a0fa55fc6da197"},
 ]
 
 [package.dependencies]
@@ -1660,50 +1677,68 @@ files = [
 
 [[package]]
 name = "mkdocstrings"
-version = "0.27.0"
+version = "0.30.1"
 description = "Automatic documentation from sources, for MkDocs."
 optional = false
 python-versions = ">=3.9"
 groups = ["docs"]
 files = [
-    {file = "mkdocstrings-0.27.0-py3-none-any.whl", hash = "sha256:6ceaa7ea830770959b55a16203ac63da24badd71325b96af950e59fd37366332"},
-    {file = "mkdocstrings-0.27.0.tar.gz", hash = "sha256:16adca6d6b0a1f9e0c07ff0b02ced8e16f228a9d65a37c063ec4c14d7b76a657"},
+    {file = "mkdocstrings-0.30.1-py3-none-any.whl", hash = "sha256:41bd71f284ca4d44a668816193e4025c950b002252081e387433656ae9a70a82"},
+    {file = "mkdocstrings-0.30.1.tar.gz", hash = "sha256:84a007aae9b707fb0aebfc9da23db4b26fc9ab562eb56e335e9ec480cb19744f"},
 ]
 
 [package.dependencies]
-click = ">=7.0"
 importlib-metadata = {version = ">=4.6", markers = "python_version < \"3.10\""}
 Jinja2 = ">=2.11.1"
 Markdown = ">=3.6"
 MarkupSafe = ">=1.1"
-mkdocs = ">=1.4"
-mkdocs-autorefs = ">=1.2"
-mkdocstrings-python = {version = ">=0.5.2", optional = true, markers = "extra == \"python\""}
-platformdirs = ">=2.2"
+mkdocs = ">=1.6"
+mkdocs-autorefs = ">=1.4"
+mkdocstrings-python = {version = ">=1.16.2", optional = true, markers = "extra == \"python\""}
 pymdown-extensions = ">=6.3"
-typing-extensions = {version = ">=4.1", markers = "python_version < \"3.10\""}
 
 [package.extras]
 crystal = ["mkdocstrings-crystal (>=0.3.4)"]
-python = ["mkdocstrings-python (>=0.5.2)"]
+python = ["mkdocstrings-python (>=1.16.2)"]
 python-legacy = ["mkdocstrings-python-legacy (>=0.2.1)"]
 
 [[package]]
 name = "mkdocstrings-python"
-version = "1.13.0"
+version = "1.18.2"
 description = "A Python handler for mkdocstrings."
 optional = false
 python-versions = ">=3.9"
 groups = ["docs"]
+markers = "python_version == \"3.9\""
 files = [
-    {file = "mkdocstrings_python-1.13.0-py3-none-any.whl", hash = "sha256:b88bbb207bab4086434743849f8e796788b373bd32e7bfefbf8560ac45d88f97"},
-    {file = "mkdocstrings_python-1.13.0.tar.gz", hash = "sha256:2dbd5757e8375b9720e81db16f52f1856bf59905428fd7ef88005d1370e2f64c"},
+    {file = "mkdocstrings_python-1.18.2-py3-none-any.whl", hash = "sha256:944fe6deb8f08f33fa936d538233c4036e9f53e840994f6146e8e94eb71b600d"},
+    {file = "mkdocstrings_python-1.18.2.tar.gz", hash = "sha256:4ad536920a07b6336f50d4c6d5603316fafb1172c5c882370cbbc954770ad323"},
 ]
 
 [package.dependencies]
-griffe = ">=0.49"
-mkdocs-autorefs = ">=1.2"
-mkdocstrings = ">=0.26"
+griffe = ">=1.13"
+mkdocs-autorefs = ">=1.4"
+mkdocstrings = ">=0.30"
+typing-extensions = {version = ">=4.0", markers = "python_version < \"3.11\""}
+
+[[package]]
+name = "mkdocstrings-python"
+version = "2.0.3"
+description = "A Python handler for mkdocstrings."
+optional = false
+python-versions = ">=3.10"
+groups = ["docs"]
+markers = "python_version >= \"3.10\""
+files = [
+    {file = "mkdocstrings_python-2.0.3-py3-none-any.whl", hash = "sha256:0b83513478bdfd803ff05aa43e9b1fca9dd22bcd9471f09ca6257f009bc5ee12"},
+    {file = "mkdocstrings_python-2.0.3.tar.gz", hash = "sha256:c518632751cc869439b31c9d3177678ad2bfa5c21b79b863956ad68fc92c13b8"},
+]
+
+[package.dependencies]
+griffelib = ">=2.0"
+mkdocs-autorefs = ">=1.4"
+mkdocstrings = ">=0.30"
+typing-extensions = {version = ">=4.0", markers = "python_version < \"3.11\""}
 
 [[package]]
 name = "modulegraph"
@@ -2805,7 +2840,7 @@ files = [
     {file = "typing_extensions-4.15.0-py3-none-any.whl", hash = "sha256:f0fa19c6845758ab08074a0cfa8b7aecb71c999ca73d62883bc25cc018c4e548"},
     {file = "typing_extensions-4.15.0.tar.gz", hash = "sha256:0cea48d173cc12fa28ecabc3b837ea3cf6f38c6d1136f85cbaaf598984861466"},
 ]
-markers = {main = "python_version < \"3.11\"", docs = "python_version == \"3.9\"", test = "python_version < \"3.11\""}
+markers = {main = "python_version < \"3.11\"", docs = "python_version < \"3.11\"", test = "python_version < \"3.11\""}
 
 [[package]]
 name = "urllib3"
@@ -3029,4 +3064,4 @@ type = ["pytest-mypy"]
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.9,<4"
-content-hash = "cdd689857108392447b64da1f1d9a2a23733fbfb8439105c38f103c41d2162d0"
+content-hash = "8bc9fa81acc7ff072781c04b152744bb6fb94be2224230a7c16a7ebf7f4bc440"
