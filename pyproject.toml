@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "flake8_custom_import_rules"
-version = "1.1.6"
+version = "3.0.0"
 description = "A Flake8 plugin that enforces custom import rules, allowing users to define and maintain clean and consistent import organization across their Python projects."
 readme = "README.rst"
 authors = ["Rodrigo Gonzalez <flake8.custom.import.rules@gmail.com>"]
