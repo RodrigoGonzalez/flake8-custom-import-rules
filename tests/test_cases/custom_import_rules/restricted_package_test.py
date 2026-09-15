@@ -296,6 +296,75 @@ def test_restricted_packages(
     assert set(actual) == {str(error) for error in expected}, sorted(actual)
 
 
+_PREFIX_COLLISION_FILE = (
+    "example_repos/my_base_module/my_second_base_package/module_three.py"
+)
+_PREFIX_COLLISION_FILE_ID = "my_second_base_package.module_three"
+_PREFIX_COLLISION_RESTRICTED = ["foo.my_module"]
+
+
+@pytest.mark.parametrize(
+    ("source", "expected"),
+    [
+        (
+            "import foo.my_module_one\nfrom foo.my_module_one import X\n",
+            [],
+        ),
+        (
+            "import foo.my_module\n"
+            "import foo.my_module.sub\n"
+            "from foo.my_module import y\n",
+            [
+                CIR106(
+                    node=HPI(
+                        lineno=1,
+                        import_statement="import foo.my_module",
+                    ),
+                    file_identifier=_PREFIX_COLLISION_FILE_ID,
+                ),
+                CIR106(
+                    node=HPI(
+                        lineno=2,
+                        import_statement="import foo.my_module.sub",
+                    ),
+                    file_identifier=_PREFIX_COLLISION_FILE_ID,
+                ),
+                CIR107(
+                    node=HPI(
+                        lineno=3,
+                        import_statement="from foo.my_module import y",
+                    ),
+                    file_identifier=_PREFIX_COLLISION_FILE_ID,
+                ),
+            ],
+        ),
+    ],
+)
+def test_restricted_packages_prefix_collision_sibling_modules(
+    source: str,
+    expected: list[str],
+    get_flake8_linter_results: callable,
+) -> None:
+    """Sibling module names must not match restricted package prefixes."""
+    filename = normalize_path(_PREFIX_COLLISION_FILE)
+    options = {
+        "base_packages": ["base_package", "my_second_base_package"],
+        "restricted_packages": _PREFIX_COLLISION_RESTRICTED,
+        "checker_settings": Settings(
+            **{
+                "RESTRICTED_PACKAGES": _PREFIX_COLLISION_RESTRICTED,
+                "RESTRICT_DYNAMIC_IMPORTS": False,
+                "RESTRICT_LOCAL_SCOPE_IMPORTS": False,
+                "RESTRICT_RELATIVE_IMPORTS": False,
+            }
+        ),
+    }
+    actual = get_flake8_linter_results(
+        s=source, options=options, delimiter="\n", filename=filename
+    )
+    assert set(actual) == {str(error) for error in expected}, sorted(actual)
+
+
 def test_restricted_import_settings_do_not_error(
     valid_custom_import_rules_imports: str,
     get_flake8_linter_results: callable,
