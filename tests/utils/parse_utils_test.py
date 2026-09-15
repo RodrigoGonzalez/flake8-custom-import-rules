@@ -11,6 +11,7 @@ from flake8_custom_import_rules.utils.parse_utils import check_string
 from flake8_custom_import_rules.utils.parse_utils import does_file_match_custom_rule
 from flake8_custom_import_rules.utils.parse_utils import does_import_match_custom_import_restriction
 from flake8_custom_import_rules.utils.parse_utils import parse_module_string
+from flake8_custom_import_rules.utils.parse_utils import matches_package_or_submodule
 from flake8_custom_import_rules.utils.parse_utils import retrieve_custom_rule_matches
 
 
@@ -135,6 +136,23 @@ PACKAGE_6 = [
     "my_third_base_package",
 ]
 
+PACKAGE_PREFIX_COLLISION = ["foo.my_module"]
+
+
+@pytest.mark.parametrize(
+    ("identifier", "package", "expected"),
+    [
+        ("foo.my_module", "foo.my_module", True),
+        ("foo.my_module.sub", "foo.my_module", True),
+        ("foo.my_module_one", "foo.my_module", False),
+    ],
+)
+def test_matches_package_or_submodule(
+    identifier: str, package: str, expected: bool
+) -> None:
+    """Test dotted-path boundary matching for restricted packages."""
+    assert matches_package_or_submodule(identifier, package) == expected
+
 
 @pytest.mark.parametrize(
     ("node_identifier", "standalone_imports", "expected"),
@@ -148,6 +166,9 @@ PACKAGE_6 = [
         ("my_second_base_package.file", PACKAGE_6, True),
         ("base_package.file", PACKAGE_6, False),
         ("my_third_base_package.file", PACKAGE_6, True),
+        ("foo.my_module", PACKAGE_PREFIX_COLLISION, True),
+        ("foo.my_module.sub", PACKAGE_PREFIX_COLLISION, True),
+        ("foo.my_module_one", PACKAGE_PREFIX_COLLISION, False),
     ],
 )
 def test_does_import_match_custom_import_restriction(
@@ -208,6 +229,9 @@ def test_does_import_match_custom_import_restriction(
             PACKAGE_6,
             [],
         ),
+        ("foo.my_module", PACKAGE_PREFIX_COLLISION, ["foo.my_module"]),
+        ("foo.my_module.sub", PACKAGE_PREFIX_COLLISION, ["foo.my_module"]),
+        ("foo.my_module_one", PACKAGE_PREFIX_COLLISION, []),
     ],
 )
 def test_retrieve_custom_rule_matches(

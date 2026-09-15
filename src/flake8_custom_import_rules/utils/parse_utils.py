@@ -165,6 +165,26 @@ def does_file_match_custom_rule(
     return check_string(file_packages, substring_match=custom_rules, delimiter=" ")
 
 
+def matches_package_or_submodule(identifier: str, package: str) -> bool:
+    """
+    Return whether ``identifier`` is ``package`` or a submodule of it.
+
+    Parameters
+    ----------
+    identifier : str
+        Full import path (e.g. ``foo.my_module_one``).
+    package : str
+        Restricted package or module path (e.g. ``foo.my_module``).
+
+    Returns
+    -------
+    bool
+        True if ``identifier`` equals ``package`` or starts with
+        ``package`` followed by a dot.
+    """
+    return identifier == package or identifier.startswith(f"{package}.")
+
+
 def does_import_match_custom_import_restriction(
     node_identifier: str, standalone_imports: list[str] | str | None
 ) -> bool:
@@ -187,7 +207,10 @@ def does_import_match_custom_import_restriction(
     restricted_imports = (
         [standalone_imports] if isinstance(standalone_imports, str) else standalone_imports
     )
-    return check_string(node_identifier, prefix=tuple(restricted_imports), delimiter=" ")
+    return any(
+        matches_package_or_submodule(node_identifier, restricted_import)
+        for restricted_import in restricted_imports
+    )
 
 
 def retrieve_custom_rule_matches(identifier: str, custom_rules: list[str] | str) -> list[str]:
@@ -197,6 +220,6 @@ def retrieve_custom_rule_matches(identifier: str, custom_rules: list[str] | str)
     matches: list[str] = [
         custom_rule_match
         for custom_rule_match in custom_rules
-        if check_string(identifier, prefix=custom_rule_match, delimiter=" ")
+        if matches_package_or_submodule(identifier, custom_rule_match)
     ]
-    return matches  # max(matches, key=len)
+    return matches

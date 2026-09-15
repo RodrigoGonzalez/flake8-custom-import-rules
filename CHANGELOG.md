@@ -1,3 +1,11 @@
+## v1.1.7 (2026-09-15)
+
+### Fix
+
+- **parse-utils**: match restricted packages on dotted-path
+  boundaries so `foo.my_module` no longer restricts
+  `foo.my_module_one`
+
 ## v1.1.6 (2025-01-14)
 
 ### Fix
