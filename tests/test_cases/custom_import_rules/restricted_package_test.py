@@ -296,9 +296,7 @@ def test_restricted_packages(
     assert set(actual) == {str(error) for error in expected}, sorted(actual)
 
 
-_PREFIX_COLLISION_FILE = (
-    "example_repos/my_base_module/my_second_base_package/module_three.py"
-)
+_PREFIX_COLLISION_FILE = "example_repos/my_base_module/my_second_base_package/module_three.py"
 _PREFIX_COLLISION_FILE_ID = "my_second_base_package.module_three"
 _PREFIX_COLLISION_RESTRICTED = ["foo.my_module"]
 
@@ -311,9 +309,7 @@ _PREFIX_COLLISION_RESTRICTED = ["foo.my_module"]
             [],
         ),
         (
-            "import foo.my_module\n"
-            "import foo.my_module.sub\n"
-            "from foo.my_module import y\n",
+            "import foo.my_module\n" "import foo.my_module.sub\n" "from foo.my_module import y\n",
             [
                 CIR106(
                     node=HPI(
@@ -359,9 +355,7 @@ def test_restricted_packages_prefix_collision_sibling_modules(
             }
         ),
     }
-    actual = get_flake8_linter_results(
-        s=source, options=options, delimiter="\n", filename=filename
-    )
+    actual = get_flake8_linter_results(s=source, options=options, delimiter="\n", filename=filename)
     assert set(actual) == {str(error) for error in expected}, sorted(actual)
 
 

@@ -1,10 +1,9 @@
-## v1.1.7 (2026-09-15)
+
+## v2.0.0 (2026-09-15)
 
 ### Fix
 
-- **parse-utils**: match restricted packages on dotted-path
-  boundaries so `foo.my_module` no longer restricts
-  `foo.my_module_one`
+- **restricted-packages**: restricted_packages matches any module names that start with the specified restricted package string (#350)
 
 ## v1.1.6 (2025-01-14)
 

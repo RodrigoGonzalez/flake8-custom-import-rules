@@ -10,8 +10,8 @@ from flake8_custom_import_rules.utils.node_utils import get_package_names
 from flake8_custom_import_rules.utils.parse_utils import check_string
 from flake8_custom_import_rules.utils.parse_utils import does_file_match_custom_rule
 from flake8_custom_import_rules.utils.parse_utils import does_import_match_custom_import_restriction
-from flake8_custom_import_rules.utils.parse_utils import parse_module_string
 from flake8_custom_import_rules.utils.parse_utils import matches_package_or_submodule
+from flake8_custom_import_rules.utils.parse_utils import parse_module_string
 from flake8_custom_import_rules.utils.parse_utils import retrieve_custom_rule_matches
 
 
@@ -147,9 +147,7 @@ PACKAGE_PREFIX_COLLISION = ["foo.my_module"]
         ("foo.my_module_one", "foo.my_module", False),
     ],
 )
-def test_matches_package_or_submodule(
-    identifier: str, package: str, expected: bool
-) -> None:
+def test_matches_package_or_submodule(identifier: str, package: str, expected: bool) -> None:
     """Test dotted-path boundary matching for restricted packages."""
     assert matches_package_or_submodule(identifier, package) == expected
 
