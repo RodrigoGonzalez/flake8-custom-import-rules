@@ -308,15 +308,12 @@ jobs:
     - name: Create or verify GitHub Release
       if: steps.classify.outputs.action != 'noop'
       env:
-        GH_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+        GH_TOKEN: ${{ github.token }}
+        RELEASE_TOKEN: ${{ secrets.RELEASE_TOKEN }}
         TAG: ${{ steps.classify.outputs.tag }}
         TESTED_SHA: ${{ github.event.workflow_run.head_sha }}
         BODY: ${{ steps.changelog.outputs.body }}
       run: |
-        if [ -z "${GH_TOKEN}" ]; then
-          echo "::error::Repository secret PERSONAL_ACCESS_TOKEN is required to create the GitHub Release and tag."
-          exit 1
-        fi
         if git rev-parse -q --verify "refs/tags/${TAG}" >/dev/null; then
           TAG_SHA="$(git rev-parse "${TAG}^{}")"
           if [ "${TAG_SHA}" != "${TESTED_SHA}" ]; then
@@ -327,8 +324,12 @@ jobs:
         if gh release view "${TAG}" >/dev/null 2>&1; then
           echo "GitHub Release ${TAG} already exists; successful rerun."
         else
+          if [ -z "${RELEASE_TOKEN}" ]; then
+            echo "::error::This release target modified .github/workflows/. GitHub requires a PAT with Workflows write; GITHUB_TOKEN cannot create that release. See https://docs.github.com/en/rest/releases/releases#create-a-release"
+            exit 1
+          fi
           printf '%s' "${BODY}" > /tmp/release-body.md
-          gh release create "${TAG}" \
+          GH_TOKEN="${RELEASE_TOKEN}" gh release create "${TAG}" \
             --target "${TESTED_SHA}" \
             --title "${TAG}" \
             --notes-file /tmp/release-body.md \
