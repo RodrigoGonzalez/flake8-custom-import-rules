@@ -285,6 +285,7 @@ jobs:
       env:
         TAG: ${{ steps.classify.outputs.tag }}
         TESTED_SHA: ${{ github.event.workflow_run.head_sha }}
+        RELEASE_TOKEN: ${{ secrets.RELEASE_TOKEN }}
       run: |
         git config user.name "github-actions[bot]"
         git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
@@ -296,8 +297,13 @@ jobs:
           fi
           echo "tag ${TAG} already points at tested SHA"
         else
+          if [ -z "${RELEASE_TOKEN}" ]; then
+            echo "::error::Set repository secret RELEASE_TOKEN to a fine-grained PAT owned by a repository admin, with Contents: Read and write. This personal repository cannot add GitHub Actions as a tag-ruleset bypass actor."
+            exit 1
+          fi
           git tag -a "${TAG}" "${TESTED_SHA}" -m "${TAG}"
-          git push origin "refs/tags/${TAG}"
+          git config --unset-all http.https://github.com/.extraheader || true
+          git push "https://x-access-token:${RELEASE_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" "refs/tags/${TAG}"
         fi
 
     - name: Publish sdist to PyPI
