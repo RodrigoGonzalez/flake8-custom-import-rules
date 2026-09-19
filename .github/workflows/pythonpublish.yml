@@ -47,7 +47,7 @@ jobs:
         TESTED_SHA: ${{ github.event.workflow_run.head_sha }}
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
-        python3.11 - <<'PY'
+        python - <<'PY'
         import json
         import os
         import re
@@ -218,7 +218,7 @@ jobs:
     - name: Validate version authorities
       if: steps.classify.outputs.action != 'noop'
       run: |
-        python3.11 scripts/check_version.py
+        python scripts/check_version.py
         uv lock --check
 
     - name: Build sdist only
@@ -232,7 +232,7 @@ jobs:
       env:
         EXPECTED_VERSION: ${{ steps.classify.outputs.version }}
       run: |
-        python3.11 - <<'PY'
+        python - <<'PY'
         import os
         import tarfile
         from pathlib import Path
@@ -312,7 +312,7 @@ jobs:
       env:
         VERSION: ${{ steps.classify.outputs.version }}
       run: |
-        python3.11 - <<'PY'
+        python - <<'PY'
         import os
         import re
         from pathlib import Path
