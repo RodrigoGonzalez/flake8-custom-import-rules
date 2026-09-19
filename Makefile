@@ -27,7 +27,7 @@
 
 PROJECT_NAME := $(shell basename "$(PWD)")
 PYTHON_INTERPRETER := python3.10
-UV_TEST_RUN ?= uv run --locked --group test
+UV_TEST_RUN ?= uv run --locked --no-default-groups --group test
 
 .SILENT: ;               # no need for @
 
@@ -80,14 +80,32 @@ pre-commit:  check-readme ## Manually run all pre-commit hooks
 commit: pre-commit tests clean  ## Commit changes
 	./scripts/commit.sh
 
-bump:  ## Bump version and update changelog
-	uv run --locked cz bump --changelog --check-consistency --annotated-tag --retry
-	git push -u origin HEAD --follow-tags
+# Historical bump created changelog, tags, and pushed tags. That release
+# ownership moved to GitHub Actions. Keep the target discoverable.
+bump:  ## Fail closed; tags and publication are owned by GitHub Actions
+	@echo "Use make set-version VERSION=X.Y.Z. Tags and publication are owned by GitHub Actions."
+	@exit 2
 
 dry-run-bump:  ## Generate the changes that would be made by bumping the version
 	uv run --locked cz bump --dry-run
 
-.PHONY: pre-commit commit bump dry-run-bump
+set-version:  ## Sync version files only; VERSION is required (future releases)
+	test -n "$(VERSION)" || (echo "VERSION is required, e.g. make set-version VERSION=4.1.0" && exit 2)
+	uv run --locked cz bump --allow-no-commit --version-files-only --yes "$(VERSION)"
+
+bump-major-version:  ## Sync MAJOR version files only (future releases)
+	uv run --locked cz bump --increment MAJOR --allow-no-commit --version-files-only --yes
+
+bump-minor-version:  ## Sync MINOR version files only (future releases)
+	uv run --locked cz bump --increment MINOR --allow-no-commit --version-files-only --yes
+
+bump-patch-version:  ## Sync PATCH version files only (future releases)
+	uv run --locked cz bump --increment PATCH --allow-no-commit --version-files-only --yes
+
+version-check:  ## Compare pyproject, lock, source, and changelog versions
+	$(PYTHON_INTERPRETER) scripts/check_version.py
+
+.PHONY: pre-commit commit bump dry-run-bump set-version bump-major-version bump-minor-version bump-patch-version version-check
 
 # =============================================================================
 # TESTING
@@ -95,10 +113,8 @@ dry-run-bump:  ## Generate the changes that would be made by bumping the version
 
 ##@ Testing
 
-tox: ## tox.ini remains deferred to the compatibility migration
-	echo "tox.ini remains coupled to the previous package manager and is intentionally deferred to the tox/Python compatibility migration."
-	echo "Use the pytest targets for the current test suite."
-	exit 2
+tox: ## Run tests across all supported Python versions
+	uv run --locked --no-default-groups --group test tox run
 
 # Cython writes ABI-specific .so/.pyd next to the original .py sources.
 # pytest --doctest-modules otherwise treats those .py files as tests and
@@ -136,7 +152,7 @@ clean-cov: ## remove output files from pytest & coverage
 
 check-readme: ## check README.rst rendering
 	echo "Checking README.rst is rendering correctly."
-	rst2html.py --halt=2 README.rst > /dev/null
+	uv run --locked rst2html --halt=2 README.rst > /dev/null
 
 docs-serve: ## serve documentation locally
 	uv run --locked --group docs mkdocs serve
@@ -168,8 +184,11 @@ clean: clean-docs  clean-cov  ## Clean package
 build:  pre-commit tests clean ## Build the project
 	uv build --no-sources
 
-deploy: build  ## Deploy to PyPI
-	uv publish
+# Historical deploy ran uv publish locally. Package publication is now
+# owned by the GitHub release workflow after merge to main.
+deploy:  ## Fail closed; publication is owned by the GitHub release workflow
+	@echo "Package publication is owned by the GitHub release workflow after merge."
+	@exit 2
 
 .PHONY: build deploy clean
 

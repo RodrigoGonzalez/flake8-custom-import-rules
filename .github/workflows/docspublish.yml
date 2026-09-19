@@ -2,8 +2,22 @@ name: Publish documentation
 
 on:
   push:
-    tags:
-      - 'v*'
+    branches:
+      - main
+    paths:
+      - 'docs/**'
+      - 'mkdocs.yml'
+      - 'CHANGELOG.md'
+      - 'LICENSE'
+      - 'pyproject.toml'
+      - 'uv.lock'
+      - '.github/workflows/docspublish.yml'
+
+  workflow_dispatch:
+
+concurrency:
+  group: documentation-deployment
+  cancel-in-progress: true
 
 jobs:
   publish-documentation:

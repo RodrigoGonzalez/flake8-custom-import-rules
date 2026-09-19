@@ -1,4 +1,40 @@
 
+## v4.0.0 (2026-09-19)
+
+### Breaking
+
+- **python**: Python 3.9 support removed. Minimum Python version is now 3.10.
+
+### Python
+
+- **python**: Python 3.10–3.14 support.
+
+### Packaging
+
+- **packaging**: Poetry replaced by uv.
+- **packaging**: Cython extension build restored and modernized.
+- **packaging**: setuptools PEP 517 backend active.
+
+### Dependencies
+
+- **deps**: Dependency ownership reorganized.
+- **deps**: Dependency versions modernized.
+
+### Testing
+
+- **testing**: Native tox configuration.
+- **testing**: tox-uv.
+- **testing**: Python 3.10–3.14 compatibility matrix.
+
+### Typing
+
+- **typing**: py.typed marker added.
+
+### Release
+
+- **release**: Merge-driven package release automation.
+- **docs**: Independent merge-driven MkDocs deployment.
+
 ## v3.0.0 (2026-09-15)
 
 ### Fix

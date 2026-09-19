@@ -8,7 +8,7 @@ REQUIRES: pip install modulegraph
 USAGE: gen_modules_graph.py httpie.core > modules-graph.json
 
 TO RUN:
-uv run --group test python scripts/gen_modules_graph.py \
+uv run --locked python scripts/gen_modules_graph.py \
     flake8_custom_import_rules.flake8_plugin > modules-graph.json
 
 Taken From:

@@ -17,6 +17,7 @@ on:
       - 'setup.py'
       - 'MANIFEST.in'
       - 'scripts/build.py'
+      - 'scripts/check_version.py'
       - '.github/workflows/ci.yml'
   pull_request:
     branches:
@@ -33,6 +34,7 @@ on:
       - 'setup.py'
       - 'MANIFEST.in'
       - 'scripts/build.py'
+      - 'scripts/check_version.py'
       - '.github/workflows/ci.yml'
   workflow_call:
 
@@ -42,7 +44,7 @@ jobs:
     strategy:
       matrix:
         # python-version: ["3.8", "3.9", "3.10", "3.11", "3.12"]
-        python-version: ["3.10", "3.11"]
+        python-version: ["3.10", "3.11", "3.12", "3.13", "3.14"]
     steps:
       - name: Checkout repository
         uses: actions/checkout@v7
@@ -104,7 +106,7 @@ jobs:
         run: |
           set -o pipefail
           make unit-tests-cov-fail UV_TEST_RUN="uv run --locked --no-sync"
-          # tox.ini remains deferred to the compatibility migration
+          # Native tox is configured in pyproject.toml; compatibility CI uses pytest.
 
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v7
@@ -189,11 +191,33 @@ jobs:
           if missing:
               raise SystemExit("missing native extensions:\n" + "\n".join(missing))
 
+          if "flake8_custom_import_rules/py.typed" not in names:
+              raise SystemExit("wheel missing flake8_custom_import_rules/py.typed")
+
           requires = [
               line for line in metadata.splitlines() if line.startswith("Requires-Dist:")
           ]
           joined = "\n".join(requires).lower()
-          for banned in ("cython", "setuptools", "my-base-module"):
+          for banned in (
+              "cython",
+              "setuptools",
+              "my-base-module",
+              "pylama",
+              "pymdown-extensions",
+              "typer",
+              "pytest",
+              "pytest-cov",
+              "tox",
+              "tox-uv",
+              "mkdocs",
+              "mkdocstrings",
+              "modulegraph",
+              "docutils",
+              "ipython",
+              "astpretty",
+              "black",
+              "mypy",
+          ):
               if any(banned in line.lower() for line in requires):
                   raise SystemExit(f"{banned} leaked into Requires-Dist:\n" + "\n".join(requires))
 
@@ -225,6 +249,8 @@ jobs:
                   raise SystemExit(f"sdist missing {suffix}")
           if not any("src/flake8_custom_import_rules/" in name for name in sdist_names):
               raise SystemExit("sdist missing src/flake8_custom_import_rules/")
+          if not any(name.endswith("src/flake8_custom_import_rules/py.typed") or name.endswith("flake8_custom_import_rules/py.typed") for name in sdist_names):
+              raise SystemExit("sdist missing flake8_custom_import_rules/py.typed")
 
           forbidden_markers = (".git/", ".idea/", ".vscode/", "/site/", "/dist/", "dependency_wheel/")
           bad = [name for name in sdist_names if any(marker in name for marker in forbidden_markers)]
@@ -241,10 +267,27 @@ jobs:
           uv venv "$SMOKE_ENV" --python 3.11
           WHEEL="$(python -c 'from pathlib import Path; print(next(Path("dist").glob("*.whl")))')"
           uv pip install --python "$SMOKE_ENV/bin/python" "$WHEEL"
-          "$SMOKE_ENV/bin/python" -c "import flake8_custom_import_rules; assert flake8_custom_import_rules.__version__ == '3.0.0'"
+          "$SMOKE_ENV/bin/python" - <<'PY'
+          import flake8_custom_import_rules
+          from importlib.metadata import version
+
+          installed = version("flake8-custom-import-rules")
+          source_version = flake8_custom_import_rules.__version__
+          if source_version != installed:
+              raise SystemExit(
+                  f"installed version {installed!r} != package __version__ {source_version!r}"
+              )
+          print(f"installed version: {installed}")
+          PY
           "$SMOKE_ENV/bin/python" - <<'PY'
           from importlib import import_module
           from importlib.machinery import EXTENSION_SUFFIXES
+          from importlib.resources import files
+
+          typed = files("flake8_custom_import_rules").joinpath("py.typed")
+          if not typed.is_file():
+              raise SystemExit("installed package missing flake8_custom_import_rules/py.typed")
+          print(f"py.typed: {typed}")
 
           MODULES = (
               "flake8_custom_import_rules.core.error_messages",
