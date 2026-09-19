@@ -23,7 +23,7 @@ repos:
     hooks:
       - id: autoflake
         name: autoflake
-        entry: poetry run autoflake -r -i
+        entry: uv run --locked autoflake -r -i
         args: [--remove-all-unused-imports, --remove-unused-variables]
         language: system
         types: [python]
@@ -32,14 +32,14 @@ repos:
       - id: isort
         name: isort-format
         language: system
-        entry: poetry run isort
+        entry: uv run --locked isort
         args: [--settings-path=pyproject.toml]
         types: [python]
         stages: [pre-commit, manual]
 
       - id: isort-check
         name: isort-lint
-        entry: poetry run isort
+        entry: uv run --locked isort
         args: [--settings-path=pyproject.toml, --check-only]
         language: system
         types: [python]
@@ -47,7 +47,7 @@ repos:
 
       - id: black
         name: black-format
-        entry: poetry run black src tests
+        entry: uv run --locked black src tests
         args: [--config=pyproject.toml]
         language: system
         types: [python]
@@ -55,7 +55,7 @@ repos:
 
       - id: black-check
         name: black-lint
-        entry: poetry run black src tests --check
+        entry: uv run --locked black src tests --check
         args: [--config=pyproject.toml]
         language: system
         types: [python]
@@ -63,7 +63,7 @@ repos:
 
       - id: mypy
         name: mypy
-        entry: poetry run mypy --install-types --non-interactive --show-error-codes --sqlite-cache src
+        entry: uv run --locked mypy --install-types --non-interactive --show-error-codes --sqlite-cache src
         args: [--config-file=pyproject.toml, --cache-dir=.mypy_cache]
         language: system
         pass_filenames: false
@@ -74,7 +74,7 @@ repos:
 
 #      - id: tryceratops
 #        name: tryceratops
-#        entry: poetry run tryceratops src
+#        entry: uv run --locked tryceratops src
 #        args: [--autofix]
 #        language: system
 #        types: [python]

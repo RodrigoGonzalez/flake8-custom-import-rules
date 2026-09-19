@@ -5,7 +5,7 @@ Test that the standard library is allowed.
 - CIR402
 
 To run this test file only:
-poetry run python -m pytest -vvvrca tests/test_cases/custom_import_rules/std_lib_only_test.py
+uv run python -m pytest -vvvrca tests/test_cases/custom_import_rules/std_lib_only_test.py
 """
 
 import pycodestyle

@@ -1,7 +1,7 @@
 """ Tests for parse_utils.py
 
 To run this test file only:
-poetry run python -m pytest -vvvrca tests/utils/parse_utils_test.py
+uv run python -m pytest -vvvrca tests/utils/parse_utils_test.py
 """
 
 import pytest

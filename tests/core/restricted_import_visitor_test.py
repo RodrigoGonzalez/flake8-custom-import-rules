@@ -2,7 +2,7 @@
 Restricted import visitor tests.
 
 To run this test file only:
-poetry run python -m pytest -vvvrca tests/core/restricted_import_visitor_test.py
+uv run python -m pytest -vvvrca tests/core/restricted_import_visitor_test.py
 """
 
 from collections import defaultdict

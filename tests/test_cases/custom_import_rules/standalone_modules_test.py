@@ -6,7 +6,7 @@
 - CIR304
 
 To run this test file only:
-poetry run python -m pytest -vvvrca tests/test_cases/custom_import_rules/standalone_modules_test.py
+uv run python -m pytest -vvvrca tests/test_cases/custom_import_rules/standalone_modules_test.py
 """
 
 import pycodestyle

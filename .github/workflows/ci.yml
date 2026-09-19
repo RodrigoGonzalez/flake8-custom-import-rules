@@ -7,11 +7,27 @@ on:
       - main
     paths:
       - 'src/**'
+      - 'tests/**'
+      - 'example_repos/**'
+      - 'pyproject.toml'
+      - 'uv.lock'
+      - 'Makefile'
+      - 'pytest.ini'
+      - 'setup.cfg'
+      - '.github/workflows/ci.yml'
   pull_request:
     branches:
       - main
     paths:
       - 'src/**'
+      - 'tests/**'
+      - 'example_repos/**'
+      - 'pyproject.toml'
+      - 'uv.lock'
+      - 'Makefile'
+      - 'pytest.ini'
+      - 'setup.cfg'
+      - '.github/workflows/ci.yml'
   workflow_call:
 
 jobs:
@@ -28,30 +44,24 @@ jobs:
         with:
           ref: ${{ github.head_ref }}
 
-      # install poetry
-      - name: Install poetry
-        run: pipx install poetry==1.5.1
-
-      # set-up python with cache
-      - name: Setup Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v7
+      - name: Install uv and set the Python version
+        uses: astral-sh/setup-uv@c771a70e6277c0a99b617c7a806ffedaca235ff9 # v9.0.0
         with:
+          version: "0.12.17"
           python-version: ${{ matrix.python-version }}
-          cache: 'poetry'
+          enable-cache: true
 
-      # install requirements (including dev dependencies)
+      # install requirements (runtime + test group only)
       - name: Install requirements
-        run: |
-          poetry install --only main,test
-          pip install -e example_repos/my_base_module
+        run: uv sync --locked --no-default-groups --group test
 
-      # run tox
+      # run unit tests
       - name: Run unit-tests
         run: |
           set -o pipefail
-          poetry run make clean
-          poetry run make unit-tests-cov-fail
-          # poetry run tox
+          make clean
+          make unit-tests-cov-fail UV_TEST_RUN="uv run --locked --no-sync"
+          # tox.ini remains deferred to the compatibility migration
 
       # upload coverage reports to Codecov
       - name: Upload coverage reports to Codecov

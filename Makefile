@@ -27,6 +27,7 @@
 
 PROJECT_NAME := $(shell basename "$(PWD)")
 PYTHON_INTERPRETER := python3.10
+UV_TEST_RUN ?= uv run --locked --group test
 
 .SILENT: ;               # no need for @
 
@@ -36,39 +37,27 @@ PYTHON_INTERPRETER := python3.10
 
 ##@ Environment
 
-setup: poetry-install pre-commit-install  ## Setup Virtual Environment
+setup: uv-sync pre-commit-install  ## Setup Virtual Environment
 
-    poetry-install:  ## Install dependencies using Poetry
-		poetry env use $(PYTHON_INTERPRETER)
-		poetry install
-		poetry self add poetry-plugin-up
-		# pip install -e .
+uv-sync:  ## Install dependencies using uv
+	uv sync --python $(PYTHON_INTERPRETER) --all-groups
 
-    pre-commit-install:  ## Install pre-commit hooks
-		poetry run pre-commit install
+pre-commit-install:  ## Install pre-commit hooks
+	uv run --locked pre-commit install
 
-update-deps: pip-upgrade poetry-update pre-commit-autoupdate  ## Update dependencies
+update-deps: uv-update pre-commit-autoupdate  ## Update dependencies
 
-    pip-upgrade:  ## Upgrade pip
-		poetry run pip install --upgrade pip
+uv-update:  ## Update locked package versions within declared constraints
+	uv lock --upgrade
+	uv sync --all-groups
 
-    poetry-update:  ## Update Poetry dependencies
-		poetry self update
-		poetry update
-		poetry lock
-
-
-    pre-commit-autoupdate:  ## Update pre-commit hooks
-		poetry run pre-commit autoupdate -c .pre-commit-config.yaml
-
-upgrade-deps: update-deps ## Upgrade dependencies to the latest versions
-	# https://github.com/MousaZeidBaker/poetry-plugin-up
-	poetry up
+pre-commit-autoupdate:  ## Update pre-commit hooks
+	uv run --locked pre-commit autoupdate -c .pre-commit-config.yaml
 
 local: setup update-deps  ## Locally install the package
-	custom-imports --help
+	uv run --locked import-rules --help
 
-.PHONY: update-deps upgrade-deps local pip-upgrade poetry-update pre-commit-autoupdate
+.PHONY: setup uv-sync pre-commit-install update-deps uv-update pre-commit-autoupdate local
 
 # =============================================================================
 # DEVELOPMENT
@@ -85,18 +74,18 @@ changed_py_files = $(filter %.py, $(changed_files))
 pre-commit:  check-readme ## Manually run all pre-commit hooks
 	# not added to `pre-commit-tool` in order to prevent unwanted behavior when running in workflows
 	git add -A
-	poetry run pre-commit run -c .pre-commit-config.yaml
+	uv run --locked pre-commit run -c .pre-commit-config.yaml
 
 # https://commitizen-tools.github.io/commitizen/bump/
 commit: pre-commit tests clean  ## Commit changes
 	./scripts/commit.sh
 
 bump:  ## Bump version and update changelog
-	poetry run cz bump --changelog --check-consistency --annotated-tag --retry
+	uv run --locked cz bump --changelog --check-consistency --annotated-tag --retry
 	git push -u origin HEAD --follow-tags
 
 dry-run-bump:  ## Generate the changes that would be made by bumping the version
-	poetry run cz bump --dry-run
+	uv run --locked cz bump --dry-run
 
 .PHONY: pre-commit commit bump dry-run-bump
 
@@ -106,20 +95,21 @@ dry-run-bump:  ## Generate the changes that would be made by bumping the version
 
 ##@ Testing
 
-tox: ## run tox tests
-	poetry run tox
-	make clean
+tox: ## tox.ini remains deferred to the compatibility migration
+	echo "tox.ini remains coupled to the previous package manager and is intentionally deferred to the tox/Python compatibility migration."
+	echo "Use the pytest targets for the current test suite."
+	exit 2
 
 tests: unit-tests  ## run all tests
 
 unit-tests: ## run unit-tests with pytest
-	poetry run pytest  -vvvvsra --doctest-modules
+	$(UV_TEST_RUN) pytest  -vvvvsra --doctest-modules
 
 unit-tests-cov: ## run unit-tests with pytest and show coverage (terminal + html)
-	poetry run pytest  -vvvvsra --doctest-modules --cov=src --cov-report term-missing --cov-report=html
+	$(UV_TEST_RUN) pytest  -vvvvsra --doctest-modules --cov=src --cov-report term-missing --cov-report=html
 
 unit-tests-cov-fail: ## run unit tests w/ pytest and coverage (terminal + html) & create files for CI
-	poetry run pytest  -vvvvsra --doctest-modules --cov=src --cov-report term-missing \
+	$(UV_TEST_RUN) pytest  -vvvvsra --doctest-modules --cov=src --cov-report term-missing \
 	--cov-report=xml --cov-fail-under=80 --junitxml=pytest.xml | tee pytest-coverage.txt
 
 clean-cov: ## remove output files from pytest & coverage
@@ -143,13 +133,13 @@ check-readme: ## check README.rst rendering
 	rst2html.py --halt=2 README.rst > /dev/null
 
 docs-serve: ## serve documentation locally
-	mkdocs serve
+	uv run --locked --group docs mkdocs serve
 
 docs-build: ## build documentation locally
-	mkdocs build
+	uv run --locked --group docs mkdocs build
 
 docs-deploy: ## build & deploy documentation to "gh-pages" branch
-	mkdocs gh-deploy -m "docs: update documentation" -v --force
+	uv run --locked --group docs mkdocs gh-deploy -m "docs: update documentation" -v --force
 
 clean-docs: ## remove output files from mkdocs
 	rm -rf site
@@ -169,10 +159,10 @@ clean: clean-docs  clean-cov  ## Clean package
 	rm -rf build dist
 
 build:  pre-commit tests clean ## Build the project
-	poetry build
+	uv build --no-sources
 
-deploy:  ## Deploy to PyPI
-	poetry publish --build
+deploy: build  ## Deploy to PyPI
+	uv publish
 
 .PHONY: build deploy clean
 
@@ -209,7 +199,7 @@ new-feat-branch: check-branch-name  ## Create a new feature branch
 	git checkout -b feat/$(BRANCH)_$(commit_count)
 
 new-version-branch:  ## Create a new version branch
-	NEW_VERSION=$(shell poetry run cz bump --dry-run | grep 'bump: version' | awk -F ' ' '{print $$NF}'); \
+	NEW_VERSION=$(shell uv run --locked cz bump --dry-run | grep 'bump: version' | awk -F ' ' '{print $$NF}'); \
 	git checkout -b v$$NEW_VERSION
 
 .PHONY: check-branch-name new-branch new-feat-branch new-version-branch

@@ -1,7 +1,7 @@
 """ Test flake8 defaults
 
 To run this test file only:
-poetry run python -m pytest -vvvrca tests/defaults_test.py
+uv run python -m pytest -vvvrca tests/defaults_test.py
 """
 
 import optparse

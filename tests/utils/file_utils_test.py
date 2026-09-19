@@ -1,7 +1,7 @@
 """ Tests for file_utils.py
 
 To run this test file only:
-poetry run python -m pytest -vvvrca tests/utils/file_utils_test.py
+uv run python -m pytest -vvvrca tests/utils/file_utils_test.py
 """
 
 import os
