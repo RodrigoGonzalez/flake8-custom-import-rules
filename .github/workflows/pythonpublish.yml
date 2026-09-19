@@ -140,7 +140,13 @@ jobs:
 
         highest = None
         for tag in tag_names:
+            sha = tag_sha(tag)
+
+            if not is_ancestor(sha, tested_sha):
+                continue
+
             parsed = parse_stable(tag[1:])
+
             if highest is None or parsed > highest[0]:
                 highest = (parsed, tag)
 
@@ -173,13 +179,28 @@ jobs:
         else:
             if highest is None:
                 action = "release"
-                reason = "no prior stable release tag"
+                reason = "no prior reachable stable release tag"
             elif current_tuple > highest[0]:
                 action = "release"
                 reason = f"source {current_version} > {highest[1]}"
             else:
                 raise SystemExit(
                     "CURRENT_VERSION <= highest released version and CURRENT_TAG does not exist"
+                )
+
+            pypi_ok = pypi_has_version(current_version)
+            release_ok = github_release_exists(current_tag)
+            print(f"github_release_exists={release_ok}")
+            print(f"pypi_has_version={pypi_ok}")
+            if pypi_ok:
+                raise SystemExit(
+                    f"CURRENT_TAG {current_tag} is absent but PyPI already "
+                    f"contains {current_version}"
+                )
+            if release_ok:
+                raise SystemExit(
+                    f"CURRENT_TAG {current_tag} is absent but GitHub Release "
+                    f"{current_tag} already exists"
                 )
 
         output_path = Path(os.environ["GITHUB_OUTPUT"])
