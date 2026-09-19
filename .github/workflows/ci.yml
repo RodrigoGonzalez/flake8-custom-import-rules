@@ -19,6 +19,7 @@ on:
       - 'scripts/build.py'
       - 'scripts/check_version.py'
       - '.github/workflows/ci.yml'
+      - '.github/workflows/pythonpublish.yml'
   pull_request:
     branches:
       - main
@@ -36,6 +37,7 @@ on:
       - 'scripts/build.py'
       - 'scripts/check_version.py'
       - '.github/workflows/ci.yml'
+      - '.github/workflows/pythonpublish.yml'
   workflow_call:
 
 jobs:
