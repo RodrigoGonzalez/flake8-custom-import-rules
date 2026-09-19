@@ -8,7 +8,7 @@ PIR205 = "PIR205 Importing tests directory or tests subdirectories is restricted
 PIR206 = "PIR206 Importing from tests directory or its subdirectories is restricted."
 
 To run this test file only:
-poetry run python -m pytest -vvvrca tests/test_cases/project_import_rules/tests_import_test.py
+uv run python -m pytest -vvvrca tests/test_cases/project_import_rules/tests_import_test.py
 """
 
 from textwrap import dedent

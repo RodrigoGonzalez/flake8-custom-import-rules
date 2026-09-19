@@ -4,7 +4,7 @@
 - CIR204
 
 To run this test file only:
-poetry run python -m pytest -vvvrca tests/test_cases/custom_import_rules/base_package_test.py
+uv run python -m pytest -vvvrca tests/test_cases/custom_import_rules/base_package_test.py
 """
 
 import pycodestyle

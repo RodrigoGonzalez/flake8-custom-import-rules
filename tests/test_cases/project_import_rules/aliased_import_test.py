@@ -3,7 +3,7 @@
 PIR108 = "PIR108 Aliased Imports are disabled for this project."
 
 To run this test file only:
-poetry run python -m pytest -vvvrca tests/test_cases/project_import_rules/aliased_import_test.py
+uv run python -m pytest -vvvrca tests/test_cases/project_import_rules/aliased_import_test.py
 """
 
 import pytest

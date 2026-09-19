@@ -4,7 +4,7 @@
 - CIR107
 
 To run this test file only:
-poetry run python -m pytest -vvvrca tests/test_cases/custom_import_rules/restricted_package_test.py
+uv run python -m pytest -vvvrca tests/test_cases/custom_import_rules/restricted_package_test.py
 """
 
 import ast

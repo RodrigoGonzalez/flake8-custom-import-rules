@@ -4,7 +4,7 @@ PIR209 = "PIR209 Importing `__main__` is restricted."
 PIR210 = "PIR210 Importing from `__main__.py` files is restricted."
 
 To run this test file only:
-poetry run python -m pytest -vvvrca tests/test_cases/project_import_rules/main_imports_test.py
+uv run python -m pytest -vvvrca tests/test_cases/project_import_rules/main_imports_test.py
 """
 
 from textwrap import dedent

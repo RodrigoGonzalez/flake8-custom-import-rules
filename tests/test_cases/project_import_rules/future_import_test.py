@@ -2,7 +2,7 @@
 Test cases for restricting __future__ imports
 
 To run this test file only:
-poetry run python -m pytest -vvvrca tests/test_cases/project_import_rules/future_import_test.py
+uv run python -m pytest -vvvrca tests/test_cases/project_import_rules/future_import_test.py
 """
 
 import pytest
