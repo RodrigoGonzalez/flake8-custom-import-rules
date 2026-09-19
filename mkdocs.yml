@@ -27,7 +27,9 @@ plugins:
       default_handler: python
       handlers:
         python:
-          rendering:
+          # mkdocstrings-python 2.x rejects the legacy `rendering` key.
+          # The same flags now live under `options`.
+          options:
             show_signature_annotations: true
             show_source: true
           paths: [src/flake8_custom_import_rules/]

@@ -677,8 +677,7 @@ potential complications.
 
 ## Plugin Limitations
 
--   This plugin is currently only compatible with Python 3.10+
-    (support for 3.8 and 3.9 in the works).
+-   This plugin is currently only compatible with Python 3.10–3.14.
 
 -   Option custom-restrictions only supports restricting
     imports by package or module, not by class or function

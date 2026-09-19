@@ -86,20 +86,11 @@ class CustomImportRulesVisitor(ast.NodeVisitor):
     def __attrs_post_init__(self) -> None:
         """Initialize the attributes after object creation.
 
-        If the current Python version is less than (3, 10), it assigns the set
-        of standard library names for the current Python version to
-        self.stdlib_names using stdlib_list. Otherwise, it assigns
-        sys.stdlib_module_names to self.stdlib_names.
+        Assign ``sys.stdlib_module_names`` to ``self.stdlib_names``. The
+        project requires Python >= 3.10, which provides this attribute
+        on ``sys``.
         """
-        if sys.version_info < (3, 10):
-            # stdlib_list only supports up to Python 3.9
-            from stdlib_list import stdlib_list
-
-            self.stdlib_names = set(
-                stdlib_list(f"{sys.version_info.major}.{sys.version_info.minor}")
-            )
-        else:
-            self.stdlib_names = sys.stdlib_module_names
+        self.stdlib_names = sys.stdlib_module_names
 
         self.resolve_local_scope_imports = self.filename not in STDIN_IDENTIFIERS
 

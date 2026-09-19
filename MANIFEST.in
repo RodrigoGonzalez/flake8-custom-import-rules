@@ -1,0 +1,11 @@
+include CHANGELOG.md
+include setup.py
+include scripts/build.py
+
+prune docs
+prune example_repos
+prune site
+prune tests
+prune dependency_wheel
+
+global-exclude .DS_Store

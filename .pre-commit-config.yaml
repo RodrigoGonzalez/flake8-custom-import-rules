@@ -81,7 +81,7 @@ repos:
 #        stages: [commit, manual, push]
 
   - repo: https://github.com/PyCQA/flake8
-    rev: 6.1.0
+    rev: 7.3.0
     hooks:
       - id: flake8
 
@@ -100,6 +100,8 @@ repos:
     - id: pylama
       name: pylama
       args: [--verbose, --options=pylama.ini, --max-complexity=20, --concurrent]
+      additional_dependencies:
+        - "setuptools<82"
       stages: [pre-commit, manual, pre-push]
 
 #  - repo: https://github.com/RodrigoGonzalez/check-mkdocs
