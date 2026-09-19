@@ -14,6 +14,9 @@ on:
       - 'Makefile'
       - 'pytest.ini'
       - 'setup.cfg'
+      - 'setup.py'
+      - 'MANIFEST.in'
+      - 'scripts/build.py'
       - '.github/workflows/ci.yml'
   pull_request:
     branches:
@@ -27,6 +30,9 @@ on:
       - 'Makefile'
       - 'pytest.ini'
       - 'setup.cfg'
+      - 'setup.py'
+      - 'MANIFEST.in'
+      - 'scripts/build.py'
       - '.github/workflows/ci.yml'
   workflow_call:
 
@@ -38,7 +44,6 @@ jobs:
         # python-version: ["3.8", "3.9", "3.10", "3.11", "3.12"]
         python-version: ["3.10", "3.11"]
     steps:
-      # check-out repo
       - name: Checkout repository
         uses: actions/checkout@v7
         with:
@@ -51,20 +56,213 @@ jobs:
           python-version: ${{ matrix.python-version }}
           enable-cache: true
 
-      # install requirements (runtime + test group only)
+      - name: Clean stale native extensions
+        run: make clean
+
       - name: Install requirements
         run: uv sync --locked --no-default-groups --group test
 
-      # run unit tests
+      - name: Assert Cython modules are compiled
+        run: |
+          uv run --locked --no-sync python - <<'PY'
+          from importlib import import_module
+          from importlib.machinery import EXTENSION_SUFFIXES
+
+          MODULES = (
+              "flake8_custom_import_rules.core.error_messages",
+              "flake8_custom_import_rules.core.import_rules",
+              "flake8_custom_import_rules.core.node_visitor",
+              "flake8_custom_import_rules.core.nodes",
+              "flake8_custom_import_rules.core.restricted_import_visitor",
+              "flake8_custom_import_rules.core.rules_checker",
+          )
+
+          failures = []
+
+          for module_name in MODULES:
+              module = import_module(module_name)
+              module_file = str(module.__file__)
+
+              if not any(module_file.endswith(suffix) for suffix in EXTENSION_SUFFIXES):
+                  failures.append((module_name, module_file))
+
+          if failures:
+              rendered = "\n".join(
+                  f"{module_name}: {module_file}"
+                  for module_name, module_file in failures
+              )
+              raise SystemExit(
+                  "Expected Cython extension modules were not loaded:\n" + rendered
+              )
+
+          for module_name in MODULES:
+              module = import_module(module_name)
+              print(f"{module_name}: {module.__file__}")
+          PY
+
       - name: Run unit-tests
         run: |
           set -o pipefail
-          make clean
           make unit-tests-cov-fail UV_TEST_RUN="uv run --locked --no-sync"
           # tox.ini remains deferred to the compatibility migration
 
-      # upload coverage reports to Codecov
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v7
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+
+  package-artifact:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ github.head_ref }}
+
+      - name: Install uv and set the Python version
+        uses: astral-sh/setup-uv@c771a70e6277c0a99b617c7a806ffedaca235ff9 # v9.0.0
+        with:
+          version: "0.12.17"
+          python-version: "3.11"
+          enable-cache: true
+
+      - name: Clean stale artifacts
+        run: make clean
+
+      - name: Build sdist and wheel with Python 3.11
+        run: uv build --python 3.11 --no-sources
+
+      - name: Inspect sdist and wheel
+        run: |
+          uv run --no-project python - <<'PY'
+          import tarfile
+          import zipfile
+          from pathlib import Path
+
+          dist = Path("dist")
+          wheels = sorted(dist.glob("*.whl"))
+          sdists = sorted(dist.glob("*.tar.gz"))
+          if len(wheels) != 1:
+              raise SystemExit(f"expected exactly one wheel, found {wheels}")
+          if len(sdists) != 1:
+              raise SystemExit(f"expected exactly one sdist, found {sdists}")
+
+          wheel = wheels[0]
+          sdist = sdists[0]
+          print("wheel:", wheel.name)
+          print("sdist:", sdist.name)
+
+          if "py3-none-any" in wheel.name:
+              raise SystemExit("wheel is py3-none-any; expected a native ABI/platform tag")
+
+          with zipfile.ZipFile(wheel) as archive:
+              names = archive.namelist()
+              wheel_meta = archive.read(
+                  [n for n in names if n.endswith(".dist-info/WHEEL")][0]
+              ).decode()
+              metadata = archive.read(
+                  [n for n in names if n.endswith(".dist-info/METADATA")][0]
+              ).decode()
+              entry_points = archive.read(
+                  [n for n in names if n.endswith(".dist-info/entry_points.txt")][0]
+              ).decode()
+
+          if "Root-Is-Purelib: false" not in wheel_meta:
+              raise SystemExit(f"expected Root-Is-Purelib: false\n{wheel_meta}")
+
+          prefixes = (
+              "flake8_custom_import_rules/core/error_messages",
+              "flake8_custom_import_rules/core/import_rules",
+              "flake8_custom_import_rules/core/node_visitor",
+              "flake8_custom_import_rules/core/nodes",
+              "flake8_custom_import_rules/core/restricted_import_visitor",
+              "flake8_custom_import_rules/core/rules_checker",
+          )
+          missing = []
+          for prefix in prefixes:
+              if not any(
+                  name.startswith(prefix)
+                  and (name.endswith(".so") or name.endswith(".pyd"))
+                  for name in names
+              ):
+                  missing.append(prefix)
+          if missing:
+              raise SystemExit("missing native extensions:\n" + "\n".join(missing))
+
+          requires = [
+              line for line in metadata.splitlines() if line.startswith("Requires-Dist:")
+          ]
+          joined = "\n".join(requires).lower()
+          for banned in ("cython", "setuptools", "my-base-module"):
+              if any(banned in line.lower() for line in requires):
+                  raise SystemExit(f"{banned} leaked into Requires-Dist:\n" + "\n".join(requires))
+
+          if "import-rules = flake8_custom_import_rules.__main__:main" not in entry_points.replace(
+              " ", ""
+          ).replace("import-rules=", "import-rules = "):
+              # tolerate spacing variants
+              compact = entry_points.replace(" ", "")
+              if "import-rules=flake8_custom_import_rules.__main__:main" not in compact:
+                  raise SystemExit(f"missing import-rules entry point:\n{entry_points}")
+          compact = entry_points.replace(" ", "")
+          if "CIR=flake8_custom_import_rules.flake8_plugin:Plugin" not in compact:
+              raise SystemExit(f"missing CIR entry point:\n{entry_points}")
+
+          with tarfile.open(sdist, "r:gz") as archive:
+              sdist_names = [member.name for member in archive.getmembers()]
+
+          required = (
+              "pyproject.toml",
+              "setup.py",
+              "MANIFEST.in",
+              "scripts/build.py",
+              "CHANGELOG.md",
+              "LICENSE",
+              "README.rst",
+          )
+          for suffix in required:
+              if not any(name.endswith(suffix) for name in sdist_names):
+                  raise SystemExit(f"sdist missing {suffix}")
+          if not any("src/flake8_custom_import_rules/" in name for name in sdist_names):
+              raise SystemExit("sdist missing src/flake8_custom_import_rules/")
+
+          forbidden_markers = (".git/", ".idea/", ".vscode/", "/site/", "/dist/", "dependency_wheel/")
+          bad = [name for name in sdist_names if any(marker in name for marker in forbidden_markers)]
+          if bad:
+              raise SystemExit("sdist contains forbidden paths:\n" + "\n".join(bad))
+
+          print("artifact inspection passed")
+          PY
+
+      - name: Isolated wheel smoke test
+        run: |
+          SMOKE_ENV="${RUNNER_TEMP}/flake8-custom-import-rules-wheel-smoke"
+          rm -rf "$SMOKE_ENV"
+          uv venv "$SMOKE_ENV" --python 3.11
+          WHEEL="$(python -c 'from pathlib import Path; print(next(Path("dist").glob("*.whl")))')"
+          uv pip install --python "$SMOKE_ENV/bin/python" "$WHEEL"
+          "$SMOKE_ENV/bin/python" -c "import flake8_custom_import_rules; assert flake8_custom_import_rules.__version__ == '3.0.0'"
+          "$SMOKE_ENV/bin/python" - <<'PY'
+          from importlib import import_module
+          from importlib.machinery import EXTENSION_SUFFIXES
+
+          MODULES = (
+              "flake8_custom_import_rules.core.error_messages",
+              "flake8_custom_import_rules.core.import_rules",
+              "flake8_custom_import_rules.core.node_visitor",
+              "flake8_custom_import_rules.core.nodes",
+              "flake8_custom_import_rules.core.restricted_import_visitor",
+              "flake8_custom_import_rules.core.rules_checker",
+          )
+          failures = []
+          for module_name in MODULES:
+              module = import_module(module_name)
+              module_file = str(module.__file__)
+              print(f"{module_name}: {module_file}")
+              if not any(module_file.endswith(suffix) for suffix in EXTENSION_SUFFIXES):
+                  failures.append((module_name, module_file))
+          if failures:
+              raise SystemExit(failures)
+          PY
+          "$SMOKE_ENV/bin/import-rules" --help
+          "$SMOKE_ENV/bin/flake8" --version

@@ -100,16 +100,22 @@ tox: ## tox.ini remains deferred to the compatibility migration
 	echo "Use the pytest targets for the current test suite."
 	exit 2
 
+# Cython writes ABI-specific .so/.pyd next to the original .py sources.
+# pytest --doctest-modules otherwise treats those .py files as tests and
+# raises an import file mismatch against the compiled module. Coverage of
+# the compiled modules is still measured through --cov=src.
+PY_IGNORE_IMPORTMISMATCH ?= 1
+
 tests: unit-tests  ## run all tests
 
 unit-tests: ## run unit-tests with pytest
-	$(UV_TEST_RUN) pytest  -vvvvsra --doctest-modules
+	PY_IGNORE_IMPORTMISMATCH=$(PY_IGNORE_IMPORTMISMATCH) $(UV_TEST_RUN) pytest  -vvvvsra --doctest-modules
 
 unit-tests-cov: ## run unit-tests with pytest and show coverage (terminal + html)
-	$(UV_TEST_RUN) pytest  -vvvvsra --doctest-modules --cov=src --cov-report term-missing --cov-report=html
+	PY_IGNORE_IMPORTMISMATCH=$(PY_IGNORE_IMPORTMISMATCH) $(UV_TEST_RUN) pytest  -vvvvsra --doctest-modules --cov=src --cov-report term-missing --cov-report=html
 
 unit-tests-cov-fail: ## run unit tests w/ pytest and coverage (terminal + html) & create files for CI
-	$(UV_TEST_RUN) pytest  -vvvvsra --doctest-modules --cov=src --cov-report term-missing \
+	PY_IGNORE_IMPORTMISMATCH=$(PY_IGNORE_IMPORTMISMATCH) $(UV_TEST_RUN) pytest  -vvvvsra --doctest-modules --cov=src --cov-report term-missing \
 	--cov-report=xml --cov-fail-under=80 --junitxml=pytest.xml | tee pytest-coverage.txt
 
 clean-cov: ## remove output files from pytest & coverage
@@ -156,6 +162,7 @@ clean: clean-docs  clean-cov  ## Clean package
 	find . -type d -name '__pycache__' | xargs rm -rf
 	find . -type d -name '.temp' | xargs rm -rf
 	find . -type f -name '.coverage' | xargs rm -rf
+	find src -type f \( -name '*.so' -o -name '*.pyd' \) -delete
 	rm -rf build dist
 
 build:  pre-commit tests clean ## Build the project

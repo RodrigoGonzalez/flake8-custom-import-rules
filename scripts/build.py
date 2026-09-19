@@ -192,6 +192,11 @@ def build_cython_extensions() -> list[Extension]:
     - Line tracing support.
     - Compilation of the six explicitly selected core modules.
     - Optimized native compilation through ``OptimizedBuildExt``.
+    - Disabled annotation typing so Cython 3 does not coerce existing
+      function annotations into runtime C type checks. Several selected
+      modules pass attrs ``field()`` objects into annotated helpers at
+      class-body evaluation time, which is valid Python and must keep
+      working after compilation.
 
     Generated C/build intermediates are placed under ``build/cython`` instead
     of being written into ``src/``.
@@ -205,6 +210,7 @@ def build_cython_extensions() -> list[Extension]:
         compiler_directives={
             "language_level": 3,
             "linetrace": True,
+            "annotation_typing": False,
         },
         annotate=False,
     )

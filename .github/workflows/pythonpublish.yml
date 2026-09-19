@@ -26,5 +26,5 @@ jobs:
         UV_PUBLISH_USERNAME: ${{ secrets.PYPI_USERNAME }}
         UV_PUBLISH_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
       run: |
-        uv build --no-sources
+        uv build --python 3.11 --sdist --no-sources
         uv publish
