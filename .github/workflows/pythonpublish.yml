@@ -280,40 +280,6 @@ jobs:
         print("sdist inspection passed:", sdist)
         PY
 
-    - name: Create or verify annotated release tag
-      if: steps.classify.outputs.action != 'noop'
-      env:
-        TAG: ${{ steps.classify.outputs.tag }}
-        TESTED_SHA: ${{ github.event.workflow_run.head_sha }}
-        RELEASE_TOKEN: ${{ secrets.RELEASE_TOKEN }}
-      run: |
-        git config user.name "github-actions[bot]"
-        git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-        if git rev-parse -q --verify "refs/tags/${TAG}" >/dev/null; then
-          TAG_SHA="$(git rev-parse "${TAG}^{}")"
-          if [ "${TAG_SHA}" != "${TESTED_SHA}" ]; then
-            echo "tag ${TAG} exists at ${TAG_SHA}, not ${TESTED_SHA}"
-            exit 1
-          fi
-          echo "tag ${TAG} already points at tested SHA"
-        else
-          if [ -z "${RELEASE_TOKEN}" ]; then
-            echo "::error::Set repository secret RELEASE_TOKEN to a fine-grained PAT owned by a repository admin, with Contents: Read and write. This personal repository cannot add GitHub Actions as a tag-ruleset bypass actor."
-            exit 1
-          fi
-          git tag -a "${TAG}" "${TESTED_SHA}" -m "${TAG}"
-          git config --unset-all http.https://github.com/.extraheader || true
-          git push "https://x-access-token:${RELEASE_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" "refs/tags/${TAG}"
-        fi
-
-    - name: Publish sdist to PyPI
-      if: steps.classify.outputs.action != 'noop'
-      env:
-        UV_PUBLISH_USERNAME: ${{ secrets.PYPI_USERNAME }}
-        UV_PUBLISH_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
-        UV_PUBLISH_CHECK_URL: https://pypi.org/simple
-      run: uv publish
-
     - name: Extract changelog section
       if: steps.classify.outputs.action != 'noop'
       id: changelog
@@ -342,13 +308,37 @@ jobs:
     - name: Create or verify GitHub Release
       if: steps.classify.outputs.action != 'noop'
       env:
-        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GH_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
         TAG: ${{ steps.classify.outputs.tag }}
+        TESTED_SHA: ${{ github.event.workflow_run.head_sha }}
         BODY: ${{ steps.changelog.outputs.body }}
       run: |
+        if [ -z "${GH_TOKEN}" ]; then
+          echo "::error::Repository secret PERSONAL_ACCESS_TOKEN is required to create the GitHub Release and tag."
+          exit 1
+        fi
+        if git rev-parse -q --verify "refs/tags/${TAG}" >/dev/null; then
+          TAG_SHA="$(git rev-parse "${TAG}^{}")"
+          if [ "${TAG_SHA}" != "${TESTED_SHA}" ]; then
+            echo "tag ${TAG} exists at ${TAG_SHA}, not ${TESTED_SHA}"
+            exit 1
+          fi
+        fi
         if gh release view "${TAG}" >/dev/null 2>&1; then
           echo "GitHub Release ${TAG} already exists; successful rerun."
         else
           printf '%s' "${BODY}" > /tmp/release-body.md
-          gh release create "${TAG}" --title "${TAG}" --notes-file /tmp/release-body.md dist/*.tar.gz
+          gh release create "${TAG}" \
+            --target "${TESTED_SHA}" \
+            --title "${TAG}" \
+            --notes-file /tmp/release-body.md \
+            dist/*.tar.gz
         fi
+
+    - name: Publish sdist to PyPI
+      if: steps.classify.outputs.action != 'noop'
+      env:
+        UV_PUBLISH_USERNAME: ${{ secrets.PYPI_USERNAME }}
+        UV_PUBLISH_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
+        UV_PUBLISH_CHECK_URL: https://pypi.org/simple
+      run: uv publish
