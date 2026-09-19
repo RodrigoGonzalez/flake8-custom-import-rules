@@ -26,7 +26,7 @@
 # =============================================================================
 
 PROJECT_NAME := $(shell basename "$(PWD)")
-PYTHON_INTERPRETER := python3.10
+PYTHON_INTERPRETER := python3.12
 UV_TEST_RUN ?= uv run --locked --no-default-groups --group test
 
 .SILENT: ;               # no need for @
