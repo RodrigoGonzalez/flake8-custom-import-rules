@@ -286,6 +286,8 @@ jobs:
         TAG: ${{ steps.classify.outputs.tag }}
         TESTED_SHA: ${{ github.event.workflow_run.head_sha }}
       run: |
+        git config user.name "github-actions[bot]"
+        git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
         if git rev-parse -q --verify "refs/tags/${TAG}" >/dev/null; then
           TAG_SHA="$(git rev-parse "${TAG}^{}")"
           if [ "${TAG_SHA}" != "${TESTED_SHA}" ]; then
