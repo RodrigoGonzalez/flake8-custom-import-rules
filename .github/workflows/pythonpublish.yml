@@ -17,12 +17,16 @@ permissions:
   contents: write
 
 jobs:
-  deploy:
+  classify:
     runs-on: ubuntu-latest
     if: >
       github.event.workflow_run.conclusion == 'success' &&
       github.event.workflow_run.event == 'push' &&
       github.event.workflow_run.head_branch == 'main'
+    outputs:
+      action: ${{ steps.classify.outputs.action }}
+      version: ${{ steps.classify.outputs.version }}
+      tag: ${{ steps.classify.outputs.tag }}
     steps:
     - name: Checkout the tested SHA
       uses: actions/checkout@v7
@@ -35,7 +39,7 @@ jobs:
       run: git fetch --tags --force origin
 
     - name: Install uv and set the Python version
-      uses: astral-sh/setup-uv@1c37ad07a6a961277cf70c0d37d6f313000f5884 # v10.3.0
+      uses: astral-sh/setup-uv@c18668ad3cf93ea998bef934396af7bb5c839dc7 # v10.2.0
       with:
         version: "0.12.17"
         python-version: "3.11"
@@ -211,44 +215,240 @@ jobs:
         print(json.dumps({"action": action, "reason": reason}, indent=2))
         PY
 
-    - name: Skip when already released
-      if: steps.classify.outputs.action == 'noop'
-      run: echo "Package version already released from an ancestor commit; successful no-op."
-
     - name: Validate version authorities
       if: steps.classify.outputs.action != 'noop'
       run: |
         python scripts/check_version.py
         uv lock --check
 
-    - name: Build sdist only
-      if: steps.classify.outputs.action != 'noop'
+  build-sdist:
+    needs: classify
+    if: needs.classify.result == 'success' && needs.classify.outputs.action != 'noop'
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout the tested SHA
+      uses: actions/checkout@v7
+      with:
+        ref: ${{ github.event.workflow_run.head_sha }}
+
+    - name: Install uv and set the Python version
+      uses: astral-sh/setup-uv@c18668ad3cf93ea998bef934396af7bb5c839dc7 # v10.2.0
+      with:
+        version: "0.12.17"
+        python-version: "3.11"
+        enable-cache: false
+
+    - name: Build sdist
       run: |
         rm -rf dist build
         uv build --python 3.11 --sdist --no-sources
 
-    - name: Inspect release sdist
-      if: steps.classify.outputs.action != 'noop'
+    - name: Upload sdist
+      uses: actions/upload-artifact@v4
+      with:
+        name: sdist
+        path: dist/*.tar.gz
+        if-no-files-found: error
+
+  build-wheels:
+    needs: classify
+    if: needs.classify.result == 'success' && needs.classify.outputs.action != 'noop'
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            artifact: wheels-linux-x86_64
+          - os: ubuntu-24.04-arm
+            artifact: wheels-linux-aarch64
+          - os: macos-latest
+            artifact: wheels-macos-arm64
+          - os: macos-15-intel
+            artifact: wheels-macos-x86_64
+          - os: windows-latest
+            artifact: wheels-windows-amd64
+    steps:
+    - name: Checkout the tested SHA
+      uses: actions/checkout@v7
+      with:
+        ref: ${{ github.event.workflow_run.head_sha }}
+
+    - name: Install uv and set the Python version
+      uses: astral-sh/setup-uv@c18668ad3cf93ea998bef934396af7bb5c839dc7 # v10.2.0
+      with:
+        version: "0.12.17"
+        python-version: "3.12"
+        enable-cache: false
+
+    - name: Build wheels
+      run: uvx --from cibuildwheel==4.3.1 cibuildwheel --output-dir wheelhouse
+
+    - name: Require built wheels
+      run: python -c "from pathlib import Path; wheels=sorted(Path('wheelhouse').glob('*.whl')); print('\n'.join(wheel.name for wheel in wheels)); raise SystemExit('cibuildwheel produced no wheels' if not wheels else None)"
+
+    - name: Upload wheels
+      uses: actions/upload-artifact@v4
+      with:
+        name: ${{ matrix.artifact }}
+        path: wheelhouse/*.whl
+        if-no-files-found: error
+
+  publish:
+    needs:
+      - classify
+      - build-sdist
+      - build-wheels
+    if: >-
+      always() &&
+      needs.classify.result == 'success' &&
+      (
+        needs.classify.outputs.action == 'noop' ||
+        (
+          needs.build-sdist.result == 'success' &&
+          needs.build-wheels.result == 'success'
+        )
+      )
+    runs-on: ubuntu-latest
+    steps:
+    - name: Skip when already released
+      if: needs.classify.outputs.action == 'noop'
+      run: echo "Package version already released from an ancestor commit; successful no-op."
+
+    - name: Checkout the tested SHA
+      if: needs.classify.outputs.action != 'noop'
+      uses: actions/checkout@v7
+      with:
+        ref: ${{ github.event.workflow_run.head_sha }}
+        fetch-depth: 0
+        fetch-tags: true
+
+    - name: Fetch complete tag history
+      if: needs.classify.outputs.action != 'noop'
+      run: git fetch --tags --force origin
+
+    - name: Install uv and set the Python version
+      if: needs.classify.outputs.action != 'noop'
+      uses: astral-sh/setup-uv@c18668ad3cf93ea998bef934396af7bb5c839dc7 # v10.2.0
+      with:
+        version: "0.12.17"
+        python-version: "3.11"
+        enable-cache: false
+
+    - name: Download release artifacts
+      if: needs.classify.outputs.action != 'noop'
+      uses: actions/download-artifact@v4
+      with:
+        path: dist
+        merge-multiple: true
+
+    - name: Inspect release artifacts
+      if: needs.classify.outputs.action != 'noop'
       env:
-        EXPECTED_VERSION: ${{ steps.classify.outputs.version }}
+        EXPECTED_VERSION: ${{ needs.classify.outputs.version }}
       run: |
         python - <<'PY'
         import os
         import tarfile
+        import zipfile
         from pathlib import Path
 
         expected_version = os.environ["EXPECTED_VERSION"]
         dist = Path("dist")
-        sdists = sorted(dist.glob("*.tar.gz"))
         wheels = sorted(dist.glob("*.whl"))
-        if wheels:
-            raise SystemExit(f"unexpected wheels in dist: {wheels}")
+        sdists = sorted(dist.glob("*.tar.gz"))
+        if not wheels:
+            raise SystemExit(f"expected native wheels, found none in {dist}")
         if len(sdists) != 1:
             raise SystemExit(f"expected exactly one sdist, found {sdists}")
+        names = [path.name for path in wheels]
+        if len(names) != len(set(names)):
+            raise SystemExit(f"duplicate wheel filenames: {names}")
+
         sdist = sdists[0]
+        print("sdist:", sdist.name)
+        for wheel in wheels:
+            print("wheel:", wheel.name)
+            if "py3-none-any" in wheel.name:
+                raise SystemExit(f"wheel is py3-none-any: {wheel.name}")
+            if f"-{expected_version}-" not in wheel.name:
+                raise SystemExit(f"wheel version is not {expected_version}: {wheel.name}")
+
+            with zipfile.ZipFile(wheel) as archive:
+                archived = archive.namelist()
+                wheel_meta = archive.read(
+                    [n for n in archived if n.endswith(".dist-info/WHEEL")][0]
+                ).decode()
+                metadata = archive.read(
+                    [n for n in archived if n.endswith(".dist-info/METADATA")][0]
+                ).decode()
+                entry_points = archive.read(
+                    [n for n in archived if n.endswith(".dist-info/entry_points.txt")][0]
+                ).decode()
+
+            if "Root-Is-Purelib: false" not in wheel_meta:
+                raise SystemExit(f"{wheel.name} expected Root-Is-Purelib: false\n{wheel_meta}")
+            if f"Version: {expected_version}" not in metadata:
+                raise SystemExit(f"{wheel.name} Version is not {expected_version}\n{metadata}")
+
+            prefixes = (
+                "flake8_custom_import_rules/core/error_messages",
+                "flake8_custom_import_rules/core/import_rules",
+                "flake8_custom_import_rules/core/node_visitor",
+                "flake8_custom_import_rules/core/nodes",
+                "flake8_custom_import_rules/core/restricted_import_visitor",
+                "flake8_custom_import_rules/core/rules_checker",
+            )
+            missing = [
+                prefix
+                for prefix in prefixes
+                if not any(
+                    name.startswith(prefix) and (name.endswith(".so") or name.endswith(".pyd"))
+                    for name in archived
+                )
+            ]
+            if missing:
+                raise SystemExit(f"{wheel.name} missing native extensions:\n" + "\n".join(missing))
+            if "flake8_custom_import_rules/py.typed" not in archived:
+                raise SystemExit(f"{wheel.name} missing flake8_custom_import_rules/py.typed")
+
+            requires = [
+                line for line in metadata.splitlines() if line.startswith("Requires-Dist:")
+            ]
+            for banned in (
+                "cython",
+                "setuptools",
+                "my-base-module",
+                "pylama",
+                "pymdown-extensions",
+                "typer",
+                "pytest",
+                "pytest-cov",
+                "tox",
+                "tox-uv",
+                "mkdocs",
+                "mkdocstrings",
+                "modulegraph",
+                "docutils",
+                "ipython",
+                "astpretty",
+                "black",
+                "mypy",
+            ):
+                if any(banned in line.lower() for line in requires):
+                    raise SystemExit(
+                        f"{wheel.name} leaked {banned} into Requires-Dist:\n" + "\n".join(requires)
+                    )
+
+            compact = entry_points.replace(" ", "")
+            if "import-rules=flake8_custom_import_rules.__main__:main" not in compact:
+                raise SystemExit(f"{wheel.name} missing import-rules entry point:\n{entry_points}")
+            if "CIR=flake8_custom_import_rules.flake8_plugin:Plugin" not in compact:
+                raise SystemExit(f"{wheel.name} missing CIR entry point:\n{entry_points}")
+
         with tarfile.open(sdist, "r:gz") as archive:
-            names = [member.name for member in archive.getmembers()]
-            metadata_name = next(name for name in names if name.endswith("PKG-INFO"))
+            sdist_names = [member.name for member in archive.getmembers()]
+            metadata_name = next(name for name in sdist_names if name.endswith("PKG-INFO"))
             metadata = archive.extractfile(metadata_name).read().decode()
 
         required = (
@@ -261,13 +461,16 @@ jobs:
             "README.rst",
         )
         for suffix in required:
-            if not any(name.endswith(suffix) for name in names):
+            if not any(name.endswith(suffix) for name in sdist_names):
                 raise SystemExit(f"sdist missing {suffix}")
-        if not any("src/flake8_custom_import_rules/" in name for name in names):
+        if not any("src/flake8_custom_import_rules/" in name for name in sdist_names):
             raise SystemExit("sdist missing src/flake8_custom_import_rules/")
-        if not any(name.endswith("src/flake8_custom_import_rules/py.typed") or name.endswith("flake8_custom_import_rules/py.typed") for name in names):
+        if not any(
+            name.endswith("src/flake8_custom_import_rules/py.typed")
+            or name.endswith("flake8_custom_import_rules/py.typed")
+            for name in sdist_names
+        ):
             raise SystemExit("sdist missing py.typed")
-
         if f"Version: {expected_version}" not in metadata:
             raise SystemExit(f"sdist Version is not {expected_version}\n{metadata}")
         requires_python = next(
@@ -277,14 +480,14 @@ jobs:
         compact = requires_python.replace(" ", "")
         if ">=3.10" not in compact or "<4" not in compact:
             raise SystemExit(f"sdist Requires-Python mismatch\n{metadata}")
-        print("sdist inspection passed:", sdist)
+        print(f"artifact inspection passed: {len(wheels)} wheels, {sdist.name}")
         PY
 
     - name: Extract changelog section
-      if: steps.classify.outputs.action != 'noop'
+      if: needs.classify.outputs.action != 'noop'
       id: changelog
       env:
-        VERSION: ${{ steps.classify.outputs.version }}
+        VERSION: ${{ needs.classify.outputs.version }}
       run: |
         python - <<'PY'
         import os
@@ -306,11 +509,11 @@ jobs:
         PY
 
     - name: Create or verify GitHub Release
-      if: steps.classify.outputs.action != 'noop'
+      if: needs.classify.outputs.action != 'noop'
       env:
         GH_TOKEN: ${{ github.token }}
         RELEASE_TOKEN: ${{ secrets.RELEASE_TOKEN }}
-        TAG: ${{ steps.classify.outputs.tag }}
+        TAG: ${{ needs.classify.outputs.tag }}
         TESTED_SHA: ${{ github.event.workflow_run.head_sha }}
         BODY: ${{ steps.changelog.outputs.body }}
       run: |
@@ -322,7 +525,31 @@ jobs:
           fi
         fi
         if gh release view "${TAG}" >/dev/null 2>&1; then
-          echo "GitHub Release ${TAG} already exists; successful rerun."
+          echo "GitHub Release ${TAG} already exists; uploading any missing assets."
+          mapfile -t existing < <(gh release view "${TAG}" --json assets --jq '.assets[].name')
+          to_upload=()
+          for file in dist/*; do
+            name="$(basename "${file}")"
+            found=0
+            for asset in "${existing[@]}"; do
+              if [ "${asset}" = "${name}" ]; then
+                found=1
+                break
+              fi
+            done
+            if [ "${found}" -eq 0 ]; then
+              to_upload+=("${file}")
+            fi
+          done
+          if [ "${#to_upload[@]}" -eq 0 ]; then
+            echo "Release assets already present."
+          else
+            if [ -z "${RELEASE_TOKEN}" ]; then
+              echo "::error::This release target modified .github/workflows/. GitHub requires a PAT with Workflows write; GITHUB_TOKEN cannot update that release. See https://docs.github.com/en/rest/releases/releases#create-a-release"
+              exit 1
+            fi
+            GH_TOKEN="${RELEASE_TOKEN}" gh release upload "${TAG}" "${to_upload[@]}"
+          fi
         else
           if [ -z "${RELEASE_TOKEN}" ]; then
             echo "::error::This release target modified .github/workflows/. GitHub requires a PAT with Workflows write; GITHUB_TOKEN cannot create that release. See https://docs.github.com/en/rest/releases/releases#create-a-release"
@@ -333,11 +560,11 @@ jobs:
             --target "${TESTED_SHA}" \
             --title "${TAG}" \
             --notes-file /tmp/release-body.md \
-            dist/*.tar.gz
+            dist/*
         fi
 
-    - name: Publish sdist to PyPI
-      if: steps.classify.outputs.action != 'noop'
+    - name: Publish sdist and wheels to PyPI
+      if: needs.classify.outputs.action != 'noop'
       env:
         UV_PUBLISH_USERNAME: ${{ secrets.PYPI_USERNAME }}
         UV_PUBLISH_PASSWORD: ${{ secrets.PYPI_PASSWORD }}

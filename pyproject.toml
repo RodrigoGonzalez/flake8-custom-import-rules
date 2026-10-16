@@ -1,6 +1,6 @@
 [project]
 name = "flake8_custom_import_rules"
-version = "4.0.0"
+version = "4.0.1"
 description = "A Flake8 plugin that enforces custom import rules, allowing users to define and maintain clean and consistent import organization across their Python projects."
 readme = "README.rst"
 requires-python = ">=3.10,<4"
@@ -374,6 +374,19 @@ commands = [
         "--junitxml=pytest.xml",
     ],
 ]
+
+
+
+# =============================================================================
+# CIBUILDWHEEL
+# =============================================================================
+
+# Release wheels cover regular CPython 3.10–3.14 ABIs. Free-threaded builds,
+# PyPy, musllinux, and 32-bit tags are skipped and install from the sdist.
+[tool.cibuildwheel]
+build = "cp310-* cp311-* cp312-* cp313-* cp314-*"
+skip = "*-musllinux_* pp* *-win32 *i686 *t-*"
+test-command = "python -c \"from importlib import import_module; from importlib.machinery import EXTENSION_SUFFIXES; mods=('flake8_custom_import_rules.core.error_messages','flake8_custom_import_rules.core.import_rules','flake8_custom_import_rules.core.node_visitor','flake8_custom_import_rules.core.nodes','flake8_custom_import_rules.core.restricted_import_visitor','flake8_custom_import_rules.core.rules_checker'); files=[(n, str(import_module(n).__file__)) for n in mods]; print('\\n'.join(f'{n}: {p}' for n, p in files)); bad=[(n, p) for n, p in files if not any(p.endswith(s) for s in EXTENSION_SUFFIXES)]; raise SystemExit(bad or None)\""
 
 
 

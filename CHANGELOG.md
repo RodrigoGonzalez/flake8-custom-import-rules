@@ -1,4 +1,10 @@
 
+## v4.0.1 (2026-10-16)
+
+### Packaging
+
+- **packaging**: Publish native wheels for CPython 3.10–3.14 on Linux x86_64, Linux aarch64, macOS arm64, macOS x86_64, and Windows amd64. The sdist remains the install fallback for other platforms.
+
 ## v4.0.0 (2026-09-19)
 
 ### Breaking
